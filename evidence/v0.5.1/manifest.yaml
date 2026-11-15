@@ -101,3 +101,43 @@ results:
     date: 2026-11-15
     command: hw/libero/program.sh
     conditions: FABRIC and SNVM components only. The eNVM digest is the same before and after.
+  - id: boot-hss
+    title: Boot monitor console from power-up to all four application cores running
+    file: board/boot-hss.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: HSS console (MMUART1) captured on the PC during a cold boot of the final image
+    conditions: Boot monitor v0.99.53-v2026.04.1 as found in the chip's boot flash. Blank lines removed; timestamps are the monitor's own.
+  - id: boot-uboot-linux
+    title: Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4
+    file: board/boot-uboot-linux.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: Linux console (MMUART4) captured on the PC during a cold boot of the final image
+    conditions: Filtered to the lines that mark each stage; repeated lines removed. The full capture is not published.
+  - id: device-tree-checks
+    title: Reserved memory, UIO devices, online CPUs and PLIC sources on the running board
+    file: board/device-tree-checks.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: grep of /proc/iomem, dmesg, /sys/class/uio/*/name, /sys/devices/system/cpu/online and /proc/interrupts over SSH, about one minute after a warm reboot
+    conditions: Proven pfdaq-v051 image, FreeRTOS on hart 4. Read-only commands.
+  - id: fabric-interrupts-run
+    title: 100,000 fabric interrupts answered by Linux, then by hart 4, with the interrupt counters after each
+    file: board/fabric-interrupts-run.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: pfdaq_lat -c 0 -p 500 -n 100000, then pfdaq_cap -L 0 and pfdaq_lat -c 1 -p 200 -n 100000, with /proc/interrupts and the UIO event files read after each
+    conditions: Single run each, board idle, counters read right after a warm reboot.
+  - id: dma-one-burst-run
+    title: One 16-frame burst through the fabric DMA from a 138-line user-space program, run twice
+    file: board/dma-one-burst.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: experiments/I04-dma-one-burst/dma_one_burst, built statically with a RISC-V Linux GCC, copied to the board and run as root
+    conditions: Proven pfdaq-v051 image; nothing else using the stream source. The second run follows the first without a reboot.

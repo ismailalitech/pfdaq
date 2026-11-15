@@ -79,7 +79,7 @@ def main():
     ids = {}
     for p in pages:
         if p.get('_no_front_matter'):
-            err(p['file'], 'no front matter')
+            err(p['file'], 'front matter missing or not valid YAML (quote any value that contains a colon): %s' % p.get('_error', ''))
             continue
         for k in C.REQUIRED:
             if p.get(k) in (None, ''):
@@ -126,7 +126,7 @@ def main():
     md = subprocess.run(['git', '-C', C.ROOT, 'ls-files', '-co', '--exclude-standard', '*.md'],
                         capture_output=True, text=True).stdout.split()
     for f in md:
-        if f.startswith('logs/') or f == 'PROJECT_STATE.md':
+        if f.startswith(('logs/', 'docs/platform/')) or f == 'PROJECT_STATE.md':
             continue
         with open(os.path.join(C.ROOT, f), errors='replace') as fh:
             text = fh.read()

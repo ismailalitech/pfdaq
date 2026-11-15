@@ -1,0 +1,10 @@
+### run 1
+DMA interrupt: event count 1, INTR_0_STAT 0x210, descriptor config 0x9 (complete, ready bit cleared by the DMA)
+frame 0: header a55a00fc  seq 0  timestamp 3211942696  payload 00000000 00000001 00000002 ...  crc a9fba266
+16 frames, 16384 bytes: 0 bad (header, sequence or CRC-32)
+exit=0
+### run 2
+DMA interrupt: event count 2, INTR_0_STAT 0x210, descriptor config 0x9 (complete, ready bit cleared by the DMA)
+frame 0: header a55a00fc  seq 16  timestamp 3332262599  payload 00100000 00100001 00100002 ...  crc 14ed3c30
+16 frames, 16384 bytes: 0 bad (header, sequence or CRC-32)
+exit=0

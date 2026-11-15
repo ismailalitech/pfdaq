@@ -20,8 +20,6 @@ flowchart LR
         plic["Platform-level interrupt controller"]
         fic0["FIC0 (AXI4, 125 MHz)"]
         fic3["FIC3 (APB, 50 MHz)"]
-        fic4["FIC4 (AHB-Lite, crypto)"]
-        crypto_processor["User crypto processor"]
       end
       subgraph fabric["FPGA fabric"]
         subgraph pfdaq_core["pfdaq_core"]
@@ -42,7 +40,6 @@ flowchart LR
   u54_4 -->|"reads counters, acknowledges latency channel 1"| fic3
   fic3 -->|"APB, 0x4000_0F00"| pfdaq_core
   fic3 -->|"APB, 0x5000_0000"| ihc
-  fic4 -->|"AHB-Lite slave for control and data, AHB-Lite master for DMA"| crypto_processor
   u54_linux -->|"DMA register access"| fic0
   fic0 -->|"AXI4-Lite, 0x6001_0000"| dma
   pfdaq_stream_src ==>|"AXI4-Stream, 64 bit, 125 MHz"| dma
@@ -147,6 +144,7 @@ flowchart TB
 The physical board. One MPFS095T system-on-chip, 1 GB DDR4, microSD, Gigabit Ethernet and an on-board FlashPro5 debugger on USB-C.
 
 - **Contains:** [MPFS095T system-on-chip](#soc), [DDR4 memory, 1 GB](#ddr), [microSD card](#sd-card), [FlashPro5 on USB-C](#debug-usb), [Gigabit Ethernet](#ethernet), [LEDs, switches and headers](#user-io)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md)
 
 ### MPFS095T system-on-chip
 
@@ -156,7 +154,7 @@ A hardened RISC-V processor subsystem (the MSS) and an FPGA fabric of 93,516 log
 
 - **Part of:** [PolarFire SoC Discovery Kit](#board)
 - **Contains:** [Microprocessor subsystem (MSS)](#mss), [FPGA fabric](#fabric), [eNVM boot flash](#envm)
-- **Learn how this works:** [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [X04 The validation report](../modules/X04-validation-report.md)
 
 ### Microprocessor subsystem (MSS)
 
@@ -165,7 +163,8 @@ A hardened RISC-V processor subsystem (the MSS) and an FPGA fabric of 93,516 log
 Five RISC-V harts, their interrupt controllers, the DDR controller, hard peripherals and the interfaces into the fabric. Fixed silicon; only its configuration is chosen.
 
 - **Part of:** [MPFS095T system-on-chip](#soc)
-- **Contains:** [E51 (hart 0)](#e51), [U54 harts 1 to 3](#u54-linux), [U54 hart 4](#u54-4), [Platform-level interrupt controller](#plic), [FIC0 (AXI4, 125 MHz)](#fic0), [FIC3 (APB, 50 MHz)](#fic3), [FIC4 (AHB-Lite, crypto)](#fic4), [User crypto processor](#crypto-processor), [MSS GPIO2](#mss-gpio2), [MMUART 0, 1 and 4](#mss-uarts)
+- **Contains:** [E51 (hart 0)](#e51), [U54 harts 1 to 3](#u54-linux), [U54 hart 4](#u54-4), [Platform-level interrupt controller](#plic), [FIC0 (AXI4, 125 MHz)](#fic0), [FIC3 (APB, 50 MHz)](#fic3), [MSS GPIO2](#mss-gpio2), [MMUART 0, 1 and 4](#mss-uarts)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md)
 
 ### FPGA fabric
 
@@ -175,7 +174,7 @@ Programmable logic. Holds the vendor reference design plus the project's stream 
 
 - **Part of:** [MPFS095T system-on-chip](#soc)
 - **Contains:** [pfdaq_core](#pfdaq-core), [CoreAXI4DMAController](#dma), [Mi-V inter-hart communication](#ihc), [Reference design peripherals](#refdesign-peripherals), [Fabric clocks and resets](#fabric-clocks)
-- **Learn how this works:** [K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](../modules/F05-tool-flow-in-batch.md); [K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md)
 
 ### DDR4 memory, 1 GB
 
@@ -185,6 +184,7 @@ Main memory. The same physical memory appears at several addresses with differen
 
 - **Part of:** [PolarFire SoC Discovery Kit](#board)
 - **Contains:** [Non-cached window](#ddr-noncached), [Cached shared region](#ddr-cached-shared), [RPMsg shared memory](#ddr-rpmsg), [Hart 4 image](#ddr-u54-4-image)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [F02 The memory map and the three faces of DDR](../modules/F02-memory-map-ddr.md)
 
 ### Software
 
@@ -202,6 +202,7 @@ Builds the fabric (Libero SoC 2026.1), the Linux image (Yocto) and the firmware,
 
 - → [FlashPro5 on USB-C](#debug-usb): fabric programming, FABRIC and SNVM only
 - → [Gigabit Ethernet](#ethernet): SSH
+- **Learn how this works:** [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](../modules/F05-tool-flow-in-batch.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### E51 (hart 0)
 
@@ -213,7 +214,7 @@ Builds the fabric (Libero SoC 2026.1), the Linux image (Yocto) and the firmware,
 - **Mode:** M
 - **Runs:** hss
 - ← [Hart Software Services](#hss): machine mode
-- **Learn how this works:** [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
 
 ### U54 harts 1 to 3
 
@@ -229,7 +230,7 @@ Three application cores running Linux as one symmetric system in supervisor mode
 - ← [Platform-level interrupt controller](#plic): sources 119, 120 and the IHC lines
 - ← [Linux 6.18.17](#linux-kernel): supervisor mode
 - ← [OpenSBI](#opensbi): machine mode
-- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [F02 The memory map and the three faces of DDR](../modules/F02-memory-map-ddr.md); [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M02 RPMsg in practice: announce, bind, ping](../modules/M02-rpmsg-in-practice.md); [M03 A real-time supervisor: deadlines and independent checks](../modules/M03-real-time-supervisor.md); [M05 Shared memory between Linux and a bare-metal hart](../modules/M05-shared-memory-linux-bare-metal.md); [I02 Fabric interrupts in user space, and the double wake-up](../modules/I02-fabric-interrupts-user-space.md); [I03 A small kernel driver for a fabric interrupt](../modules/I03-kernel-driver-fabric-interrupt.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [P04 Deadline supervision, alarm and recovery](../modules/P04-deadline-supervision.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X02 One burst from START to verified](../modules/X02-one-burst.md); [X04 The validation report](../modules/X04-validation-report.md)
 
 ### U54 hart 4
 
@@ -244,7 +245,7 @@ The fourth application core, kept out of Linux. Runs the supervisor in machine m
 - → [FIC3 (APB, 50 MHz)](#fic3): reads counters, acknowledges latency channel 1
 - ← [Platform-level interrupt controller](#plic): source 123 and its IHC line
 - ← [pfdaq supervisor](#supervisor): machine mode
-- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K06 The interrupt that stayed masked after one event](../case-studies/K06-interrupt-stayed-masked.md); [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [F02 The memory map and the three faces of DDR](../modules/F02-memory-map-ddr.md); [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M02 RPMsg in practice: announce, bind, ping](../modules/M02-rpmsg-in-practice.md); [M03 A real-time supervisor: deadlines and independent checks](../modules/M03-real-time-supervisor.md); [M04 Same core, same code: FreeRTOS against bare metal](../modules/M04-freertos-vs-bare-metal.md); [M05 Shared memory between Linux and a bare-metal hart](../modules/M05-shared-memory-linux-bare-metal.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [M07 Deferred interrupt handling, and a port that switches tasks inside the handler](../modules/M07-deferred-interrupt-handling.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [P04 Deadline supervision, alarm and recovery](../modules/P04-deadline-supervision.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [K06 The interrupt that stayed masked after one event](../case-studies/K06-interrupt-stayed-masked.md); [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X02 One burst from START to verified](../modules/X02-one-burst.md); [X04 The validation report](../modules/X04-validation-report.md)
 
 ### Platform-level interrupt controller
 
@@ -260,7 +261,7 @@ Routes peripheral and fabric interrupts to harts. Each hart context enables the 
 - ← [Latency unit (two channels)](#pfdaq-latency): F2M[1], PLIC 119. latency channel 0
 - ← [Latency unit (two channels)](#pfdaq-latency): F2M[5], PLIC 123. latency channel 1
 - ← [Mi-V inter-hart communication](#ihc): F2M[59..63], PLIC 177 to 181. one line per hart
-- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [H07 Measuring software from hardware: the latency unit](../modules/H07-latency-unit.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md); [K06 The interrupt that stayed masked after one event](../case-studies/K06-interrupt-stayed-masked.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [M04 Same core, same code: FreeRTOS against bare metal](../modules/M04-freertos-vs-bare-metal.md); [M07 Deferred interrupt handling, and a port that switches tasks inside the handler](../modules/M07-deferred-interrupt-handling.md); [H07 Measuring software from hardware: the latency unit](../modules/H07-latency-unit.md); [H09 Integrating custom RTL into a vendor design by script](../modules/H09-rtl-into-vendor-design.md); [I02 Fabric interrupts in user space, and the double wake-up](../modules/I02-fabric-interrupts-user-space.md); [I03 A small kernel driver for a fabric interrupt](../modules/I03-kernel-driver-fabric-interrupt.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md); [K06 The interrupt that stayed masked after one event](../case-studies/K06-interrupt-stayed-masked.md); [X02 One burst from START to verified](../modules/X02-one-burst.md)
 
 ### FIC0 (AXI4, 125 MHz)
 
@@ -275,7 +276,7 @@ Fabric interface controller 0. An AXI4 bridge in both directions - the MSS reach
 - → [Non-cached window](#ddr-noncached): frames into the buffers
 - ← [U54 harts 1 to 3](#u54-linux): DMA register access
 - ← [CoreAXI4DMAController](#dma): AXI4 write bursts
-- **Learn how this works:** [C01 Direct memory access](../concepts/C01-dma.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [F04 Clocks and resets: one PLL, two bus clocks](../modules/F04-clocks-and-resets.md); [H10 Timing closure, and the build that lost its pins](../modules/H10-timing-closure.md); [P01 Where 940 MB/s becomes 30: throughput layer by layer](../modules/P01-throughput-layers.md); [X02 One burst from START to verified](../modules/X02-one-burst.md); [C01 Direct memory access](../concepts/C01-dma.md)
 
 ### FIC3 (APB, 50 MHz)
 
@@ -291,33 +292,7 @@ Fabric interface controller 3. An APB master from the MSS into the fabric, used 
 - → [Reference design peripherals](#refdesign-peripherals): APB, 0x4000_0000 to 0x4000_04FF
 - ← [U54 harts 1 to 3](#u54-linux): register access
 - ← [U54 hart 4](#u54-4): reads counters, acknowledges latency channel 1
-- **Learn how this works:** [H01 An APB register block that software can trust](../modules/H01-apb-register-block.md); [K02 Python wrote my registers one byte at a time](../case-studies/K02-bytewise-register-writes.md)
-
-### FIC4 (AHB-Lite, crypto)
-
-<a id="fic4"></a>
-
-The fabric interface controller reserved for the user crypto processor. It gives the fabric an AHB-Lite path to the crypto processor and gives the crypto processor's DMA a path into the fabric. Not used in this design.
-
-- **Part of:** [Microprocessor subsystem (MSS)](#mss)
-- **Protocol:** AHB-Lite
-- **Clock limit:** 200 MHz (the crypto processor maximum)
-- **Used here:** no
-- → [User crypto processor](#crypto-processor): AHB-Lite slave for control and data, AHB-Lite master for DMA. Only in fabric and shared modes. Not used in this design.
-- **Learn how this works:** [S01 FIC4 and the user crypto processor](../modules/S01-fic4-crypto-processor.md)
-
-### User crypto processor
-
-<a id="crypto-processor"></a>
-
-A hard Athena TeraFire cryptography processor (AES, SHA, HMAC, ECC, RSA, random numbers) that either the MSS or the fabric can own. In this design its mode is set to unused; it is driven only through a vendor library that is not public.
-
-- **Part of:** [Microprocessor subsystem (MSS)](#mss)
-- **Block:** Athena TeraFire EXP-F5200B
-- **Clock:** up to 200 MHz
-- **Mss configuration:** CRYPTO = UNUSED
-- ← [FIC4 (AHB-Lite, crypto)](#fic4): AHB-Lite slave for control and data, AHB-Lite master for DMA. Only in fabric and shared modes. Not used in this design.
-- **Learn how this works:** [S01 FIC4 and the user crypto processor](../modules/S01-fic4-crypto-processor.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [F04 Clocks and resets: one PLL, two bus clocks](../modules/F04-clocks-and-resets.md); [M03 A real-time supervisor: deadlines and independent checks](../modules/M03-real-time-supervisor.md); [H01 An APB register block that software can trust](../modules/H01-apb-register-block.md); [H09 Integrating custom RTL into a vendor design by script](../modules/H09-rtl-into-vendor-design.md); [H10 Timing closure, and the build that lost its pins](../modules/H10-timing-closure.md); [I01 Reaching fabric registers from Linux](../modules/I01-fabric-registers-from-linux.md); [K02 Python wrote my registers one byte at a time](../case-studies/K02-bytewise-register-writes.md); [X02 One burst from START to verified](../modules/X02-one-burst.md)
 
 ### MSS GPIO2
 
@@ -353,7 +328,7 @@ The project's logic. Decodes one 256-byte APB slot into the stream source and tw
 - ← [Fabric clocks and resets](#fabric-clocks): 50 MHz and 125 MHz
 - **Source:** [`hw/rtl/pfdaq_core.v`](../../hw/rtl/pfdaq_core.v) (`pfdaq_core`)
 - **Source:** [`hw/libero/overlay/PFDAQ.tcl`](../../hw/libero/overlay/PFDAQ.tcl)
-- **Learn how this works:** [K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
+- **Learn how this works:** [F04 Clocks and resets: one PLL, two bus clocks](../modules/F04-clocks-and-resets.md); [H09 Integrating custom RTL into a vendor design by script](../modules/H09-rtl-into-vendor-design.md); [H10 Timing closure, and the build that lost its pins](../modules/H10-timing-closure.md); [I01 Reaching fabric registers from Linux](../modules/I01-fabric-registers-from-linux.md); [K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X02 One burst from START to verified](../modules/X02-one-burst.md); [X04 The validation report](../modules/X04-validation-report.md)
 
 ### Stream source
 
@@ -368,7 +343,7 @@ Generates framed test data - header, sequence number, timestamp, payload, CRC-32
 - → [CoreAXI4DMAController](#dma): AXI4-Stream, 64 bit, 125 MHz. TVALID continuous within a packet; TDEST 0 to 3 selects the descriptor
 - ← [FIR payload source](#pfdaq-fir-src): filtered samples through a FIFO
 - **Source:** [`hw/rtl/pfdaq_stream_src.v`](../../hw/rtl/pfdaq_stream_src.v) (`pfdaq_stream_src`, `pfdaq_word_step`)
-- **Learn how this works:** [H01 An APB register block that software can trust](../modules/H01-apb-register-block.md); [H02 AXI4-Stream: the handshake, backpressure and TLAST](../modules/H02-axi4-stream.md); [H03 Crossing clock domains: toggles, snapshots and constraints](../modules/H03-clock-domain-crossing.md); [H04 CRC-32 at 64 bits per clock](../modules/H04-crc32-two-words-per-clock.md); [H05 A FIR filter on math blocks, decoupled by a FIFO](../modules/H05-fir-on-math-blocks.md); [H06 Real-time sources: slots, credits and honest drops](../modules/H06-real-time-source.md); [H11 Verification with an independent model](../modules/H11-independent-model.md); [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [K02 Python wrote my registers one byte at a time](../case-studies/K02-bytewise-register-writes.md); [K03 A DMA core that needs TVALID without gaps](../case-studies/K03-tvalid-gaps.md); [K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md); [K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md); [K09 An early TLAST does not end a transfer](../case-studies/K09-early-tlast.md); [K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md)
+- **Learn how this works:** [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [M03 A real-time supervisor: deadlines and independent checks](../modules/M03-real-time-supervisor.md); [H01 An APB register block that software can trust](../modules/H01-apb-register-block.md); [H02 AXI4-Stream: the handshake, backpressure and TLAST](../modules/H02-axi4-stream.md); [H03 Crossing clock domains: toggles, snapshots and constraints](../modules/H03-clock-domain-crossing.md); [H04 CRC-32 at 64 bits per clock](../modules/H04-crc32-two-words-per-clock.md); [H05 A FIR filter on math blocks, decoupled by a FIFO](../modules/H05-fir-on-math-blocks.md); [H06 Real-time sources: slots, credits and honest drops](../modules/H06-real-time-source.md); [H11 Verification with an independent model](../modules/H11-independent-model.md); [I01 Reaching fabric registers from Linux](../modules/I01-fabric-registers-from-linux.md); [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [I06 Capturing and verifying a stream](../modules/I06-capture-and-verify.md); [I07 Real-time capture with four descriptors and credits](../modules/I07-real-time-capture.md); [P01 Where 940 MB/s becomes 30: throughput layer by layer](../modules/P01-throughput-layers.md); [P03 Fault injection from the fabric up](../modules/P03-fault-injection.md); [P05 Abort without wedging the DMA](../modules/P05-abort.md); [K02 Python wrote my registers one byte at a time](../case-studies/K02-bytewise-register-writes.md); [K03 A DMA core that needs TVALID without gaps](../case-studies/K03-tvalid-gaps.md); [K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md); [K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md); [K09 An early TLAST does not end a transfer](../case-studies/K09-early-tlast.md); [K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md); [X02 One burst from START to verified](../modules/X02-one-burst.md)
 
 ### FIR payload source
 
@@ -379,7 +354,7 @@ A triangle-wave generator and an 8-tap FIR filter on the fabric's math blocks, d
 - **Part of:** [Stream source](#pfdaq-stream-src)
 - → [Stream source](#pfdaq-stream-src): filtered samples through a FIFO
 - **Source:** [`hw/rtl/pfdaq_stream_src.v`](../../hw/rtl/pfdaq_stream_src.v) (`pfdaq_fir_src`)
-- **Learn how this works:** [H05 A FIR filter on math blocks, decoupled by a FIFO](../modules/H05-fir-on-math-blocks.md)
+- **Learn how this works:** [H05 A FIR filter on math blocks, decoupled by a FIFO](../modules/H05-fir-on-math-blocks.md); [I06 Capturing and verifying a stream](../modules/I06-capture-and-verify.md)
 
 ### Latency unit (two channels)
 
@@ -393,7 +368,7 @@ Raises an interrupt on a schedule and counts 50 MHz cycles until software acknow
 - → [Platform-level interrupt controller](#plic): F2M[1], PLIC 119. latency channel 0
 - → [Platform-level interrupt controller](#plic): F2M[5], PLIC 123. latency channel 1
 - **Source:** [`hw/rtl/pfdaq_latency.v`](../../hw/rtl/pfdaq_latency.v) (`pfdaq_latency_ch`)
-- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [H07 Measuring software from hardware: the latency unit](../modules/H07-latency-unit.md); [H08 Histograms in block RAM: read-modify-write without hazards](../modules/H08-histogram-in-ram.md); [H11 Verification with an independent model](../modules/H11-independent-model.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md); [K06 The interrupt that stayed masked after one event](../case-studies/K06-interrupt-stayed-masked.md)
+- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [M07 Deferred interrupt handling, and a port that switches tasks inside the handler](../modules/M07-deferred-interrupt-handling.md); [H07 Measuring software from hardware: the latency unit](../modules/H07-latency-unit.md); [H08 Histograms in block RAM: read-modify-write without hazards](../modules/H08-histogram-in-ram.md); [H11 Verification with an independent model](../modules/H11-independent-model.md); [I02 Fabric interrupts in user space, and the double wake-up](../modules/I02-fabric-interrupts-user-space.md); [I03 A small kernel driver for a fabric interrupt](../modules/I03-kernel-driver-fabric-interrupt.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md); [K06 The interrupt that stayed masked after one event](../case-studies/K06-interrupt-stayed-masked.md)
 
 ### CoreAXI4DMAController
 
@@ -409,7 +384,7 @@ Vendor DMA core, version 2.2.107. Receives the AXI4-Stream and writes it into DD
 - ← [FIC0 (AXI4, 125 MHz)](#fic0): AXI4-Lite, 0x6001_0000
 - ← [Stream source](#pfdaq-stream-src): AXI4-Stream, 64 bit, 125 MHz. TVALID continuous within a packet; TDEST 0 to 3 selects the descriptor
 - ← [Non-cached window](#ddr-noncached): reads stream descriptors
-- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [H02 AXI4-Stream: the handshake, backpressure and TLAST](../modules/H02-axi4-stream.md); [H06 Real-time sources: slots, credits and honest drops](../modules/H06-real-time-source.md); [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [K03 A DMA core that needs TVALID without gaps](../case-studies/K03-tvalid-gaps.md); [K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md); [K09 An early TLAST does not end a transfer](../case-studies/K09-early-tlast.md); [K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [C01 Direct memory access](../concepts/C01-dma.md)
+- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [H02 AXI4-Stream: the handshake, backpressure and TLAST](../modules/H02-axi4-stream.md); [H06 Real-time sources: slots, credits and honest drops](../modules/H06-real-time-source.md); [H09 Integrating custom RTL into a vendor design by script](../modules/H09-rtl-into-vendor-design.md); [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](../modules/I05-dma-buffers.md); [I06 Capturing and verifying a stream](../modules/I06-capture-and-verify.md); [I07 Real-time capture with four descriptors and credits](../modules/I07-real-time-capture.md); [P01 Where 940 MB/s becomes 30: throughput layer by layer](../modules/P01-throughput-layers.md); [P05 Abort without wedging the DMA](../modules/P05-abort.md); [K03 A DMA core that needs TVALID without gaps](../case-studies/K03-tvalid-gaps.md); [K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md); [K09 An early TLAST does not end a transfer](../case-studies/K09-early-tlast.md); [K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X02 One burst from START to verified](../modules/X02-one-burst.md); [X04 The validation report](../modules/X04-validation-report.md); [C01 Direct memory access](../concepts/C01-dma.md)
 
 ### Mi-V inter-hart communication
 
@@ -423,7 +398,7 @@ Vendor mailbox core. Carries the notifications that RPMsg needs between Linux an
 - → [Platform-level interrupt controller](#plic): F2M[59..63], PLIC 177 to 181. one line per hart
 - ← [FIC3 (APB, 50 MHz)](#fic3): APB, 0x5000_0000
 - ← [remoteproc and RPMsg](#remoteproc-rpmsg): notifications
-- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
+- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [M02 RPMsg in practice: announce, bind, ping](../modules/M02-rpmsg-in-practice.md); [K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
 
 ### Reference design peripherals
 
@@ -448,7 +423,7 @@ One clock conditioning circuit produces the 50 MHz and 125 MHz clocks that the f
 
 - **Part of:** [FPGA fabric](#fabric)
 - → [pfdaq_core](#pfdaq-core): 50 MHz and 125 MHz
-- **Learn how this works:** [H03 Crossing clock domains: toggles, snapshots and constraints](../modules/H03-clock-domain-crossing.md); [K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md); [K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md)
+- **Learn how this works:** [F04 Clocks and resets: one PLL, two bus clocks](../modules/F04-clocks-and-resets.md); [H03 Crossing clock domains: toggles, snapshots and constraints](../modules/H03-clock-domain-crossing.md); [H10 Timing closure, and the build that lost its pins](../modules/H10-timing-closure.md); [K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md); [K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md)
 
 ### Non-cached window
 
@@ -463,7 +438,7 @@ One clock conditioning circuit produces the 50 MHz and 125 MHz clocks that the f
 - → [CoreAXI4DMAController](#dma): reads stream descriptors
 - ← [FIC0 (AXI4, 125 MHz)](#fic0): frames into the buffers
 - ← [pfdaq_cap](#pfdaq-cap): writes descriptors, reads frames
-- **Learn how this works:** [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md); [K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [C01 Direct memory access](../concepts/C01-dma.md)
+- **Learn how this works:** [F02 The memory map and the three faces of DDR](../modules/F02-memory-map-ddr.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [M05 Shared memory between Linux and a bare-metal hart](../modules/M05-shared-memory-linux-bare-metal.md); [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](../modules/I05-dma-buffers.md); [I06 Capturing and verifying a stream](../modules/I06-capture-and-verify.md); [I07 Real-time capture with four descriptors and credits](../modules/I07-real-time-capture.md); [P01 Where 940 MB/s becomes 30: throughput layer by layer](../modules/P01-throughput-layers.md); [K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md); [K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X02 One burst from START to verified](../modules/X02-one-burst.md); [C01 Direct memory access](../concepts/C01-dma.md)
 
 ### Cached shared region
 
@@ -477,6 +452,7 @@ One clock conditioning circuit produces the 50 MHz and 125 MHz clocks that the f
 - **Linux:** /dev/udmabuf-ddr-c0
 - ← [pfdaq_cap](#pfdaq-cap): shared-memory test
 - ← [pfdaq supervisor](#supervisor): shared-memory test
+- **Learn how this works:** [F02 The memory map and the three faces of DDR](../modules/F02-memory-map-ddr.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [M05 Shared memory between Linux and a bare-metal hart](../modules/M05-shared-memory-linux-bare-metal.md); [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](../modules/I05-dma-buffers.md)
 
 ### RPMsg shared memory
 
@@ -487,6 +463,7 @@ Two virtqueue rings, a buffer pool and the resource table that Linux and hart 4 
 - **Part of:** [DDR4 memory, 1 GB](#ddr)
 - **Address:** 0x91D0_0000 to 0x91D5_0FFF
 - ← [remoteproc and RPMsg](#remoteproc-rpmsg): rings and buffers
+- **Learn how this works:** [F02 The memory map and the three faces of DDR](../modules/F02-memory-map-ddr.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M02 RPMsg in practice: announce, bind, ping](../modules/M02-rpmsg-in-practice.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md)
 
 ### Hart 4 image
 
@@ -498,6 +475,7 @@ Two virtqueue rings, a buffer pool and the resource table that Linux and hart 4 
 - **Address:** 0x91C0_0000
 - **Size:** 1 MiB
 - ← [pfdaq supervisor](#supervisor): code and data
+- **Learn how this works:** [F02 The memory map and the three faces of DDR](../modules/F02-memory-map-ddr.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M04 Same core, same code: FreeRTOS against bare metal](../modules/M04-freertos-vs-bare-metal.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md)
 
 ### microSD card
 
@@ -507,7 +485,7 @@ The only boot medium besides the chip's own flash. Partition 1 holds the kernel 
 
 - **Part of:** [PolarFire SoC Discovery Kit](#board)
 - → [Hart Software Services](#hss): payload from partition 2
-- **Learn how this works:** [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### eNVM boot flash
 
@@ -517,7 +495,7 @@ Non-volatile memory inside the chip that holds the Hart Software Services. This 
 
 - **Part of:** [MPFS095T system-on-chip](#soc)
 - → [Hart Software Services](#hss): stored in
-- **Learn how this works:** [K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md); [K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### FlashPro5 on USB-C
 
@@ -528,7 +506,7 @@ On-board debugger. One JTAG interface for programming the fabric and three seria
 - **Part of:** [PolarFire SoC Discovery Kit](#board)
 - ← [MMUART 0, 1 and 4](#mss-uarts): three consoles
 - ← [Development PC](#host): fabric programming, FABRIC and SNVM only
-- **Learn how this works:** [K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md)
+- **Learn how this works:** [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](../modules/F05-tool-flow-in-batch.md); [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md); [K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### Gigabit Ethernet
 
@@ -538,6 +516,7 @@ Used for SSH - deployment, test automation and file transfer.
 
 - **Part of:** [PolarFire SoC Discovery Kit](#board)
 - ← [Development PC](#host): SSH
+- **Learn how this works:** [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### LEDs, switches and headers
 
@@ -561,7 +540,7 @@ Microchip's boot monitor, v2026.04.1. Trains DDR, loads the payload from the SD 
 - → [pfdaq supervisor](#supervisor): starts on hart 4 without OpenSBI
 - ← [eNVM boot flash](#envm): stored in
 - ← [microSD card](#sd-card): payload from partition 2
-- **Learn how this works:** [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md); [S03 A signed boot chain you can run](../modules/S03-signed-boot-chain.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M04 Same core, same code: FreeRTOS against bare metal](../modules/M04-freertos-vs-bare-metal.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [S03 A signed boot chain you can run](../modules/S03-signed-boot-chain.md)
 
 ### OpenSBI
 
@@ -571,6 +550,7 @@ The machine-mode layer under Linux on harts 1 to 3. Hart 4 is started without it
 
 - **Part of:** [Software](#software)
 - → [U54 harts 1 to 3](#u54-linux): machine mode
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md)
 
 ### U-Boot
 
@@ -581,7 +561,7 @@ v2025.07-mchp. Loads the kernel image from the SD card and starts Linux.
 - **Part of:** [Software](#software)
 - → [Linux 6.18.17](#linux-kernel): kernel image from partition 1
 - ← [Hart Software Services](#hss): starts on harts 1 to 3 through OpenSBI
-- **Learn how this works:** [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### Linux 6.18.17
 
@@ -594,7 +574,7 @@ Built with Yocto from Microchip's BSP plus the project layer. Three CPUs; the fo
 - → [U54 harts 1 to 3](#u54-linux): supervisor mode
 - ← [U-Boot](#u-boot): kernel image from partition 1
 - **Source:** [`yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts`](../../yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts)
-- **Learn how this works:** [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [I03 A small kernel driver for a fabric interrupt](../modules/I03-kernel-driver-fabric-interrupt.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### UIO devices
 
@@ -605,7 +585,7 @@ How user space reaches fabric registers and waits for fabric interrupts - a gene
 - **Part of:** [Linux 6.18.17](#linux-kernel)
 - ← [pfdaq_cap](#pfdaq-cap): registers and interrupt wait
 - ← [pfdaq_lat](#pfdaq-lat): registers and interrupt wait
-- **Learn how this works:** [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md)
+- **Learn how this works:** [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [I01 Reaching fabric registers from Linux](../modules/I01-fabric-registers-from-linux.md); [I02 Fabric interrupts in user space, and the double wake-up](../modules/I02-fabric-interrupts-user-space.md); [I03 A small kernel driver for a fabric interrupt](../modules/I03-kernel-driver-fabric-interrupt.md); [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [I07 Real-time capture with four descriptors and credits](../modules/I07-real-time-capture.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md); [X02 One burst from START to verified](../modules/X02-one-burst.md)
 
 ### pfdaq_uio kernel driver
 
@@ -616,7 +596,7 @@ A small optional driver that acknowledges the latency interrupt inside the kerne
 - **Part of:** [Linux 6.18.17](#linux-kernel)
 - ← [pfdaq_lat](#pfdaq-lat): kernel acknowledge mode
 - **Source:** [`yocto/meta-pfdaq/recipes-kernel/pfdaq-uio/files/pfdaq_uio.c`](../../yocto/meta-pfdaq/recipes-kernel/pfdaq-uio/files/pfdaq_uio.c) (`pfdaq_uio_handler`)
-- **Learn how this works:** [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md)
+- **Learn how this works:** [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [I01 Reaching fabric registers from Linux](../modules/I01-fabric-registers-from-linux.md); [I03 A small kernel driver for a fabric interrupt](../modules/I03-kernel-driver-fabric-interrupt.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md)
 
 ### u-dma-buf
 
@@ -626,7 +606,7 @@ Exposes the reserved DDR regions to user space as mappable devices.
 
 - **Part of:** [Linux 6.18.17](#linux-kernel)
 - ← [pfdaq_cap](#pfdaq-cap): maps the reserved regions
-- **Learn how this works:** [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md)
+- **Learn how this works:** [F02 The memory map and the three faces of DDR](../modules/F02-memory-map-ddr.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [M05 Shared memory between Linux and a bare-metal hart](../modules/M05-shared-memory-linux-bare-metal.md); [I01 Reaching fabric registers from Linux](../modules/I01-fabric-registers-from-linux.md); [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](../modules/I05-dma-buffers.md); [X02 One burst from START to verified](../modules/X02-one-burst.md)
 
 ### remoteproc and RPMsg
 
@@ -639,7 +619,7 @@ Linux attaches to the already-running hart 4 and exchanges messages with it over
 - → [RPMsg shared memory](#ddr-rpmsg): rings and buffers
 - → [Mi-V inter-hart communication](#ihc): notifications
 - ← [pfdaq_cap](#pfdaq-cap): status reports
-- **Learn how this works:** [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md)
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M02 RPMsg in practice: announce, bind, ping](../modules/M02-rpmsg-in-practice.md); [M03 A real-time supervisor: deadlines and independent checks](../modules/M03-real-time-supervisor.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [P04 Deadline supervision, alarm and recovery](../modules/P04-deadline-supervision.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md); [X02 One burst from START to verified](../modules/X02-one-burst.md)
 
 ### pfdaq_cap
 
@@ -654,7 +634,7 @@ The Linux capture tool. Arms the DMA, starts the fabric, verifies every frame ag
 - → [remoteproc and RPMsg](#remoteproc-rpmsg): status reports
 - → [Cached shared region](#ddr-cached-shared): shared-memory test
 - **Source:** [`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c) (`arm`, `wait_done`, `verify`)
-- **Learn how this works:** [H04 CRC-32 at 64 bits per clock](../modules/H04-crc32-two-words-per-clock.md); [H05 A FIR filter on math blocks, decoupled by a FIFO](../modules/H05-fir-on-math-blocks.md); [H06 Real-time sources: slots, credits and honest drops](../modules/H06-real-time-source.md); [H11 Verification with an independent model](../modules/H11-independent-model.md); [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md); [K09 An early TLAST does not end a transfer](../case-studies/K09-early-tlast.md); [K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [C01 Direct memory access](../concepts/C01-dma.md)
+- **Learn how this works:** [F02 The memory map and the three faces of DDR](../modules/F02-memory-map-ddr.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [M02 RPMsg in practice: announce, bind, ping](../modules/M02-rpmsg-in-practice.md); [M03 A real-time supervisor: deadlines and independent checks](../modules/M03-real-time-supervisor.md); [M05 Shared memory between Linux and a bare-metal hart](../modules/M05-shared-memory-linux-bare-metal.md); [H04 CRC-32 at 64 bits per clock](../modules/H04-crc32-two-words-per-clock.md); [H05 A FIR filter on math blocks, decoupled by a FIFO](../modules/H05-fir-on-math-blocks.md); [H06 Real-time sources: slots, credits and honest drops](../modules/H06-real-time-source.md); [H11 Verification with an independent model](../modules/H11-independent-model.md); [I01 Reaching fabric registers from Linux](../modules/I01-fabric-registers-from-linux.md); [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md); [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](../modules/I05-dma-buffers.md); [I06 Capturing and verifying a stream](../modules/I06-capture-and-verify.md); [I07 Real-time capture with four descriptors and credits](../modules/I07-real-time-capture.md); [P01 Where 940 MB/s becomes 30: throughput layer by layer](../modules/P01-throughput-layers.md); [P03 Fault injection from the fabric up](../modules/P03-fault-injection.md); [P04 Deadline supervision, alarm and recovery](../modules/P04-deadline-supervision.md); [P05 Abort without wedging the DMA](../modules/P05-abort.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md); [K09 An early TLAST does not end a transfer](../case-studies/K09-early-tlast.md); [K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X02 One burst from START to verified](../modules/X02-one-burst.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [X04 The validation report](../modules/X04-validation-report.md); [C01 Direct memory access](../concepts/C01-dma.md)
 
 ### pfdaq_lat
 
@@ -666,7 +646,7 @@ The Linux tool for the latency unit. Configures a channel, acknowledges interrup
 - → [UIO devices](#uio): registers and interrupt wait
 - → [pfdaq_uio kernel driver](#pfdaq-uio): kernel acknowledge mode
 - **Source:** [`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_lat.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_lat.c)
-- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
+- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [I02 Fabric interrupts in user space, and the double wake-up](../modules/I02-fabric-interrupts-user-space.md); [I03 A small kernel driver for a fabric interrupt](../modules/I03-kernel-driver-fabric-interrupt.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X04 The validation report](../modules/X04-validation-report.md)
 
 ### pfdaq supervisor
 
@@ -681,5 +661,5 @@ Runs on hart 4. Enforces a deadline on Linux's reports, cross-checks them agains
 - ← [remoteproc and RPMsg](#remoteproc-rpmsg): channel pfdaq-supervisor
 - ← [Hart Software Services](#hss): starts on hart 4 without OpenSBI
 - **Source:** [`firmware/u54_4-supervisor/pfdaq_supervisor.c`](../../firmware/u54_4-supervisor/pfdaq_supervisor.c) (`PLIC_f2m_5_IRQHandler`)
-- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [K06 The interrupt that stayed masked after one event](../case-studies/K06-interrupt-stayed-masked.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md)
+- **Learn how this works:** [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](../modules/F03-fabric-interrupts.md); [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M02 RPMsg in practice: announce, bind, ping](../modules/M02-rpmsg-in-practice.md); [M03 A real-time supervisor: deadlines and independent checks](../modules/M03-real-time-supervisor.md); [M04 Same core, same code: FreeRTOS against bare metal](../modules/M04-freertos-vs-bare-metal.md); [M05 Shared memory between Linux and a bare-metal hart](../modules/M05-shared-memory-linux-bare-metal.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [M07 Deferred interrupt handling, and a port that switches tasks inside the handler](../modules/M07-deferred-interrupt-handling.md); [P01 Where 940 MB/s becomes 30: throughput layer by layer](../modules/P01-throughput-layers.md); [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](../modules/P02-interrupt-latency.md); [P03 Fault injection from the fabric up](../modules/P03-fault-injection.md); [P04 Deadline supervision, alarm and recovery](../modules/P04-deadline-supervision.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [K06 The interrupt that stayed masked after one event](../case-studies/K06-interrupt-stayed-masked.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X02 One burst from START to verified](../modules/X02-one-burst.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [X04 The validation report](../modules/X04-validation-report.md)
 

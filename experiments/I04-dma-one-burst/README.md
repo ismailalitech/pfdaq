@@ -33,15 +33,18 @@ ssh root@<board> /tmp/dma_one_burst
 
 The exit status is 0 if the DMA completed without error and all frames are good.
 
-## Expected output
+## Output
 
-**To be recorded.** The program has been compiled for the board but not yet run on it. Until then, what the code prints is:
+Recorded on the board (evidence `dma-one-burst-run`), two runs in a row:
 
-- one line with the UIO event count, `INTR_0_STAT` (expected `0x210`: stream operation complete, no error bits) and the descriptor's configuration word (expected with bit 2 clear: the DMA has cleared the ready bit);
-- one line with frame 0: header `a55a00fc`, sequence number, timestamp, first three payload words, CRC;
-- one line with the number of bad frames (expected 0).
+```text
+DMA interrupt: event count 1, INTR_0_STAT 0x210, descriptor config 0x9 (complete, ready bit cleared by the DMA)
+frame 0: header a55a00fc  seq 0  timestamp 3211942696  payload 00000000 00000001 00000002 ...  crc a9fba266
+16 frames, 16384 bytes: 0 bad (header, sequence or CRC-32)
+```
+
+The second run printed `event count 2` and `seq 16`; the sequence number advances by 16 because the source never resets its counter.
 
 ## Things to try
 
-- Run it twice: the sequence number of frame 0 advances by 16, because the source never resets its sequence counter.
-- Move the descriptor writes to after START and note what the program reports. On this board a descriptor armed after its packet had started was not picked up (module I04, rule 1). Reboot the board afterwards.
+- Run it twice: the sequence number of frame 0 advances by 16.

@@ -197,6 +197,6 @@ Simulation shows that the register logic behaves as the table says. It does not 
 | **In the system** | [Stream source](../system/README.md#pfdaq-stream-src) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) |
 | **Source** | [`hw/rtl/pfdaq_stream_src.v`](../../hw/rtl/pfdaq_stream_src.v): `pfdaq_stream_src`, `apb_write`, `prdata_mux`, `credit_val_p`, `snapv_pulse_p`<br>[`hw/rtl/pfdaq_core.v`](../../hw/rtl/pfdaq_core.v): `sel_src`<br>[`hw/tb/tb_pfdaq_stream_src.v`](../../hw/tb/tb_pfdaq_stream_src.v): `apb_wr`, `apb_rd`, `snapshot`<br>[`hw/tb/check_trace.py`](../../hw/tb/check_trace.py) |
 | **Evidence** | [Stream source simulation, 20 scenarios checked by the Python model](../../evidence/v0.5.1/sim/stream.txt) (sim, fabric v0.5.1, 2026-11-15) |
-| **Related** | [H02 AXI4-Stream: the handshake, backpressure and TLAST](H02-axi4-stream.md)<br>[H03 Crossing clock domains: toggles, snapshots and constraints](H03-clock-domain-crossing.md)<br>I01 Reaching fabric registers from Linux *(planned)*<br>[K02 Python wrote my registers one byte at a time](../case-studies/K02-bytewise-register-writes.md) |
+| **Related** | [H02 AXI4-Stream: the handshake, backpressure and TLAST](H02-axi4-stream.md)<br>[H03 Crossing clock domains: toggles, snapshots and constraints](H03-clock-domain-crossing.md)<br>[I01 Reaching fabric registers from Linux](I01-fabric-registers-from-linux.md)<br>[K02 Python wrote my registers one byte at a time](../case-studies/K02-bytewise-register-writes.md) |
 | **Status** | validated |
 <!-- nav:end -->

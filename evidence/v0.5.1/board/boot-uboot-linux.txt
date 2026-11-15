@@ -1,0 +1,19 @@
+OpenSBI v1.2
+U-Boot 2025.07-linux4microchip-2026.04 (Apr 29 2026 - 08:52:30 +0000)
+DRAM:  1 GiB (total 1.8 GiB)
+Hit any key to stop autoboot:  2  1  0 
+## Loading kernel (any) from FIT Image at 8e000000 ...
+Starting kernel ...
+[    0.000000] Booting Linux on hartid 1
+[    0.000000] Linux version 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d-dirty (oe-user@oe-host) (riscv64-mchp-linux-gcc (GCC) 13.4.0, GNU ld (GNU Binutils) 2.42.0.20240723) #1 SMP Wed Apr 29 16:43:56 UTC 2026
+[    0.000000] Machine model: Microchip PolarFire-SoC Discovery Kit (AMP)
+[    0.000000] earlycon: ns16550a0 at MMIO32 0x0000000020106000 (options '115200n8')
+[    0.000000] Kernel command line: earlycon root=/dev/mmcblk0p3 rootwait uio_pdrv_genirq.of_id=generic-uio clk_ignore_unused
+[    0.040523] Memory: 552904K/1048576K available (7167K kernel code, 4743K rwdata, 4096K rodata, 2266K init, 312K bss, 493556K reserved, 0K cma-reserved)
+[    1.709490] remoteproc remoteproc0: remote-context is available
+[    1.715628] remoteproc remoteproc0: attaching to remote-context
+[    1.738642] virtio_rpmsg_bus virtio0: rpmsg host is online
+[    1.751180] remoteproc remoteproc0: remote processor remote-context is now attached
+[    1.938361] virtio_rpmsg_bus virtio0: creating channel pfdaq-supervisor addr 0x0
+[    2.063078] Run /sbin/init as init process
+mpfs-disco-kit-amp login: [   25.326932] macb 20110000.ethernet end0: Link is Up - 1Gbps/Full - flow control off

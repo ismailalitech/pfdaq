@@ -100,11 +100,11 @@ Two habits carry over from this case. First, a driver reporting success is not p
 
 | | |
 |---|---|
-| **Read first** | M01 Asymmetric multiprocessing on one chip *(planned)* |
+| **Read first** | [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md) |
 | **How to run** | Explanation with recorded evidence; nothing to run |
 | **In the system** | [E51 (hart 0)](../system/README.md#e51) · [U54 hart 4](../system/README.md#u54-4) · [Hart Software Services](../system/README.md#hss) · [remoteproc and RPMsg](../system/README.md#remoteproc-rpmsg) |
 | **Source** | [`tests/board/pfdaq_final_suite.sh`](../../tests/board/pfdaq_final_suite.sh) |
 | **Evidence** | [Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | M06 remoteproc: attach, stop, and why restart fails here *(planned)*<br>M01 Asymmetric multiprocessing on one chip *(planned)*<br>B02 The HSS payload: starting two operating systems *(planned)* |
+| **Related** | [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md)<br>[M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md)<br>[B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md) |
 | **Status** | validated |
 <!-- nav:end -->

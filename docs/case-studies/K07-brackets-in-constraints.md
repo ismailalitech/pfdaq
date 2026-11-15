@@ -102,6 +102,6 @@ Two habits follow. Try a new constraint form on a design that builds in minutes,
 | **In the system** | [Stream source](../system/README.md#pfdaq-stream-src) · [Fabric clocks and resets](../system/README.md#fabric-clocks) |
 | **Source** | [`hw/libero/overlay/pfdaq_cdc.sdc`](../../hw/libero/overlay/pfdaq_cdc.sdc)<br>[`hw/libero/build.sh`](../../hw/libero/build.sh) |
 | **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Timing analysis without the clock-crossing constraints (the tool's console log; the 40 worst violating paths it lists are the intended crossings)](../../evidence/v0.5.1/build/timing-without-cdc-constraints.txt) (build, fabric v0.5.1, 2026-11-15) |
-| **Related** | [H03 Crossing clock domains: toggles, snapshots and constraints](../modules/H03-clock-domain-crossing.md)<br>H10 Timing closure, and the build that lost its pins *(planned)*<br>[K08 Timing met, board dead: the missing pin constraints](K08-timing-met-board-dead.md) |
+| **Related** | [H03 Crossing clock domains: toggles, snapshots and constraints](../modules/H03-clock-domain-crossing.md)<br>[H10 Timing closure, and the build that lost its pins](../modules/H10-timing-closure.md)<br>[K08 Timing met, board dead: the missing pin constraints](K08-timing-met-board-dead.md) |
 | **Status** | validated |
 <!-- nav:end -->

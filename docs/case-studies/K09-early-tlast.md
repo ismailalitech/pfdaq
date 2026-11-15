@@ -123,6 +123,6 @@ Two habits follow. When a vendor core ignores a signal you expected to matter, s
 | **In the system** | [Stream source](../system/README.md#pfdaq-stream-src) · [CoreAXI4DMAController](../system/README.md#dma) · [pfdaq_cap](../system/README.md#pfdaq-cap) |
 | **Source** | [`hw/rtl/pfdaq_stream_src.v`](../../hw/rtl/pfdaq_stream_src.v): `fill_mode`, `split_a`, `remaining`, `fill_beat`<br>[`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c): `run_abort` |
 | **Evidence** | [Stream source simulation, 20 scenarios checked by the Python model](../../evidence/v0.5.1/sim/stream.txt) (sim, fabric v0.5.1, 2026-11-15)<br>[Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15)<br>[Raw output of the FreeRTOS suite, one JSON object per test](../../evidence/v0.5.1/board/suite-freertos.jsonl) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md)<br>P05 Abort without wedging the DMA *(planned)*<br>[K03 A DMA core that needs TVALID without gaps](K03-tvalid-gaps.md) |
+| **Related** | [I04 DMA stream descriptors: the rules this core really follows](../modules/I04-dma-stream-descriptors.md)<br>[P05 Abort without wedging the DMA](../modules/P05-abort.md)<br>[K03 A DMA core that needs TVALID without gaps](K03-tvalid-gaps.md) |
 | **Status** | validated |
 <!-- nav:end -->

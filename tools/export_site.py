@@ -60,15 +60,59 @@ PLACE = {
     'K06': ('microcontrollers', 'linux-and-rtos', 20, None, None, None),
     'K11': ('microcontrollers', 'linux-and-rtos', 30, None, None, None),
     'K12': ('microcontrollers', 'linux-and-rtos', 40, None, None, None),
-    'S01': ('fpga', 'soc-integration', 80, None, None, None),
-    'S02': ('security', 'secure-boot', 10, None, None, None),
-    'S03': ('security', 'secure-boot', 20, 13, SIM, 'Development PC'),
+    'S03': ('security', 'secure-boot', 10, 13, SIM, 'Development PC'),
+    # boot and images
+    'B01': ('embedded-linux', 'boot-and-images', 10, None, None, None),
+    'B02': ('embedded-linux', 'boot-and-images', 20, 'auto', None, None),
+    'B03': ('embedded-linux', 'boot-and-images', 30, 'auto', None, None),
+    'B04': ('embedded-linux', 'boot-and-images', 40, 'auto', None, None),
+    'B05': ('embedded-linux', 'boot-and-images', 50, 'auto', None, None),
+    'B06': ('embedded-linux', 'boot-and-images', 60, None, None, None),
+    'X03': ('embedded-linux', 'boot-and-images', 70, 'auto', None, None),
+    # Linux to FPGA
+    'I01': ('embedded-linux', 'linux-fpga-interfaces', 10, 'auto', None, None),
+    'I02': ('embedded-linux', 'linux-fpga-interfaces', 20, 'auto', None, None),
+    'I03': ('embedded-linux', 'linux-fpga-interfaces', 30, 'auto', None, None),
+    'I05': ('embedded-linux', 'linux-fpga-interfaces', 40, 'auto', None, None),
+    'I06': ('embedded-linux', 'linux-fpga-interfaces', 50, 'auto', None, None),
+    'I07': ('embedded-linux', 'linux-fpga-interfaces', 60, 'auto', None, None),
+    # fundamentals
+    'F01': ('fpga', 'polarfire-soc-fundamentals', 10, None, None, None),
+    'F02': ('fpga', 'polarfire-soc-fundamentals', 20, 'auto', None, None),
+    'F04': ('fpga', 'polarfire-soc-fundamentals', 30, None, None, None),
+    'F05': ('fpga', 'polarfire-soc-fundamentals', 40, None, None, None),
+    'H09': ('fpga', 'soc-integration', 90, None, None, None),
+    'H10': ('fpga', 'registers-clocks-timing', 60, None, None, None),
+    'X02': ('fpga', 'soc-integration', 85, 'auto', None, None),
+    # Linux and an RTOS
+    'M01': ('microcontrollers', 'linux-and-rtos', 5, None, None, None),
+    'M02': ('microcontrollers', 'linux-and-rtos', 12, 'auto', None, None),
+    'M03': ('microcontrollers', 'linux-and-rtos', 14, 'auto', None, None),
+    'M04': ('microcontrollers', 'linux-and-rtos', 16, 'auto', None, None),
+    'M05': ('microcontrollers', 'linux-and-rtos', 18, 'auto', None, None),
+    'M07': ('microcontrollers', 'linux-and-rtos', 25, 'auto', None, None),
+    'M06': ('microcontrollers', 'linux-and-rtos', 35, None, None, None),
+    # performance and reliability
+    'P01': ('fpga', 'performance-and-reliability', 10, 'auto', None, None),
+    'P03': ('fpga', 'performance-and-reliability', 20, 'auto', None, None),
+    'P04': ('fpga', 'performance-and-reliability', 30, 'auto', None, None),
+    'P05': ('fpga', 'performance-and-reliability', 40, 'auto', None, None),
+    'P06': ('fpga', 'performance-and-reliability', 50, 'auto', None, None),
+    'X04': ('fpga', 'performance-and-reliability', 60, None, None, None),
 }
+CORE_BY_TRACK = {'boot': 'E51 and U54', 'fundamentals': 'PolarFire SoC', 'integration': 'U54 (Linux)',
+                 'multicore': 'U54 (Linux) and U54 hart 4', 'performance': 'U54 (Linux) and FPGA fabric',
+                 'system': 'U54 (Linux) and FPGA fabric'}
+TOPICS = {'embedded-linux': ('Embedded Linux', 'Booting and building Linux for a SoC with an FPGA, and reaching fabric logic from user space and the kernel.', 35)}
 SUBTOPICS = {
     'streaming-datapaths': ('Streaming datapaths', 'Frames, CRC and filters on AXI4-Stream, a source that cannot be paused, and what a DMA needs from a stream.', 40),
     'registers-clocks-timing': ('Registers, clocks and timing', 'Register blocks software can trust, crossing between clock domains, and constraints that say exactly what they mean.', 50),
     'verification-and-instruments': ('Verification and instruments', 'Checking hardware with an independent model, and building measuring instruments into the fabric.', 60),
     'soc-integration': ('SoC integration', 'Joining FPGA logic to processors: DMA, interrupts and memory, with the failures met on a real board.', 70),
+    'boot-and-images': ('Boot and images', 'From power-on to login: the boot monitor, U-Boot, the payload, the Yocto layer, the device tree and how to update a running board.', 10),
+    'linux-fpga-interfaces': ('Linux and the FPGA', 'Registers, interrupts, buffers and drivers: how a Linux program and the kernel work with logic in the fabric.', 20),
+    'polarfire-soc-fundamentals': ('PolarFire SoC fundamentals', 'The chip and the board, the memory map, clocks and resets, and the tool flow.', 5),
+    'performance-and-reliability': ('Performance and reliability', 'Where throughput goes, fault injection, deadlines, abort, soak and reboot testing, and the validation report.', 80),
     'linux-and-rtos': ('Linux and an RTOS on one chip', 'Running Linux and a real-time supervisor side by side, and measuring how each answers an interrupt.', 50),
 }
 LEVEL = {1: 'Beginner', 2: 'Beginner', 3: 'Intermediate', 4: 'Advanced', 5: 'Advanced'}
@@ -90,6 +134,18 @@ MERMAID = {
 7. The processor reads the data from memory.
 """,
 }
+
+
+def lab_numbers():
+    nxt, out = 14, {}
+    for pid, v in PLACE.items():
+        if v[3] == 'auto':
+            out[pid] = nxt
+            nxt += 1
+    return out
+
+
+LAB_NO = lab_numbers()
 
 
 class Site:
@@ -174,9 +230,10 @@ def body_of(page, site):
 def at_a_glance(page, site, evidence):
     rows = [('Level', LEVEL[page['level']]), ('How to run', C.REPRO[page['repro']]), ('Status', STATUS_TEXT[page['status']])]
     if page.get('needs'):
-        rows.append(('Read first', ', '.join(
-            '[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) if i in site.pages and (i in PLACE or i == 'X01') else '%s (planned)' % i
-            for i in page['needs'])))
+        shown = ['[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) for i in page['needs']
+                 if i in site.pages and (i in PLACE or i == 'X01')]
+        if shown:
+            rows.append(('Read first', '; '.join(shown)))
     ids = (page.get('hardware') or []) + (page.get('software') or [])
     if ids:
         nodes = {n['id']: n for n in C.load_architecture()['nodes']}
@@ -188,9 +245,10 @@ def at_a_glance(page, site, evidence):
         rows.append(('Evidence', '; '.join('[%s](/pfdaq/%s) (%s%s)' % (
             evidence[i]['title'], evidence[i]['path'], evidence[i]['class'], C.fabric_label(evidence[i])) for i in page['evidence'])))
     if page.get('related'):
-        rows.append(('Related', '; '.join(
-            '[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) if i in site.pages and (i in PLACE or i == 'X01') else '%s (planned)' % i
-            for i in page['related'])))
+        shown = ['[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) for i in page['related']
+                 if i in site.pages and (i in PLACE or i == 'X01')]
+        if shown:
+            rows.append(('Related', '; '.join(shown)))
     if page['repro'] in ('sim', 'base'):
         rows.append(('Code', 'The commands on this page run from the [pfdaq repository](%s).' % REPO))
     out = ['## At a glance', '', '| | |', '|---|---|'] + ['| **%s** | %s |' % r for r in rows]
@@ -204,6 +262,8 @@ def toml_str(s):
 def page_file(page, site, evidence):
     pid = page['id']
     topic, sub, weight, lab, board, core = PLACE[pid]
+    if lab == 'auto':
+        lab, board, core = LAB_NO[pid], BOARD, CORE_BY_TRACK.get(page['track'], 'PolarFire SoC')
     fm = ['+++', 'title = %s' % toml_str(page['title']), "date = '%s'" % DATE, 'draft = false',
           'description = %s' % toml_str(page['summary']), 'weight = %d' % weight, '', '[params]']
     if lab:
@@ -276,7 +336,7 @@ Constraints that shaped the design:
 The pieces are written up as separate notes and labs: [streaming datapaths](/topics/fpga/streaming-datapaths/),
 [registers, clocks and timing](/topics/fpga/registers-clocks-timing/),
 [verification and instruments](/topics/fpga/verification-and-instruments/),
-[SoC integration](/topics/fpga/soc-integration/) and [Linux and an RTOS on one chip](/topics/microcontrollers/linux-and-rtos/).
+[SoC integration](/topics/fpga/soc-integration/), [Linux and an RTOS on one chip](/topics/microcontrollers/linux-and-rtos/), [boot and images](/topics/embedded-linux/boot-and-images/), [Linux and the FPGA](/topics/embedded-linux/linux-fpga-interfaces/) and [performance and reliability](/topics/fpga/performance-and-reliability/).
 
 ## Architecture
 
@@ -410,9 +470,14 @@ def main():
     written = []
 
     # remove exactly what this script owns, then regenerate it
-    owned = [os.path.join(root, 'content/topics', PLACE_TOPIC(s), s) for s in SUBTOPICS]
+    owned = [os.path.join(root, 'content/topics', PLACE_TOPIC(s), s) for s in SUBTOPICS if PLACE_TOPIC(s) not in TOPICS]
+    owned += [os.path.join(root, 'content/topics', t) for t in TOPICS]
     owned += [os.path.join(root, 'static/pfdaq'), os.path.join(root, 'content/work/pfdaq-polarfire-soc.md')]
     owned += [os.path.join(root, 'content/resources/pfdaq-%s.md' % n) for n in ('explorer', 'architecture', 'results')]
+    # pages that were published once and have been withdrawn
+    for retired in ('content/topics/security/secure-boot/s02-secure-boot.md',):
+        if os.path.isfile(os.path.join(root, retired)):
+            os.remove(os.path.join(root, retired))
     # pages placed in sub-topics that already exist on the site: remove only the files this script writes
     for pid, (topic, sub, *_rest) in PLACE.items():
         if sub not in SUBTOPICS and pid in site.pages:
@@ -423,6 +488,15 @@ def main():
         elif os.path.isfile(p):
             os.remove(p)
 
+    for t, (title, desc, weight) in TOPICS.items():
+        write(os.path.join(root, 'content/topics', t, '_index.md'),
+              '+++\ntitle = %s\ndescription = %s\nweight = %d\n+++\n' % (toml_str(title), toml_str(desc), weight), written)
+    # the site lists Embedded Linux as a planned subject; it now exists
+    idx = os.path.join(root, 'content/topics/_index.md')
+    txt = open(idx).read()
+    new = txt.replace('planned = ["Embedded Linux"]', 'planned = []')
+    if new != txt:
+        open(idx, 'w').write(new)
     for sub, (title, desc, weight) in SUBTOPICS.items():
         topic = PLACE_TOPIC(sub)
         write(os.path.join(root, 'content/topics', topic, sub, '_index.md'),
