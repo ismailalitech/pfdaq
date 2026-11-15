@@ -103,6 +103,9 @@ PLACE = {
 CORE_BY_TRACK = {'boot': 'E51 and U54', 'fundamentals': 'PolarFire SoC', 'integration': 'U54 (Linux)',
                  'multicore': 'U54 (Linux) and U54 hart 4', 'performance': 'U54 (Linux) and FPGA fabric',
                  'system': 'U54 (Linux) and FPGA fabric'}
+EXPLORER_NOTE = (
+    '[pfdaq architecture explorer](/pfdaq/explorer/): an interactive diagram of one complete system built on this topic. '
+    'It shows the FPGA blocks and the processor system, how they are connected and how the board boots, and plays guided walks step by step.\n')
 TOPICS = {'embedded-linux': ('Embedded Linux', 'Booting and building Linux for a SoC with an FPGA, and reaching fabric logic from user space and the kernel.', 35)}
 SUBTOPICS = {
     'streaming-datapaths': ('Streaming datapaths', 'Frames, CRC and filters on AXI4-Stream, a source that cannot be paused, and what a DMA needs from a stream.', 40),
@@ -490,7 +493,12 @@ def main():
 
     for t, (title, desc, weight) in TOPICS.items():
         write(os.path.join(root, 'content/topics', t, '_index.md'),
-              '+++\ntitle = %s\ndescription = %s\nweight = %d\n+++\n' % (toml_str(title), toml_str(desc), weight), written)
+              '+++\ntitle = %s\ndescription = %s\nweight = %d\n+++\n\n%s' % (toml_str(title), toml_str(desc), weight, 'See the ' + EXPLORER_NOTE), written)
+    fpga_idx = os.path.join(root, 'content/topics/fpga/_index.md')
+    if os.path.isfile(fpga_idx):
+        ftxt = open(fpga_idx).read()
+        if '/pfdaq/explorer/' not in ftxt:
+            open(fpga_idx, 'w').write(ftxt.rstrip('\n') + '\n\nSee the ' + EXPLORER_NOTE)
     # the site lists Embedded Linux as a planned subject; it now exists
     idx = os.path.join(root, 'content/topics/_index.md')
     txt = open(idx).read()
