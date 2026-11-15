@@ -120,7 +120,18 @@ The reference design's top level is a SmartDesign canvas with four blocks: the c
 
 Inside `FIC_0_PERIPHERALS` is where `pfdaq_core` sits. Its stream outputs (`TDATA`, `TVALID`, `TLAST`, `TDEST`, `TID`, `TKEEP`, `TSTRB`, `TREADY`) go straight into the stream target of the DMA controller, its two latency interrupts leave the block as `IRQ_LAT0` and `IRQ_LAT1`, and its APB slot is reached through `APB_TARGET`. The DMA controller's initiator goes through `DMA_INITIATOR` to the fabric interface, and `FIC0_INITIATOR` also reaches the on-chip SRAM `MSS_LSRAM`.
 
-![FIC_0_PERIPHERALS canvas: pfdaq_core feeding the DMA controller over AXI4-Stream, with IRQ_LAT0, IRQ_LAT1 and the DMA interrupt as outputs](../../evidence/v0.5.1/build/libero-fic0-peripherals.png)
+![The FIC_0_PERIPHERALS canvas in Libero with six numbered callouts that light up in turn: pfdaq_core, its stream output, the DMA controller's stream input, the two latency interrupts, the APB register port and the DMA initiator](../diagrams/pfdaq-core-wiring.svg)
+
+The picture plays through six points on the canvas. The same points, in order:
+
+1. **`pfdaq_core`** is the one block this project adds. It is plain Verilog, next to the vendor's IP, with clock, reset and one APB slot.
+2. **Its stream output** is `TDATA` (64 bit), `TVALID`, `TLAST`, `TKEEP`, `TSTRB` and `TDEST`; `TREADY` comes back from the DMA.
+3. **The DMA controller's stream input** takes each of those signals one to one.
+4. **The two latency interrupts** leave the block as `IRQ_LAT0` and `IRQ_LAT1`; the DMA has its own, `DMA_CONTROLLER_IRQ`.
+5. **The register port** `APB_TARGET` is the project's slot in the APB range.
+6. **The DMA initiator** carries the DMA's AXI4 writes towards the fabric interface and DDR.
+
+To build the same in your own design: instantiate your block in the sub-design, connect the stream pins to the DMA controller's stream target by hand (or with the script in step 5 above), and promote the interrupt and APB pins to ports. Module H09 shows the script that does all three.
 
 `FIC_3_PERIPHERALS` is the register side. One address-decode block splits the APB range of the fabric interface into 256-byte slots (`0x4000_00xx` to `0x4000_04xx`, plus `0x4000_0Fxx`, which leaves the block as the port the project's slot is wired to), and behind them sit the reference design's peripherals: the inter-hart mailbox `MIV_IHC_C0`, a GPIO block, a PWM, a UART, a seven-segment SPI block and an I2C wrapper.
 

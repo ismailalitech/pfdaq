@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 440" width="860" height="440" role="img" aria-labelledby="t d">
+<title id="t">The path from a new board to a passing test suite: the FPGA design is built with hw/libero/build.sh in Libero, exported as a FlashPro job and programmed over JTAG with hw/libero/program.sh; the Linux image is built with bitbake, written to the SD card with bmaptool; the board then cold-starts from the card and runs the 27-test suite.</title><desc id="d">The path from a new board to a passing test suite: the FPGA design is built with hw/libero/build.sh in Libero, exported as a FlashPro job and programmed over JTAG with hw/libero/program.sh; the Linux image is built with bitbake, written to the SD card with bmaptool; the board then cold-starts from the card and runs the 27-test suite.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 24.10s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 24.10s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}5.39%{opacity:1}8.39%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="860" height="440" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M200,113 L220,113" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:1.30s" d="M200,113 L220,113" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e1">
+<path d="M400,113 L420,113" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.90s" d="M400,113 L420,113" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e2">
+<path d="M600,113 L620,113" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:6.50s" d="M600,113 L620,113" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e3">
+<path d="M200,243 L220,243" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:10.40s" d="M200,243 L220,243" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e4">
+<path d="M400,243 L420,243" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:13.00s" d="M400,243 L420,243" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e5">
+<path d="M600,243 L620,243" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:15.60s" d="M600,243 L620,243" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e6">
+<path d="M800,113 L828,113 L828,375 L550,375" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:18.20s" d="M800,113 L828,113 L828,375 L550,375" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e7">
+<path d="M800,243 L828,243 L828,375 L550,375" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:19.50s" d="M800,243 L828,243 L828,375 L550,375" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="fab1">
+<rect x="20" y="80" width="180" height="66" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="110" y="109" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">hw/libero/build.sh</text>
+<text x="110" y="126" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">Libero builds the fabric</text>
+<rect class="hl" style="animation-delay:0.00s" x="19" y="79" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="fab2">
+<rect x="220" y="80" width="180" height="66" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="310" y="109" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">FlashPro job</text>
+<text x="310" y="126" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">fabric and sNVM only</text>
+<rect class="hl" style="animation-delay:2.60s" x="219" y="79" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="fab3">
+<rect x="420" y="80" width="180" height="66" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="510" y="109" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">hw/libero/program.sh</text>
+<text x="510" y="126" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">FlashPro Express, JTAG</text>
+<rect class="hl" style="animation-delay:5.20s" x="419" y="79" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="fab4">
+<rect x="620" y="80" width="180" height="66" rx="9" fill="#17382f" stroke="#4fd1a5" stroke-width="1.5"/>
+<text x="710" y="109" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Fabric on the board</text>
+<text x="710" y="126" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">programmed and verified</text>
+<rect class="hl" style="animation-delay:7.80s" x="619" y="79" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="img1">
+<rect x="20" y="210" width="180" height="66" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="110" y="239" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Yocto build</text>
+<text x="110" y="256" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">bitbake mchp-base-image</text>
+<rect class="hl" style="animation-delay:9.10s" x="19" y="209" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="img2">
+<rect x="220" y="210" width="180" height="66" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="310" y="239" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Image files</text>
+<text x="310" y="256" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">wic.gz, payload, fitImage</text>
+<rect class="hl" style="animation-delay:11.70s" x="219" y="209" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="img3">
+<rect x="420" y="210" width="180" height="66" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="510" y="239" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">bmaptool</text>
+<text x="510" y="256" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">writes the SD card</text>
+<rect class="hl" style="animation-delay:14.30s" x="419" y="209" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="img4">
+<rect x="620" y="210" width="180" height="66" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="710" y="239" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">SD card</text>
+<text x="710" y="256" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">payload, kernel, root fs</text>
+<rect class="hl" style="animation-delay:16.90s" x="619" y="209" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="board">
+<rect x="310" y="340" width="240" height="70" rx="9" fill="#17382f" stroke="#4fd1a5" stroke-width="1.5"/>
+<text x="430" y="371" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Cold start</text>
+<text x="430" y="388" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">then the 27-test suite</text>
+<rect class="hl" style="animation-delay:20.80s" x="309" y="339" width="242" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="62" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">1 · The FPGA design (module H09, F05)</text>
+<text x="20" y="192" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">2 · The Linux image and the SD card (modules B03, B05)</text>
+<text x="20" y="372" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">3 · Power-cycle with the card in,</text>
+<text x="20" y="389" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">then run the suite (module X03)</text>
+</svg>

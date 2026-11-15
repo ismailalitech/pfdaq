@@ -147,3 +147,47 @@
     - {from: plic.right@0.3, to: linux.left, dashed: true, kind: mss}
     - {from: plic.right@0.7, to: h4.left,    dashed: true, kind: mss}
   steps: [lat0, e0, dma, e1, lat1, e2, plic, e3, linux, e4, h4]
+
+- id: build-path
+  alt: "The path from a new board to a passing test suite: the FPGA design is built with hw/libero/build.sh in Libero, exported as a FlashPro job and programmed over JTAG with hw/libero/program.sh; the Linux image is built with bitbake, written to the SD card with bmaptool; the board then cold-starts from the card and runs the 27-test suite."
+  width: 860
+  height: 440
+  nodes:
+    fab1: {x: 20,  y: 80,  w: 180, h: 66, kind: fabric, title: "hw/libero/build.sh", sub: "Libero builds the fabric"}
+    fab2: {x: 220, y: 80,  w: 180, h: 66, kind: fabric, title: "FlashPro job", sub: "fabric and sNVM only"}
+    fab3: {x: 420, y: 80,  w: 180, h: 66, kind: fabric, title: "hw/libero/program.sh", sub: "FlashPro Express, JTAG"}
+    fab4: {x: 620, y: 80,  w: 180, h: 66, kind: good,   title: "Fabric on the board", sub: "programmed and verified"}
+    img1: {x: 20,  y: 210, w: 180, h: 66, kind: sw,     title: "Yocto build", sub: "bitbake mchp-base-image"}
+    img2: {x: 220, y: 210, w: 180, h: 66, kind: sw,     title: "Image files", sub: "wic.gz, payload, fitImage"}
+    img3: {x: 420, y: 210, w: 180, h: 66, kind: sw,     title: "bmaptool", sub: "writes the SD card"}
+    img4: {x: 620, y: 210, w: 180, h: 66, kind: mem,    title: "SD card", sub: "payload, kernel, root fs"}
+    board: {x: 310, y: 340, w: 240, h: 70, kind: good,  title: "Cold start", sub: "then the 27-test suite"}
+  edges:
+    - {from: fab1.right, to: fab2.left}
+    - {from: fab2.right, to: fab3.left}
+    - {from: fab3.right, to: fab4.left}
+    - {from: img1.right, to: img2.left}
+    - {from: img2.right, to: img3.left}
+    - {from: img3.right, to: img4.left}
+    - {from: fab4.right, to: board.right, bulge: 28}
+    - {from: img4.right, to: board.right, bulge: 28}
+  steps: [fab1, e0, fab2, e1, fab3, e2, fab4, img1, e3, img2, e4, img3, e5, img4, e6, e7, board]
+  notes:
+    - {x: 20, y: 62,  text: "1 · The FPGA design (module H09, F05)", bold: true}
+    - {x: 20, y: 192, text: "2 · The Linux image and the SD card (modules B03, B05)", bold: true}
+    - {x: 20, y: 372, text: "3 · Power-cycle with the card in,\nthen run the suite (module X03)", bold: true}
+
+- id: pfdaq-core-wiring
+  type: annotated
+  alt: "The FIC_0_PERIPHERALS canvas in Libero, with numbered callouts that light up in turn: the project's own pfdaq_core block, its AXI4-Stream outputs, the DMA controller's stream input, the two latency interrupts, the APB register port, and the DMA initiator that carries the writes towards DDR."
+  image: evidence/v0.5.1/build/libero-fic0-peripherals.png
+  width: 900
+  height: 500
+  step: 3.6
+  callouts:
+    - {box: [290, 70, 240, 290],  title: "pfdaq_core: the block this project adds", text: "Plain Verilog, instantiated next to the vendor's IP. Clock, reset and one APB slot come in on the left."}
+    - {box: [430, 95, 100, 235],  title: "Its stream output", text: "TDATA (64 bit), TVALID, TLAST, TKEEP, TSTRB and TDEST leave the block; TREADY comes back."}
+    - {box: [925, 240, 380, 240], title: "The DMA controller's stream input", text: "Each stream signal is wired one to one into AXI4StreamTarget_IF."}
+    - {box: [1700, 18, 245, 52],  title: "Two latency interrupts", text: "IRQ_LAT0 and IRQ_LAT1 leave the block; the DMA's own interrupt is DMA_CONTROLLER_IRQ."}
+    - {box: [30, 268, 380, 30],   title: "The register port", text: "APB_TARGET is the project's slot in the APB address range (0x4000_0Fxx)."}
+    - {box: [1408, 730, 270, 132], title: "Where the DMA writes go", text: "DMA_INITIATOR carries the DMA's AXI4 writes to the fabric interface, and from there to DDR."}
