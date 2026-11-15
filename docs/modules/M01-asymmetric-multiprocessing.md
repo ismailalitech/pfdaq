@@ -24,7 +24,7 @@ After this module you can say why this project runs two software systems on one 
 ## Before you start
 
 - **Level 2.** You should know that the PolarFire SoC has one monitor core (E51) and four application cores (U54), and roughly what a privilege mode is.
-- **Read first:** B02, the boot payload (planned). Without it, take the YAML in the next section on trust.
+- **Read first:** B02, the boot payload.
 - **Tools:** none. The "Run it" steps only read the evidence files in this repository.
 
 ## The idea

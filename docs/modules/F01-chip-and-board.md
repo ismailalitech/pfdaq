@@ -69,7 +69,7 @@ The same console prints the cache setup of the cores:
 
 The shared L2 is split between ordinary cache, a scratchpad and a loosely integrated memory (LIM). Only the cache part matters for this project; module F02 shows why.
 
-### Five fabric interfaces
+### Fabric interfaces
 
 | Interface | Kind | Direction that matters here | Used in this project for |
 |---|---|---|---|
@@ -77,7 +77,6 @@ The shared L2 is split between ordinary cache, a scratchpad and a loosely integr
 | **FIC1** | clocked at 125 MHz by the fabric design | not used | nothing |
 | **FIC2** | clocked at 125 MHz by the fabric design | not used | nothing |
 | **FIC3** | APB, 50 MHz | MSS to fabric registers | the stream source and latency unit at 0x4000_0F00, the inter-hart mailbox at 0x5000_0000, and the reference design's own peripherals |
-| **FIC4** | AHB-Lite | reserved for the on-chip crypto processor | nothing |
 
 The clock figures are what the fabric design supplies; module F04 shows where they come from. FIC1 and FIC2 are clocked but nothing in this project connects to them, and this page does not describe them further.
 

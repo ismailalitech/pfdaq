@@ -474,6 +474,10 @@ def main():
     owned += [os.path.join(root, 'content/topics', t) for t in TOPICS]
     owned += [os.path.join(root, 'static/pfdaq'), os.path.join(root, 'content/work/pfdaq-polarfire-soc.md')]
     owned += [os.path.join(root, 'content/resources/pfdaq-%s.md' % n) for n in ('explorer', 'architecture', 'results')]
+    # pages that were published once and have been withdrawn
+    for retired in ('content/topics/security/secure-boot/s02-secure-boot.md',):
+        if os.path.isfile(os.path.join(root, retired)):
+            os.remove(os.path.join(root, retired))
     # pages placed in sub-topics that already exist on the site: remove only the files this script writes
     for pid, (topic, sub, *_rest) in PLACE.items():
         if sub not in SUBTOPICS and pid in site.pages:
