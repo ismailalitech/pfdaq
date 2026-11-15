@@ -230,4 +230,39 @@ results:
     date: 2026-11-15
     command: Reports view of Libero, file max_timing_multi_corner
     conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+  - id: libero-cfg-dma-controller
+    title: "The DMA controller configurator (CoreAXI4DMAController): stream input, interrupts and descriptors"
+    file: build/libero-cfg-dma-controller.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "CoreAXI4DMAController configurator opened from DMA_CONTROLLER in FIC_0_PERIPHERALS, cancelled"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, taken from a copy of the project built from the restructured layout (design version 7). The dialog was closed with Cancel; nothing was built, saved or programmed.
+
+  - id: libero-cfg-fic0-initiator-slave
+    title: "The FIC0 interconnect configurator, slave tab: the two address windows"
+    file: build/libero-cfg-fic0-initiator-slave.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "CoreAXI4Interconnect configurator opened from FIC0_INITIATOR, tab Slave Configuration, cancelled"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, taken from a copy of the project built from the restructured layout (design version 7). The dialog was closed with Cancel; nothing was built, saved or programmed.
+
+  - id: libero-cfg-pf-ccc-outputs
+    title: "The clock conditioning circuit configurator, output clocks tab"
+    file: build/libero-cfg-pf-ccc-outputs.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "PF_CCC configurator opened from the clock block, tab Output Clocks, cancelled"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, taken from a copy of the project built from the restructured layout (design version 7). The dialog was closed with Cancel; nothing was built, saved or programmed.
+
+  - id: libero-cfg-constraint-timing
+    title: "The constraint manager, timing tab: which constraint file serves which step"
+    file: build/libero-cfg-constraint-timing.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "Constraint Manager, tab Timing"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, taken from a copy of the project built from the restructured layout (design version 7). The dialog was closed with Cancel; nothing was built, saved or programmed.
 

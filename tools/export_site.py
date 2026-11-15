@@ -6,9 +6,9 @@
 The pages in this repository stay the single source. This script converts them to the site's
 conventions and writes them into the site checkout; it never edits anything else there:
 
-  content/work/pfdaq-polarfire-soc.md             the case study (hand-written template below)
-  content/topics/fpga/<sub-topic>/...             sub-topics with articles and numbered labs
-  content/topics/microcontrollers/linux-and-rtos/
+  content/projects/fpga-soc/microchip-polarfire-soc/pfdaq/
+                                                  the project: its page (hand-written template below) and its parts,
+                                                  each with articles and numbered labs
   content/resources/pfdaq-*.md                    explorer page, architecture reference, results
   static/pfdaq/                                   explorer, evidence records, architecture data
 
@@ -26,6 +26,8 @@ import yaml
 import content as C
 import gen_explorer as E
 
+PROJECT_PATH = 'projects/fpga-soc/microchip-polarfire-soc/pfdaq'
+PROJECT_URL = '/' + PROJECT_PATH + '/'
 REPO = 'https://github.com/ismailalitech/pfdaq'
 BLOB = REPO + '/blob/main/'
 TREE = REPO + '/tree/main/'
@@ -103,20 +105,18 @@ PLACE = {
 CORE_BY_TRACK = {'boot': 'E51 and U54', 'fundamentals': 'PolarFire SoC', 'integration': 'U54 (Linux)',
                  'multicore': 'U54 (Linux) and U54 hart 4', 'performance': 'U54 (Linux) and FPGA fabric',
                  'system': 'U54 (Linux) and FPGA fabric'}
-EXPLORER_NOTE = (
-    '[pfdaq architecture explorer](/pfdaq/explorer/): an interactive diagram of one complete system built on this topic. '
-    'It shows the FPGA blocks and the processor system, how they are connected and how the board boots, and plays guided walks step by step.\n')
-TOPICS = {'embedded-linux': ('Embedded Linux', 'Booting and building Linux for a SoC with an FPGA, and reaching fabric logic from user space and the kernel.', 35)}
+TOPICS = {}
 SUBTOPICS = {
-    'streaming-datapaths': ('Streaming datapaths', 'Frames, CRC and filters on AXI4-Stream, a source that cannot be paused, and what a DMA needs from a stream.', 40),
-    'registers-clocks-timing': ('Registers, clocks and timing', 'Register blocks software can trust, crossing between clock domains, and constraints that say exactly what they mean.', 50),
-    'verification-and-instruments': ('Verification and instruments', 'Checking hardware with an independent model, and building measuring instruments into the fabric.', 60),
-    'soc-integration': ('SoC integration', 'Joining FPGA logic to processors: DMA, interrupts and memory, with the failures met on a real board.', 70),
-    'boot-and-images': ('Boot and images', 'From power-on to login: the boot monitor, U-Boot, the payload, the Yocto layer, the device tree and how to update a running board.', 10),
-    'linux-fpga-interfaces': ('Linux and the FPGA', 'Registers, interrupts, buffers and drivers: how a Linux program and the kernel work with logic in the fabric.', 20),
-    'polarfire-soc-fundamentals': ('PolarFire SoC fundamentals', 'The chip and the board, the memory map, clocks and resets, and the tool flow.', 5),
-    'performance-and-reliability': ('Performance and reliability', 'Where throughput goes, fault injection, deadlines, abort, soak and reboot testing, and the validation report.', 80),
-    'linux-and-rtos': ('Linux and an RTOS on one chip', 'Running Linux and a real-time supervisor side by side, and measuring how each answers an interrupt.', 50),
+    'polarfire-soc-fundamentals': ('The chip and the board', 'The chip and the board, the memory map, clocks and resets, and the tool flow.', 10),
+    'streaming-datapaths': ('Streaming datapaths', 'Frames, CRC and filters on AXI4-Stream, a source that cannot be paused, and what a DMA needs from a stream.', 20),
+    'registers-clocks-timing': ('Registers, clocks and timing', 'Register blocks software can trust, crossing between clock domains, and constraints that say exactly what they mean.', 30),
+    'verification-and-instruments': ('Verification and instruments', 'Checking hardware with an independent model, and building measuring instruments into the fabric.', 40),
+    'soc-integration': ('SoC integration', 'Joining FPGA logic to processors: DMA, interrupts and memory, with the failures met on a real board.', 50),
+    'boot-and-images': ('Boot and images', 'From power-on to login: the boot monitor, U-Boot, the payload, the Yocto layer, the device tree and how to update a running board.', 60),
+    'linux-fpga-interfaces': ('Linux and the FPGA', 'Registers, interrupts, buffers and drivers: how a Linux program and the kernel work with logic in the fabric.', 70),
+    'linux-and-rtos': ('Linux and an RTOS on one chip', 'Running Linux and a real-time supervisor side by side, and measuring how each answers an interrupt.', 80),
+    'performance-and-reliability': ('Performance and reliability', 'Where throughput goes, fault injection, deadlines, abort, soak and reboot testing, and the validation report.', 90),
+    'secure-boot': ('Secure boot, offline', 'How a signed boot chain works, with a model and the real signing format, run on a PC. Nothing is flashed.', 100),
 }
 LEVEL = {1: 'Beginner', 2: 'Beginner', 3: 'Intermediate', 4: 'Advanced', 5: 'Advanced'}
 STATUS_TEXT = {'validated': 'validated', 'validated-old': 'validated on an earlier fabric version', 'simulated': 'simulated',
@@ -140,12 +140,10 @@ MERMAID = {
 
 
 def lab_numbers():
-    nxt, out = 14, {}
-    for pid, v in PLACE.items():
-        if v[3] == 'auto':
-            out[pid] = nxt
-            nxt += 1
-    return out
+    """Labs are numbered 1, 2, 3 ... in the order of the project: by part, then by position inside the part."""
+    order = list(SUBTOPICS)
+    labs = [(order.index(v[1]), v[2], pid) for pid, v in PLACE.items() if v[3]]
+    return {pid: n for n, (_p, _w, pid) in enumerate(sorted(labs), 1)}
 
 
 LAB_NO = lab_numbers()
@@ -157,14 +155,14 @@ class Site:
         self.urls = {}        # page id -> url
         self.files = {}       # repo file -> page id
         for pid, (topic, sub, _w, _l, _b, _c) in PLACE.items():
-            self.urls[pid] = '/topics/%s/%s/' % (topic, sub)
-        self.urls['X01'] = '/work/pfdaq-polarfire-soc/'
+            self.urls[pid] = PROJECT_URL + sub + '/'
+        self.urls['X01'] = PROJECT_URL
         self.pages = {p['id']: p for p in C.load_pages() if 'id' in p}
         for pid, p in self.pages.items():
             self.files[p['file']] = pid
             if pid in PLACE:
                 topic, sub = PLACE[pid][0], PLACE[pid][1]
-                self.urls[pid] = '/topics/%s/%s/%s/' % (topic, sub, self.slug(p))
+                self.urls[pid] = PROJECT_URL + '%s/%s/' % (sub, self.slug(p))
 
     @staticmethod
     def slug(p):
@@ -178,8 +176,8 @@ FIXED = {
     'docs/architecture.md': '/resources/pfdaq-architecture/',
     'docs/validation-plan.md': '/resources/pfdaq-results/',
     'docs/system/README.md': '/resources/pfdaq-explorer/',
-    'docs/modules/README.md': '/topics/',
-    'docs/learning-path.md': '/topics/',
+    'docs/modules/README.md': PROJECT_URL,
+    'docs/learning-path.md': PROJECT_URL,
     'docs/system/architecture.yaml': '/pfdaq/architecture.yaml',
 }
 
@@ -279,9 +277,12 @@ def page_file(page, site, evidence):
     pid = page['id']
     topic, sub, weight, lab, board, core = PLACE[pid]
     if lab == 'auto':
-        lab, board, core = LAB_NO[pid], BOARD, CORE_BY_TRACK.get(page['track'], 'PolarFire SoC')
+        board, core = BOARD, CORE_BY_TRACK.get(page['track'], 'PolarFire SoC')
+    if lab:
+        lab = LAB_NO[pid]
     fm = ['+++', 'title = %s' % toml_str(page['title']), "date = '%s'" % DATE, 'draft = false',
-          'description = %s' % toml_str(page['summary']), 'weight = %d' % weight, '', '[params]']
+          'description = %s' % toml_str(page['summary']), 'weight = %d' % weight,
+          'aliases = [%s]' % toml_str('/topics/%s/%s/%s/' % (topic, sub, Site.slug(page))), '', '[params]']
     if lab:
         fm += ['  lab = %d' % lab, '  board = %s' % toml_str(board), '  core = %s' % toml_str(core),
                '  level = %s' % toml_str(LEVEL[page['level']])]
@@ -299,8 +300,11 @@ description = "An FPGA data source, a DMA path into DDR, Linux on three RISC-V c
 date = @DATE@
 draft = false
 weight = 20
+aliases = ["/work/pfdaq-polarfire-soc/"]
 
 [params]
+  project = true
+  platform = "Microchip PolarFire SoC"
   problem = "A data path that crosses an FPGA, a DMA, an operating system that is not real-time and a second processor is easy to make work once and hard to trust. Every layer can hide a fault the others cannot see."
   role = "Designed and built the complete system: the FPGA logic and its testbenches, the Linux image, the real-time firmware, the capture and measurement tools, and the board test suites."
   result = "27 of 27 functional tests pass from a freshly written SD card; injected faults are caught in every payload mode; the supervisor answers an interrupt in 0.5 microseconds typically, against 78 microseconds for a Linux user-space program."
@@ -308,6 +312,7 @@ weight = 20
   tools = "Libero SoC 2026.1, Icarus Verilog, Yocto (Scarthgap), FreeRTOS, Python"
   action = "/resources/pfdaq-explorer/"
   action_text = "Explore the architecture"
+  guide = "@GUIDE@"
   toc = true
 +++
 
@@ -354,10 +359,8 @@ controller over an AXI4-Stream link and raises two latency interrupts. The other
   tests, run from a freshly written card.
 - **Measurement.** The interrupt-to-acknowledge latency at five software levels, measured by the fabric itself.
 
-The pieces are written up as separate notes and labs: [streaming datapaths](/topics/fpga/streaming-datapaths/),
-[registers, clocks and timing](/topics/fpga/registers-clocks-timing/),
-[verification and instruments](/topics/fpga/verification-and-instruments/),
-[SoC integration](/topics/fpga/soc-integration/), [Linux and an RTOS on one chip](/topics/microcontrollers/linux-and-rtos/), [boot and images](/topics/embedded-linux/boot-and-images/), [Linux and the FPGA](/topics/embedded-linux/linux-fpga-interfaces/) and [performance and reliability](/topics/fpga/performance-and-reliability/).
+The parts of the project, each with its notes and numbered labs, are listed at the top of this page, in the order a
+reader would work through them.
 
 ## Architecture
 
@@ -444,7 +447,7 @@ behind it: simulation, tool output or measurement on the board.
 
 - [Architecture reference](/resources/pfdaq-architecture/): register maps, frame format, DMA rules, protocols.
 - [Results and evidence](/resources/pfdaq-results/): every test, its method, its result and its record.
-- [The case study](/work/pfdaq-polarfire-soc/).
+- [The project page](/projects/fpga-soc/microchip-polarfire-soc/pfdaq/).
 """
 
 
@@ -491,49 +494,37 @@ def main():
     written = []
 
     # remove exactly what this script owns, then regenerate it
-    owned = [os.path.join(root, 'content/topics', PLACE_TOPIC(s), s) for s in SUBTOPICS if PLACE_TOPIC(s) not in TOPICS]
-    owned += [os.path.join(root, 'content/topics', t) for t in TOPICS]
-    owned += [os.path.join(root, 'static/pfdaq'), os.path.join(root, 'content/work/pfdaq-polarfire-soc.md')]
+    project_dir = os.path.join(root, 'content', PROJECT_PATH)
+    owned = [project_dir, os.path.join(root, 'static/pfdaq')]
     owned += [os.path.join(root, 'content/resources/pfdaq-%s.md' % n) for n in ('explorer', 'architecture', 'results')]
-    # pages that were published once and have been withdrawn
-    for retired in ('content/topics/security/secure-boot/s02-secure-boot.md',):
-        if os.path.isfile(os.path.join(root, retired)):
-            os.remove(os.path.join(root, retired))
-    # pages placed in sub-topics that already exist on the site: remove only the files this script writes
-    for pid, (topic, sub, *_rest) in PLACE.items():
-        if sub not in SUBTOPICS and pid in site.pages:
-            owned.append(os.path.join(root, 'content/topics', topic, sub, site.slug(site.pages[pid]) + '.md'))
+    # where this material lived before it was organised by project; the pages keep their old addresses as aliases
+    owned += [os.path.join(root, 'content/work/pfdaq-polarfire-soc.md'), os.path.join(root, 'content/topics/embedded-linux')]
+    for sub in SUBTOPICS:
+        old = PLACE_TOPIC(sub)
+        if old and sub != 'secure-boot':      # the site's own Secure boot folder keeps its index page
+            owned.append(os.path.join(root, 'content/topics', old, sub))
+    owned.append(os.path.join(root, 'content/topics/security/secure-boot/s03-signed-boot-chain.md'))
     for p in owned:
         if os.path.isdir(p):
             shutil.rmtree(p)
         elif os.path.isfile(p):
             os.remove(p)
 
-    for t, (title, desc, weight) in TOPICS.items():
-        write(os.path.join(root, 'content/topics', t, '_index.md'),
-              '+++\ntitle = %s\ndescription = %s\nweight = %d\n+++\n\n%s' % (toml_str(title), toml_str(desc), weight, 'See the ' + EXPLORER_NOTE), written)
-    fpga_idx = os.path.join(root, 'content/topics/fpga/_index.md')
-    if os.path.isfile(fpga_idx):
-        ftxt = open(fpga_idx).read()
-        if '/pfdaq/explorer/' not in ftxt:
-            open(fpga_idx, 'w').write(ftxt.rstrip('\n') + '\n\nSee the ' + EXPLORER_NOTE)
-    # the site lists Embedded Linux as a planned subject; it now exists
-    idx = os.path.join(root, 'content/topics/_index.md')
-    txt = open(idx).read()
-    new = txt.replace('planned = ["Embedded Linux"]', 'planned = []')
-    if new != txt:
-        open(idx, 'w').write(new)
+    # the project page and its parts
+    write(os.path.join(project_dir, '_index.md'),
+          WORK.replace('@DATE@', "'%s'" % DATE).replace('@I04@', site.url('I04')).replace('@K10@', site.url('K10')).replace('@K11@', site.url('K11')).replace('@GUIDE@', site.url('X03')), written)
     for sub, (title, desc, weight) in SUBTOPICS.items():
-        topic = PLACE_TOPIC(sub)
-        write(os.path.join(root, 'content/topics', topic, sub, '_index.md'),
-              '+++\ntitle = %s\ndescription = %s\nweight = %d\n+++\n' % (toml_str(title), toml_str(desc), weight), written)
+        old = PLACE_TOPIC(sub)
+        aliases = ['/topics/%s/%s/' % (old, sub)] if old else []
+        fm = ['+++', 'title = %s' % toml_str(title), 'description = %s' % toml_str(desc), 'weight = %d' % weight]
+        if aliases:
+            fm.append('aliases = [%s]' % ', '.join(toml_str(a) for a in aliases))
+        write(os.path.join(project_dir, sub, '_index.md'), '\n'.join(fm + ['+++', '']), written)
     for pid in PLACE:
         p = site.pages[pid]
-        topic, sub = PLACE[pid][0], PLACE[pid][1]
-        write(os.path.join(root, 'content/topics', topic, sub, site.slug(p) + '.md'), page_file(p, site, evidence), written)
+        sub = PLACE[pid][1]
+        write(os.path.join(project_dir, sub, site.slug(p) + '.md'), page_file(p, site, evidence), written)
 
-    write(os.path.join(root, 'content/work/pfdaq-polarfire-soc.md'),
-          WORK.replace('@DATE@', "'%s'" % DATE).replace('@I04@', site.url('I04')).replace('@K10@', site.url('K10')).replace('@K11@', site.url('K11')), written)
     write(os.path.join(root, 'content/resources/pfdaq-explorer.md'), EXPLORER_PAGE, written)
     write(os.path.join(root, 'content/resources/pfdaq-architecture.md'),
           resource_page('pfdaq architecture reference', 'Register maps, frame format, DMA rules, the RPMsg protocol, boot flow and risks of the pfdaq system on PolarFire SoC.', 60,
@@ -543,7 +534,7 @@ def main():
                         convert_doc('docs/validation-plan.md', site) + results_extra(evidence)), written)
 
     # static: explorer, architecture data, evidence records, the experiment source
-    s = {'root': BLOB, 'url': site.url, 'back': '/resources/pfdaq-explorer/', 'system': '/work/pfdaq-polarfire-soc/', 'yaml': '/pfdaq/architecture.yaml'}
+    s = {'root': BLOB, 'url': site.url, 'back': PROJECT_URL, 'system': PROJECT_URL, 'yaml': '/pfdaq/architecture.yaml', 'home': '/', 'projects': '/projects/'}
     write(os.path.join(root, 'static/pfdaq/explorer/index.html'), E.build_html(arch, layout, mods, s), written)
     shutil.copy(os.path.join(C.DOCS, 'system', 'architecture.yaml'), os.path.join(root, 'static/pfdaq/architecture.yaml'))
     for d in ('evidence',):

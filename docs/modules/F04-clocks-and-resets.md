@@ -13,7 +13,7 @@ sources:
   - hw/libero/overlay/pfdaq_cdc.sdc
   - hw/rtl/pfdaq_stream_src.v:ACLK,PCLK,RSTN,PRESETN
   - hw/rtl/pfdaq_core.v:pfdaq_core
-evidence: [timing, timing-without-cdc, libero-mss-clocks]
+evidence: [timing, timing-without-cdc, libero-mss-clocks, libero-cfg-pf-ccc-outputs]
 related: [F01, H01, H03, H07, K07]
 ---
 
@@ -55,6 +55,18 @@ The project's own names for them are the port names in its RTL:
 | `PCLK`, reset `PRESETN` | `FIC_3_CLK` (OUT3), reset `RESETN_FIC_3_CLK` | 50 MHz: the registers |
 
 The multiplier and divider values of the PLL are in the reference design's script, which this repository does not copy (the build fetches it); this page does not reproduce them and does not need them.
+
+The numbers in the table above are what the clock-conditioning block's configuration window shows. The picture plays through it.
+
+![The clock conditioning circuit's output clocks in Libero with five numbered callouts: one PLL, outputs 0, 1 and 2 at 125 MHz and output 3 at 50 MHz](../diagrams/cfg-pf-ccc.svg)
+
+1. **One PLL, four outputs.** The configuration is `PLL-Single`.
+2. **Output 0** is requested at 125 MHz and the tool reports an actual 125.000 MHz.
+3. **Output 1** is the same, 125 MHz.
+4. **Output 2** is the same, 125 MHz.
+5. **Output 3** is requested at 50 MHz and the actual frequency is 50.000 MHz.
+
+In Libero: in the Design Hierarchy expand `CLOCKS_AND_RESETS` and double-click the clock-conditioning component (its tabs are Clock Options PLL and Output Clocks). Close with Cancel. For your own design, the same two decisions are the input frequency and one requested frequency per output; the tool then shows the actual value it can reach.
 
 ### The MSS side, in the MSS Configurator
 
@@ -137,7 +149,7 @@ These are build results: they show the design meets timing with the crossings de
 | **How to run** | Explanation with recorded evidence; nothing to run |
 | **In the system** | [Fabric clocks and resets](../system/README.md#fabric-clocks) · [FIC0 (AXI4, 125 MHz)](../system/README.md#fic0) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) · [pfdaq_core](../system/README.md#pfdaq-core) |
 | **Source** | [`hw/libero/overlay/PFDAQ.tcl`](../../hw/libero/overlay/PFDAQ.tcl): `CLOCKS_AND_RESETS_0`, `FIC_3_CLK`, `RESETN_FIC_3_CLK`<br>[`hw/libero/overlay/pfdaq_cdc.sdc`](../../hw/libero/overlay/pfdaq_cdc.sdc)<br>[`hw/rtl/pfdaq_stream_src.v`](../../hw/rtl/pfdaq_stream_src.v): `ACLK`, `PCLK`, `RSTN`, `PRESETN`<br>[`hw/rtl/pfdaq_core.v`](../../hw/rtl/pfdaq_core.v): `pfdaq_core` |
-| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Timing analysis without the clock-crossing constraints (the tool's console log; the 40 worst violating paths it lists are the intended crossings)](../../evidence/v0.5.1/build/timing-without-cdc-constraints.txt) (build, fabric v0.5.1, 2026-11-15)<br>[MSS Configurator, Clocks tab: MSS PLL, dividers and the clock tree](../../evidence/v0.5.1/build/libero-mss-clocks.png) (build, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Timing analysis without the clock-crossing constraints (the tool's console log; the 40 worst violating paths it lists are the intended crossings)](../../evidence/v0.5.1/build/timing-without-cdc-constraints.txt) (build, fabric v0.5.1, 2026-11-15)<br>[MSS Configurator, Clocks tab: MSS PLL, dividers and the clock tree](../../evidence/v0.5.1/build/libero-mss-clocks.png) (build, fabric v0.5.1, 2026-11-15)<br>[The clock conditioning circuit configurator, output clocks tab](../../evidence/v0.5.1/build/libero-cfg-pf-ccc-outputs.png) (build, fabric v0.5.1, 2026-11-15) |
 | **Related** | [F01 The chip and the board: MSS, fabric and the interfaces between them](F01-chip-and-board.md)<br>[H01 An APB register block that software can trust](H01-apb-register-block.md)<br>[H03 Crossing clock domains: toggles, snapshots and constraints](H03-clock-domain-crossing.md)<br>[H07 Measuring software from hardware: the latency unit](H07-latency-unit.md)<br>[K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md) |
 | **Status** | validated |
 <!-- nav:end -->

@@ -40,6 +40,8 @@ After this page you know the whole path from a new Discovery Kit, a blank microS
 
 ## The idea
 
+![The path from a new board to a passing test suite: build the FPGA design and program it, build the Linux image and write the SD card, then cold-start and run the 27 tests](../diagrams/build-path.svg)
+
 Three things make a working board, and they are independent:
 
 | What | Where it lives | How it gets there |

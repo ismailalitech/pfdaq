@@ -51,6 +51,7 @@ class Diagram:
         self.h = d['height']
         self.out = []
         self.names = []     # animation targets in order
+        self.step = d.get('step', STEP)
 
     # ---------- geometry
     def port(self, ref):
@@ -126,7 +127,7 @@ class Diagram:
         self.add('</g>')
 
     def delay(self, name):
-        return self.steps.index(name) * STEP
+        return self.steps.index(name) * self.step
 
     def edge_svg(self, eid, e):
         pts = self.route(e)
@@ -229,26 +230,59 @@ class Diagram:
             self.note_svg(t)
         self.timeline_dur = dur
 
+    # ---------- annotated screenshots
+    def annotated(self):
+        """A screenshot with numbered callouts that light up one after the other, each with its caption."""
+        import base64
+        from PIL import Image
+        d = self.d
+        path = os.path.join(ROOT, d['image'])
+        im = Image.open(path)
+        w = self.w
+        sc = w / im.size[0]
+        ih = im.size[1] * sc
+        data = base64.b64encode(open(path, 'rb').read()).decode()
+        self.add('<image href="data:image/png;base64,%s" x="0" y="0" width="%g" height="%g"/>' % (data, w, ih))
+        self.steps = ['c%d' % i for i in range(len(d['callouts']))]
+        cap_y = ih + 26
+        self.add('<rect x="0" y="%g" width="%g" height="%g" fill="%s"/>' % (ih, w, self.h - ih, BG))
+        for i, c in enumerate(d['callouts']):
+            x, y, bw, bh = [v * sc for v in c['box']]
+            dl = self.delay('c%d' % i)
+            self.add('<g class="co" style="animation-delay:%.2fs">' % dl)
+            self.add('<rect x="%g" y="%g" width="%g" height="%g" rx="4" fill="%s" fill-opacity="0.12" stroke="%s" stroke-width="3"/>' % (x - 3, y - 3, bw + 6, bh + 6, ACCENT, ACCENT))
+            self.add('<circle cx="%g" cy="%g" r="13" fill="%s"/><text x="%g" y="%g" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">%d</text>' % (x - 3, y - 3, ACCENT, x - 3, y + 2, i + 1))
+            self.add('</g>')
+            self.add('<g class="co cap" style="animation-delay:%.2fs">' % dl)
+            self.add('<rect x="0" y="%g" width="%g" height="%g" fill="%s"/>' % (ih + 1, w, self.h - ih - 1, BG))
+            self.add('<circle cx="24" cy="%g" r="13" fill="%s"/><text x="24" y="%g" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">%d</text>' % (cap_y, ACCENT, cap_y + 5, i + 1))
+            self.add('<text x="48" y="%g" font-size="15" font-weight="bold" fill="%s">%s</text>' % (cap_y - 2, FG, esc(c['title'])))
+            self.add('<text x="48" y="%g" font-size="13" fill="%s">%s</text>' % (cap_y + 18, MUTED, esc(c['text'])))
+            self.add('</g>')
+
     # ---------- document
     def render(self):
         d = self.d
         if d.get('type') == 'timeline':
             self.timeline()
             cycle = self.timeline_dur
+        elif d.get('type') == 'annotated':
+            self.annotated()
+            cycle = max(len(self.steps) * self.step + HOLD, 1)
         else:
             self.flow()
-            cycle = max(len(self.steps) * STEP + HOLD, 1)
+            cycle = max(len(self.steps) * self.step + HOLD, 1)
         body = '\n'.join(self.out)
-        on = (len(self.steps) and STEP / cycle * 100) or 0
+        on = (len(self.steps) and self.step / cycle * 100) or 0
         css = """
 text{font-family:%s}
-.hl{opacity:0;animation:lit %.2fs linear infinite;animation-fill-mode:forwards}
+.hl,.co{opacity:0;animation:lit %.2fs linear infinite;animation-fill-mode:forwards}
 .flow{stroke-dasharray:9 6;animation:lit %.2fs linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
 @keyframes lit{0%%{opacity:0}2%%{opacity:1}%.2f%%{opacity:1}%.2f%%{opacity:0}100%%{opacity:0}}
 @keyframes flow{to{stroke-dashoffset:-15}}
 .play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
-@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
 """ % (FONT, cycle, cycle, on, on + 3)
         title = d.get('alt', self.id)
         marks = ''.join(

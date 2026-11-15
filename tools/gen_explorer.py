@@ -147,7 +147,15 @@ h1{font-size:1.45rem;margin:0 0 4px;font-weight:600;text-wrap:balance}
 .sub{color:var(--muted);margin:0;max-width:75ch}
 .bar{max-width:1280px;margin:0 auto 12px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
 .tabs{display:flex;gap:4px;flex-wrap:wrap}
-.theme-toggle,.tabs button,.walk button,.walk select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+.topbar{max-width:1280px;margin:-6px auto 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.topbar .brand{font-weight:600;color:var(--ink);text-decoration:none;letter-spacing:.01em}
+.topbar .brand:hover{text-decoration:underline}
+.topbar .links{display:flex;align-items:center;gap:18px}
+.topbar .links a{color:var(--muted);text-decoration:none}.topbar .links a:hover{color:var(--ink)}
+.icon-button{display:inline-flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;padding:0;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--muted);cursor:pointer}
+.icon-button:hover{color:var(--ink);border-color:var(--muted)}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tabs button,.walk button,.walk select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
 .tabs button[aria-pressed="true"]{border-color:var(--sel);box-shadow:inset 0 -2px 0 var(--sel);font-weight:600}
 .walk{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .walk button:disabled{opacity:.45;cursor:default}
@@ -321,7 +329,7 @@ resetWalkUI();fromHash();
 (function(){
   var btn=document.getElementById('theme-toggle'),root=document.documentElement;
   function dark(){var a=root.getAttribute('data-theme');return a?a==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches}
-  function label(){btn.textContent=dark()?'Light mode':'Dark mode'}
+  function label(){btn.setAttribute('aria-pressed',dark()?'true':'false')}
   btn.onclick=function(){var t=dark()?'light':'dark';root.setAttribute('data-theme',t);try{localStorage.setItem('theme',t)}catch(e){}label()};
   label()})();
 
@@ -341,14 +349,22 @@ def build_html(arch, layout, mods, site=None):
         '<span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-%s" x1="1" y1="5" x2="33" y2="5" style="%s"/></svg>%s</span>'
         % (k, LEGEND_STYLE[k], escape(KIND_LABEL[k])) for k in LEGEND)
     if site:
-        back = '<p class="sub"><a href="%s">Back to the explorer page</a></p>' % site['back']
+        back = ''
         sysurl = site['system']
         foot = 'Every fact in this diagram comes from one data file, <a href="%s">architecture.yaml</a>. Source files link to the pfdaq repository.' % site['yaml']
     else:
         back = ''
         sysurl = 'README.md'
         foot = 'Evidence class of every fact: see <a href="../architecture.md">Architecture as built</a>. Source links are relative to the repository root.'
-    return """<!doctype html>
+    toggle = ('<button class="icon-button" type="button" id="theme-toggle" aria-pressed="false" aria-label="Switch between light and dark theme">'
+              '<svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18"><circle cx="10" cy="10" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+              '<path d="M10 2.75a7.25 7.25 0 0 0 0 14.5z" fill="currentColor"/></svg><span class="visually-hidden">Theme</span></button>')
+    if site:
+        topbar = ('<div class="topbar js-only" hidden><a class="brand" href="%s">Ali Ismail</a><div class="links"><a href="%s">Projects</a><a href="%s">Back to the project</a>%s</div></div>'
+                  % (site.get('home', '/'), site.get('projects', '/projects/'), site['back'], toggle))
+    else:
+        topbar = '<div class="topbar js-only" hidden><span></span><div class="links">%s</div></div>' % toggle
+    html = """<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -358,12 +374,12 @@ def build_html(arch, layout, mods, site=None):
 <style>%s</style>
 </head>
 <body>
+@@TOPBAR@@
 <header>
 %s<h1>pfdaq architecture explorer</h1>
 <p class="sub">%s on the %s (%s), fabric v%s. Select a component or a connection. Generated from <code>docs/system/architecture.yaml</code>; the same data drives the component pages.</p>
 </header>
 <div class="bar js-only" hidden>
-<button type="button" id="theme-toggle" class="theme-toggle" aria-label="Switch between light and dark mode"></button>
 <div class="tabs" role="group" aria-label="View">%s</div>
 <div class="walk" role="group" aria-label="Walks through the system">
 <label for="walk-select">Walk</label>
@@ -385,6 +401,7 @@ def build_html(arch, layout, mods, site=None):
 </html>
 """ % (CSS, back, escape(b['tag']), escape(b['board']), escape(b['device']), escape(b['fabric']), tabs, walks, svgs, legend,
        sysurl, foot, json.dumps(data, separators=(',', ':')).replace('</', '<\\/'), JS)
+    return html.replace('@@TOPBAR@@', topbar)
 
 
 LEGEND_STYLE = {
