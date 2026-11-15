@@ -60,7 +60,7 @@ The multiplier and divider values of the PLL are in the reference design's scrip
 
 The MSS has its own clock tree, set in the configurator. Its PLL runs at 600 MHz from the 125 MHz reference clock on a dedicated pin; the processor cores get 600 MHz (divider 1), the AXI and level-2 cache clock 300 MHz (divider 2) and the AHB/APB clock 150 MHz (divider 4). The same tab shows the SD/eMMC clock at 200 MHz, the DDR controller and PHY at 800 MHz and the SGMII PHY at 625 MHz. These are the MSS's own clocks; the fabric interface clocks above are supplied separately.
 
-![MSS Configurator, clocks tab: MSS PLL, dividers and the clock controller diagram](../../evidence/v0.5.1/build/libero-mss-clocks.png)
+![MSS Configurator, clocks tab: the MSS clock controller diagram with the PLL, the dividers and the resulting frequencies](../../evidence/v0.5.1/build/libero-mss-clocks.png)
 
 ### Where the resets come from
 
