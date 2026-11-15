@@ -19,7 +19,7 @@ import content as C
 
 OUT = 'docs/system/explorer.html'
 KIND_LABEL = {
-    'apb': 'APB register bus', 'ahb': 'AHB-Lite bus (crypto)', 'axi4': 'AXI4 memory bus', 'axi4-stream': 'AXI4-Stream data',
+    'apb': 'APB register bus', 'axi4': 'AXI4 memory bus', 'axi4-stream': 'AXI4-Stream data',
     'irq': 'Interrupt', 'mem': 'Memory access', 'rpmsg': 'RPMsg message channel',
     'uses': 'Uses / depends on', 'runs': 'Runs on', 'boot': 'Boot hand-over',
 }
@@ -388,7 +388,7 @@ def build_html(arch, layout, mods, site=None):
 
 
 LEGEND_STYLE = {
-    'apb': 'stroke:var(--c-apb)', 'ahb': 'stroke:var(--c-apb);stroke-dasharray:10 3', 'axi4': 'stroke:var(--c-axi4)', 'axi4-stream': 'stroke:var(--c-axi4-stream);stroke-width:4',
+    'apb': 'stroke:var(--c-apb)', 'axi4': 'stroke:var(--c-axi4)', 'axi4-stream': 'stroke:var(--c-axi4-stream);stroke-width:4',
     'irq': 'stroke:var(--c-irq);stroke-dasharray:7 5', 'mem': 'stroke:var(--c-mem);stroke-dasharray:2 4',
     'rpmsg': 'stroke:var(--c-rpmsg);stroke-dasharray:9 3 2 3', 'boot': 'stroke:var(--c-boot);stroke-width:3',
     'uses': 'stroke:var(--c-uses);stroke-width:1.2',
