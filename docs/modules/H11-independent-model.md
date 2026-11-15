@@ -205,7 +205,7 @@ Every frame is still correct, but the credit accounting is not, and the counters
 
 ## Limits of this method
 
-- **No coverage measurement.** Nothing reports which lines, states or conditions of the RTL the scenarios reached. The list of scenarios is the coverage statement, and it is only as good as its author's imagination. Module H12 is about measuring it.
+- **No coverage measurement.** Nothing reports which lines, states or conditions of the RTL the scenarios reached. The list of scenarios is the coverage statement, and it is only as good as its author's imagination.
 - **Constrained-random only in one place.** `TREADY` is random with a chosen probability and a fixed seed. Frame lengths, counts, fault positions and abort times are chosen by hand.
 - **No model of the vendor DMA.** The source is tested against a sink that is only ready or not ready. The behaviour of the real DMA, which caused the case study K03, appears only on the board.
 - **One simulator.** Icarus Verilog 12 only. A construct that a synthesis tool or another simulator treats differently would not be found here.

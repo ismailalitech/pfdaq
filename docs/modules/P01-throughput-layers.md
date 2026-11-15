@@ -138,8 +138,8 @@ For the counter run, in the v0.5.1 record:
 
 ## Trade-offs and going further
 
-- **Same core, two jobs.** Splitting copy and verify across two cores would make them overlap and move the limit to the slower of the two. That, and spreading frames of one burst over several cores, is the subject of P08, which has not been written or measured. Nothing on this page claims it works.
-- **The copy exists because of the memory map.** A cached mapping would read faster but needs cache maintenance around each transfer (I05, I08).
+- **Same core, two jobs.** Splitting copy and verify across two cores would make them overlap and move the limit to the slower of the two. Neither this nor spreading the frames of one burst over several cores has been tried, so nothing on this page claims it works.
+- **The copy exists because of the memory map.** A cached mapping would read faster but needs cache maintenance around each transfer (module I05).
 - **Check in the fabric instead.** The CRC could be checked next to the DMA and only a pass flag read, at the price of trusting the hardware's own check. The software model is the independent one, which is why it is kept.
 - **Exercise:** from the table, predict the end-to-end rate if verification were twice as fast. Then predict it for infinitely fast verification, and say which stage becomes the limit.
 

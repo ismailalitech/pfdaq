@@ -256,7 +256,7 @@ In every row `events` equals `acks`: no interrupt was lost on its way to the res
 **What this measurement cannot tell you.**
 
 - It is one board and one run per row. The maxima are the largest values seen in 100,000 events, about 21 or 51 seconds. A longer run can only raise them.
-- It is one kernel configuration: no preemption, no real-time patches, no CPU isolation, default interrupt affinity. Module P07 looks at what those change. None of the Linux figures say anything about a kernel built with `PREEMPT_RT`.
+- It is one kernel configuration: no preemption, no real-time patches, no CPU isolation, default interrupt affinity. None of the Linux figures say anything about a kernel built with `PREEMPT_RT`.
 - The resolution is one 50 MHz cycle. Differences of 20 ns, such as bare metal against FreeRTOS, are at the limit of the instrument.
 - The interval ends at the register write. A handler that must do real work before it can acknowledge will be slower by that work.
 - Channel 1 was measured with an otherwise idle supervisor. A supervisor that runs other code with interrupts disabled would add that time.

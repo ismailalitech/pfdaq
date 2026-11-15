@@ -120,7 +120,7 @@ Reading non-cached memory is slow, so the tool copies each burst out once into o
 | PRBS | 70.3 MB/s | 50.8 MB/s |
 | FIR | 66.8 MB/s | 10.2 MB/s |
 
-The benefit is that no cache maintenance appears anywhere in the program: whatever the DMA wrote is what the processor reads. A cached buffer would read faster but would need the program to invalidate the cache lines before reading, and to get that right on every path. Whether that would be faster here was not measured; it is the subject of module I08 (planned).
+The benefit is that no cache maintenance appears anywhere in the program: whatever the DMA wrote is what the processor reads. A cached buffer would read faster but would need the program to invalidate the cache lines before reading, and to get that right on every path. Whether that would be faster here was not measured.
 
 ## Run it
 

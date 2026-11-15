@@ -201,7 +201,7 @@ The C model was written to mirror the RTL, by the same author, from the same des
 ## Trade-offs and going further
 
 - **Verify everything or sample?** Checking every word costs 30 MB/s of throughput. A tool that only checks headers and a CRC would run faster and still catch most faults; the project chose full checking because the goal was to catch faults, not to measure speed.
-- **One core for everything.** The per-stage rates above are for one thread. Splitting copy and verify across the three Linux cores is the subject of P08, planned; it has not been tried.
+- **One core for everything.** The per-stage rates above are for one thread. Splitting copy and verify across the three Linux cores has not been tried.
 - **Exercise:** from the table, compute the burst size at which a 1 ms DMA time would equal the copy-plus-verify time for the counter payload.
 - **Exercise:** in the fault table the payload row has `bad_crc` equal to `bad_payload`. What would `bad_crc` read for that row if the fabric computed the CRC over the data as sent instead of the intended data?
 

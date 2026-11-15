@@ -127,7 +127,7 @@ All four runs: 50 iterations of 64 K words, in each direction, with **zero misma
 - **No concurrent access.** The sides never touch the region at the same time. Nothing here says what happens when they do.
 - **Ordering is supplied by the message exchange, not tested on its own.** Barriers and the RPMsg round trip sit between every write and the following read. Leaving them out was not tried, so the test says nothing about what they are protecting against.
 - **No proof from a pass.** Zero mismatches in 50 passes is evidence for the access pattern used. It cannot rule out a rare failure, and it was one board and one run of the suite.
-- **Coherence with other bus masters is a separate question.** Fabric DMA writing into a cached region, for example, is not covered. The DMA buffers in this project are therefore non-cached on purpose (module I05). The experiment that tests the cached case is planned as module I08.
+- **Coherence with other bus masters is a separate question.** Fabric DMA writing into a cached region, for example, is not covered. The DMA buffers in this project are therefore non-cached on purpose (module I05).
 - **The mechanism is not established.** Why no stale data appeared, for example whether the harts' own caches are kept coherent by hardware, was not looked up in the vendor's manual for this page and is not claimed.
 
 ## When it goes wrong
@@ -142,7 +142,7 @@ All four runs: 50 iterations of 64 K words, in each direction, with **zero misma
 ## Trade-offs and going further
 
 - **Non-cached memory is slow, cached memory needs care.** Non-cached is the safe choice for anything a non-processor master writes. Cached is faster for pure hart-to-hart exchange, which is what this test shows works without maintenance, within its limits.
-- **A pointer is a bad message.** The protocol passes an address and a count over a channel and keeps the data in place. It works because both sides know the region and trust each other. Anything with a trust boundary needs the protection the processors can give: memory protection on the real-time hart (planned module M09).
+- **A pointer is a bad message.** The protocol passes an address and a count over a channel and keeps the data in place. It works because both sides know the region and trust each other. Anything with a trust boundary needs more than this protocol gives; none exists in this project.
 - **Exercise:** write down, before running it, what you expect if Linux skips the barrier in step 1. Then think about which part of the system would have to be at fault for the test to notice.
 - **Exercise:** the check time grows with the number of words. Estimate how long a 256 KiB check should take at the speed of a plain `memcpy` of that size, and compare it with the table.
 
