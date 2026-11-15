@@ -47,6 +47,18 @@ The file is `mpfs-disco-kit-amp.dts`. It starts by including the vendor's Discov
 
 Its own comment says where the AMP parts come from: they follow the vendor's overlay for the other board's AMP configuration, and "MMUART0 (context B console) and wdt4 are already disabled in mpfs-disco-kit.dts". The result is the model string the kernel prints at boot.
 
+![The reserved block of the device tree, drawn in address order and not to scale: the supervisor region at 0x91C00000 (1 MiB), two RPMsg rings of 32 KiB, the 256 KiB message buffer pool and the 4 KiB resource table, after which Linux's System RAM resumes at 0x91D51000. The boot payload, the firmware linker script and the firmware resource table must name the same addresses.](../diagrams/lab-b04-reserved-block.svg)
+
+1. The supervisor's own region is `0x91C0_0000`, 1 MiB.
+2. The first RPMsg ring follows at `0x91D0_0000`, 32 KiB.
+3. The second ring follows at `0x91D0_8000`, 32 KiB.
+4. The message buffer pool is at `0x91D1_0000`, 256 KiB.
+5. The resource table is at `0x91D5_0000`, 4 KiB.
+6. Linux's System RAM resumes at `0x91D5_1000`.
+7. The payload (module B02) must start the supervisor at the first address.
+8. The firmware's linker script must link it for the same address.
+9. The firmware's resource table names the ring and buffer addresses, and the supervisor copies it to `0x91D5_0000` at start.
+
 ### 1. The disabled core
 
 ```text
@@ -189,6 +201,36 @@ virtio_rpmsg_bus virtio0: creating channel pfdaq-supervisor addr 0x0
 ```
 
 The model string is the device tree's; the command-line word is the one that makes the UIO node work; the remoteproc lines show the node of section 3 being used.
+
+![Read-only checks on the running board: the reserved block 0x91C00000 to 0x91D50FFF in /proc/iomem with System RAM resuming at 0x91D51000, two of the kernel's reserved-memory messages, the three UIO device names, and 0-2 as the online CPUs.](../diagrams/lab-b04-checks.svg)
+
+The figure shows the three checks with the output of `device-tree-checks`. Lines that do not matter here are left out, the kernel timestamps are removed, and only two of the five reserved-memory messages are shown.
+
+1. `/proc/iomem` shows one reserved block from `0x91C00000` to `0x91D50FFF`, with the resource table inside it, and System RAM resuming at `0x91D51000`.
+2. The kernel's messages name the regions: the supervisor's firmware region and the resource table, both `nomap`.
+3. The fabric registers (`pfdaq_stream_src`) and the DMA controller appear as UIO devices, in the order Linux found them.
+4. The online CPUs are `0-2`: hart 4 is disabled in the tree.
+
+## Do the same in your project
+
+Use this when a second program shares the chip with Linux and when fabric logic should be reached from user space. The names are this project's; use your own addresses.
+
+1. **Start from your board's tree.** Begin the file with `#include "mpfs-disco-kit.dts"` (your board's tree) and set `model`, so the boot console shows which tree Linux was given.
+2. **Disable the core that is not Linux's.** Write `&cpu4 { status = "disabled"; };` for your core.
+3. **Reserve the second program's memory.** Copy the five `reserved-memory` blocks (firmware region, two rings, buffer pool, resource table) with your addresses and sizes. Mark each `no-map`; the buffer pool also has `compatible = "shared-dma-pool"`.
+4. **Describe the second program to Linux.** Copy the `remote-context` node: `compatible = "microchip,ipc-sbi-remoteproc"`, the five `memory-region` names in the order shown, the mailbox entry `mboxes = <&ihc 8>`, and enable `&ihc`.
+5. **Describe each fabric window you want in user space.** Copy the `uio@40000f00` node and change `reg` (the window), `linux,uio-name` (the name your tools search for) and `interrupts` (here PLIC source 119, which is fabric line 1 plus 118).
+6. **Make U-Boot pass the word that binds the node.** U-Boot's `mpfs_set_bootargs` has to carry `uio_pdrv_genirq.of_id=generic-uio`, or the node gets no driver.
+7. **Get the file into the build** the way module B03 does: copy it into the kernel source and add it to the device-tree Makefile.
+8. **Check it on the board** with the three read-only commands in "Run it": reserved regions, UIO names, online CPUs. Compare them with the recorded output above.
+
+What not to change:
+
+- **Keep `no-map`** on the second program's regions. Without it Linux can map them and corrupt the supervisor at random.
+- **Keep the addresses in step** with the payload, the firmware's linker script and its resource table.
+- **Keep the `generic-uio` word** on the kernel command line and the node's `compatible` as it is.
+- **Map the page, then add the offset.** A UIO window that does not start on a page boundary is reached through the page and an offset, as `0x40000F00` is here.
+- **Do not put the supervisor's core back** in Linux's hands: leave `&cpu4` disabled, or Linux brings up four CPUs.
 
 ## Evidence
 

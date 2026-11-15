@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" width="960" height="420" role="img" aria-labelledby="t d">
+<title id="t">Linux console on the board (excerpt, kernel timestamps removed)</title><desc id="d">Read-only checks on the running board: the reserved block 0x91C00000 to 0x91D50FFF in /proc/iomem with System RAM resuming at 0x91D51000, two of the kernel's reserved-memory messages, the three UIO device names, and 0-2 as the online CPUs.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 15.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 15.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}21.79%{opacity:1}24.79%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="960" height="420" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="960" height="334" fill="#0d1117"/>
+<rect x="0" y="0" width="960" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="480" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">Linux console on the board (excerpt, kernel timestamps removed)</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">grep -i -E 'reserved|91c00000|91d' /proc/iomem</tspan></text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">91c00000-91d50fff : Reserved</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">  91d50000-91d50fff : remote-context rsc-table@91d50000</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">91d51000-91ffffff : System RAM</text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">dmesg | grep -i reserved</tspan></text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">OF: reserved mem: 0x0000000091c00000..0x0000000091cfffff (1024 KiB) nomap non-reusable contextb_reserved@91c00000</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">OF: reserved mem: 0x0000000091d50000..0x0000000091d50fff (4 KiB) nomap non-reusable rsc-table@91d50000</text>
+<text x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">grep -H . /sys/class/uio/uio*/name</tspan></text>
+<text x="24" y="218" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">/sys/class/uio/uio0/name:fpga_lsram</text>
+<text x="24" y="238" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">/sys/class/uio/uio1/name:pfdaq_stream_src</text>
+<text x="24" y="258" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">/sys/class/uio/uio2/name:dma-controller@60010000</text>
+<text x="24" y="278" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">cat /sys/devices/system/cpu/online</tspan></text>
+<text x="24" y="298" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">0-2</text>
+<rect x="0" y="334" width="960" height="86" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="63" width="944" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="65" r="11" fill="#ffd166"/><text x="8" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="334" width="960" height="86" fill="#12171d"/>
+<circle cx="24" cy="360" r="13" fill="#ffd166"/><text x="24" y="365" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="358" font-size="15" font-weight="bold" fill="#e6ecf1">One reserved block</text>
+<text x="48" y="378" font-size="13" fill="#9aa8b5">0x91C00000 to 0x91D50FFF is reserved; RAM resumes at 0x91D51000. The resource table sits inside.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="8" y="143" width="944" height="43" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="145" r="11" fill="#ffd166"/><text x="8" y="149" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="334" width="960" height="86" fill="#12171d"/>
+<circle cx="24" cy="360" r="13" fill="#ffd166"/><text x="24" y="365" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="358" font-size="15" font-weight="bold" fill="#e6ecf1">The kernel names the regions</text>
+<text x="48" y="378" font-size="13" fill="#9aa8b5">Two of the five regions (the others are left out): firmware and resource table, both nomap.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="8" y="203" width="944" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="205" r="11" fill="#ffd166"/><text x="8" y="209" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="334" width="960" height="86" fill="#12171d"/>
+<circle cx="24" cy="360" r="13" fill="#ffd166"/><text x="24" y="365" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="358" font-size="15" font-weight="bold" fill="#e6ecf1">UIO devices</text>
+<text x="48" y="378" font-size="13" fill="#9aa8b5">The fabric registers and the DMA controller appear as UIO devices, in the order Linux found them.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="8" y="283" width="944" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="285" r="11" fill="#ffd166"/><text x="8" y="289" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="334" width="960" height="86" fill="#12171d"/>
+<circle cx="24" cy="360" r="13" fill="#ffd166"/><text x="24" y="365" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="358" font-size="15" font-weight="bold" fill="#e6ecf1">Three CPUs</text>
+<text x="48" y="378" font-size="13" fill="#9aa8b5">Hart 4 is disabled in the tree, so Linux has CPUs 0 to 2.</text>
+</g>
+</svg>

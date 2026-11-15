@@ -44,6 +44,19 @@ The unit then keeps statistics itself, so that a run of a hundred thousand event
 
 ## On this board
 
+One channel of the unit is a small set of counters around one flag. The figure follows an event from the timer to the stored result; each box is a register or signal of `pfdaq_latency_ch` in `hw/rtl/pfdaq_latency.v`.
+
+![Block diagram of one latency channel: a 16-bit LFSR, masked by JITTER_MASK, sets the reload of the 32-bit timer; when the timer is due, pending (the interrupt line) is set; lat_cnt counts while it is high; software writes ACK over APB; lat_now, which is lat_cnt plus one, is stored in the statistics and the histogram; an event that falls due while one is pending is counted in OVERRUN.](../diagrams/lab-h07-latency-unit.svg)
+
+1. The LFSR shifts on every clock; its value, masked by `JITTER_MASK`, is added to `PERIOD` when the timer reloads.
+2. The 32-bit `timer` counts down. When it reads 0 and the unit is enabled, the event is due.
+3. `pending` is set. It is the interrupt output, `IRQ_LAT0` or `IRQ_LAT1`, and it stays high.
+4. `lat_cnt` restarts at 0 and counts while `pending` is high. The line goes to the interrupt controller and then to software.
+5. Software writes `ACK` over APB, in the same clock `PCLK` that the unit counts in.
+6. `lat_now` is `lat_cnt + 1`.
+7. On an `ACK` with an event pending, `lat_now` goes to `LAT_LAST`, `LAT_MIN`, `LAT_MAX`, `LAT_SUM`, `ACKS` and one histogram bin.
+8. If the timer is due while an event is still pending, nothing is raised and `OVERRUN` counts it instead.
+
 ### Where it sits
 
 `pfdaq_core` places two identical copies of the unit, called channels, behind the same APB slot as the stream source. Both are clocked by `PCLK`, the FIC3 clock, which is 50 MHz in this design, so **one count is 20 ns**.
@@ -70,6 +83,15 @@ wire [31:0] lat_now  = lat_cnt + 32'd1;
 What the interval contains is everything between those two events: the line's way to the interrupt controller, the core noticing it, the software, and the write's way back through the MSS and the FIC3 bridge. The unit cannot say how the time divides among these steps. P02 gives the full list of what is and is not included, and what was measured.
 
 Because both ends are counted in the same clock, the only quantisation is the 20 ns of the clock itself. A figure such as 0.52 µs is 26 counts, and so on.
+
+The first event of the simulation in this module's "Run it" section shows it. The waveform is channel 0, phase 1, from a run of the unmodified testbench, with the unit's internal signals added to the dump; one division is one `PCLK` clock.
+
+![Waveform of channel 0, first event of phase 1: IRQ_LAT0 rises, lat_cnt counts from 0 to 11 while it is high, the ACK write arrives in the cycle where lat_cnt is 11 and lat_now is 12, then IRQ_LAT0 falls and LAT_LAST reads 12.](../diagrams/lab-h07-first-event.svg)
+
+1. `IRQ_LAT0` goes high and `lat_cnt` restarts at 0.
+2. `lat_cnt` rises by one every clock while the line is high.
+3. The `ACK` write arrives while `lat_cnt` is 11, so `lat_now` is 12: the cycle of the `ACK` itself is counted.
+4. The line falls and `LAT_LAST` reads 12 counts, 12 × 20 ns = 240 ns.
 
 ### The event generator
 
@@ -107,6 +129,15 @@ end else begin
 It counts the miss in `OVERRUN` and moves on. This keeps the meaning of the measurement clean: a latency is always from an event to its own acknowledge, and a responder that is slower than the period shows up as a count of events it missed, instead of as a backlog that grows without bound.
 
 The `else` branch also covers the case where the acknowledge and the next event arrive in the same cycle. Then the line stays high with a fresh count: the acknowledge belongs to the old event, and the new event starts at once.
+
+Phase 2 of the testbench makes this happen on purpose: period 120, software up to 300 counts late. The figure is its first event on channel 0, again from the unmodified testbench.
+
+![Waveform of channel 0 in phase 2: the first event raises IRQ_LAT0; the timer is due again after 120 and after 240 clocks while the line is still high, and OVERRUN becomes 1 and then 2; the ACK arrives after 311 counts and LAT_LAST reads 311.](../diagrams/lab-h07-overrun.svg)
+
+1. `due` is high for one clock, `IRQ_LAT0` rises and `EVENTS` becomes 1. The timer reloads with `PERIOD`, 120.
+2. 120 clocks later `due` is high again and nobody has answered. Nothing is raised; `OVERRUN` becomes 1 and the line stays high.
+3. After another 120 clocks the same happens: `OVERRUN` is 2. Events are missed, not queued.
+4. The `ACK` arrives after 311 counts (6.22 µs). The line drops and `LAT_LAST` reads 311.
 
 ### Run lengths
 
@@ -216,6 +247,27 @@ RESULT: FAIL
 ```
 
 with many more lines like these. Every latency the unit reports is one too low, and the minimum, maximum, sum and histogram follow. The unit is internally consistent, but it no longer measures what the observer sees. The `+ 1` is part of the definition of the measurement.
+
+## Do the same in your project
+
+You can use the unit as it is, or copy the idea into a block of your own: a counter that starts in hardware when the interrupt is raised and stops in hardware when software touches the device.
+
+1. **Copy the module.** `pfdaq_latency_ch` in `hw/rtl/pfdaq_latency.v` is one channel with no other dependency. Its ports are `clk`, `rstn` (active low), `wr`, `addr[5:0]`, `wdata`, `rdata` and `irq`.
+2. **Wire it to your register bus the way `pfdaq_core.v` does.** `clk` is the clock of the bus that software writes `ACK` through (here `PCLK`); `wr` is high in the access phase of a write to this channel (`sel_lat0 & PENABLE & PWRITE`); `addr` is the word-aligned byte offset inside the channel (`{PADDR[5:2], 2'b00}`); `rdata` goes into your read multiplexer. Give each channel its own 64-byte window, as the two address bits in `pfdaq_core.v` do.
+3. **Connect `irq` to your interrupt controller as a level input.** Software must write `ACK` before it completes the interrupt (module F03). A handler that completes without acknowledging gets the same event again.
+4. **Rename and rescale.** One count is one period of `clk`, so on a different clock the figures change: at 50 MHz it is 20 ns, at another frequency it is that clock's period. Keep `PERIOD` at 2 or more (smaller values are stored as 2). Choose `JITTER_MASK` as a run of low one-bits, such as `0x3F` or `0x3FF`.
+5. **Copy the testbench pattern before you trust it.** Take `hw/tb/tb_pfdaq_latency.v` (the observer that writes `I`, `K` and `R` lines, the `serve` task that answers after a random delay) and `hw/tb/check_latency.py`. The testbench instantiates `pfdaq_core` and reaches it at `32'h40000F00` in its `apb_wr` and `apb_rd` tasks; point both at your own top level. The checker assumes this project's window: the latency registers at offsets `0x80` and `0xC0`, and a read of the stream source's ID and VERSION in phase 0. Change those and nothing else if your window differs. Run it as `make -C hw sim-latency OUT=/tmp/pfdaq-sim` does here; it must end with `RESULT: PASS`.
+6. **Prove the checker sees you.** Make the change of step 4 of "Run it" in a scratch copy: remove the `+ 1` from `lat_now`. The checker must fail with every latency one too low.
+7. **Use it from software.** The order the project's tool follows: write `CTRL` = 0 and acknowledge a stale pending interrupt; write `CTRL` = `CLEAR`; write `PERIOD` and `COUNT_LIMIT`; write `CTRL` with the jitter mask in bits 31 to 16 and `ENABLE`. Your handler writes `ACK`. The run is over when `STATUS` bits 0 and 1 are both 0.
+8. **Read the result.** Mean = `LAT_SUM` / `ACKS`; the distribution comes from `HIST_SEL` and `HIST_DATA` (module H08). `EVENTS` should equal `ACKS`; `OVERRUN` says how many events your responder missed, and `SPURIOUS` how many `ACK` writes had nothing to acknowledge.
+
+What not to change:
+
+- **The `+ 1` in `lat_now`.** It defines the measurement: the cycle in which `ACK` arrives is counted, and the smallest latency is 1.
+- **One clock for counting and for `ACK`.** If your `ACK` write arrives in another clock domain, there is a crossing the unit does not have; module H03 covers it.
+- **Missed events, not queued ones.** Without the `OVERRUN` branch a slow responder builds a backlog and the latencies stop meaning "event to its own acknowledge".
+- **The jitter.** Without it the events stay in step with anything periodic in your software.
+- **Do not start an event with `ONESHOT` right after `CLEAR`.** Wait for `STATUS` bit 2 to fall (module H08).
 
 ## Evidence
 

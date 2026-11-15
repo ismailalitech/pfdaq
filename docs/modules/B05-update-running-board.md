@@ -42,6 +42,15 @@ A running Linux can rewrite the same SD card it booted from, as long as the piec
 | The boot payload (U-Boot and the hart 4 firmware) | partition 2, raw, no filesystem | `dd` the file onto the partition | yes |
 | The fabric | not on the card | JTAG only, see module B06 | no |
 
+![Where each kind of update goes on the running board: the Linux tools and module go to the root filesystem on partition 3 and need no reboot; the kernel image goes to the FAT partition 1 by mount, copy, sync and a checksum compare; the boot payload goes to the raw partition 2 with dd and a read-back checksum compare. After a reboot you check that remoteproc is attached and the supervisor channel is present.](../diagrams/lab-b05-update-paths.svg)
+
+1. The files to install come from the PC: built by Yocto or by `firmware/build_payload.sh`.
+2. The Linux tools and the optional module go to the root filesystem, partition 3. This needs no reboot.
+3. The kernel image goes to the FAT partition, partition 1: mount, copy, `sync`, and a comparison of checksum prefixes.
+4. The boot payload goes to the raw partition 2 with `dd`, followed by a read-back checksum compared with the PC's.
+5. A kernel or payload change needs a reboot.
+6. After the reboot you check that remoteproc is attached, that the `pfdaq-supervisor` channel exists and that a supervised capture passes.
+
 The record of a cold boot shows why these are separate. The boot monitor finds its boot partition on the SD card ("Boot Partition found at index 1", the second partition) and reads the payload from it. U-Boot, started from that payload, then loads the kernel from the FAT partition ("Loading kernel (any) from FIT Image at 8e000000"), and Linux mounts its root from the third partition (`root=/dev/mmcblk0p3` on its command line).
 
 ## On this board
@@ -126,6 +135,33 @@ After a reboot with a good payload and kernel, the Linux console shows the real-
 ```
 
 In the project's 30-cycle warm-reboot test, run on the final payload, every cycle ended with remoteproc attached, the supervisor channel present and the supervised capture passing, and SSH was reachable between 45.9 and 61.4 seconds after the `reboot` command.
+
+![Lines of the 30-cycle warm-reboot record: the header, cycles 1, 2 and 30 with the time until SSH answered, remoteproc attached, the supervisor channel present and both capture checks true, and the final line, 30 of 30.](../diagrams/lab-b05-reboot-30.svg)
+
+The figure shows lines of `reboot-30`; the line of three dots marks cycles 3 to 29, which are left out.
+
+1. The header names what each cycle records: the seconds until SSH answered, the remoteproc state, the supervisor channel, the capture result and the supervisor result.
+2. Cycles 1 and 2: SSH was back after 61.4 and 46.1 seconds, remoteproc attached, channel present, both checks true.
+3. Cycle 30 looks the same, and the record's last line sums up: supervisor channel present 30 of 30, full pass 30 of 30.
+
+## Do the same in your project
+
+Use this when a board must be updated many times a day and you do not want to swap the card. The names are this project's.
+
+1. **Write down what lives where.** Copy the table in "The idea" and fill it in for your system: for each kind of change, the partition, the way it is updated and whether it needs a reboot. List the partitions of your card first and do not go on until they match what you wrote.
+2. **Keep a proven image on the PC.** Write the full image to a card with `bmaptool` once, and keep that image and its block map. It is the only rollback that does not depend on the board.
+3. **Install files that need no reboot** (tools, a kernel module) as in step 1 of "Run it": `scp` to the board, then `install`, then for a module `depmod -a`.
+4. **Install the kernel image** as in step 2: mount the FAT partition, save the old image once under another name, copy, `sync`, compare the first 16 characters of `sha256sum` on the board and on the PC, unmount. Join the steps with `&&` so nothing runs after a failed mount.
+5. **Install the payload** as in step 3. Run `lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT /dev/mmcblk0` first and read it: partition 2 must be the unmounted raw payload partition. Then save the old payload once, `dd` with `conv=fsync`, read back exactly as many bytes as the file has, and compare checksums.
+6. **Reboot and check both systems.** Adapt `tests/host/amp_reboot_test.sh`: it takes the number of cycles, an output file and the board address (or `PFDAQ_BOARD`), and per cycle waits for SSH, reads the remoteproc state, looks for the supervisor's message channel and runs a supervised capture. Replace the channel name and the capture with your own check that both systems are up.
+7. **Decide with a fresh card.** Use the SSH route to iterate, then write the image to a blank card and boot it before you say that something works.
+
+What not to change:
+
+- **Never write to a device you have not just listed.** A wrong target for `dd` is the one mistake this method cannot undo.
+- **Do not drop the `&&` chain, the save-once guard or the exact-length read-back.** Each stops a specific failure described above.
+- **Do not reboot while the two checksum prefixes differ.**
+- **Do not use this route for the fabric or the boot flash.** The fabric is changed by JTAG only (module B06), and the chip's boot flash is never touched.
 
 ## Evidence
 

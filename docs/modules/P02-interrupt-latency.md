@@ -69,6 +69,13 @@ One count is 20 ns. The interval runs **from** the first clock cycle in which th
 
 So the figure is the time to the *first effect on hardware*, which is what matters when an interrupt asks for something to be done to a device.
 
+![What the latency unit measures: it raises the interrupt line and starts counting 20 ns cycles, the line reaches the PLIC and then the responding hart, software claims the interrupt and writes ACK, and the write travels back through the MSS, FIC3 and the APB bus to the unit, which stops the count.](../diagrams/lab-p02-measured-interval.svg)
+
+1. **The unit starts counting** 50 MHz cycles (20 ns each) from the first cycle in which the interrupt line is high.
+2. **The line reaches the PLIC** (source 119 for channel 0, source 123 for channel 1).
+3. **The responder runs:** the hart notices, enters its trap code, claims the interrupt, finds the handler and does whatever it does before it writes `ACK`.
+4. **The `ACK` write comes back** through the MSS, FIC3 and the APB bus; the count stops in the cycle in which it arrives. Completing the interrupt and returning are after that and are not counted.
+
 The unit keeps its statistics itself: minimum, maximum, sum, and a histogram with two bins per power of two. Software reads them after the run. Two details of the unit shape how the results must be read:
 
 - **Jitter.** A pseudo-random value of 0 to 1023 cycles (0 to 20.46 µs) is added to every interval, so events do not stay in step with a periodic software tick.
@@ -198,6 +205,40 @@ The first command of step 2, from the same run:
 
 `"pass": false` means only that `overrun` is not zero. For the Linux rows that is the result, not a fault of the test. `empty_wakeups` is the second wake-up per event described in I02.
 
+![The recorded JSON results of the hart 4 handler run and of the Linux user-space run, with callouts on lost events, the histogram bins and the tail.](../diagrams/lab-p02-records.svg)
+
+The figure shows both records with the lines folded; fields marked `...` are left out.
+
+1. **The hart 4 run:** channel 1 at a 200 µs period, answered by the handler on hart 4.
+2. **Nothing lost:** `events` equals `acks` and `overrun` is 0.
+3. **One bin holds almost everything:** 99,601 of 100,000 samples are between 0.48 and 0.64 µs; the largest value is 2.10 µs.
+4. **The Linux user-space run:** channel 0 at a 500 µs period, answered by a program through the generic UIO driver.
+5. **Missed events and double wake-ups:** `overrun` is 89 and `empty_wakeups` is 99,967.
+6. **Typical 60 to 80 µs, tail to 5 ms:** 78,470 samples are between 61.44 and 81.92 µs, and the last bin, 3.93 to 5.24 ms, still holds 5.
+
+## Do the same in your project
+
+You can measure the interrupt latency of any responder in your own design the same way: let hardware start the clock when it raises the line and stop it when software acknowledges.
+
+1. **Build the measuring unit in your fabric.** Take `pfdaq_latency_ch` from `hw/rtl/pfdaq_latency.v`. It counts clock cycles while its interrupt line is high; the acknowledge write latches `lat_now = lat_cnt + 1`. It keeps the minimum, maximum and sum, a histogram with two bins per power of two in block RAM, and an `OVERRUN` count. Change only the clock: here one count is one 50 MHz cycle, 20 ns.
+2. **Decide where the interval ends and write it down.** Here it ends at the APB write of the channel's `ACK` register. Copy the included and not-included table above and edit it for your responder.
+3. **Keep the jitter and the missed-event rule.** The unit adds a pseudo-random 0 to 1023 cycles to every interval so events do not stay in step with a software tick, and it does not raise an event while the previous one is unacknowledged but counts it in `OVERRUN`. Without the jitter, a periodic responder can hide behind a periodic tick.
+4. **Give each responder its own channel and line.** Here channel 0 is F2M[1], source 119, for Linux, and channel 1 is F2M[5], source 123, enabled only for hart 4 (module F03). Replace the source numbers with your own.
+5. **Write the smallest responder first.** The handler body is one write to `ACK` (`SRC_REG(LAT1_ACK) = 1u`) and a counter. For a task, mask the source in the handler, give a semaphore and let the task acknowledge and unmask (`PLIC_DisableIRQ`, `xSemaphoreGiveFromISR`, `portEND_SWITCHING_ISR`). For Linux, acknowledge in a kernel handler after checking that the unit really has an interrupt pending (`pfdaq_uio_handler`), or from a program woken through the generic UIO driver.
+6. **Print one record per run** with `events`, `acks`, `overrun`, the minimum, mean, percentiles, maximum and the histogram, as `pfdaq_lat` does. The call is `pfdaq_lat -c <channel> -p <period in µs> -n <events>`, plus `-R 80` for real-time priority in user space and `-k` for the kernel handler.
+7. **Run each responder idle and loaded, 100,000 events each,** and tabulate minimum, mean, p99 upper bound, maximum and missed events. The load here is one busy loop per Linux CPU plus a capture that never stops.
+
+Check that it works: `events` equals `acks` in every row, and your simplest handler row is a single bin with a maximum a few counts above the minimum (here 0.52 µs mean, 2.10 µs maximum, 99,601 of 100,000 in one bin).
+
+**What not to change**
+
+- Do not read a software clock to time the response; the timer would sit on the far side of the delays you want to see.
+- Keep `ACK` as the end of the interval, and say what is not counted. Work done after it is not in the figure.
+- Use a longer period for the slow responders. The user-space rows use 500 µs because a period shorter than the typical latency shows up as missed events.
+- Report the maximum and the missed events, not only the mean. One run of 100,000 events can only show that a bound was not exceeded in that run.
+- Read percentiles as upper bounds: the histogram bins are about a factor of 1.5 wide.
+- Record the kernel configuration with the Linux rows (here no preemption, 250 Hz tick, no CPU isolation, default affinity).
+
 ## Evidence
 
 All figures are from fabric v0.5.1 on one board, one run of 100,000 events per row, in µs. The event period is 200 µs for the hart 4 and kernel rows and 500 µs for the user-space rows, plus the jitter. "Loaded" is the load of step 5. "Missed" is the `OVERRUN` count.
@@ -219,6 +260,15 @@ All figures are from fabric v0.5.1 on one board, one run of 100,000 events per r
 The FreeRTOS and Linux rows come from the FreeRTOS suite, the bare-metal rows from the bare-metal suite; both raw outputs hold the complete histograms. The suite did not measure Linux user space with default scheduling under load.
 
 In every row `events` equals `acks`: no interrupt was lost on its way to the responder. On channel 1 no event was missed in any run.
+
+![Four responders, idle board. On hart 4 a FreeRTOS handler has a mean of 0.52 microseconds and a maximum of 2.10; a task woken by that handler adds a semaphore and a task switch and has a mean of 2.04 and a maximum of 11.66. In Linux the kernel handler has a mean of 4.41 and a maximum of 1298.18; a user-space program adds the scheduler wake-up, poll and reads and has a mean of 78.31 and a maximum of 5130.60.](../diagrams/lab-p02-responders.svg)
+
+1. **FreeRTOS handler on hart 4:** mean 0.52 µs, p99 ≤ 0.62 µs, maximum 2.10 µs, no missed events.
+2. **FreeRTOS task on hart 4:** the handler masks the source, gives a semaphore and the port switches to the task. Mean 2.04 µs, maximum 11.66 µs, no missed events.
+3. **Linux kernel handler:** mean 4.41 µs but a maximum of 1,298.18 µs, and 6 missed events.
+4. **Linux user space:** the kernel wakes the program, which returns from `poll`, reads and only then writes `ACK`. Mean 78.31 µs, maximum 5,130.60 µs, 89 missed events (500 µs period).
+
+The numbers are the idle rows of the table above.
 
 ### Reading the table
 

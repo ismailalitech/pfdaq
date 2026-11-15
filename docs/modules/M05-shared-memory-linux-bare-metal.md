@@ -69,6 +69,16 @@ The test is the pair of functions `run_shm` in the Linux tool and `memchk` on th
 3. The real-time hart reads every word, counts those that differ from the sequence, **writes the bitwise inverse** in the same place, executes `fence rw, rw`, and replies with the number of mismatches and the number of words checked.
 4. Linux then reads every word and counts those that differ from the inverse.
 
+The same four steps as turns, with the two windows underneath:
+
+![One iteration of the shared-memory test, by turns. Linux fills 64 K words with an xorshift32 sequence and executes a full barrier; it sends one MEMCHK message with the physical address, the word count and the seed; hart 4 reads every word, counts those that differ, writes the inverse back and executes fence rw, rw; it replies with the number of mismatches and words checked; Linux then reads every word and expects the inverse.](../diagrams/lab-m05-memchk-turns.svg)
+
+1. Linux's turn: it writes the whole region, then executes a full barrier. Hart 4 does not touch the region yet.
+2. The MEMCHK message hands the turn over. It carries only the physical address, the word count and the seed; the data stays where it is.
+3. Hart 4's turn: it reads each word and counts the differences, writes the inverse in the same place, and executes `fence rw, rw`.
+4. The acknowledgement hands the turn back, carrying the mismatch count and the number of words checked.
+5. Linux's turn again: it reads every word and expects the inverse. The region sits in one of the two windows below, at the offset the test uses.
+
 ```c
 /* firmware/u54_4-supervisor/pfdaq_supervisor.c */
 for (i = 0; i < words; i++) {
@@ -112,6 +122,37 @@ From the FreeRTOS suite (`suite-freertos`) and the bare-metal suite (`suite-bare
 | Bare metal | cached | 65,536 × 50 | 0 | 0 | 18.77 ms |
 
 "Time per check" is measured on the Linux side from just before the message is sent to just after the reply arrives. It therefore contains the message exchange and the hart's whole pass over 64 K words, and none of Linux's own writing or verifying. The non-cached runs are about 11 ms slower in both contexts. That is consistent with uncached accesses being slower than cached ones, and nothing more specific was measured. The few milliseconds of difference between FreeRTOS and bare metal were not investigated.
+
+The commands, as recorded in the FreeRTOS suite, with hart 4's side of the same runs:
+
+![The shared-memory test, cached and non-cached. Each run is 50 iterations of 65,536 words with 0 mismatches seen by hart 4 and 0 seen by Linux. The cached run reports a mean check of 20.104 ms at physical address 0x88100000, the non-cached run 31.148 ms at 0xc9f00000. Hart 4's console prints one MEMCHK line per iteration: 65536 words, 0 mismatches, inverse written.](../diagrams/lab-m05-memchk-run.svg)
+
+1. `-X` is the word count, `-n` the number of iterations and `-c` selects the cached window. Nobody flushes or invalidates a cache.
+2. Hart 4 saw 0 mismatches and Linux saw 0, over 50 passes of 65,536 words, with no RPMsg failure.
+3. Hart 4 prints one `MEMCHK` line per iteration, 50 per run; one is shown. The address in it is the physical address Linux read from sysfs.
+4. The same command without `-c` uses the non-cached window, the one the DMA buffers live in.
+5. The check takes 31.148 ms against 20.104 ms. The time includes the message exchange and the hart's whole pass over the region.
+
+The JSON lines are wrapped for display. The console lines are from the fresh-card run of the suite.
+
+## Do the same in your project
+
+You have Linux on some cores and a bare-metal or RTOS context on another, and you want to know that data written by one is read correctly by the other. Work in this order.
+
+1. **Reserve one region per kind of mapping.** In the device tree, mark each pool `no-map` so that Linux does not use it for ordinary memory, and expose it through a u-dma-buf device. The project has `udmabuf-ddr-c0` (`0x8800_0000`, 32 MiB, cacheable on Linux) and `udmabuf-ddr-nc0` (`0xC800_0000`, 32 MiB, non-cached). Use your own windows and names.
+2. **Keep the test away from your real buffers.** The project works at offset `0x100000` in the cached region and `0x1F00000` in the non-cached one.
+3. **Pass a physical address.** Read it from `/sys/class/u-dma-buf/<device>/phys_addr` and add the offset. The other context uses it directly as a pointer, so it must be the physical address of the window, never a virtual one. Open the non-cached device with `O_SYNC` and the cached one without it.
+4. **Add the message type to your RPMsg protocol.** `MEMCHK` is type 6 with the physical address, the word count and the seed in three of the existing fields (module M02).
+5. **Write the two halves of the protocol.** Linux: fill the region from an xorshift32 sequence, `__sync_synchronize()`, send the message, then read every word and count those that differ from the inverse. The other context (`memchk()`): read every word and count those that differ from the sequence, write the bitwise inverse, execute `fence rw, rw`, and answer with the mismatch count and the number of words. Make the pointer `volatile`.
+6. **Run it and read the three counters.** `pfdaq_cap -X 65536 -n 50` for the non-cached region and `pfdaq_cap -X 65536 -n 50 -c` for the cached one. In each JSON line expect `mismatch_seen_by_u54_4` 0, `mismatch_seen_by_linux` 0 and `rpmsg_fail` 0. The tool clamps `-X` to 0x40000 words.
+7. **Run the cached variant too, with no cache maintenance on either side.** That is the point of the test: it shows whether the sharing pattern you chose works as it is. If it reports mismatches that grow with the pattern size, you have found a cache effect; none has been seen on this board.
+
+What not to change:
+
+- **Turn taking.** Never let both sides touch the region at the same time; this test says nothing about that.
+- **A message between every two turns.** The barriers and the RPMsg round trip sit between each write and the next read. Leaving them out was not tried here.
+- **Non-cached memory for anything a non-processor master writes.** Coherence with fabric DMA is not covered by this test; the project's DMA buffers are non-cached on purpose (module I05).
+- **How much you claim from a pass.** Zero mismatches in 50 passes is evidence for this access pattern, on one board, in one run of the suite.
 
 ## Evidence
 

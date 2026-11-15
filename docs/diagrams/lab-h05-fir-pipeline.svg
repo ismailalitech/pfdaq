@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 350" width="900" height="350" role="img" aria-labelledby="t d">
+<title id="t">The FIR source. Two triangle-wave samples per clock enter a four-stage pipeline: window, sixteen products, eight partial sums, two results. The results go into a 16-word FIFO. Registered head words feed the frame generator, which checks fir_ok before every beat. A credit rule reads the FIFO count and the stages in flight and decides whether a new pair of samples may be issued.</title><desc id="d">The FIR source. Two triangle-wave samples per clock enter a four-stage pipeline: window, sixteen products, eight partial sums, two results. The results go into a 16-word FIFO. Registered head words feed the frame generator, which checks fir_ok before every beat. A credit rule reads the FIFO count and the stages in flight and decides whether a new pair of samples may be issued.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 56.00s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 56.00s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}5.36%{opacity:1}8.36%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="350" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M160,65 L190,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.00s" d="M160,65 L190,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e1">
+<path d="M330,65 L360,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:9.00s" d="M330,65 L360,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e2">
+<path d="M500,65 L530,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:15.00s" d="M500,65 L530,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e3">
+<path d="M670,65 L700,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:21.00s" d="M670,65 L700,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e4">
+<path d="M770,100 L770,190" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:27.00s" d="M770,100 L770,190" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e5">
+<path d="M700,225 L640,225" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:33.00s" d="M700,225 L640,225" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e6">
+<path d="M480,225 L430,225" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:39.00s" d="M480,225 L430,225" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e7">
+<path d="M770,260 L770,296 L115,296 L115,260" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:45.00s" d="M770,260 L770,296 L115,296 L115,260" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="337.68" y="274" width="209.64" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="442.5" y="286.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">count, and v1..v4 of the stages</text>
+</g>
+<g id="e8">
+<path d="M153,190 L153,145 L232,145 L232,100" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:51.00s" d="M153,190 L153,145 L232,145 L232,100" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="171.4" y="123" width="42.2" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="192.5" y="135.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">issue</text>
+</g>
+<g id="inp">
+<rect x="20" y="30" width="140" height="70" rx="9" fill="#1e2530" stroke="#6b7b8c" stroke-width="1.5"/>
+<text x="90" y="61" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Triangle input</text>
+<text x="90" y="78" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">tri((i + 1) * STEP)</text>
+<rect class="hl" style="animation-delay:0.00s" x="19" y="29" width="142" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="s1">
+<rect x="190" y="30" width="140" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="260" y="52.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">1 Window</text>
+<text x="260" y="69.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">w[0..8]</text>
+<text x="260" y="86.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">two new samples</text>
+<rect class="hl" style="animation-delay:6.00s" x="189" y="29" width="142" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="s2">
+<rect x="360" y="30" width="140" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="430" y="52.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">2 Products</text>
+<text x="430" y="69.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">p0, p1</text>
+<text x="430" y="86.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">16 multiplies</text>
+<rect class="hl" style="animation-delay:12.00s" x="359" y="29" width="142" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="s3">
+<rect x="530" y="30" width="140" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="600" y="52.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">3 Partial sums</text>
+<text x="600" y="69.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">q0, q1</text>
+<text x="600" y="86.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">8 additions</text>
+<rect class="hl" style="animation-delay:18.00s" x="529" y="29" width="142" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="s4">
+<rect x="700" y="30" width="140" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="770" y="52.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">4 Results</text>
+<text x="770" y="69.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">y0, y1</text>
+<text x="770" y="86.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">32 bit, wrapped</text>
+<rect class="hl" style="animation-delay:24.00s" x="699" y="29" width="142" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="fifo">
+<rect x="700" y="190" width="140" height="70" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="770" y="212.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">FIFO</text>
+<text x="770" y="229.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">16 words</text>
+<text x="770" y="246.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">mem, wp, rp, count</text>
+<rect class="hl" style="animation-delay:30.00s" x="699" y="189" width="142" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="heads">
+<rect x="480" y="190" width="160" height="70" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="560" y="212.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">head0, head1</text>
+<text x="560" y="229.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">next two words,</text>
+<text x="560" y="246.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">registered</text>
+<rect class="hl" style="animation-delay:36.00s" x="479" y="189" width="162" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="gen">
+<rect x="260" y="190" width="170" height="70" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="345" y="212.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Frame generator</text>
+<text x="345" y="229.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">pops 0, 1 or 2 words</text>
+<text x="345" y="246.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">only if fir_ok</text>
+<rect class="hl" style="animation-delay:42.00s" x="259" y="189" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="rule">
+<rect x="20" y="190" width="190" height="70" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="115" y="212.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Credit rule: issue</text>
+<text x="115" y="229.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">count + 2 * inflight</text>
+<text x="115" y="246.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">+ 2 &lt;= 16</text>
+<rect class="hl" style="animation-delay:48.00s" x="19" y="189" width="192" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="322" text-anchor="start" font-size="12" fill="#9aa8b5">A new pair is issued only if the FIFO can hold everything already in flight plus the two new results, so the pipeline can always drain.</text>
+</svg>

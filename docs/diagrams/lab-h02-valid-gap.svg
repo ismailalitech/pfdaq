@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 390" width="900" height="390" role="img" aria-labelledby="t d">
+<title id="t">Two waveforms of the same first 120 ns of scenario 1, which sends one packet of five frames with TREADY always high. As built, TVALID is high on every clock and a beat goes on every edge. With w_ready changed to ~out_valid, TVALID is high only every second clock, so the same beats take twice as long and every low clock inside the packet is a TVALID gap. The beat rows number the beats of each 12-word frame, 0 to 5.</title><desc id="d">Two waveforms of the same first 120 ns of scenario 1, which sends one packet of five frames with TREADY always high. As built, TVALID is high on every clock and a beat goes on every edge. With w_ready changed to ~out_valid, TVALID is high only every second clock, so the same beats take twice as long and every low clock inside the packet is a TVALID gap. The beat rows number the beats of each 12-word frame, 0 to 5.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 12.20s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 12.20s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}27.87%{opacity:1}30.87%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="390" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="296" fill="#0d1117"/>
+<line x1="140" y1="30" x2="140" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="140" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2300 ns</text>
+<line x1="263.333" y1="30" x2="263.333" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="263.333" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2320 ns</text>
+<line x1="386.667" y1="30" x2="386.667" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="386.667" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2340 ns</text>
+<line x1="510" y1="30" x2="510" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="510" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2360 ns</text>
+<line x1="633.333" y1="30" x2="633.333" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="633.333" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2380 ns</text>
+<line x1="756.667" y1="30" x2="756.667" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="756.667" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2400 ns</text>
+<line x1="880" y1="30" x2="880" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="880" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2420 ns</text>
+<text x="12" y="66" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">ACLK</text>
+<path d="M140,54 L140,54 L164.667,54 L164.667,74 L189.333,74 L189.333,54 L214,54 L214,74 L238.667,74 L238.667,54 L263.333,54 L263.333,74 L288,74 L288,54 L312.667,54 L312.667,74 L337.333,74 L337.333,54 L362,54 L362,74 L386.667,74 L386.667,54 L411.333,54 L411.333,74 L436,74 L436,54 L460.667,54 L460.667,74 L485.333,74 L485.333,54 L510,54 L510,74 L534.667,74 L534.667,54 L559.333,54 L559.333,74 L584,74 L584,54 L608.667,54 L608.667,74 L633.333,74 L633.333,54 L658,54 L658,74 L682.667,74 L682.667,54 L707.333,54 L707.333,74 L732,74 L732,54 L756.667,54 L756.667,74 L781.333,74 L781.333,54 L806,54 L806,74 L830.667,74 L830.667,54 L855.333,54 L855.333,74 L880,74 L880,54 L880,54" fill="none" stroke="#6b7b8c" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="106" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TREADY</text>
+<path d="M140,94 L140,94 L880,94" fill="none" stroke="#5aa0d6" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="146" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TVALID, as built</text>
+<path d="M140,154 L140,154 L238.667,154 L238.667,134 L880,134" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="186" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">beat, as built</text>
+<rect x="140.5" y="173" width="97.6667" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="189.333" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="239.167" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="263.333" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="288.5" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="312.667" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="337.833" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="362" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<rect x="387.167" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="411.333" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">3</text>
+<rect x="436.5" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="460.667" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">4</text>
+<rect x="485.833" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="510" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">5</text>
+<rect x="535.167" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="559.333" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="584.5" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="608.667" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="633.833" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="658" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<rect x="683.167" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="707.333" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">3</text>
+<rect x="732.5" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="756.667" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">4</text>
+<rect x="781.833" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="806" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">5</text>
+<rect x="831.167" y="173" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="855.333" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="880.5" y="173" width="1" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="12" y="226" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TVALID, broken</text>
+<path d="M140,234 L140,234 L238.667,234 L238.667,214 L288,214 L288,234 L337.333,234 L337.333,214 L386.667,214 L386.667,234 L436,234 L436,214 L485.333,214 L485.333,234 L534.667,234 L534.667,214 L584,214 L584,234 L633.333,234 L633.333,214 L682.667,214 L682.667,234 L732,234 L732,214 L781.333,214 L781.333,234 L830.667,234 L830.667,214 L880,214 L880,234 L880,234" fill="none" stroke="#ef6f6c" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="266" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">beat, broken</text>
+<rect x="140.5" y="253" width="97.6667" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="189.333" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="239.167" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="263.333" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="288.5" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="312.667" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="337.833" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="362" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="387.167" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="411.333" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="436.5" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="460.667" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<rect x="485.833" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="510" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="535.167" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="559.333" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">3</text>
+<rect x="584.5" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="608.667" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="633.833" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="658" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">4</text>
+<rect x="683.167" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="707.333" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="732.5" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="756.667" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">5</text>
+<rect x="781.833" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="806" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="831.167" y="253" width="48.3333" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="855.333" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="880.5" y="253" width="1" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<rect x="0" y="296" width="900" height="94" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="238.667" y="30" width="296" height="260" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="238.667" cy="30" r="11" fill="#ffd166"/><text x="238.667" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="296" width="900" height="94" fill="#12171d"/>
+<circle cx="24" cy="324" r="13" fill="#ffd166"/><text x="24" y="329" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="322" font-size="15" font-weight="bold" fill="#e6ecf1">As built</text>
+<text x="48" y="342" font-size="13" fill="#9aa8b5">TVALID stays high on every clock. The 6 beats of the first frame go on 6 consecutive edges.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="238.667" y="30" width="542.667" height="260" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="238.667" cy="30" r="11" fill="#ffd166"/><text x="238.667" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="296" width="900" height="94" fill="#12171d"/>
+<circle cx="24" cy="324" r="13" fill="#ffd166"/><text x="24" y="329" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="322" font-size="15" font-weight="bold" fill="#e6ecf1">w_ready = ~out_valid</text>
+<text x="48" y="342" font-size="13" fill="#9aa8b5">TVALID is high only every second clock. The same 6 beats are spread over twice the time.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="288" y="30" width="49.3333" height="260" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="288" cy="30" r="11" fill="#ffd166"/><text x="288" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="296" width="900" height="94" fill="#12171d"/>
+<circle cx="24" cy="324" r="13" fill="#ffd166"/><text x="24" y="329" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="322" font-size="15" font-weight="bold" fill="#e6ecf1">A gap inside the packet</text>
+<text x="48" y="342" font-size="13" fill="#9aa8b5">No data is wrong, but this is a TVALID gap: the testbench logs VALID_GAP. This DMA needs none.</text>
+</g>
+</svg>

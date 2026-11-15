@@ -106,6 +106,14 @@ if (crc32_words(w, flen - 1) != w[flen - 1]) st->bad_crc++;
 
 Two details matter. A frame with a bad magic word is counted and skipped; the sequence number and the model do not advance for it. And a sequence number that jumps forward is a **gap** only in real-time mode (`allow_gaps`, module [I07](I07-real-time-capture.md)), where the fabric deliberately drops frames. In burst mode it is an error.
 
+![A frame of 32-bit words and the check that catches each kind of damage: magic and length, the sequence number, the payload recomputed by a model, and the CRC-32 in the last word. The timestamp is not compared.](../diagrams/lab-i06-frame-checks.svg)
+
+1. Word 0 must be `0xA55A0000 | payload_words`; if it is not, `bad_magic` goes up and the frame is skipped.
+2. Word 1 must be the expected sequence number; if not, `bad_seq` goes up (in real-time mode a forward jump goes into `seq_gap`).
+3. The timestamp in word 2 is not compared.
+4. The payload words are recomputed by the model of the mode (counter, PRBS or FIR); a difference is `bad_payload`.
+5. The last word must equal `crc32_words` over words 0 to N+2; a difference is `bad_crc`.
+
 ### The burst loop
 
 The tool uses two buffers in the non-cached region and overlaps the work: the next burst is armed and started before the previous one is verified.
@@ -117,7 +125,7 @@ The tool uses two buffers in the non-cached region and overlaps the work: the ne
 | 3 | wait for the DMA's completion interrupt for burst `k` (`wait_done`, module I04) |
 | 4 | repeat with the other buffer |
 
-With `-s` ("serial") each burst is verified before the next is started, which keeps DMA timing clean for measurements at the price of overlap. With `-r` every verified burst is reported to the supervisor on hart 4 over RPMsg (module M03, planned): its number, the next expected sequence number and the error count.
+With `-s` ("serial") each burst is verified before the next is started, which keeps DMA timing clean for measurements at the price of overlap. With `-r` every verified burst is reported to the supervisor on hart 4 over RPMsg (module [M03](M03-real-time-supervisor.md)): its number, the next expected sequence number and the error count.
 
 ## Run it
 
@@ -165,6 +173,13 @@ Each fault type was injected into each payload mode, 20 bursts of 1,024 frames:
 
 The counts were the same for counter, PRBS and FIR. The payload row has `bad_crc` equal to `bad_payload` because the fabric computes the CRC over the *intended* payload, so a flipped bit is caught twice. The tool knows that and expects exactly those counts; a run passes only when the counters equal what was injected.
 
+![Three recorded fault-injection runs with the counter payload: a CRC fault injected four times gives bad_crc 4, a sequence fault injected five times gives bad_seq 5, and a payload fault injected twice gives bad_payload 2 and bad_crc 2. Fields not discussed are shown as [...].](../diagrams/lab-i06-fault-counts.svg)
+
+1. A corrupted CRC every fifth burst: 4 faults injected, `bad_crc` 4, and no other counter moves.
+2. A skipped sequence number every fourth burst: 5 injected, `bad_seq` 5.
+3. A flipped payload bit every tenth burst: 2 injected, `bad_payload` 2 and `bad_crc` 2.
+4. `pass` is true in all three because the counters equal what was injected.
+
 ### Where the speed goes
 
 | Payload | End to end | Copy out | Verify |
@@ -177,7 +192,34 @@ Take the reciprocals and add the two software stages: copy and verify run one af
 
 The fabric side is far faster. The shortest `start_to_irq` in the counter run is 1.218 ms, for the first burst, which has no earlier burst to verify first; 1,048,576 bytes in 1.218 ms is 861 MB/s, and that figure includes the register writes and the wake-up. The mean in the same run is 34.3 ms, because from the second burst on the loop spends its time verifying the previous burst before it waits for the next one. The software, not the DMA, sets the pace.
 
+![Two recorded burst runs of pfdaq_cap, 32 bursts of 1 MiB: the counter payload reaches 29.60 MB/s end to end with a copy rate of 70.5 MB/s and a verify rate of 55.4 MB/s; the FIR payload reaches 8.70 MB/s because its verify rate is 10.2 MB/s. Fields not discussed are shown as [...].](../diagrams/lab-i06-where-the-speed-goes.svg)
+
+1. 32 bursts of 1 MiB, 33,554,432 bytes, and every error counter is 0.
+2. The shortest `start_to_irq_s` is 1.218 ms (the first burst); the mean is 34.325 ms.
+3. `copy_mb_per_s` 70.5 and `verify_mb_per_s` 55.4 run one after the other, which gives about 31.0 MB/s; the recorded end-to-end rate is 29.60 MB/s.
+4. For FIR the copy rate is the same, but `verify_mb_per_s` is 10.2, so the end-to-end rate is 8.70 MB/s.
+
 FIR is slow because its model does eight multiply-adds and a history shift per word. That its verify column is a fifth of the counter's is recorded; that the model's arithmetic is the cause is the natural reading and was not profiled.
+
+## Do the same in your project
+
+The goal is a receiver that proves every word of a stream, and that you can trust because it has caught faults you put there on purpose. The names are this project's.
+
+1. **Make every word computable.** The frame is word 0 `0xA55A0000 | payload_words`, word 1 the sequence number, word 2 a timestamp, the payload, and a CRC-32 over all earlier words as the last word. Choose payload generators that are functions of the sequence number and the position (the project's are a counter, an xorshift32 PRBS and an 8-tap FIR).
+2. **Write the model as a second implementation of the generators.** Port `xs32`, `tri16` and `payload_bad` and change only what your fabric does: the PRBS start (`seq ^ 0x9E3779B9`, or 1 if that is 0), the FIR coefficients (written to the fabric's `COEF` registers and to the model from the same table) and the step.
+3. **Check in this order for each frame:** magic and length (skip the frame if wrong), sequence number, payload against the model, then CRC. Keep one counter per kind (`bad_magic`, `bad_seq`, `bad_payload`, `bad_crc`).
+4. **Let the model state advance on a bad frame.** For a filter, advance it for every payload word even when the frame is bad, and restart it (`model_restart`) at the start of every burst, because the fabric starts a new run at every START.
+5. **Copy the burst out of the DMA buffer once and verify the copy**, with two buffers used alternately so that the next burst is armed and started before the previous one is verified (module I05 has the buffers, I04 the arming).
+6. **Put fault injection in the source and test the receiver with it.** The project's source takes a fault type (`crc`, `seq`, `payload`), a frame index and an every-n-th-burst count; the tool derives what the counters must read and passes only when they match. Expect a payload fault to count twice, once in `bad_payload` and once in `bad_crc`.
+7. **Check the CRC against something that is not yours.** This project's matches the standard `zlib.crc32` of the raw bytes.
+8. **Check it.** Run 32 bursts of 1 MiB per payload with no errors, then the three fault types: the recorded counts are 4 `bad_crc`, 5 `bad_seq`, and 2 each of `bad_payload` and `bad_crc`.
+
+What not to change:
+
+- A forward jump in the sequence number is an error in burst mode; only the real-time mode allows gaps.
+- Keep the refusal of an odd frame length in a multi-frame burst (case study K10); `-O` is for characterisation only.
+- Do not compute the expected counts from what the receiver saw: derive them from what was injected.
+- A C model written by the same person from the same description can share a misreading with the RTL; keep an independent model in simulation, as the project does (module H11).
 
 ## Evidence
 

@@ -60,6 +60,14 @@ Two smaller differences: the bare-metal build must enable interrupts itself (`__
 
 Everything else, the message handling, the deadline logic, the sequence check, the memory-visibility check, is the same text. The time base is the only reason the deadline code reads identically in both: the code only calls `now_ms()`.
 
+![One source file, two builds. pfdaq_supervisor.c is built by Makefile.freertos with -DPFDAQ_SUPERVISOR and by Makefile.bm with -DPFDAQ_SUPERVISOR -DPFDAQ_BM. The flag selects the time base, delay_ms, the receive with timeout and the task path for the latency interrupt. The FreeRTOS payload with U-Boot is 1,376,656 bytes and the SD image carries it; the bare-metal payload is 842,208 bytes and is built by firmware/build_payload.sh.](../diagrams/lab-m04-one-source.svg)
+
+1. One source file, `pfdaq_supervisor.c`, holds the whole supervisor. The macro `PFDAQ_BM` is the only switch.
+2. The FreeRTOS build takes its time from the tick count and sleeps in `vTaskDelay()`. The receive call takes the timeout, and the latency interrupt can be answered in a task.
+3. The bare-metal build adds `-DPFDAQ_BM`. It reads the 1 MHz machine timer, busy-waits in `delay_ms()` and polls the queue size to get a timeout. It has no tasks.
+4. Each build sets bit 31 of `uptime_ms` in its acknowledgements, or leaves it clear, so Linux can tell which build it is talking to.
+5. Each build is wrapped with U-Boot into one payload. Yocto builds the FreeRTOS one for the SD image; `firmware/build_payload.sh` builds the bare-metal one.
+
 ### The cost in memory
 
 Measured with the toolchain's `size` tool on the two build outputs for this page. These are not an evidence record; they come from the images built for the board suites.
@@ -103,6 +111,15 @@ cat evidence/v0.5.1/board/suite-baremetal.md
 
 ## What you should see
 
+Each suite record starts with a line that names the build that ran on hart 4. This is how to read the two records side by side:
+
+![Two recorded suite summaries read with grep. Each starts with a context line naming the build that ran on hart 4, freertos or bare-metal. The interrupt-handler latency row at idle reads mean 0.52 microseconds and worst 2.10 for FreeRTOS, and mean 0.50 and worst 3.10 for bare metal.](../diagrams/lab-m04-which-build.svg)
+
+1. The first line of a suite record names the context. Linux reads it from the supervisor's build tag, bit 31.
+2. FreeRTOS, handler acknowledging, at idle: 100,000 events, mean 0.52 µs, worst 2.10 µs.
+3. The same suite on bare metal. Only the payload on the SD card changed, and the context line says `bare-metal`.
+4. Bare metal, the same row: mean 0.50 µs, which is 0.02 µs less, one count of the 20 ns instrument. The worst case of 3.10 µs is a single sample.
+
 `suite-baremetal` records eight tests, all passing. They are eight of the FreeRTOS suite's tests, run with the same command lines:
 
 | Test | Bare metal | FreeRTOS |
@@ -125,6 +142,25 @@ The supervisor's round trip, from the raw records, in microseconds:
 | `T4-counter` | FreeRTOS | 1,249 | 1,974 | 10,020 |
 | `T4-fir` | bare metal | 1,232 | 1,653 | 9,429 |
 | `T4-fir` | FreeRTOS | 1,257 | 2,134 | 10,012 |
+
+## Do the same in your project
+
+You have a firmware program and you want to know what an RTOS would cost it, or what it would give you, on your own hardware. Build the one program both ways, so that the comparison is fair.
+
+1. **Put every operating-system call behind a few small functions.** The supervisor has four places: the time base (`now_ms()`), the delay (`delay_ms()`), the receive with a timeout (`sup_recv()`) and the interrupt path that wakes a task (`PLIC_f2m_5_IRQHandler`, `lat1_task`). Everything else calls those and nothing else.
+2. **Select the variant with one macro.** Here it is `PFDAQ_BM`. Write the RTOS side and the bare-metal side of each function in one `#ifdef PFDAQ_BM` block, so that the difference is visible in one place.
+3. **Keep two build projects that differ by one compiler flag.** `Makefile.freertos` has `-DPFDAQ_SUPERVISOR`; `Makefile.bm` has `-DPFDAQ_SUPERVISOR -DPFDAQ_BM`. Rename the flags to yours and check that a `diff` of the two Makefiles shows only that line.
+4. **Do what the bare-metal side must do for itself.** Enable interrupts (`__enable_irq()`), supply a time base (the machine timer here), and poll where the RTOS would block.
+5. **Make each build identify itself.** The supervisor sets bit 31 of `uptime_ms` in every acknowledgement on the bare-metal build, and the host reads it (`pfdaq_cap -L 0` prints the `context`). Have your test suite print that as its first line, as `INFO u54_4_context=…`, so a record always says which build produced it.
+6. **Build the second variant outside the main build.** `firmware/build_payload.sh [outdir] [bm|freertos]` builds the firmware for hart 4 only (it passes `MPFS_HAL_FIRST_HART=4` and `MPFS_HAL_LAST_HART=4`), wraps it with U-Boot into a payload and writes it with `SHA256SUMS`. It reads `PFDAQ_AMP_EXAMPLES`, `RISCV_TOOLCHAIN` and `PFDAQ_YOCTO_BUILD` from the environment.
+7. **Switch and compare.** Write the payload to the SD card's payload partition (partition 2), reboot, and run `tests/board/pfdaq_bm_suite.sh`. Then write the image's own payload back. Run the same command lines on both builds and compare counts for equality first, then timings.
+
+What not to change:
+
+- **The partition number.** Check it twice before writing: a write to the wrong partition destroys the card's contents.
+- **The one-source rule.** Once the two builds have their own copies of the logic, any difference in the table may come from the logic and not from the base layer.
+- **The conclusions you draw from single runs.** Here the mean handler cost differs by one count of the 20 ns instrument, and the worst cases are single samples out of 100,000. They do not rank the builds.
+- **The mode the bare-metal build cannot do.** A request for the task-acknowledged mode is turned into the handler mode there, by design.
 
 ## Evidence
 

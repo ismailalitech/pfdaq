@@ -230,6 +230,99 @@ class Diagram:
             self.note_svg(t)
         self.timeline_dur = dur
 
+    # ---------- shared: numbered captions that follow the callouts
+    def caption(self, i, title, text, cap_y, delay, bg_y, bg_h):
+        self.add('<g class="co cap" style="animation-delay:%.2fs">' % delay)
+        self.add('<rect x="0" y="%g" width="%g" height="%g" fill="%s"/>' % (bg_y, self.w, bg_h, BG))
+        self.add('<circle cx="24" cy="%g" r="13" fill="%s"/><text x="24" y="%g" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">%d</text>' % (cap_y, ACCENT, cap_y + 5, i + 1))
+        self.add('<text x="48" y="%g" font-size="15" font-weight="bold" fill="%s">%s</text>' % (cap_y - 2, FG, esc(title)))
+        self.add('<text x="48" y="%g" font-size="13" fill="%s">%s</text>' % (cap_y + 18, MUTED, esc(text)))
+        self.add('</g>')
+
+    # ---------- recorded console output with callouts
+    def terminal(self):
+        d = self.d
+        lines = d['lines']
+        cw, lh, top = 7.8, 20, 58
+        limit = int((self.w - 48) / cw)
+        for i, ln in enumerate(lines):
+            if len(ln) > limit:
+                raise SystemExit('%s: terminal line %d is %d characters, the limit is %d: %r' % (self.id, i, len(ln), limit, ln[:40]))
+        ph = top + len(lines) * lh + 16
+        self.steps = ['c%d' % i for i in range(len(d['callouts']))]
+        self.add('<rect x="0" y="0" width="%g" height="%g" fill="#0d1117"/>' % (self.w, ph))
+        self.add('<rect x="0" y="0" width="%g" height="34" fill="#1b222c"/>' % self.w)
+        for k, c in enumerate(('#ef6f6c', '#e6c04f', '#5fbf84')):
+            self.add('<circle cx="%d" cy="17" r="6" fill="%s"/>' % (20 + 18 * k, c))
+        self.add('<text x="%g" y="22" text-anchor="middle" font-size="12" fill="%s">%s</text>' % (self.w / 2, MUTED, esc(d.get('title', 'terminal'))))
+        mono = 'font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13"'
+        for i, ln in enumerate(lines):
+            y = top + i * lh
+            if ln.startswith('$ ') or ln.startswith('# '):
+                self.add('<text x="24" y="%g" %s xml:space="preserve"><tspan fill="#5fbf84">%s</tspan><tspan fill="%s">%s</tspan></text>' % (y, mono, esc(ln[:2]), FG, esc(ln[2:])))
+            else:
+                self.add('<text x="24" y="%g" %s fill="#b9c4cf" xml:space="preserve">%s</text>' % (y, mono, esc(ln)))
+        cap_y = ph + 26
+        self.add('<rect x="0" y="%g" width="%g" height="%g" fill="%s"/>' % (ph, self.w, self.h - ph, BG))
+        if self.h < ph + 70:
+            raise SystemExit('%s: height %g is too small, need at least %g' % (self.id, self.h, ph + 70))
+        for i, c in enumerate(d['callouts']):
+            a, b = c['lines'][0], c['lines'][-1]
+            y0 = top + a * lh - 15
+            h = (b - a + 1) * lh + 3
+            dl = self.delay('c%d' % i)
+            self.add('<g class="co" style="animation-delay:%.2fs"><rect x="8" y="%g" width="%g" height="%g" rx="4" fill="%s" fill-opacity="0.13" stroke="%s" stroke-width="2.5"/>' % (dl, y0, self.w - 16, h, ACCENT, ACCENT))
+            self.add('<circle cx="8" cy="%g" r="11" fill="%s"/><text x="8" y="%g" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">%d</text></g>' % (y0 + 2, ACCENT, y0 + 6, i + 1))
+            self.caption(i, c['title'], c['text'], cap_y, dl, ph, self.h - ph)
+
+    # ---------- waveforms from a recorded simulation, with callouts
+    def wave(self):
+        d = self.d
+        left, right, top, rh = 140, 20, 44, 40
+        length = d['length']
+        sc = (self.w - left - right) / length
+        sigs = d['signals']
+        ph = top + len(sigs) * rh + 12
+        self.steps = ['c%d' % i for i in range(len(d.get('callouts', [])))]
+        if self.h < ph + 74:
+            raise SystemExit('%s: height %g is too small, need at least %g' % (self.id, self.h, ph + 74))
+        self.add('<rect x="0" y="0" width="%g" height="%g" fill="#0d1117"/>' % (self.w, ph))
+        for t, lab in d.get('ticks', []):
+            x = left + t * sc
+            self.add('<line x1="%g" y1="30" x2="%g" y2="%g" stroke="#27313d" stroke-dasharray="2 4"/><text x="%g" y="22" text-anchor="middle" font-size="11" fill="%s">%s</text>' % (x, x, ph - 6, x, MUTED, esc(lab)))
+        for r, sg in enumerate(sigs):
+            y = top + r * rh
+            col = KINDS[sg.get('kind', 'plain')][1] if sg.get('kind') else '#8fb0d8'
+            self.add('<text x="12" y="%g" font-size="12" fill="%s" font-family="IBM Plex Mono, ui-monospace, monospace">%s</text>' % (y + 22, FG, esc(sg['name'])))
+            pts = sg['values']
+            if sg.get('bus'):
+                for k, (t, v) in enumerate(pts):
+                    t1 = pts[k + 1][0] if k + 1 < len(pts) else length
+                    x0, x1 = left + t * sc, left + t1 * sc
+                    w = max(x1 - x0, 1)
+                    self.add('<rect x="%g" y="%g" width="%g" height="22" rx="4" fill="#1b2a3a" stroke="%s" stroke-width="1.2"/>' % (x0 + 0.5, y + 9, max(w - 1, 1), col))
+                    if text_w(str(v), 11) <= w - 6:
+                        self.add('<text x="%g" y="%g" text-anchor="middle" font-size="11" fill="%s" font-family="IBM Plex Mono, ui-monospace, monospace">%s</text>' % (x0 + w / 2, y + 24, FG, esc(v)))
+            else:
+                path = []
+                prev = None
+                for t, v in pts:
+                    x = left + t * sc
+                    yy = y + (10 if v else 30)
+                    path.append(('M' if prev is None else 'L') + '%g,%g' % (x, yy if prev is None else prev))
+                    path.append('L%g,%g' % (x, yy))
+                    prev = yy
+                path.append('L%g,%g' % (left + length * sc, prev))
+                self.add('<path d="%s" fill="none" stroke="%s" stroke-width="2" stroke-linejoin="round"/>' % (' '.join(path), col))
+        cap_y = ph + 28
+        self.add('<rect x="0" y="%g" width="%g" height="%g" fill="%s"/>' % (ph, self.w, self.h - ph, BG))
+        for i, c in enumerate(d.get('callouts', [])):
+            x0, x1 = left + c['t0'] * sc, left + c['t1'] * sc
+            dl = self.delay('c%d' % i)
+            self.add('<g class="co" style="animation-delay:%.2fs"><rect x="%g" y="30" width="%g" height="%g" rx="4" fill="%s" fill-opacity="0.13" stroke="%s" stroke-width="2.5"/>' % (dl, x0, max(x1 - x0, 4), ph - 36, ACCENT, ACCENT))
+            self.add('<circle cx="%g" cy="30" r="11" fill="%s"/><text x="%g" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">%d</text></g>' % (x0, ACCENT, x0, i + 1))
+            self.caption(i, c['title'], c['text'], cap_y, dl, ph, self.h - ph)
+
     # ---------- annotated screenshots
     def annotated(self):
         """A screenshot with numbered callouts that light up one after the other, each with its caption."""
@@ -266,8 +359,8 @@ class Diagram:
         if d.get('type') == 'timeline':
             self.timeline()
             cycle = self.timeline_dur
-        elif d.get('type') == 'annotated':
-            self.annotated()
+        elif d.get('type') in ('annotated', 'terminal', 'wave'):
+            getattr(self, d['type'])()
             cycle = max(len(self.steps) * self.step + HOLD, 1)
         else:
             self.flow()
@@ -294,7 +387,15 @@ text{font-family:%s}
 
 
 def main():
-    specs = yaml.safe_load(open(SPEC))
+    specs = []
+    for name in sorted(os.listdir(DIR)):
+        if name.endswith('.yaml'):
+            specs += yaml.safe_load(open(os.path.join(DIR, name))) or []
+    seen = set()
+    for d in specs:
+        if d['id'] in seen:
+            raise SystemExit('duplicate diagram id %s' % d['id'])
+        seen.add(d['id'])
     stale = []
     for d in specs:
         svg = Diagram(d).render()

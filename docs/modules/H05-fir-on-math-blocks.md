@@ -79,6 +79,14 @@ The products are signed 16 × 16 → 32 bit multiplications, written plainly as 
 
 The four stages end in a 16-word FIFO (`mem`, write pointer `wp`, read pointer `rp`, fill level `count`). The generator takes zero, one or two words per clock from the front. Two registered outputs, `head0` and `head1`, show the next two words. They are computed one clock ahead by `mem_after`, which also forwards a word that is being written in the same clock, so the generator never has to read the RAM-like array and wait.
 
+![The FIR source: two triangle-wave samples per clock enter a four-stage pipeline of window, products, partial sums and results; the results go into a 16-word FIFO; two registered head words feed the frame generator, which checks fir_ok; a credit rule reads the FIFO count and the stages in flight and decides whether a new pair of samples may be issued.](../diagrams/lab-h05-fir-pipeline.svg)
+
+1. **Input.** Two triangle-wave samples per clock, `tri((i + 1) * STEP)`.
+2. **Four stages.** The window, the sixteen products, the eight partial sums and the two results, one stage per clock.
+3. **The FIFO.** The two results go into the 16-word FIFO.
+4. **Heads and `fir_ok`.** `head0` and `head1` show the next two words, registered. The generator checks `fir_ok` before every beat and pops zero, one or two words.
+5. **The credit rule.** The FIFO `count` and the valid flags `v1` to `v4` of the stages feed `issue`, which gates the first stage: a new pair of samples is issued only if everything already in flight plus the new results still fits in 16 words.
+
 The rule that prevents overflow is one line:
 
 ```verilog
@@ -106,6 +114,16 @@ R_PREFILL: begin
         run <= cfg_rt ? R_RTWAIT : R_RUN;
 end
 ```
+
+This is what it looks like at the start of scenario 11, from a simulation of the unmodified design. The time axis starts at the START pulse in the stream clock.
+
+![Waveform of the start of scenario 11: after START the run state is PREFILL while the pipeline fills and the FIFO count rises by two per clock; issue stops when count plus two times inflight plus two would exceed 16; the run starts when the count reaches 12; the first beat appears when the count is 16; the count never exceeds 16.](../diagrams/lab-h05-prefill.svg)
+
+1. **Pipeline fills.** START sets `run` to `R_PREFILL`. The stages in flight rise from 1 to 4 while the FIFO stays empty for five clocks.
+2. **Prefill.** The FIFO `count` rises by 2 on every clock. When it has reached 12, `run` changes to `R_RUN` on the next clock.
+3. **The credit rule.** At 8 words in the FIFO and 4 stages in flight, 8 + 2 * 4 + 2 is 18, which is over 16, so `issue` goes low. The four stages in flight drain into the space that was reserved, and the count stops at 16.
+4. **First beat.** `TVALID` rises. `fir_pop` is 1 on the first beat after the header, because that beat needs one payload word.
+5. **Steady state.** The generator pops two words per beat, the count falls and `issue` comes back. The count never goes above 16.
 
 If, despite that, a beat is wanted and the FIFO cannot supply it, the source records it: `underrun <= 1'b1` when the generator is ready but `fir_ok` is false. STATUS bit 3 shows the flag. It is cleared only by reset, not by START, so one underrun stays visible until the fabric is reset.
 
@@ -205,7 +223,38 @@ RESULT: FAIL
 
 In this run each of the three burst scenarios 11, 12 and 20 had three `VALID_GAP` lines, nine in all. In scenario 11 the trace shows the header beat (magic and sequence number) at 111,596 ns, then three clocks with no beat, then the timestamp and the first payload word at 111,628 ns. Without prefill, the beat that needs the first filter output has to wait for the four-stage pipeline to produce it. The underrun flag is then set; because only reset clears it, the checker reports it for every scenario after 11, including those that do not use FIR.
 
+The same start of scenario 11 in the scratch copy with the threshold at 0, over a window that begins at the START pulse:
+
+![Waveform of the start of scenario 11 with the prefill threshold at 0: PREFILL lasts one clock, the header beat goes out, then fir_ok is low because the FIFO is empty and TVALID is low for three clocks inside the packet; the underrun flag is set and stays set.](../diagrams/lab-h05-no-prefill.svg)
+
+1. **No margin.** With the threshold at 0 the run leaves `R_PREFILL` after one clock, with an empty FIFO.
+2. **Header beat.** It needs no filter output, so it goes out.
+3. **A gap in the packet.** `fir_ok` is low, `TVALID` is low for three clocks and `underrun` is set: three `VALID_GAP` lines.
+4. **Data at last.** The FIFO count reaches 2, `fir_ok` rises and the stream continues.
+
 With the threshold at 1 and at 2 the simulation passed, with no gap and no underrun. In these scenarios the pipeline fills fast enough that one word of margin is enough. The value 12 in the design therefore gives a larger margin than these scenarios need. Why 12 was chosen, and what the true minimum is under other step sizes, frame lengths or backpressure patterns, is not recorded.
+
+## Do the same in your project
+
+Use this when a pipelined computation must feed a stream that cannot pause inside a packet. The names are this project's: rename them for yours.
+
+1. **Write the model first.** Before the RTL, write the exact function in software: the input (`tri16`), the filter with its coefficients and the 32-bit wrap. `check_trace.py` and `pfdaq_cap.c` are two such models; write yours so that it can be restarted at the same moment as the hardware (`model_restart` in `pfdaq_cap.c`).
+2. **Pipeline the arithmetic and give every stage a valid flag.** `pfdaq_fir_src` has four stages (window, products, partial sums, results) with the flags `v1` to `v4`. Add a stage and you add a flag.
+3. **Produce as many results per clock as the consumer takes.** The stream takes two words per clock (module H02), so the filter produces two outputs per clock from a 9-sample window.
+4. **Put a FIFO between producer and consumer** and give it the credit rule: `issue = run && (count + 2 * inflight + 2 <= 16)`, where `inflight` is the number of valid stages and each carries two words. If you change the depth, change the 16; if you add a stage, `inflight` must count it.
+5. **Show the next words in registers.** `head0` and `head1` are computed one clock ahead by `mem_after`, which also forwards a word that is written in the same clock.
+6. **Let the consumer check before it sends.** `fir_ok` is true only if the FIFO holds as many words as the beat needs; a beat is sent only then.
+7. **Add a start-up state.** Before the first beat, run the filter until the FIFO holds 12 words (`R_PREFILL`). The 12 is this project's value; why 12 was chosen and what the true minimum is are not recorded.
+8. **Keep a flag for the case that must never happen.** `underrun` is set when the consumer is ready and `fir_ok` is false. It is shown in STATUS bit 3 and cleared only by reset.
+9. **Check it.** Run the model against the hardware's words for the first outputs, as step 3 of "Run it" does, and run the simulation: `make -C hw sim-stream` must end with `RESULT: PASS`. Then make the break of step 4 (threshold 0) in a scratch copy: your testbench must report `VALID_GAP` and the underrun flag. If it does not, it cannot see the fault this start-up state prevents.
+
+What not to change:
+
+- **Keep the wrap at 32 bits on both sides.** The model and the hardware must wrap the same way.
+- **Restart the hardware and the model together, at START.** The phase and the history start at zero for every run.
+- **Do not remove the start-up state because the pipeline usually keeps up.** Thresholds 1 and 2 passed these scenarios, but the minimum under other step sizes, frame lengths or backpressure was not explored.
+- **Do not leave the in-flight stages out of the credit rule.** The pipeline keeps producing for a few clocks after the consumer stops.
+- **Do not expect full sums at the start.** Samples before the start count as zero, so the first outputs are partial sums.
 
 ## Evidence
 

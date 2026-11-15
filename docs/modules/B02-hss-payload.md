@@ -37,6 +37,15 @@ Two properties make the setup used here possible:
 
 ## On this board
 
+![How the boot payload is made and used: the template amp.yaml.in is filled in and given to hss-payload-generator, which writes payload.bin. The boot monitor on the E51 reads it from the SD card and starts u-boot.bin on harts 1 to 3 in supervisor mode at 0x80200000, and the FreeRTOS firmware on hart 4 in machine mode at 0x91C00000 without OpenSBI.](../diagrams/lab-b02-payload-layout.svg)
+
+1. `amp.yaml.in` is the template: a set name, one entry point per core and one line per image. Its `@@...@@` words are placeholders.
+2. A step of the build fills the placeholders in and runs the generator, `hss-payload-generator -c amp.yaml -v payload.bin`.
+3. The result, `payload.bin`, is a header, a table of chunks and the chunks themselves.
+4. The file goes onto the SD card's payload partition (the second one). The boot monitor on the E51 reads the header and loads the chunks.
+5. `u-boot.bin` is started on harts 1, 2 and 3 in supervisor mode at `0x80200000`. Hart 1 owns it; harts 2 and 3 join it.
+6. The FreeRTOS ELF is started on hart 4 alone, in machine mode at `0x91C00000`, without OpenSBI.
+
 ### The description
 
 The project's template, `amp.yaml.in`, in full:
@@ -108,6 +117,17 @@ Core 1's entry carries U-Boot (the cores that join it have entry points but no c
 | `SKIP_OPENSBI` on core 4 | `boot_service(u54_4):: BOOT_FLAG_SKIP_OPENSBI found` |
 | `u-boot.bin` shared by cores 1, 2, 3 | `Registering domain "u-boot.bin" (hart mask 0xe)` |
 
+![Lines of the boot monitor's console that match the payload: the 1632-byte header and 1376656 bytes copied, the image set name, the skip-OpenSBI flag on hart 4, u-boot.bin registered for the hart mask 0xe, the two images being processed, and the cores reaching Running.](../diagrams/lab-b02-boot-log.svg)
+
+The figure shows ten lines of the recorded console (`boot-hss`); the lines between them are left out.
+
+1. The monitor reads a header of 1632 bytes (`chunkTableOffset: 0x660`) and copies 1376656 bytes (`bootImageLength`) of payload.
+2. The label is the `set-name` line of the template, with `@@AMP_DEMO@@` replaced by `freertos`.
+3. The `skip-opensbi` flag of core 4's entry reached the monitor.
+4. `u-boot.bin` is registered once, for the hart mask `0xe`: harts 1, 2 and 3.
+5. Each image is then processed: the U-Boot image, and the FreeRTOS ELF as core 4's own image. Core 4 is Running at 4.86 s.
+6. Later, all four application cores report Running.
+
 ## Run it
 
 These are the steps the project ran; they are not rerun here.
@@ -122,6 +142,26 @@ These are the steps the project ran; they are not rerun here.
 On a good boot, the monitor's console shows the five rows of the table above, then one state line per core and per step, and `[Running]` for core 4 at 4.86 s, before Linux starts (module B01).
 
 Swapping the supervisor for its bare-metal build is only a different payload on partition 2: the same suite then runs against the bare-metal firmware (8 of 8 tests, `suite-baremetal`), and the final image from a freshly written card passes 27 of 27 (`suite-fresh-card`).
+
+## Do the same in your project
+
+Use this when you want one program on one core of a multi-core chip while Linux runs on the others. The names are this project's: rename them for yours.
+
+1. **Copy the template.** Start from `amp.yaml.in` and keep its three parts: `set-name`, `hart-entry-points`, and one line under `payloads` for each image.
+2. **Parameterise four things.** The label (`@@AMP_DEMO@@`), the file name of your second image (`@@AMP_PAYLOAD@@`), whether the monitor starts it (`@@AMP_SKIP-AUTOBOOT@@`, which this project fills with `false`) and the address of your second program in DDR (`0x91C00000` here). The address is yours to choose.
+3. **Give every core an entry point and every image an owner.** In `hart-entry-points`, point the Linux cores at the Linux-side image and your core at its own image. One image may serve several cores: name an `owner-hart` and a `secondary-hart` for each of the others.
+4. **Set the privilege mode.** The Linux-side image is `priv-mode: prv_s`, with OpenSBI underneath. A program that runs the machine-mode world itself is `priv-mode: prv_m` with `skip-opensbi: true`.
+5. **Make the address agree in four places.** The entry point and `exec-addr` in the payload, the address your firmware is linked for, the device-tree reservation (module B04) and the resource table the firmware carries. Change one and you have changed all four.
+6. **Generate the payload.** Run `hss-payload-generator -c amp.yaml -v payload.bin`. In a Yocto build, select the template with `HSS_PAYLOAD = "amp"` and turn on the machine feature `hss-early-boot-freertos` (module B03). Outside Yocto, `firmware/build_payload.sh` fills in the template and runs the generator.
+7. **Check it on the PC.** Run `hss-payload-generator -d payload.bin` and compare `entryPoint`, `privMode`, the `SKIP_OPENSBI` flag, the `set_name` and the chunk count per owner with your YAML.
+8. **Check it on the board.** After the payload is on the SD card (module B05), the monitor's console must show the five rows of the table above: the header, the bytes copied, the set name, the skip-OpenSBI line and the registered domain. Then your core must reach Running.
+
+What not to change:
+
+- **Keep `skip-opensbi: true`** on the entry of a core that runs its own machine-mode code. Without it the core would be started through OpenSBI (reasoned from the flag, not tried).
+- **Do not change `exec-addr` in the YAML alone.** The linker script, the device tree and the resource table have to move with it.
+- **Do not touch the boot flash.** The monitor is already in the chip's boot flash; this project only replaces the payload on the SD card. No boot mode, key or lock is part of this page (module B06).
+- **Do not rely on a signature.** The unsigned payloads here boot, and the signing in module S03 was done offline only.
 
 ## Evidence
 

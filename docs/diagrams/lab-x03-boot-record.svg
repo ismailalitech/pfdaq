@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" width="960" height="470" role="img" aria-labelledby="t d">
+<title id="t">recorded cold boot and suite summary (excerpts of three consoles)</title><desc id="d">Milestones of the recorded cold boot of the final image: the boot monitor selects the SD card, finds the boot partition and processes the two images, all four cores run; U-Boot loads the kernel from the FIT image; Linux names the machine, attaches to the supervisor and opens the channel; the host summary of the suite reads 27 of 27.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 24.40s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 24.40s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}13.11%{opacity:1}16.11%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="960" height="470" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="960" height="394" fill="#0d1117"/>
+<rect x="0" y="0" width="960" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="480" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">recorded cold boot and suite summary (excerpts of three consoles)</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[0.785647] PolarFire(R) SoC Hart Software Services (HSS) - version 0.99.53-v2026.04.1</text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[4.410823] Attempting to select SDCARD ... Passed</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[4.486903] Boot Partition found at index 1</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[4.570249] Boot image set name: "PolarFire-SoC-HSS::Disco Linux + freertos AMP"</text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[4.733328] boot_service(u54_1)::Processing boot image: "u-boot.bin"</text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[4.755671] boot_service(u54_4)::Processing boot image: "polarfire-soc-freertos-amp-demo.elf"</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[22.485161] u54 State Change:  [Running] [Running] [Running] [Running]</text>
+<text x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">U-Boot 2025.07-linux4microchip-2026.04 (Apr 29 2026 - 08:52:30 +0000)</text>
+<text x="24" y="218" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">## Loading kernel (any) from FIT Image at 8e000000 ...</text>
+<text x="24" y="238" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">Starting kernel ...</text>
+<text x="24" y="258" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[    0.000000] Machine model: Microchip PolarFire-SoC Discovery Kit (AMP)</text>
+<text x="24" y="278" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[    1.751180] remoteproc remoteproc0: remote processor remote-context is now attached</text>
+<text x="24" y="298" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[    1.938361] virtio_rpmsg_bus virtio0: creating channel pfdaq-supervisor addr 0x0</text>
+<text x="24" y="318" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">mpfs-disco-kit-amp login:</text>
+<text x="24" y="338" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">python3 tests/host/summarise_suite.py suite.txt</tspan></text>
+<text x="24" y="358" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">27/27 functional tests passed, 13 measurements, 2 known issues</text>
+<rect x="0" y="394" width="960" height="76" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="43" width="944" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="45" r="11" fill="#ffd166"/><text x="8" y="49" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="394" width="960" height="76" fill="#12171d"/>
+<circle cx="24" cy="420" r="13" fill="#ffd166"/><text x="24" y="425" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="418" font-size="15" font-weight="bold" fill="#e6ecf1">The boot monitor</text>
+<text x="48" y="438" font-size="13" fill="#9aa8b5">It starts from the chip's boot flash, which this project never writes.</text>
+</g>
+<g class="co" style="animation-delay:3.20s"><rect x="8" y="63" width="944" height="43" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="65" r="11" fill="#ffd166"/><text x="8" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.20s">
+<rect x="0" y="394" width="960" height="76" fill="#12171d"/>
+<circle cx="24" cy="420" r="13" fill="#ffd166"/><text x="24" y="425" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="418" font-size="15" font-weight="bold" fill="#e6ecf1">The card</text>
+<text x="48" y="438" font-size="13" fill="#9aa8b5">It selects the SD card and takes the payload from the partition at index 1.</text>
+</g>
+<g class="co" style="animation-delay:6.40s"><rect x="8" y="103" width="944" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="105" r="11" fill="#ffd166"/><text x="8" y="109" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.40s">
+<rect x="0" y="394" width="960" height="76" fill="#12171d"/>
+<circle cx="24" cy="420" r="13" fill="#ffd166"/><text x="24" y="425" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="418" font-size="15" font-weight="bold" fill="#e6ecf1">The payload</text>
+<text x="48" y="438" font-size="13" fill="#9aa8b5">The image set and its two images: U-Boot for harts 1 to 3, the supervisor for hart 4.</text>
+</g>
+<g class="co" style="animation-delay:9.60s"><rect x="8" y="163" width="944" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="165" r="11" fill="#ffd166"/><text x="8" y="169" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:9.60s">
+<rect x="0" y="394" width="960" height="76" fill="#12171d"/>
+<circle cx="24" cy="420" r="13" fill="#ffd166"/><text x="24" y="425" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="418" font-size="15" font-weight="bold" fill="#e6ecf1">Four cores up</text>
+<text x="48" y="438" font-size="13" fill="#9aa8b5">All four application cores report Running.</text>
+</g>
+<g class="co" style="animation-delay:12.80s"><rect x="8" y="183" width="944" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="185" r="11" fill="#ffd166"/><text x="8" y="189" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="co cap" style="animation-delay:12.80s">
+<rect x="0" y="394" width="960" height="76" fill="#12171d"/>
+<circle cx="24" cy="420" r="13" fill="#ffd166"/><text x="24" y="425" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
+<text x="48" y="418" font-size="15" font-weight="bold" fill="#e6ecf1">U-Boot to the kernel</text>
+<text x="48" y="438" font-size="13" fill="#9aa8b5">U-Boot loads the kernel from the FIT image on the first partition and starts it.</text>
+</g>
+<g class="co" style="animation-delay:16.00s"><rect x="8" y="243" width="944" height="83" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="245" r="11" fill="#ffd166"/><text x="8" y="249" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">6</text></g>
+<g class="co cap" style="animation-delay:16.00s">
+<rect x="0" y="394" width="960" height="76" fill="#12171d"/>
+<circle cx="24" cy="420" r="13" fill="#ffd166"/><text x="24" y="425" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">6</text>
+<text x="48" y="418" font-size="15" font-weight="bold" fill="#e6ecf1">Linux and the supervisor</text>
+<text x="48" y="438" font-size="13" fill="#9aa8b5">The device tree's model, remoteproc attaching, the RPMsg channel, then the login prompt.</text>
+</g>
+<g class="co" style="animation-delay:19.20s"><rect x="8" y="323" width="944" height="43" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="325" r="11" fill="#ffd166"/><text x="8" y="329" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">7</text></g>
+<g class="co cap" style="animation-delay:19.20s">
+<rect x="0" y="394" width="960" height="76" fill="#12171d"/>
+<circle cx="24" cy="420" r="13" fill="#ffd166"/><text x="24" y="425" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">7</text>
+<text x="48" y="418" font-size="15" font-weight="bold" fill="#e6ecf1">The proof</text>
+<text x="48" y="438" font-size="13" fill="#9aa8b5">The suite is run from the PC and summarised; the fresh-card run ended with 27/27.</text>
+</g>
+</svg>

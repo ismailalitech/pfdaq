@@ -86,11 +86,41 @@ The script makes throwaway keys, builds the payload unsigned and signed (`hss-pa
    signed, someone else's key         vendor tool: failed | independent verifier: NOT VALID
 ```
 
+The same run as recorded, with the part before the verdicts:
+
+![Recorded output of the signing script: the signed and unsigned images are both 842,208 bytes; the right key is accepted by the vendor tool and the independent verifier; a flipped bit, an unsigned image and someone else's key are refused by both.](../diagrams/lab-s03-sign-and-verify-run.svg)
+
+1. The signed and the unsigned image are both 842,208 bytes. The same YAML builds both; `-p` adds the signature.
+2. With the right public key, both checkers accept the signed image.
+3. One flipped bit in the middle of the image makes both refuse it.
+4. An image that was never signed is refused: a field of zeros is simply not a valid signature.
+5. A signed image checked against another key's public half is refused by both.
+
 Two things to notice. The vendor tool wants the public key as DER, not PEM; with PEM it stops on an assertion. And an unsigned image fails not because the check sees "no signature" but because a field of zeros is not a valid signature: there is no special case to get wrong.
 
 ### How the independent verifier finds the signature
 
 The signature field's position depends on constants chosen when the boot monitor is built, so the verifier does not hard-code it. It looks for the 8-byte image length, which must equal the file size, directly in front of a 144-byte field, zeroes that field, and checks that SHA-384 of the result equals the digest stored in the field before it trusts anything. In the image used here the field starts at byte 1488 of a 842,208-byte file.
+
+## Do the same in your project
+
+You can use the toy chain as a template for the image format and the checks of your own boot chain, and the signing script for your own payload. Everything here runs on a PC; nothing in it flashes a device.
+
+1. **Decide what the root of trust holds.** In `main()` of `chain_demo.py` that is `rom_pub`, the root public key as an uncompressed P-384 point (97 bytes), and `rom_min`, the lowest version it accepts. Nothing else is trusted from the start.
+2. **Choose the image format.** In `sign_image` an image is a header (`'<4sII'`: magic, version, payload length), the payload, and a 96-byte signature (r then s, 48 bytes each) over everything before it. Give each stage its own magic (`b'ST1.'`, `b'ST2.'`, `b'APP.'` here), so an image cannot be mistaken for another stage's.
+3. **Put the next link's key inside the signed part.** Stage 1's payload is stage 2's public key, so what stage 1 trusts is covered by the signature that the ROM checks. `build()` shows the three signatures and who signs what.
+4. **Write one check and use it at every link.** `check_image(blob, trusted_pub, magic, min_version, name)` checks the header, then the signature, then the version. `boot()` calls it three times, passing the key taken from the previous image.
+5. **Generate keys per stage and keep the private ones offline.** The scripts make throwaway keys with `new_key()` and `openssl`; a real signing key must never be created or kept like that.
+6. **Run the six scenarios against your chain** and change `chain_demo.py` until each of your stages appears in them: genuine, one flipped bit, an image signed by someone else, a replacement stage that names the attacker's key, an old but genuinely signed image, an embedded key swapped. The run must end with `N of N scenarios behaved as a chain of trust should.`
+7. **For a real HSS payload, repeat the signing run.** Build the payload as `firmware/build_payload.sh` does, then run `experiments/secure-boot-chain/sign_and_verify.sh`; pass your own YAML as its argument. It builds the image unsigned and signed with the vendor generator and checks four variants with the vendor tool and with `verify_boot_image.py`. Give the vendor tool the public key as DER.
+8. **Keep a second, independent verifier.** `verify_boot_image.py` finds the signature field by the image length in front of it, zeroes the field, and checks the stored SHA-384 digest before it trusts anything. Two programs that agree on four images are more convincing than one.
+
+What not to change:
+
+- **Check the signature with a public key only.** The checker never holds a private key.
+- **Keep the version check separate from the signature check.** Scenario 5 passes the signature; only the version stops it.
+- **Do not add a special case for "unsigned".** An unsigned image fails because zeros are not a signature; a special case is one more place to get wrong.
+- **Do not enable the real check on a device from this lab.** The signed payload was never flashed, and enabling the check on the chip means rebuilding the boot monitor and rewriting the boot flash, which this project does not do.
 
 ## Evidence
 

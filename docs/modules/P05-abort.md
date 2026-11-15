@@ -75,6 +75,15 @@ task fill_beat;
 
 `remaining` is the run's total word count, `FRAME_COUNT × (PAYLOAD_WORDS + 4)`, minus the words already sent. `TLAST` goes on the last beat, with the half-filled beat rule of module H02 when the count is odd.
 
+![What an ABORT does: CTRL bit 4 makes the source finish the frame in progress. In per-frame and real-time modes it then stops, because each frame was its own packet. In burst mode it sends zero words until the whole run's word count is out, with TLAST on the last, so the DMA transfer completes and STATUS bit 2 is set. FORCE_ABORT, CTRL bit 5, stops at once and can leave the DMA waiting.](../diagrams/lab-p05-abort-modes.svg)
+
+1. **`ABORT`** (`CTRL` bit 4) is written during a run.
+2. **The frame in progress is finished.**
+3. **Burst mode:** the source sends zero words until `FRAME_COUNT × (PAYLOAD_WORDS + 4)` words are out, with `TLAST` on the last. The DMA gets the whole transfer it was promised.
+4. **DMA completes:** `STATUS` bit 2 is set, and `FRAMES_SENT` says where the real data ends.
+5. **Per-frame and real-time modes:** each frame was its own packet, so the source simply stops.
+6. **`FORCE_ABORT`** (`CTRL` bit 5) is the other path: it stops at once and can leave the DMA waiting until a reboot.
+
 Two details make it correct on the board, both found by testing:
 
 - **No gap.** The first fill beat leaves in the same clock in which the abort is noticed (`abort_fill`), or in the same beat as the last word of the frame in progress (`split_a`). A one-clock `TVALID` gap in a packet is exactly what this DMA does not tolerate (K03), and an abort that landed on a frame boundary once produced one in simulation.
@@ -112,6 +121,14 @@ Two board runs in the suite, plus a clean run right after the second:
 | Errors in the real frames | none | none |
 
 The fill-word counts are the exact complement of the real frames: 500 × 4,096 words minus 119 × 4,096 is 1,560,576, and 8,000 × 256 minus 128 × 256 is 2,015,232.
+
+![Two aborted 8,192,000-byte bursts drawn in proportion to bytes: the 2 ms abort sent 119 real frames, 1.95 MB, then 6.24 MB of zero fill; the 50 microsecond abort sent 128 real frames, 0.13 MB, then 8.06 MB of zero fill. The DMA descriptor was filled completely in both.](../diagrams/lab-p05-to-scale.svg)
+
+1. **`-A 2000`:** 119 real frames (1,949,696 bytes), then 1,560,576 zero words (6,242,304 bytes).
+2. **`-A 50`:** 128 real frames (131,072 bytes), then 2,015,232 zero words (8,060,928 bytes). Asked for 50 µs, the source had already sent 128 frames.
+3. **The DMA descriptor** was one transfer of 8,192,000 bytes in both runs, and both completed with status `0x210`.
+
+The drawing is in proportion to bytes, not to time. Both runs took about 8.9 ms (8.899 and 8.904 ms), because the fill streams at the same rate as data. A word is 32 bits, so the zero words are four bytes each.
 
 The run that follows (`ABORT-after`, 8,192 frames, counter payload, supervised) passes with no error: the source and the DMA are healthy after an abort.
 
@@ -163,6 +180,35 @@ The JSON line of the first board run, trimmed:
 ```
 
 `"status": "0x6"` is "done" together with "aborted".
+
+![The recorded JSON result of the 2 ms abort run, with callouts on the requested frames, the DMA completion, the real frames and the zero fill.](../diagrams/lab-p05-record.svg)
+
+1. **500 frames requested** and an abort 2000 µs after START.
+2. **The DMA completes** (`dma_completed` true, status `0x210`) after 8.899 ms, and `status` 0x6 means done and aborted.
+3. **119 real frames** (`frames_sent`, 1,949,696 bytes), with no error of any kind.
+4. **The fill** is 1,560,576 words, none non-zero, and `nothing_after_burst` is true: the 64 guard bytes after the burst are untouched.
+
+## Do the same in your project
+
+You can give any producer a clean stop if its consumer was promised a fixed amount of data.
+
+1. **Find out what your DMA needs to complete.** Here only the full byte count of the descriptor completes a transfer (module I04), and a transfer cut short with an early `TLAST` or `FORCE_ABORT` leaves it waiting until a reboot. If yours behaves the same, the producer has to keep the promise.
+2. **Add two stop bits to your control register.** A graceful one (`ABORT`, `CTRL` bit 4) and, only if you need it, a hard one (`FORCE_ABORT`, bit 5) that you document as not safe for the DMA. Report the outcome in a status bit (here `STATUS` bit 2 means the last run was aborted) and keep a count of the frames really sent (`FRAMES_SENT`).
+3. **In per-frame modes, finish the frame and stop.** Each frame was its own packet, so there is nothing to pad.
+4. **In burst mode, finish the frame and then pad.** Count `remaining` words, `FRAME_COUNT × (PAYLOAD_WORDS + 4)` minus those already sent, and send zero words until it reaches zero. Put `TLAST` on the last beat, and the half-filled beat rule (`out_keep` of `8'h0F` for the last word) when the count is odd. Copy the `fill_beat` task and rename the counters.
+5. **Leave no gap in `TVALID`.** The first fill beat must leave in the same clock in which the abort is noticed (`abort_fill`), or in the same beat as the last word of the frame in progress (`split_a`). This DMA does not tolerate a one-clock gap inside a packet (K03).
+6. **Make the fill impossible to mistake for data.** A real frame starts with a magic word that is not zero; keep it that way.
+7. **Write the test in the tool.** `pfdaq_cap -A <microseconds>` arms the whole burst, writes START, sleeps, writes ABORT and waits for the DMA interrupt. Then it reads `FRAMES_SENT`, verifies exactly those frames, checks that every word after them is zero, and checks that the 64 bytes after the burst still hold the marker 0xEE written beforehand. Pass only if all of that holds, the aborted flag is set and fewer frames than requested were sent.
+8. **Simulate it with a checker that knows where `TLAST` must be** (`make -C hw sim-stream`): an abort mid-burst, one right after START, a per-frame run, a real-time run and an odd frame length.
+
+Check that it works: `fill_words` equals the requested words minus the real ones (500 × 4,096 − 119 × 4,096 = 1,560,576), `fill_nonzero` is 0, and a normal run right afterwards (`pfdaq_cap -r -m counter -w 252 -f 1024 -n 8`) passes.
+
+**What not to change**
+
+- Do not use `FORCE_ABORT` as an ordinary stop. It can leave the DMA waiting.
+- Do not let the fill start a clock late, and do not shorten the descriptor after the burst has started; this core was seen to ignore a late re-arm (K04).
+- Read `FRAMES_SENT`, not your own clock, to learn where the data ends: a `usleep` from a Linux process does not give an exact stop.
+- Do not expect the abort to shorten the transfer. It saves data production and software work, not bus time.
 
 ## Evidence
 

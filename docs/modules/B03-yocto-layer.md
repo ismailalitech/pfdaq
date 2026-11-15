@@ -44,6 +44,15 @@ LAYERDEPENDS_meta-pfdaq = "meta-mchp-polarfire-soc-bsp"
 LAYERSERIES_COMPAT_meta-pfdaq = "scarthgap"
 ```
 
+![How the project layer is used: five parts of meta-pfdaq (machine, U-Boot files, kernel device tree, supervisor firmware, extras) and the vendor layers all go into bitbake mchp-base-image, built with MACHINE=mpfs-disco-kit-amp, which leaves the SD image, kernel image, device tree, payload and firmware in the deploy directory.](../diagrams/lab-b03-layer.svg)
+
+1. The machine file names the machine and its device tree, U-Boot configuration and payload.
+2. The U-Boot part supplies the payload template, the environment and a configuration fragment, all keyed on the machine name.
+3. The kernel part copies the project's device tree into the kernel source.
+4. The firmware part adds a step that builds the hart 4 supervisor from this repository's source.
+5. The extras add the project's tools, the optional kernel module and the package list.
+6. The vendor layers (OpenEmbedded-Core, meta-openembedded, meta-mchp) are not edited. They join the five parts in one build, `MACHINE=mpfs-disco-kit-amp bitbake mchp-base-image`, which leaves the SD image, the kernel image, the device tree, `payload.bin` and the firmware ELF in the deploy directory.
+
 Its content, and what each part replaces:
 
 | Path | What it supplies | Why the vendor layer cannot |
@@ -139,6 +148,26 @@ Versions that go with these commands: meta-mchp `linux4microchip-2026.04`, OpenE
 
 - The console of a boot from the resulting card shows the machine model the device tree gives (`Machine model: Microchip PolarFire-SoC Discovery Kit (AMP)`) and Linux attaching to the supervisor (module B01).
 - An image written to a blank card and booted cold with no manual steps passed all 27 functional tests (`suite-fresh-card`).
+
+## Do the same in your project
+
+Use this when the vendor's BSP lacks the machine you need. Rename `meta-pfdaq`, `mpfs-disco-kit-amp` and `pfdaq` to your own names; keep the shape.
+
+1. **Make the layer.** Copy `conf/layer.conf` and rename the collection. Keep `BBFILE_PRIORITY` (10 here) and set `LAYERDEPENDS` to the vendor BSP layer you build on and `LAYERSERIES_COMPAT` to your Yocto release (`scarthgap` here). Add the layer's path to `bblayers.conf`.
+2. **Write the machine.** Start from the vendor machine closest to yours (this project's file says in its first lines which one it ports and that it is not a vendor machine). Set `KERNEL_DEVICETREE`, `UBOOT_MACHINE`, `HSS_PAYLOAD`, the `amp` machine feature, the `hss-early-boot-freertos` distro feature and `MACHINEOVERRIDES` so the vendor's files for your board are pulled in.
+3. **Add the U-Boot files.** Create `recipes-bsp/u-boot/u-boot-mchp_%.bbappend` with its one `FILESEXTRAPATHS` line, then under `files/` the payload template (module B02), `envs/<machine>.txt` and the `.cfg` fragment that keeps the environment on the card's first partition. Do not skip the environment file: the first build here failed at the image step without it.
+4. **Add the device tree.** Put your `.dts` under `recipes-kernel/linux/files/` (module B04) and copy the `do_configure:prepend` step from the kernel `bbappend`, changing the file name.
+5. **Build the second program's firmware from your own source.** Copy the `do_pfdaq_overlay` step and the `addtask` line from the firmware `bbappend`, and point it at a script of yours that adds your files to the fetched vendor tree. Keep the source in your repository, not as patches inside the layer.
+6. **List what goes in the image.** Add your tools and module to the packagegroup with a `bbappend`.
+7. **Build.** Run `MACHINE=<your machine> bitbake mchp-base-image` and collect the SD image with its block map, `fitImage`, the device tree, `payload.bin` and the firmware ELF.
+8. **Check it.** Boot from a card written from that image. The console must show your device tree's `model` string and Linux attaching to the second program (module B01); the project's own check is the full test suite from a freshly written card.
+
+What not to change:
+
+- **Do not edit the vendor layers.** All changes live in your layer, so a vendor update does not conflict with them.
+- **Keep the `grep -q ... ||` guard** in the device-tree step so running it twice is safe.
+- **Keep the `hss-early-boot-freertos` feature** if you want the payload to contain firmware: without it the vendor step fills the template with `null`.
+- **Rebuild the firmware recipe after a source change.** `apply.sh` copies the source over the fetched tree.
 
 ## Evidence
 

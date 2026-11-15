@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 410" width="900" height="410" role="img" aria-labelledby="t d">
+<title id="t">Waveform from a scratch testbench that drives one latency channel directly. A ONESHOT event is pending when CLEAR is written. The sweep starts. An ACK written during the sweep ends the pending state and sets inc_bin to 7, but in the cycle where inc_pend is high the write port belongs to the sweep: hw_addr is 4 and hw_data is 0, so bin 7 is never incremented.</title><desc id="d">Waveform from a scratch testbench that drives one latency channel directly. A ONESHOT event is pending when CLEAR is written. The sweep starts. An ACK written during the sweep ends the pending state and sets inc_bin to 7, but in the cycle where inc_pend is high the write port belongs to the sweep: hw_addr is 4 and hw_data is 0, so bin 7 is never incremented.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 15.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 15.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}21.79%{opacity:1}24.79%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="410" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="336" fill="#0d1117"/>
+<line x1="192.857" y1="30" x2="192.857" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="192.857" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">CLEAR</text>
+<line x1="404.286" y1="30" x2="404.286" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="404.286" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">ACK</text>
+<text x="12" y="66" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">APB write strobe</text>
+<path d="M140,74 L140,74 L192.857,74 L192.857,54 L245.714,54 L245.714,74 L404.286,74 L404.286,54 L457.143,54 L457.143,74 L880,74" fill="none" stroke="#b08fe0" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="106" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">pending</text>
+<path d="M140,94 L140,94 L457.143,94 L457.143,114 L880,114" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="146" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">clearing</text>
+<path d="M140,154 L140,154 L245.714,154 L245.714,134 L880,134" fill="none" stroke="#ef6f6c" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="186" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">inc_pend</text>
+<path d="M140,194 L140,194 L457.143,194 L457.143,174 L510,174 L510,194 L880,194" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="226" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">inc_bin</text>
+<rect x="140.5" y="213" width="316.143" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="298.571" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="457.643" y="213" width="421.857" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="668.571" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">7</text>
+<text x="12" y="266" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">hw_addr</text>
+<rect x="140.5" y="253" width="157.571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="219.286" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="299.071" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="325" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="351.929" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="377.857" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<rect x="404.786" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="430.714" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">3</text>
+<rect x="457.643" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="483.571" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">4</text>
+<rect x="510.5" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="536.429" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">5</text>
+<rect x="563.357" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="589.286" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">6</text>
+<rect x="616.214" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="642.143" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">7</text>
+<rect x="669.071" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="695" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">8</text>
+<rect x="721.929" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="747.857" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">9</text>
+<rect x="774.786" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="800.714" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">10</text>
+<rect x="827.643" y="253" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="853.571" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">11</text>
+<text x="12" y="306" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">hw_data</text>
+<rect x="140.5" y="293" width="104.714" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="192.857" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="246.214" y="293" width="633.286" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="562.857" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="192.857" y="30" width="52.8571" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="192.857" cy="30" r="11" fill="#ffd166"/><text x="192.857" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">CLEAR with an event pending</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">CLEAR is written while the interrupt is still pending. The next clock, clearing goes high.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="245.714" y="30" width="158.571" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="245.714" cy="30" r="11" fill="#ffd166"/><text x="245.714" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">The sweep owns the write port</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">hw_addr steps through the bins and hw_data is 0: one bin cleared per clock, 64 clocks in all.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="404.286" y="30" width="52.8571" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="404.286" cy="30" r="11" fill="#ffd166"/><text x="404.286" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">The ACK arrives</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">The unit records it: pending falls and inc_bin is set to 7, the bin this sample belongs in.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="457.143" y="30" width="52.8571" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="457.143" cy="30" r="11" fill="#ffd166"/><text x="457.143" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">The increment is discarded</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">inc_pend is high for one clock, but hw_addr is the sweep's 4 and hw_data is 0. Bin 7 is never written.</text>
+</g>
+</svg>

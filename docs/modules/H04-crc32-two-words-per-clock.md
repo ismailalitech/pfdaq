@@ -106,6 +106,23 @@ pfdaq_word_step step_b (.ph(a_ph), .crc(a_crc), ... .n_crc(b_crc), ...); // odd 
 
 Instance B starts from the state that A leaves: `a_ph`, `a_crc`, `a_seq` and so on. Between two clock edges a signal therefore travels through A's `crc32_word`, then B's. If A has just consumed the last payload word and B's phase is the CRC word, B's output is simply `~a_crc`, so the whole CRC network of A sits in front of the output register that drives the stream.
 
+![Two CRC steps in series inside one clock: the crc register feeds step A for the even word, A's result feeds step B for the odd word, B's result is loaded into the crc register at the next clock edge, and the two words go to the low and high half of the output register.](../diagrams/lab-h04-chained-steps.svg)
+
+1. **The register.** `crc` holds `0xFFFFFFFF` at the start and after every frame, and feeds step A together with the phase `ph`.
+2. **Step A.** It handles the even word and passes its state on: `a_crc` and `a_ph`.
+3. **Step B.** It starts from A's result and handles the odd word. Both steps are combinational, so a signal runs through A's XOR network and then B's inside one 8 ns period.
+4. **Back to the register.** B's `b_crc` is loaded into `crc` at the clock edge, so the next clock starts from the result of two words.
+5. **The output.** `a_word` goes to `TDATA[31:0]` and `b_word` to `TDATA[63:32]`. On the CRC beat B's word is `~a_crc`.
+
+Here is one frame in the simulation. It is the first frame of scenario 1: 12 words, so six beats. The rows `a_crc` and `b_crc` are the results after step A and after step B in that clock; the two `TDATA` rows show the registered beat, which appears one clock after the clock in which it was computed.
+
+![Waveform of the first frame of scenario 1: the crc register starts at ffffffff and changes once per clock through the two chained steps; on the last beat step B outputs the inverse of a_crc, b023c43c, and b_crc reloads ffffffff for the next frame.](../diagrams/lab-h04-crc-frame.svg)
+
+1. **Frame start.** The register holds `ffffffff`. Step A takes the header word and step B the sequence number.
+2. **Two words per clock.** In every following clock the register takes `b_crc`, the result of step A and then step B in one clock, for example `5cea0054` after the header beat and `87f3d40a` after the next.
+3. **The CRC beat.** Step A takes the last payload word, `00000007`. Step B outputs `~a_crc`, the CRC word, and `b_crc` is `ffffffff` again, ready for the next frame.
+4. **On the bus.** `TDATA[63:32]` is `b023c43c`, the CRC word, next to payload word `00000007` in `TDATA[31:0]`. The generator is already on the header of the next frame.
+
 The cost is logic depth: two XOR networks in series, plus for the PRBS mode the xorshift step in front of A's CRC input, all inside the 8 ns of one 125 MHz period. The number of logic levels was not measured separately. What the published records show is the total: the full design meets timing in all corners, with a worst slack of 1.342 (Libero reports it in nanoseconds) for the multi-pass run, and uses 26.02 % of the fabric's logic elements. That slack belongs to the whole design, not to the CRC path in particular.
 
 ### Where fault injection goes
@@ -181,6 +198,12 @@ zlib.crc32     : b023c43c
 
 The words are the header `0xA55A0008` (magic and payload length 8), sequence number 0, the timestamp counter value `0x116`, eight counter-payload words, and the CRC. The CRC computed in hardware and the CRC computed by Python's `zlib` are the same number.
 
+![Console: the stream simulation passes, then the script of step 2 prints the first frame of scenario 1 and shows that the CRC word in the stream, b023c43c, equals the zlib CRC-32 of the other eleven words.](../diagrams/lab-h04-zlib-check.svg)
+
+1. **The simulation.** The 20 scenarios pass against the Python checker, which itself uses `zlib` for every frame.
+2. **One frame.** The header `0xA55A0008`, the sequence number, the timestamp, eight payload words and the CRC word as the last one.
+3. **Same number.** The script packs the first 11 words little-endian and asks `zlib`; the result equals the CRC word the hardware sent. The `python3 - <<'EOF'` line stands for the script of step 2.
+
 Step 3 fails, and the checker says where. The first frame still passes, because START loads the register with `0xFFFFFFFF` by a different path; every following frame is wrong. From the run made for this page:
 
 ```
@@ -201,6 +224,27 @@ RESULT: FAIL
 ```
 
 The payload mismatch is still caught, but only by the model's own recomputation of the payload. The CRC no longer catches a fault in the payload, which is the case it exists for. The original choice protects against a source that corrupts its own data after computing it.
+
+## Do the same in your project
+
+Use this when a block must append a standard CRC-32 to frames it sends, at one or two words per clock, and a program on the other side must be able to check it. The names are this project's: rename them for yours.
+
+1. **Copy `crc32_word`.** It is the bit-serial rule written as a loop over 32 data bits, with the reflected polynomial `32'hEDB88320`. It has no clock and no state; the synthesis tool unrolls it. Only the 32-bit step was built in this project. For another word width the loop bound and the width of `d` are what change (not built here).
+2. **Keep the register and its two special values.** The register `crc` is `0xFFFFFFFF` at reset and at START, and `n_crc = (ph == P_CRC) ? 32'hFFFFFFFF : crc32_word(crc, crc_in)` reloads it after the CRC word, so every frame is independent.
+3. **Say what the CRC covers.** Here it covers every word of the frame except the CRC word itself, fed one word per phase through `crc_in`. Put the same rule in your frame description.
+4. **Send the inverse.** The CRC word is `crc_final = ~crc`, the final inversion of the definition.
+5. **Feed the CRC from the intended data.** `crc_in = pay_good`, while the word sent is `pay_word`. If you inject faults for testing, a payload fault then breaks the CRC as well as the payload.
+6. **For two words per clock, chain two steps.** Instantiate the word step twice and start the second from the first one's next-state outputs (`a_ph`, `a_crc`, ...), as `step_a` and `step_b` do. When the first word was the last payload word, the second step's word is `~a_crc`. Check the timing of the whole path in your own tool: this project did not measure the CRC path separately.
+7. **Write an independent check.** Pack the frame's words little-endian and ask Python: `zlib.crc32(struct.pack('<%dI' % (flen - 1), *w[:-1]))` must equal the last word. Run it over the whole stream of your simulation, as `hw/tb/check_trace.py` does, and over one frame by hand with the script of step 2 of "Run it".
+8. **Make sure the check can fail.** Make the two breaks of "Run it" in a scratch copy: reload the register with `32'h00000000`, and feed the CRC from `pay_word`. Your checker must fail on both. If it does not, it is not checking the property.
+
+What not to change:
+
+- **Keep the packing little-endian.** Big-endian packing (`'>%dI'`) makes a correct frame look wrong.
+- **Apply the final inversion once.** Missing or doubled, every CRC is wrong by the same inversion.
+- **Reload `0xFFFFFFFF` after every frame.** The first frame passes even if you forget, because START loads the register by another path.
+- **Do not feed the CRC from the word that is sent** if you want it to catch a source that corrupts its own data.
+- **Do not take a passing simulation as timing.** It shows the logic, not the delay of the XOR networks.
 
 ## Evidence
 

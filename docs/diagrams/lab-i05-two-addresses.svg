@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 345" width="900" height="345" role="img" aria-labelledby="t d">
+<title id="t">The two addresses of one buffer: pfdaq_cap maps /dev/udmabuf-ddr-nc0 and writes the descriptor through that virtual mapping, but the descriptor and the DMA's stream address register hold physical addresses, ddr_phys plus an offset, read from the device's phys_addr attribute. The DMA controller fetches the descriptor and writes the burst into the buffer by physical address, and the program copies the burst out through its virtual mapping.</title><desc id="d">The two addresses of one buffer: pfdaq_cap maps /dev/udmabuf-ddr-nc0 and writes the descriptor through that virtual mapping, but the descriptor and the DMA's stream address register hold physical addresses, ddr_phys plus an offset, read from the device's phys_addr attribute. The DMA controller fetches the descriptor and writes the burst into the buffer by physical address, and the program copies the burst out through its virtual mapping.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 13.70s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 13.70s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}9.49%{opacity:1}12.49%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="345" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M270,115 L355,115" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:1.30s" d="M270,115 L355,115" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="284.96" y="93" width="55.08" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="312.5" y="105.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">virtual</text>
+</g>
+<g id="e1">
+<path d="M145,160 L145,277 L355,277" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.90s" d="M145,160 L145,277 L355,277" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="219.24" y="255" width="61.52" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="250" y="267.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">physical</text>
+</g>
+<g id="e2">
+<path d="M480,235 L480,160" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:6.50s" d="M480,235 L480,160" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="484" y="188.5" width="138.8" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="489" y="201" text-anchor="start" font-size="11.5" fill="#e6ecf1">reads the descriptor</text>
+</g>
+<g id="e3">
+<path d="M605,277 L785,277 L785,160" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:7.80s" d="M605,277 L785,277 L785,160" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="638.48" y="255" width="113.04" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="695" y="267.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">writes the burst</text>
+</g>
+<g id="e4">
+<path d="M785,70 L785,34 L145,34 L145,70" fill="none" stroke="#5aa0d6" stroke-width="1.8" stroke-dasharray="5 4" stroke-linejoin="round" marker-end="url(#ar-hart)"/>
+<path class="hl flow" style="animation-delay:10.40s" d="M785,70 L785,34 L145,34 L145,70" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="344.08" y="12" width="241.84" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="465" y="24.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">copy out through the virtual mapping</text>
+</g>
+<g id="prog">
+<rect x="20" y="70" width="250" height="90" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="145" y="94" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">pfdaq_cap</text>
+<text x="145" y="111" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">ddr = mmap(udmabuf-ddr-nc0)</text>
+<text x="145" y="128" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">ddr_phys = sysfs phys_addr</text>
+<text x="145" y="145" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">virtual and physical differ</text>
+<rect class="hl" style="animation-delay:0.00s" x="19" y="69" width="252" height="92" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="desc">
+<rect x="355" y="70" width="250" height="90" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="480" y="94" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Descriptor</text>
+<text x="480" y="111" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">at DESC_OFF 0x0</text>
+<text x="480" y="128" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">desc[2] = ddr_phys + dest_off</text>
+<text x="480" y="145" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">the physical destination</text>
+<rect class="hl" style="animation-delay:2.60s" x="354" y="69" width="252" height="92" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="buf">
+<rect x="690" y="70" width="190" height="90" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="785" y="94" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Burst buffer</text>
+<text x="785" y="111" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">at BUF_OFF 0x1000</text>
+<text x="785" y="128" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">page-aligned</text>
+<text x="785" y="145" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">non-cached region</text>
+<rect class="hl" style="animation-delay:9.10s" x="689" y="69" width="192" height="92" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="dma">
+<rect x="355" y="235" width="250" height="84" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="480" y="264.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">DMA controller</text>
+<text x="480" y="281.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">STREAM_0_ADDR_REG (0x460)</text>
+<text x="480" y="298.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">= ddr_phys + DESC_OFF</text>
+<rect class="hl" style="animation-delay:5.20s" x="354" y="234" width="252" height="86" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+</svg>

@@ -152,6 +152,18 @@ mpfs-disco-kit-amp login:
 
 The supervisor on hart 4 is already running before Linux boots; its console shows the channel being announced after Linux attaches (record: supervisor console).
 
+![Milestones of the recorded cold boot of the final image: the boot monitor selects the SD card, finds the boot partition and processes the two images, all four cores run; U-Boot loads the kernel from the FIT image; Linux names the machine, attaches to the supervisor and opens the channel; the host summary of the suite reads 27 of 27.](../diagrams/lab-x03-boot-record.svg)
+
+The figure joins excerpts of three records: the boot monitor's console, the Linux console and the suite summary. Lines between them are left out.
+
+1. The boot monitor starts from the chip's boot flash, which this project never writes.
+2. It selects the SD card and takes the payload from the partition at index 1.
+3. The image set and its two images: U-Boot for harts 1 to 3 and the supervisor for hart 4.
+4. All four application cores report Running.
+5. U-Boot loads the kernel from the FIT image and starts it.
+6. Linux names the machine from the device tree, attaches to the supervisor, sees the channel `pfdaq-supervisor` and shows the login prompt.
+7. The suite is run and summarised on the PC; the fresh-card run ended with 27 of 27.
+
 ### 6. First login and network
 
 The image forces a root password change at first login; choose your own. Find the board's address from the Linux console or your router, and install your SSH key, so the tests and the reboot script can run without passwords.
@@ -182,6 +194,27 @@ The two known issues are the two the project reports openly: odd frame lengths i
 | Programming | PROGRAM, VERIFY and DEVICE_INFO passed; eNVM digest unchanged |
 | Cold boot | all four application harts Running; Linux with 3 CPUs; remoteproc attached; channel `pfdaq-supervisor` created |
 | Suite | 27/27 functional tests, 13 measurements, 2 known issues, kernel `6.18.17-linux4microchip-2026.04.1`, hart 4 context FreeRTOS |
+
+## Do the same in your project
+
+Use this as the checklist for taking any board of this kind from nothing to a passing suite. The commands are this project's; replace the names and the suite with yours, and keep the order. Module numbers point to the pages that explain each step.
+
+1. **Protect the board first.** Read module B06. Decide which fabric job is the one built for your board, and program nothing else: the Icicle Kit reference design is another board's and is never programmed here.
+2. **Build the fabric** with `hw/libero/build.sh <design version> [job name]` (here `6` and `PFDAQ_v0_5_1`). Set `LM_LICENSE_FILE` if your licence daemon is not on the local machine. The build must report timing met in all corners and every pin placed; here that was 64 of 64 I/Os.
+3. **Program the fabric** with `hw/libero/program.sh <job>`, after the board is powered, interface 0 is not bound to the serial driver and Linux is shut down. PROGRAM, VERIFY and DEVICE_INFO must all pass, and the eNVM digest must be the same value as before.
+4. **Build the image.** Assemble the layers at the versions in `VERSIONS.md`, add your layer to `conf/bblayers.conf` (module B03), and run `MACHINE=<your machine> bitbake mchp-base-image`. Check that the deploy directory holds the `.wic.gz`, the `.wic.bmap`, `payload.bin`, `fitImage` and the device tree.
+5. **Write the card** with `bmaptool copy`, after comparing `lsblk` with the card removed and inserted. Then compare the payload partition, the `fitImage` and the tools on the card with the deploy files by SHA-256.
+6. **Cold-start and read the consoles.** Power-cycle with the card in. Compare what you see with the figure above: the card selected, the boot partition found, both images processed, four cores Running, kernel started, remoteproc attached, the channel created, the login prompt.
+7. **Log in, set a password and install your SSH key** so tests and reboot scripts run without passwords.
+8. **Run the suite.** Copy it to the board, run it there and summarise it on the PC. The suite ends with `SUITE_DONE`; for this project the summary line is `27/27 functional tests passed, 13 measurements, 2 known issues`.
+9. **Iterate by SSH, decide from a fresh card.** Use module B05 for day-to-day changes, and repeat steps 5 to 8 on a blank card before you call a milestone done.
+
+What not to change:
+
+- **Program the fabric and sNVM only.** Nothing in these steps writes the chip's boot flash (eNVM) or sets a boot mode, a key or a security lock. Keep the check that the eNVM digest is the same before and after every programming.
+- **Do not skip the device check before writing the card.** Writing to the wrong device destroys its contents.
+- **Keep the early aborts in the build script.** A constraint-file error and an unplaced pin once gave a board that met timing but would not boot (case study K08).
+- **Do not count a partial run as proof.** Only a run from a freshly written card, cold-started with nothing changed since the build, shows that the pieces fit. This project has not run this page from an empty card in its current layout.
 
 ## Evidence
 

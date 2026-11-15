@@ -1,0 +1,430 @@
+# Figures of the group A labs (H01 to H06). Waveforms come from `make -C hw sim-stream` runs; see the lab pages.
+
+- id: lab-h02-handshake
+  type: wave
+  alt: "Waveform from the stream simulation, scenario 2 with TREADY high on 30 percent of the clocks. A beat transfers on every rising clock edge where TVALID and TREADY are both high. While TREADY is low, TVALID stays high and TDATA does not change. The last beat of the packet has TLAST high and TKEEP 0F, and TVALID is low for seven clocks before the next packet. A dash means TVALID is low."
+  width: 900
+  height: 440
+  length: 224
+  ticks: [[0, "4500 ns"], [40, "4540 ns"], [80, "4580 ns"], [120, "4620 ns"], [160, "4660 ns"], [200, "4700 ns"]]
+  step: 3.4
+  signals:
+    - {name: "ACLK", kind: plain, values: [[0, 1], [4, 0], [8, 1], [12, 0], [16, 1], [20, 0], [24, 1], [28, 0], [32, 1], [36, 0], [40, 1], [44, 0], [48, 1], [52, 0], [56, 1], [60, 0], [64, 1], [68, 0], [72, 1], [76, 0], [80, 1], [84, 0], [88, 1], [92, 0], [96, 1], [100, 0], [104, 1], [108, 0], [112, 1], [116, 0], [120, 1], [124, 0], [128, 1], [132, 0], [136, 1], [140, 0], [144, 1], [148, 0], [152, 1], [156, 0], [160, 1], [164, 0], [168, 1], [172, 0], [176, 1], [180, 0], [184, 1], [188, 0], [192, 1], [196, 0], [200, 1], [204, 0], [208, 1], [212, 0], [216, 1], [220, 0], [224, 1]]}
+    - {name: "TVALID", kind: fabric, values: [[0, 1], [144, 0], [200, 1]]}
+    - {name: "TREADY", kind: hart, values: [[0, 0], [24, 1], [32, 0], [40, 1], [48, 0], [56, 1], [64, 0], [72, 1], [80, 0], [96, 1], [112, 0], [128, 1], [152, 0], [160, 1], [168, 0], [184, 1], [192, 0], [200, 1], [208, 0]]}
+    - {name: "TVALID & TREADY", kind: good, values: [[0, 0], [24, 1], [32, 0], [40, 1], [48, 0], [56, 1], [64, 0], [72, 1], [80, 0], [96, 1], [112, 0], [128, 1], [144, 0], [200, 1], [208, 0]]}
+    - {name: "TDATA (beat no.)", bus: true, kind: fabric, values: [[0, "1"], [32, "2"], [48, "3"], [64, "4"], [80, "5"], [104, "6"], [112, "7"], [136, "8"], [144, "-"], [200, "0"], [208, "1"]]}
+    - {name: "TKEEP", bus: true, kind: fabric, values: [[0, "FF"], [136, "0F"], [144, "-"], [200, "FF"]]}
+    - {name: "TLAST", kind: fabric, values: [[0, 0], [136, 1], [200, 0]]}
+  callouts:
+    - {t0: 0, t1: 24, title: "Stalled", text: "TREADY is low. The source keeps TVALID high and TDATA unchanged: beat 1 waits, nothing moves."}
+    - {t0: 24, t1: 32, title: "One beat", text: "TVALID and TREADY are both high at the clock edge that ends this cycle: beat 1 transfers."}
+    - {t0: 80, t1: 104, title: "Stalled again", text: "TREADY drops for two clocks. TDATA still shows beat 5; it changes only after beat 5 has gone."}
+    - {t0: 96, t1: 120, title: "No clock lost", text: "TREADY stays high for two clocks: beats 5 and 6 go on consecutive edges, one beat per clock."}
+    - {t0: 136, t1: 144, title: "Last beat", text: "TLAST is high and TKEEP is 0F: this packet has 17 words, so the last beat carries only the CRC word."}
+    - {t0: 144, t1: 200, title: "Between packets", text: "TVALID is low for 7 clocks (GAP_CYCLES is 7 here). That is allowed: the packet has ended."}
+
+- id: lab-h02-valid-gap
+  type: wave
+  alt: "Two waveforms of the same first 120 ns of scenario 1, which sends one packet of five frames with TREADY always high. As built, TVALID is high on every clock and a beat goes on every edge. With w_ready changed to ~out_valid, TVALID is high only every second clock, so the same beats take twice as long and every low clock inside the packet is a TVALID gap. The beat rows number the beats of each 12-word frame, 0 to 5."
+  width: 900
+  height: 390
+  length: 120
+  ticks: [[0, "2300 ns"], [20, "2320 ns"], [40, "2340 ns"], [60, "2360 ns"], [80, "2380 ns"], [100, "2400 ns"], [120, "2420 ns"]]
+  step: 3.4
+  signals:
+    - {name: "ACLK", kind: plain, values: [[0, 1], [4, 0], [8, 1], [12, 0], [16, 1], [20, 0], [24, 1], [28, 0], [32, 1], [36, 0], [40, 1], [44, 0], [48, 1], [52, 0], [56, 1], [60, 0], [64, 1], [68, 0], [72, 1], [76, 0], [80, 1], [84, 0], [88, 1], [92, 0], [96, 1], [100, 0], [104, 1], [108, 0], [112, 1], [116, 0], [120, 1]]}
+    - {name: "TREADY", kind: hart, values: [[0, 1]]}
+    - {name: "TVALID, as built", kind: fabric, values: [[0, 0], [16, 1]]}
+    - {name: "beat, as built", bus: true, kind: fabric, values: [[0, "-"], [16, "0"], [24, "1"], [32, "2"], [40, "3"], [48, "4"], [56, "5"], [64, "0"], [72, "1"], [80, "2"], [88, "3"], [96, "4"], [104, "5"], [112, "0"], [120, "1"]]}
+    - {name: "TVALID, broken", kind: bad, values: [[0, 0], [16, 1], [24, 0], [32, 1], [40, 0], [48, 1], [56, 0], [64, 1], [72, 0], [80, 1], [88, 0], [96, 1], [104, 0], [112, 1], [120, 0]]}
+    - {name: "beat, broken", bus: true, kind: bad, values: [[0, "-"], [16, "0"], [24, "-"], [32, "1"], [40, "-"], [48, "2"], [56, "-"], [64, "3"], [72, "-"], [80, "4"], [88, "-"], [96, "5"], [104, "-"], [112, "0"], [120, "-"]]}
+  callouts:
+    - {t0: 16, t1: 64, title: "As built", text: "TVALID stays high on every clock. The 6 beats of the first frame go on 6 consecutive edges."}
+    - {t0: 16, t1: 104, title: "w_ready = ~out_valid", text: "TVALID is high only every second clock. The same 6 beats are spread over twice the time."}
+    - {t0: 24, t1: 32, title: "A gap inside the packet", text: "No data is wrong, but this is a TVALID gap: the testbench logs VALID_GAP. This DMA needs none."}
+
+- id: lab-h04-crc-frame
+  type: wave
+  alt: "Waveform from the stream simulation, the first frame of scenario 1 (12 words, six beats). The crc register starts at ffffffff and changes once per clock, through two chained CRC steps, a_crc after word A and b_crc after word B. On the last beat the second step produces the CRC word, the inverse of a_crc, b023c43c, and b_crc reloads ffffffff for the next frame."
+  width: 900
+  height: 400
+  length: 64
+  ticks: [[0, "2308 ns"], [16, "2324 ns"], [32, "2340 ns"], [48, "2356 ns"], [64, "2372 ns"]]
+  step: 3.4
+  signals:
+    - {name: "ph (word A)", bus: true, kind: fabric, values: [[0, "MAGIC"], [8, "TIME"], [16, "PAY"], [48, "MAGIC"], [56, "TIME"], [64, "PAY"]]}
+    - {name: "crc register", bus: true, kind: hart, values: [[0, "ffffffff"], [8, "5cea0054"], [16, "87f3d40a"], [24, "382ff4be"], [32, "350b0e4f"], [40, "ce0f3d91"], [48, "ffffffff"], [56, "e4566731"], [64, "948db5ec"]]}
+    - {name: "a_crc, after A", bus: true, kind: sw, values: [[0, "fde7eab5"], [8, "f693fc38"], [16, "11ccbe10"], [24, "67cbcdb8"], [32, "4b7088bb"], [40, "4fdc3bc3"], [48, "fde7eab5"], [56, "55841cc2"], [64, "87d42504"]]}
+    - {name: "b_crc, after B", bus: true, kind: sw, values: [[0, "5cea0054"], [8, "87f3d40a"], [16, "382ff4be"], [24, "350b0e4f"], [32, "ce0f3d91"], [40, "ffffffff"], [48, "e4566731"], [56, "948db5ec"], [64, "947efc0e"]]}
+    - {name: "TDATA[63:32]", bus: true, kind: fabric, values: [[0, "-"], [8, "00000000"], [24, "00000002"], [32, "00000004"], [40, "00000006"], [48, "b023c43c"], [56, "00000001"], [64, "00010000"]]}
+    - {name: "TDATA[31:0]", bus: true, kind: fabric, values: [[0, "-"], [8, "a55a0008"], [16, "00000116"], [24, "00000001"], [32, "00000003"], [40, "00000005"], [48, "00000007"], [56, "a55a0008"], [64, "0000011c"]]}
+  callouts:
+    - {t0: 0, t1: 8, title: "Frame start", text: "The register holds ffffffff. Step A takes the header word, step B the sequence number."}
+    - {t0: 8, t1: 40, title: "Two words per clock", text: "Every clock the register takes b_crc: the result of step A and then step B, in one clock."}
+    - {t0: 40, t1: 48, title: "The CRC beat", text: "A takes the last payload word. B outputs ~a_crc, the CRC word, and b_crc reloads ffffffff."}
+    - {t0: 48, t1: 56, title: "On the bus", text: "TDATA[63:32] is b023c43c, the CRC word, next to payload word 00000007. The next frame starts."}
+
+- id: lab-h02-output-stage
+  alt: "The output stage of the stream source. The sink drives TREADY. The output register drives TVALID. Together they give w_ready, which is high when the register is empty or being emptied this clock. w_ready allows emit, and emit loads the output register with the next word pair and advances the generator state."
+  width: 900
+  height: 340
+  step: 3
+  nodes:
+    gen:    {x: 20,  y: 30, w: 150, h: 70, kind: fabric, title: "Generator state", sub: "ph, pay_idx,\nseq, crc"}
+    steps:  {x: 240, y: 30, w: 170, h: 70, kind: fabric, title: "Word steps A and B", sub: "combinational,\ntwo words per clock"}
+    reg:    {x: 490, y: 30, w: 170, h: 70, kind: hart,   title: "Output register", sub: "out_valid, out_data,\nout_last, out_keep"}
+    sink:   {x: 730, y: 30, w: 150, h: 70, kind: mss,    title: "DMA controller", sub: "takes a beat when\nTVALID and TREADY"}
+    emit:   {x: 240, y: 200, w: 190, h: 70, kind: plain, title: "emit", sub: "run == R_RUN, w_ready,\nfir_ok, not aborting"}
+    wready: {x: 480, y: 200, w: 190, h: 70, kind: plain, title: "w_ready", sub: "~out_valid | TREADY"}
+  edges:
+    - {id: e_state, from: gen.right,    to: steps.left, label: "state"}
+    - {id: e_pair,  from: steps.right,  to: reg.left,   label: "word pair"}
+    - {id: e_beat,  from: reg.right,    to: sink.left,  label: "beat"}
+    - {id: e_valid, from: reg.bottom,   to: wready.top, label: "out_valid"}
+    - {id: e_ready, from: sink.bottom,  to: wready.right, label: "TREADY"}
+    - {id: e_wr,    from: wready.left,  to: emit.right, label: "w_ready"}
+    - {id: e_load,  from: emit.top@0.8, to: reg.bottom@0.1, label: "load", mid: 150}
+    - {id: e_adv,   from: emit.left,    to: gen.bottom, label: "advance"}
+  steps: [e_valid, e_ready, wready, e_wr, emit, e_adv, gen, e_state, steps, e_pair, e_load, reg, e_beat, sink]
+  notes:
+    - {x: 20, y: 305, text: "TVALID is out_valid and nothing else, so the source never waits for TREADY. While out_valid is high and TREADY is low,"}
+    - {x: 20, y: 322, text: "w_ready is low and nothing is loaded, so every signal holds."}
+
+
+- id: lab-h04-chained-steps
+  alt: "Two CRC steps in series inside one clock. The crc register feeds step A, which handles the even word. Step A's result feeds step B, which handles the odd word. Step B's result is loaded into the crc register at the next clock edge. The words from A and B go to the low and high half of the output register."
+  width: 900
+  height: 300
+  step: 3
+  nodes:
+    crc:  {x: 20,  y: 60, w: 150, h: 70, kind: hart,   title: "crc register", sub: "0xFFFFFFFF at start\nand after every frame"}
+    a:    {x: 230, y: 60, w: 180, h: 70, kind: fabric, title: "Step A: even word", sub: "pfdaq_word_step\ncrc32_word, 32 bit steps"}
+    b:    {x: 490, y: 60, w: 170, h: 70, kind: fabric, title: "Step B: odd word", sub: "pfdaq_word_step\nstarts from a_crc, a_ph"}
+    outr: {x: 730, y: 60, w: 150, h: 70, kind: hart,   title: "Output register", sub: "TDATA, 64 bit"}
+  edges:
+    - {id: e_in,  from: crc.right, to: a.left,  label: "crc, ph"}
+    - {id: e_ab,  from: a.right,   to: b.left,  label: "a_crc, a_ph"}
+    - {id: e_out, from: b.right,   to: outr.left, label: "b_word"}
+    - {id: e_a,   from: a.top,     to: outr.top, bulge: 30, label: "a_word"}
+    - {id: e_fb,  from: b.bottom,  to: crc.bottom, bulge: 50, label: "b_crc, loaded at the clock edge"}
+  steps: [crc, e_in, a, e_ab, b, e_fb, e_a, e_out, outr]
+  notes:
+    - {x: 20, y: 250, text: "Both steps are combinational: one signal runs through A's XOR network and then B's inside one 8 ns period. On the CRC beat B's word is ~a_crc."}
+    - {x: 20, y: 272, text: "The register is fed with pay_good, the intended payload; the word sent is pay_word, which carries an injected fault."}
+
+
+- id: lab-h04-zlib-check
+  type: terminal
+  title: "simulation host"
+  alt: "Console: the stream simulation passes, then a short Python script takes the first frame of scenario 1 from the recorded stream and shows that the CRC word in the stream, b023c43c, equals the zlib CRC-32 of the other eleven words."
+  width: 900
+  height: 330
+  step: 3.4
+  lines:
+    - "$ make -C hw sim-stream OUT=/tmp/pfdaq-h04 | grep RESULT"
+    - "RESULT: PASS"
+    - "$ python3 - <<'EOF'"
+    - "['0xa55a0008', '0x0', '0x116', '0x0', '0x1', '0x2', '0x3', '0x4', '0x5', '0x6', '0x7', '0xb023c43c']"
+    - "crc in stream  : b023c43c"
+    - "zlib.crc32     : b023c43c"
+  callouts:
+    - {lines: [0, 1], title: "The simulation", text: "20 scenarios pass against the Python checker, which itself uses zlib for every frame."}
+    - {lines: [3, 3], title: "One frame", text: "Header 0xA55A0008, sequence 0, timestamp, eight payload words, and the CRC word as the last one."}
+    - {lines: [4, 5], title: "Same number", text: "The script packs the first 11 words little-endian and asks zlib: the hardware CRC is the same."}
+
+
+- id: lab-h05-fir-pipeline
+  alt: "The FIR source. Two triangle-wave samples per clock enter a four-stage pipeline: window, sixteen products, eight partial sums, two results. The results go into a 16-word FIFO. Registered head words feed the frame generator, which checks fir_ok before every beat. A credit rule reads the FIFO count and the stages in flight and decides whether a new pair of samples may be issued."
+  width: 900
+  height: 350
+  step: 3
+  nodes:
+    inp:   {x: 20,  y: 30, w: 140, h: 70, kind: plain,  title: "Triangle input", sub: "tri((i + 1) * STEP)"}
+    s1:    {x: 190, y: 30, w: 140, h: 70, kind: fabric, title: "1 Window", sub: "w[0..8]\ntwo new samples"}
+    s2:    {x: 360, y: 30, w: 140, h: 70, kind: fabric, title: "2 Products", sub: "p0, p1\n16 multiplies"}
+    s3:    {x: 530, y: 30, w: 140, h: 70, kind: fabric, title: "3 Partial sums", sub: "q0, q1\n8 additions"}
+    s4:    {x: 700, y: 30, w: 140, h: 70, kind: fabric, title: "4 Results", sub: "y0, y1\n32 bit, wrapped"}
+    fifo:  {x: 700, y: 190, w: 140, h: 70, kind: mem,   title: "FIFO", sub: "16 words\nmem, wp, rp, count"}
+    heads: {x: 480, y: 190, w: 160, h: 70, kind: mem,   title: "head0, head1", sub: "next two words,\nregistered"}
+    gen:   {x: 260, y: 190, w: 170, h: 70, kind: hart,  title: "Frame generator", sub: "pops 0, 1 or 2 words\nonly if fir_ok"}
+    rule:  {x: 20,  y: 190, w: 190, h: 70, kind: sw,    title: "Credit rule: issue", sub: "count + 2 * inflight\n+ 2 <= 16"}
+  edges:
+    - {id: e0, from: inp.right, to: s1.left}
+    - {id: e1, from: s1.right, to: s2.left}
+    - {id: e2, from: s2.right, to: s3.left}
+    - {id: e3, from: s3.right, to: s4.left}
+    - {id: e4, from: s4.bottom, to: fifo.top}
+    - {id: e5, from: fifo.left, to: heads.right}
+    - {id: e6, from: heads.left, to: gen.right}
+    - {id: e7, from: fifo.bottom, to: rule.bottom, bulge: 36, label: "count, and v1..v4 of the stages"}
+    - {id: e8, from: rule.top@0.7, to: s1.bottom@0.3, label: "issue"}
+  steps: [inp, e0, s1, e1, s2, e2, s3, e3, s4, e4, fifo, e5, heads, e6, gen, e7, rule, e8]
+  notes:
+    - {x: 20, y: 322, text: "A new pair is issued only if the FIFO can hold everything already in flight plus the two new results, so the pipeline can always drain."}
+
+
+- id: lab-h05-prefill
+  type: wave
+  alt: "Waveform from the stream simulation, the start of scenario 11 (FIR payload). After START the run state is PREFILL while the four-stage pipeline fills: the stages in flight rise to four, then the FIFO count rises by two per clock. The issue rule stops new work when count plus two times inflight plus two would exceed 16. The run starts when the count reaches 12, the first beat appears when the count is 16, and the count never exceeds 16."
+  width: 900
+  height: 400
+  length: 168
+  ticks: [[0, "111564 ns"], [40, "111604 ns"], [80, "111644 ns"], [120, "111684 ns"], [160, "111724 ns"]]
+  step: 3.4
+  signals:
+    - {name: "run", bus: true, kind: hart, values: [[0, "IDLE"], [8, "PREFILL"], [96, "RUN"]]}
+    - {name: "issue", kind: sw, values: [[0, 0], [8, 1], [72, 0], [120, 1], [144, 0], [168, 1]]}
+    - {name: "inflight", bus: true, kind: sw, values: [[0, "0"], [16, "1"], [24, "2"], [32, "3"], [40, "4"], [80, "3"], [88, "2"], [96, "1"], [104, "0"], [128, "1"], [136, "2"], [144, "3"], [160, "2"], [168, "1"]]}
+    - {name: "count", bus: true, kind: mem, values: [[0, "0"], [48, "2"], [56, "4"], [64, "6"], [72, "8"], [80, "10"], [88, "12"], [96, "14"], [104, "16"], [112, "15"], [120, "13"], [128, "11"], [136, "9"], [160, "11"]]}
+    - {name: "fir_pop", bus: true, kind: mem, values: [[0, "0"], [104, "1"], [112, "2"], [136, "0"], [160, "2"], [168, "0"]]}
+    - {name: "TVALID", kind: fabric, values: [[0, 0], [104, 1]]}
+  callouts:
+    - {t0: 8, t1: 48, title: "Pipeline fills", text: "START sets run to PREFILL. Stages in flight rise 1 to 4; the FIFO stays empty for 5 clocks."}
+    - {t0: 48, t1: 96, title: "Prefill", text: "The FIFO count rises by 2 every clock. When it reaches 12, run changes to RUN on the next clock."}
+    - {t0: 72, t1: 104, title: "The credit rule", text: "At 8 words and 4 stages in flight, 8 + 2 * 4 + 2 is 18, over 16: issue goes low. The count stops at 16."}
+    - {t0: 104, t1: 112, title: "First beat", text: "TVALID rises. fir_pop is 1 on the first beat after the header, which needs one payload word."}
+    - {t0: 112, t1: 168, title: "Steady state", text: "The generator pops 2 words per beat, the count falls, issue returns. The count never goes above 16."}
+
+- id: lab-h05-no-prefill
+  type: wave
+  alt: "Waveform from a scratch copy of the stream simulation with the prefill threshold changed from 12 to 0, same start of scenario 11. PREFILL lasts one clock, the header beat goes out, then fir_ok is low because the FIFO is empty and TVALID is low for three clocks inside the packet. The underrun flag is set and stays set."
+  width: 900
+  height: 340
+  length: 104
+  ticks: [[0, "111564 ns"], [20, "111584 ns"], [40, "111604 ns"], [60, "111624 ns"], [80, "111644 ns"], [100, "111664 ns"]]
+  step: 3.4
+  signals:
+    - {name: "run", bus: true, kind: hart, values: [[0, "IDLE"], [8, "PREFILL"], [16, "RUN"]]}
+    - {name: "count", bus: true, kind: mem, values: [[0, "0"], [48, "2"], [56, "3"], [80, "5"], [104, "7"]]}
+    - {name: "fir_ok", kind: sw, values: [[0, 1], [24, 0], [48, 1]]}
+    - {name: "TVALID", kind: fabric, values: [[0, 0], [24, 1], [32, 0], [56, 1]]}
+    - {name: "underrun", kind: bad, values: [[0, 0], [32, 1]]}
+  callouts:
+    - {t0: 8, t1: 16, title: "No margin", text: "With the threshold at 0 the run leaves PREFILL after one clock, with an empty FIFO."}
+    - {t0: 24, t1: 32, title: "Header beat", text: "The header beat does not need a filter output, so it goes out."}
+    - {t0: 32, t1: 56, title: "A gap in the packet", text: "fir_ok is low, TVALID is low for three clocks and underrun is set: three VALID_GAP lines."}
+    - {t0: 48, t1: 64, title: "Data at last", text: "The FIFO count reaches 2, fir_ok rises, and the stream continues."}
+
+- id: lab-h06-send-or-drop
+  alt: "What the real-time source does when a slot is due. The slot timer counts down and reloads. When a slot is due, the source sends the frame if it is idle in R_RTWAIT and holds a credit; sending uses one credit and moves to the next TDEST. Otherwise it drops the slot: DROPS goes up by one and the sequence number still advances. Software returns credits by writing CREDIT after it has freed a buffer."
+  width: 900
+  height: 330
+  step: 3
+  nodes:
+    timer:  {x: 20,  y: 90,  w: 170, h: 70, kind: fabric, title: "Slot timer", sub: "rt_timer counts down,\nreloads rate - 1"}
+    decide: {x: 270, y: 90,  w: 220, h: 70, kind: mss,    title: "Slot due: can_start?", sub: "idle in R_RTWAIT and\ncredits != 0"}
+    send:   {x: 580, y: 20,  w: 290, h: 70, kind: good,   title: "Send the frame", sub: "uses one credit, next TDEST,\ntimestamp = when it was due"}
+    drop:   {x: 580, y: 160, w: 290, h: 70, kind: bad,    title: "Drop the slot", sub: "DROPS + 1, and the sequence\nnumber still advances"}
+    soft:   {x: 270, y: 230, w: 220, h: 70, kind: sw,     title: "Software", sub: "writes CREDIT after it\nhas freed a buffer"}
+  edges:
+    - {id: e_due,  from: timer.right,   to: decide.left, label: "every RATE"}
+    - {id: e_yes,  from: decide.right@0.3, to: send.left, label: "yes"}
+    - {id: e_no,   from: decide.right@0.7, to: drop.left, label: "no"}
+    - {id: e_cred, from: soft.top,      to: decide.bottom, label: "credit"}
+  steps: [timer, e_due, decide, e_yes, send, e_cred, soft, e_no, drop]
+  notes:
+    - {x: 20, y: 322, text: "The two reasons for a drop, no credit and busy, look the same in DROPS."}
+
+
+- id: lab-h06-busy-drop
+  type: wave
+  alt: "Waveform from the stream simulation, scenario 14: real-time mode, a slot every 20 clocks (160 ns), a frame of 44 words that takes 22 clocks (176 ns), 100 credits. The first slot is sent and uses a credit. The next slot falls due while the frame is still going out, so can_start is low and the slot is dropped although credits remain. The slot after that finds the source idle and is sent to the next TDEST."
+  width: 900
+  height: 460
+  length: 680
+  ticks: [[0, "172692 ns"], [100, "172792 ns"], [200, "172892 ns"], [300, "172992 ns"], [400, "173092 ns"], [500, "173192 ns"], [600, "173292 ns"]]
+  step: 3.4
+  signals:
+    - {name: "due", kind: fabric, values: [[0, 0], [16, 1], [24, 0], [176, 1], [184, 0], [336, 1], [344, 0], [496, 1], [504, 0], [656, 1], [664, 0]]}
+    - {name: "can_start", kind: mss, values: [[0, 1], [24, 0], [200, 1], [344, 0], [520, 1], [664, 0]]}
+    - {name: "drop_now", kind: bad, values: [[0, 0], [176, 1], [184, 0], [496, 1], [504, 0]]}
+    - {name: "run", bus: true, kind: hart, values: [[0, "RTWAIT"], [24, "RUN"], [200, "RTWAIT"], [344, "RUN"], [520, "RTWAIT"], [664, "RUN"]]}
+    - {name: "credits", bus: true, kind: sw, values: [[0, "100"], [24, "99"], [344, "98"], [664, "97"]]}
+    - {name: "drops", bus: true, kind: bad, values: [[0, "18"], [184, "19"], [504, "20"]]}
+    - {name: "TDEST", bus: true, kind: fabric, values: [[0, "0"], [344, "1"], [664, "0"]]}
+  callouts:
+    - {t0: 16, t1: 32, title: "Slot due, sent", text: "can_start is high (idle, 100 credits): the frame starts, credits 100 to 99, run RUN, TDEST 0."}
+    - {t0: 24, t1: 200, title: "Frame in progress", text: "The frame occupies the stream for 22 clocks, 176 ns. The slot interval is 160 ns."}
+    - {t0: 176, t1: 192, title: "Busy drop", text: "The next slot is due with run in RUN: can_start low, drop_now high, DROPS 18 to 19. Credits stay 99."}
+    - {t0: 336, t1: 352, title: "Sent again", text: "This slot finds run idle again (RTWAIT): sent, credits 98, TDEST moves to 1."}
+
+- id: lab-h06-credit-drop
+  type: wave
+  alt: "Waveform from the stream simulation, scenario 13: real-time mode, a slot every 200 clocks (1600 ns), 12 credits and none ever returned. The twelfth slot takes the last credit and its frame is sent. The thirteenth slot falls due with zero credits: can_start is low, the slot is dropped, DROPS goes from 0 to 1 and the sequence number advances although no frame was sent."
+  width: 900
+  height: 440
+  length: 1704
+  ticks: [[0, "141836 ns"], [400, "142236 ns"], [800, "142636 ns"], [1200, "143036 ns"], [1600, "143436 ns"]]
+  step: 3.4
+  signals:
+    - {name: "due", kind: fabric, values: [[0, 0], [8, 1], [16, 0], [1608, 1], [1616, 0]]}
+    - {name: "can_start", kind: mss, values: [[0, 1], [16, 0]]}
+    - {name: "run", bus: true, kind: hart, values: [[0, "RTWAIT"], [16, "RUN"], [192, "RTWAIT"]]}
+    - {name: "credits", bus: true, kind: sw, values: [[0, "1"], [16, "0"]]}
+    - {name: "drop_now", kind: bad, values: [[0, 0], [1608, 1], [1616, 0]]}
+    - {name: "drops", bus: true, kind: bad, values: [[0, "0"], [1616, "1"]]}
+    - {name: "seq", bus: true, kind: fabric, values: [[0, "118"], [192, "119"], [1616, "120"]]}
+  callouts:
+    - {t0: 8, t1: 24, title: "The last credit", text: "Slot 12 is due with credits at 1. can_start is high, the frame is sent, credits go to 0."}
+    - {t0: 16, t1: 192, title: "Its frame", text: "run is RUN for 22 clocks. When the frame ends, the sequence number advances from 118 to 119."}
+    - {t0: 192, t1: 1600, title: "Waiting at zero", text: "The source is idle but credits are 0, so can_start stays low. This scenario returns no credits."}
+    - {t0: 1608, t1: 1624, title: "No credit, dropped", text: "Slot 13 is due: drop_now, DROPS 0 to 1, and seq 119 to 120 with no frame sent."}
+
+- id: lab-h01-apb-start
+  type: wave
+  alt: "Waveform from the stream simulation: the testbench writes 1 to CTRL at offset 0x08, which is START, and then reads STATUS at offset 0x1C. The write has a setup phase with PSEL high and PENABLE low, then an access phase with PENABLE high, and PREADY is always high so it ends after one clock. At the end of the access phase the toggle start_tgl_p flips; the START bit itself is not stored. The read returns STATUS through a combinational multiplexer."
+  width: 900
+  height: 480
+  length: 160
+  ticks: [[0, "2240 ns"], [20, "2260 ns"], [40, "2280 ns"], [60, "2300 ns"], [80, "2320 ns"], [100, "2340 ns"], [120, "2360 ns"], [140, "2380 ns"], [160, "2400 ns"]]
+  step: 3.4
+  signals:
+    - {name: "PCLK", kind: plain, values: [[0, 0], [10, 1], [20, 0], [30, 1], [40, 0], [50, 1], [60, 0], [70, 1], [80, 0], [90, 1], [100, 0], [110, 1], [120, 0], [130, 1], [140, 0], [150, 1], [160, 0]]}
+    - {name: "PSEL", kind: hart, values: [[0, 0], [10, 1], [50, 0], [70, 1], [110, 0], [130, 1]]}
+    - {name: "PENABLE", kind: hart, values: [[0, 0], [30, 1], [50, 0], [90, 1], [110, 0], [150, 1]]}
+    - {name: "PWRITE", kind: hart, values: [[0, 0], [10, 1], [50, 0]]}
+    - {name: "PADDR", bus: true, kind: hart, values: [[0, "0x3c"], [10, "0x08"], [70, "0x1c"]]}
+    - {name: "PWDATA", bus: true, kind: hart, values: [[0, "0x02"], [10, "0x01"]]}
+    - {name: "PRDATA", bus: true, kind: fabric, values: [[0, "0x00"], [90, "0x01"]]}
+    - {name: "start_tgl_p", kind: sw, values: [[0, 0], [50, 1]]}
+  callouts:
+    - {t0: 10, t1: 30, title: "Setup phase", text: "PSEL is high, PENABLE low. The master puts offset 0x08 (CTRL) and the data 0x01 (START) on the bus."}
+    - {t0: 30, t1: 50, title: "Access phase", text: "PENABLE is high. PREADY is tied high, so the write completes at the end of this one clock."}
+    - {t0: 50, t1: 70, title: "A toggle, not a bit", text: "At that edge start_tgl_p flips. START is stored nowhere; the flip is the event."}
+    - {t0: 70, t1: 110, title: "A read of STATUS", text: "Offset 0x1C in the setup phase; PRDATA is a multiplexer on PADDR, with no wait state. It reads 0x01: busy."}
+
+- id: lab-h01-register-paths
+  alt: "How register accesses reach the logic. A write goes either to a configuration register, which the stream logic copies once at START, or to a CTRL pulse bit, which flips a toggle that the stream logic sees as one event. The stream logic copies its counters into a snapshot bank when software writes SNAPSHOT or when a run ends. A read goes through the prdata_mux multiplexer, which returns constants, configuration registers or the snapshot bank."
+  width: 900
+  height: 360
+  step: 3
+  nodes:
+    apb:    {x: 20,  y: 110, w: 150, h: 80, kind: hart,   title: "APB master", sub: "FIC3, 50 MHz"}
+    cfg:    {x: 250, y: 30,  w: 220, h: 70, kind: fabric, title: "Configuration", sub: "PAYLOAD_WORDS, MODE,\nRATE, FAULT ..."}
+    pulse:  {x: 250, y: 140, w: 220, h: 70, kind: sw,     title: "CTRL pulse bits", sub: "START, SNAPSHOT,\nABORT, FORCE_ABORT"}
+    stream: {x: 590, y: 85,  w: 290, h: 80, kind: fabric, title: "Stream logic, 125 MHz", sub: "cfg_* copied once, at START;\ncounters keep running"}
+    bank:   {x: 590, y: 260, w: 290, h: 70, kind: mem,    title: "Snapshot bank", sub: "copied on SNAPSHOT and\nat the end of a run"}
+    mux:    {x: 250, y: 260, w: 220, h: 70, kind: plain,  title: "prdata_mux", sub: "ID, VERSION, registers,\nthe bank"}
+  edges:
+    - {id: e_w1, from: apb.right@0.25, to: cfg.left,   label: "write"}
+    - {id: e_w2, from: apb.right@0.75, to: pulse.left, label: "write 1"}
+    - {id: e_c,  from: cfg.right,      to: stream.left@0.25, label: "at START"}
+    - {id: e_p,  from: pulse.right,    to: stream.left@0.75, label: "event"}
+    - {id: e_s,  from: stream.bottom,  to: bank.top, label: "snapshot"}
+    - {id: e_b,  from: bank.left,      to: mux.right}
+    - {id: e_r,  from: mux.left,       to: apb.bottom, label: "PRDATA"}
+  steps: [apb, e_w1, cfg, e_c, stream, e_w2, pulse, e_p, e_s, bank, e_b, mux, e_r]
+  notes:
+    - {x: 20, y: 352, text: "Configuration registers also read back through prdata_mux. The read path holds PCLK flip-flops only."}
+
+
+- id: lab-h01-trace
+  type: terminal
+  title: "simulation host"
+  alt: "Console: register reads recorded by the testbench for scenarios 0, 1 and the start of 2. R lines are reads, P lines are snapshot reads before START. The ID reads 50464451, the coefficients read back as written, and after scenario 1 the snapshot registers hold 5 frames, 60 words and next sequence number 5."
+  width: 900
+  height: 620
+  step: 3.4
+  lines:
+    - "$ grep -E '^(R|P) (0|1|2) ' /tmp/pfdaq-h01/sim/trace.txt | head -n 22"
+    - "R 0 00 50464451"
+    - "R 0 04 00050000"
+    - "R 0 48 00002ee0"
+    - "R 0 4c 0000c568"
+    - "R 0 50 00004e20"
+    - "R 0 54 00007fff"
+    - "R 0 58 00008000"
+    - "R 0 5c 00004e20"
+    - "R 0 60 0000c568"
+    - "R 0 64 00002ee0"
+    - "P 1 20 00000000"
+    - "P 1 24 00000000"
+    - "P 1 30 00000000"
+    - "P 1 40 00000000"
+    - "P 1 3c 00000000"
+    - "R 1 1c 00000002"
+    - "R 1 20 00000005"
+    - "R 1 24 0000003c"
+    - "R 1 30 00000005"
+    - "R 1 40 00000000"
+    - "R 1 3c 00000000"
+    - "P 2 20 00000005"
+  callouts:
+    - {lines: [1, 2],   title: "Identity",       text: "ID reads 50464451, the ASCII text PFDQ. VERSION reads 00050000. Both are constants."}
+    - {lines: [3, 10],  title: "Configuration",  text: "Coefficients read back as written: 2ee0 is 12000, c568 is -15000 in 16 bits. Upper bits read zero."}
+    - {lines: [11, 15], title: "Before START",   text: "Snapshot reads before scenario 1 starts: nothing sent yet, all zero."}
+    - {lines: [16, 21], title: "After the run",  text: "STATUS 2 is done, not busy. 5 frames, 0x3c is 60 words, next sequence number 5."}
+    - {lines: [22, 22], title: "Counts since reset", text: "Scenario 2 starts from 5 frames: the snapshot counts since reset, not since START."}
+
+
+- id: lab-h03-crossings
+  alt: "The clock-domain crossings of the stream source. PCLK side on the left, ACLK side on the right. Configuration registers cross to the cfg registers as held-still values, sampled when the START pulse arrives. Events cross as toggles through a three flip-flop chain that turns a change of level into a one-clock pulse. The other way, the snapshot registers are held still while a toggle crosses to the PCLK side, which then copies them into the snap_p bank in one clock."
+  width: 900
+  height: 420
+  step: 3
+  nodes:
+    pcfg:   {x: 20,  y: 40,  w: 260, h: 70, kind: hart,   title: "Configuration (PCLK)", sub: "payload_words, rate, coef_p,\nfault, credit_val_p"}
+    ptgl:   {x: 20,  y: 160, w: 260, h: 70, kind: hart,   title: "Toggle flip-flops (PCLK)", sub: "start_tgl_p, snap_tgl_p,\nabort_tgl_p, credit_tgl_p"}
+    psnap:  {x: 20,  y: 290, w: 260, h: 70, kind: mem,    title: "Bank snap_*_p (PCLK)", sub: "read by APB; done_p;\nsnapv_sync_p chain"}
+    acfg:   {x: 620, y: 40,  w: 260, h: 70, kind: fabric, title: "cfg_* registers (ACLK)", sub: "loaded in one clock\non the START pulse"}
+    async:  {x: 620, y: 160, w: 260, h: 70, kind: fabric, title: "Chains *_sync_a (ACLK)", sub: "3 flip-flops;\npulse = [2] xor [1]"}
+    asnap:  {x: 620, y: 290, w: 260, h: 70, kind: mem,    title: "snap_* registers (ACLK)", sub: "written, then held still;\nsnap_tgl_a flips"}
+  edges:
+    - {id: e_cfg,  from: pcfg.right,  to: acfg.left,  label: "held still, sampled at START"}
+    - {id: e_tgl,  from: ptgl.right,  to: async.left, label: "toggle"}
+    - {id: e_pul,  from: async.top,   to: acfg.bottom, label: "pulse"}
+    - {id: e_st,   from: asnap.left@0.3, to: psnap.right@0.3, label: "snap_tgl_a, 3 flip-flops"}
+    - {id: e_sd,   from: asnap.left@0.75, to: psnap.right@0.75, label: "copied on the pulse"}
+  steps: [pcfg, e_cfg, ptgl, e_tgl, async, e_pul, acfg, asnap, e_st, e_sd, psnap]
+  notes:
+    - {x: 20, y: 392, text: "busy_a crosses as a plain level through two flip-flops. Nothing wider than one bit is ever passed through a synchroniser."}
+
+
+- id: lab-h03-start-crossing
+  type: wave
+  alt: "Waveform from the stream simulation: a START write in PCLK reaches the ACLK side. The write ends at a PCLK edge, where start_tgl_p flips. In ACLK the three-flip-flop chain start_sync_a shifts the new level in over three clock edges; the pulse is high for one clock when bits 2 and 1 differ. At the next ACLK edge the run starts and the configuration is copied: cfg_payload changes from 16 to 8."
+  width: 900
+  height: 480
+  length: 70
+  ticks: [[0, "2260 ns"], [10, "2270 ns"], [20, "2280 ns"], [30, "2290 ns"], [40, "2300 ns"], [50, "2310 ns"], [60, "2320 ns"], [70, "2330 ns"]]
+  step: 3.4
+  signals:
+    - {name: "PCLK", kind: plain, values: [[0, 0], [10, 1], [20, 0], [30, 1], [40, 0], [50, 1], [60, 0], [70, 1]]}
+    - {name: "ACLK", kind: plain, values: [[0, 1], [4, 0], [8, 1], [12, 0], [16, 1], [20, 0], [24, 1], [28, 0], [32, 1], [36, 0], [40, 1], [44, 0], [48, 1], [52, 0], [56, 1], [60, 0], [64, 1], [68, 0]]}
+    - {name: "apb_write", kind: hart, values: [[0, 0], [10, 1], [30, 0]]}
+    - {name: "start_tgl_p", kind: hart, values: [[0, 0], [30, 1]]}
+    - {name: "start_sync_a", bus: true, kind: fabric, values: [[0, "000"], [32, "001"], [40, "011"], [48, "111"]]}
+    - {name: "start_pulse_a", kind: fabric, values: [[0, 0], [40, 1], [48, 0]]}
+    - {name: "run", bus: true, kind: fabric, values: [[0, "IDLE"], [48, "RUN"]]}
+    - {name: "cfg_payload", bus: true, kind: fabric, values: [[0, "16"], [48, "8"]]}
+  callouts:
+    - {t0: 10, t1: 30, title: "The START write", text: "The access phase of the APB write to CTRL is in PCLK. apb_write is high until the PCLK edge at 2290 ns."}
+    - {t0: 30, t1: 40, title: "The toggle flips", text: "At that PCLK edge start_tgl_p changes. The event is the change of level, not a short pulse."}
+    - {t0: 32, t1: 48, title: "The chain", text: "ACLK shifts the new level in: 001 at 2292 ns, 011 at 2300 ns, 111 at 2308 ns."}
+    - {t0: 40, t1: 48, title: "One pulse", text: "start_pulse_a is bit 2 xor bit 1: high for exactly one ACLK clock, whatever the level does after."}
+    - {t0: 48, t1: 56, title: "Copied at once", text: "At the next ACLK edge run leaves IDLE and cfg_payload takes its value, 8, the one software wrote earlier."}
+
+- id: lab-h03-snapshot-crossing
+  type: wave
+  alt: "Waveform from the stream simulation: the end of the first run, from ACLK to PCLK. At one ACLK edge the run ends: busy_a falls, snap_tgl_a flips and the snapshot registers hold their final values. In PCLK the chain snapv_sync_p shifts the new level in, snapv_pulse_p goes high for one PCLK clock, and at the next PCLK edge the bank snap_frames_p takes the value 5 and done_p is set together with it. The busy bit of STATUS falls one PCLK clock earlier than done_p rises."
+  width: 900
+  height: 480
+  length: 80
+  ticks: [[0, "2540 ns"], [10, "2550 ns"], [20, "2560 ns"], [30, "2570 ns"], [40, "2580 ns"], [50, "2590 ns"], [60, "2600 ns"], [70, "2610 ns"], [80, "2620 ns"]]
+  step: 3.4
+  signals:
+    - {name: "PCLK", kind: plain, values: [[0, 0], [10, 1], [20, 0], [30, 1], [40, 0], [50, 1], [60, 0], [70, 1], [80, 0]]}
+    - {name: "busy_a", kind: fabric, values: [[0, 1], [8, 0]]}
+    - {name: "snap_tgl_a", kind: fabric, values: [[0, 1], [8, 0]]}
+    - {name: "snapv_sync_p", bus: true, kind: hart, values: [[0, "111"], [10, "110"], [30, "100"], [50, "000"]]}
+    - {name: "snapv_pulse_p", kind: hart, values: [[0, 0], [30, 1], [50, 0]]}
+    - {name: "STATUS busy", kind: hart, values: [[0, 1], [30, 0]]}
+    - {name: "snap_frames_p", bus: true, kind: mem, values: [[0, "0"], [50, "5"]]}
+    - {name: "done_p", kind: mem, values: [[0, 0], [50, 1]]}
+  callouts:
+    - {t0: 8, t1: 10, title: "The run ends", text: "In ACLK, at 2548 ns: busy_a falls, snap_tgl_a flips, and the final counters are written and then held."}
+    - {t0: 10, t1: 30, title: "The chain", text: "In PCLK the toggle is shifted in: 110 at 2550 ns, 100 at 2570 ns, 000 at 2590 ns."}
+    - {t0: 30, t1: 34, title: "busy falls first", text: "STATUS busy falls at 2570 ns, 20 ns before done: in this run a STATUS read in the gap returns 0x0."}
+    - {t0: 30, t1: 50, title: "One pulse", text: "snapv_pulse_p is high for one PCLK clock. The snap_* registers have not changed since 2548 ns."}
+    - {t0: 50, t1: 52, title: "Data and done together", text: "At 2590 ns the bank snap_frames_p takes 5 and done_p rises in the same edge."}

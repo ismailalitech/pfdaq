@@ -59,6 +59,14 @@ Every crossing, from the RTL in `hw/rtl/pfdaq_stream_src.v`:
 | `snap_frames`, `snap_words`, `snap_stall`, `snap_time`, `snap_seq`, `snap_drops`, `snap_credits`, `snap_flags` | ACLK → PCLK | quasi-static, copied on the snapshot pulse | the `snap_*_p` bank |
 | `snap_is_done` | ACLK → PCLK | quasi-static, read on the snapshot pulse | `done_p` |
 
+![The clock-domain crossings of the stream source: PCLK on the left, ACLK on the right. Configuration registers cross as values held still and sampled when the START pulse arrives. Events cross as toggles through a three flip-flop chain that turns a change of level into a one-clock pulse. In the other direction the snapshot registers are held still while a toggle crosses to PCLK, which then copies them into the snap_p bank in one clock.](../diagrams/lab-h03-crossings.svg)
+
+1. **Configuration.** The PCLK registers are held still. The ACLK side samples them into `cfg_*` when the START pulse arrives.
+2. **The toggle.** A write of 1 to a CTRL bit flips a toggle flip-flop in PCLK, and the toggle goes into a three flip-flop chain in ACLK.
+3. **The pulse.** The chain turns the change of level into a one-clock pulse, `[2] xor [1]`, which loads the `cfg_*` registers.
+4. **The return trip.** The ACLK side writes `snap_*`, holds them still and flips `snap_tgl_a`.
+5. **The bank.** A three flip-flop chain in PCLK turns that toggle into a pulse, and on it the PCLK side copies the whole bank `snap_*_p`, together with `done_p`, in one clock.
+
 ### Toggles
 
 A pulse cannot be passed directly: a one-cycle pulse in a 50 MHz domain would be sampled by a 125 MHz clock for two or three cycles, a one-cycle pulse in the fast domain could be missed entirely by the slow one. A **toggle** turns the event into a level change:
@@ -74,6 +82,16 @@ wire start_pulse_a = start_sync_a[2] ^ start_sync_a[1];
 ```
 
 `start_sync_a[0]` and `[1]` are the two synchronising flip-flops. `[2]` exists only to remember the previous value, so that `[2] ^ [1]` is high for exactly one ACLK cycle when the toggle has arrived. Because the information is in the *change*, it makes no difference how many clock cycles the level stays stable, as long as it stays long enough to be sampled once. One event per toggle: two writes of START in quick succession produce two toggles, and the stream side sees two events, provided they are far enough apart for the slower side to see each change. For START, the stream logic ignores the second event while a run is busy.
+
+This is the START write of scenario 1 in the simulation, from the end of the APB write to the start of the run:
+
+![Waveform of the stream simulation: a START write in PCLK reaches the ACLK side. The write ends at a PCLK edge, where start_tgl_p flips. In ACLK the three flip-flop chain start_sync_a shifts the new level in over three clock edges and the pulse is high for one clock when bits 2 and 1 differ. At the next ACLK edge the run starts and the configuration is copied: cfg_payload changes from 16 to 8.](../diagrams/lab-h03-start-crossing.svg)
+
+1. **The START write.** The access phase of the APB write to CTRL is in PCLK; `apb_write` is high until the PCLK edge at 2290 ns.
+2. **The toggle flips.** At that edge `start_tgl_p` changes. The event is the change of level, not a short pulse.
+3. **The chain.** ACLK shifts the new level in: `001` at 2292 ns, `011` at 2300 ns and `111` at 2308 ns.
+4. **One pulse.** `start_pulse_a` is bit 2 xor bit 1: high for exactly one ACLK clock, whatever the level does after.
+5. **Copied at once.** At the next ACLK edge `run` leaves `R_IDLE` and `cfg_payload` takes its value, 8, the one software wrote earlier. It was 16, the reset value.
 
 The same structure carries the event in the other direction. `snap_tgl_a` flips when the stream side has written a new set of snapshot values; `snapv_sync_p` and `snapv_pulse_p` bring it into PCLK.
 
@@ -107,6 +125,16 @@ if (snap_is_done)
 ```
 
 `done_p` is therefore set in the same PCLK cycle in which the final counters appear in the `_p` bank. When software sees `done`, the counters it then reads are the final ones. A SNAPSHOT command clears `snap_is_done` and flips the toggle too, so a mid-run snapshot copies the bank but cannot set `done`. A write of START clears `done_p` on the PCLK side at once.
+
+The end of the first run in the simulation, from ACLK to PCLK:
+
+![Waveform of the stream simulation, the end of the first run from ACLK to PCLK: at one ACLK edge busy_a falls, snap_tgl_a flips and the snapshot registers hold their final values; in PCLK the chain snapv_sync_p shifts the new level in, snapv_pulse_p is high for one PCLK clock, and at the next PCLK edge the bank snap_frames_p takes 5 and done_p is set with it. The busy bit of STATUS falls one PCLK clock earlier than done_p rises.](../diagrams/lab-h03-snapshot-crossing.svg)
+
+1. **The run ends.** In ACLK, at 2548 ns, `busy_a` falls, `snap_tgl_a` flips, and the final counters are written and then held.
+2. **The chain.** In PCLK the toggle is shifted in: `110` at 2550 ns, `100` at 2570 ns, `000` at 2590 ns.
+3. **Busy falls first.** The `busy` bit of STATUS falls at 2570 ns, 20 ns before `done`. In this run a STATUS read in that gap returns `0x0`.
+4. **One pulse.** `snapv_pulse_p` is high for one PCLK clock. The `snap_*` registers have not changed since 2548 ns.
+5. **Data and done together.** At 2590 ns the bank `snap_frames_p` takes 5 and `done_p` rises in the same edge.
 
 ### Why the toggles were not the first idea
 
@@ -177,6 +205,28 @@ An RTL simulator models each flip-flop as taking its input at a clock edge. It h
 On the chip, the bits of the bank travel on different wires with different delays. A PCLK flip-flop that samples during the change can see a mixed word. Metastability and mixed samples are physical effects that only a timing analysis, a gate-level simulation with delays, or a hardware test can reveal. This design has the first, and it is deliberately switched off for these paths, which is the point of the constraint file: the tool is told not to look because the *protocol* (toggle first, copy later, bank held still) is what makes the paths safe. The always-copy experiment, which would pass in simulation, would be correct only by luck on the chip, and the constraint file would hide the fault.
 
 What simulation does verify is the protocol itself: that the right values appear in the right order, that `done` is set together with the final counters, that no event is lost or doubled, and that backpressure and aborts leave the flag consistent. Those are the properties the 20 scenarios and the Python model check.
+
+## Do the same in your project
+
+Use this when a register block in one clock domain controls logic in another and reads its counters back. The names are this project's: rename them for yours.
+
+1. **List every crossing first.** Write a table like the inventory above: signal, direction, mechanism, receiving register. Every signal that goes from one clock to the other must be in it, and every row must be one of three kinds: a toggle, a level through two flip-flops, or a value held still and sampled on a toggle.
+2. **Turn each event into a toggle.** In the source domain, flip a flip-flop on the event (`start_tgl_p`). In the destination domain shift it into a chain, `x_sync_a <= {x_sync_a[1:0], x_tgl_p};`, and take `wire x_pulse_a = x_sync_a[2] ^ x_sync_a[1];` as the one-clock pulse.
+3. **Never pass a bus through a synchroniser.** Hold the value still and let a toggle say when to look: copy the configuration into `cfg_*` on the START pulse, and copy the counters into the `snap_*_p` bank on the snapshot pulse (`snapv_pulse_p`).
+4. **Pass a flag that must agree with data on the same toggle.** `snap_is_done` is written before `snap_tgl_a` flips and `done_p` is set on the same pulse that copies the bank. A separate toggle for `done` failed in simulation in this project.
+5. **Pass a plain level through two flip-flops.** `busy_sync_p <= {busy_sync_p[0], busy_a};` is enough for a flag whose current value is all that matters.
+6. **Keep the bus read path in the bus domain.** Reads see only the `_p` registers, which are bus-domain flip-flops. Reading the other domain's counters directly failed timing by 0.707 ns in this project's first build (fabric v0.2.0).
+7. **Declare the crossings to the timing tool, one by one.** Copy the five commands of `hw/libero/overlay/pfdaq_cdc.sdc` and rename the registers: the snapshot bank, the done flag, the configuration registers (into the clock), the PCLK toggles into the first stage of the `*_sync_a` chains, and `busy_a` and `snap_tgl_a` into the first stage of the `*_sync_p` chains. Name paths by the registers at their ends; bracketed names cannot be matched (case study K07).
+8. **Check the protocol in simulation, the physics in timing.** `make -C hw sim-stream` checks that the right values appear in the right order, with `done` together with the final counters. It cannot show metastability or a mixed word. For that, run the placed design's timing analysis with and without your constraint file, as `hw/libero/sta_without_cdc.tcl` does: with it timing is met, and without it the violating paths should be your crossings (each report lists only its worst 20 paths, so read them as a check, not a proof).
+
+What not to change:
+
+- **Do not write configuration while a run is busy.** Nothing in the hardware stops you; the quasi-static rule is the whole protection.
+- **Keep snapshot events apart.** The testbench waits six `PCLK` cycles after each SNAPSHOT; do not start a second snapshot inside the few cycles the copy needs.
+- **Write CREDIT one at a time.** A second write before the first pulse has crossed overwrites the amount.
+- **Do not give `done` its own toggle.** Carry it on the data's toggle.
+- **Do not widen a false path** to a clock group to make a report quieter. It would also hide an unprotected crossing.
+- **Do not trust a passing simulation for the crossings.** A bank that is copied on every clock also passes simulation.
 
 ## Evidence
 

@@ -56,6 +56,17 @@ Side-band signals travel with the data and obey the same rules:
 - `TKEEP` and `TSTRB` say which bytes of the bus carry data, for packets that do not fill the last beat.
 - `TDEST` routes a packet to one of several destinations.
 
+Here is the contract in a real simulation of this project's source, with the sink ready on a random 30 % of the clocks (scenario 2). The numbers in the `TDATA` row count the beats of the packet, and a dash means `TVALID` is low.
+
+![Waveform of the stream source in simulation with TREADY high on 30 percent of the clocks: a beat transfers on each rising edge where TVALID and TREADY are both high; while TREADY is low TVALID stays high and TDATA does not change; the last beat has TLAST high and TKEEP 0F; TVALID is low for seven clocks between packets.](../diagrams/lab-h02-handshake.svg)
+
+1. **Stalled.** `TREADY` is low, the source keeps `TVALID` high and `TDATA` unchanged: beat 1 waits and nothing moves.
+2. **One beat.** `TVALID` and `TREADY` are both high at the clock edge that ends the cycle: beat 1 transfers.
+3. **Stalled again.** `TREADY` drops for two clocks and `TDATA` still shows beat 5. It changes only after beat 5 has gone.
+4. **No clock lost.** `TREADY` stays high for two clocks, so beats 5 and 6 go on consecutive edges, one beat per clock.
+5. **Last beat.** `TLAST` is high and `TKEEP` is `0F`. This packet has 17 words, so its last beat carries only the CRC word.
+6. **Between packets.** `TVALID` is low for 7 clocks (`GAP_CYCLES` is 7 in this scenario). That is allowed, because the packet has ended.
+
 ## On this board
 
 The stream source (`pfdaq_stream_src`) feeds the vendor DMA controller. The interface is 64 bits wide because the DMA is configured for 64 bits, so every beat carries **two 32-bit words**, the earlier word in `TDATA[31:0]`.
@@ -90,6 +101,13 @@ end else if (emit) begin            // emit requires w_ready
 `w_ready` answers the question "may I load a new beat into the register on this edge?". The answer is yes in two cases: the register is empty, **or** the beat it holds is being taken on this very edge. The second case is what keeps the stream moving at one beat per clock: the register is refilled in the same cycle it is emptied, so `TVALID` never drops while there is data.
 
 Both rules from the previous section hold by construction. `out_valid` is set from the generator's state only, never from `TREADY` (rule 1). While `out_valid` is high and `TREADY` is low, `w_ready` is low, so nothing writes the register (rule 2).
+
+![The output stage of the stream source: the output register and the sink's TREADY give w_ready; w_ready allows emit; emit loads the output register with the next word pair from the two word steps and advances the generator state.](../diagrams/lab-h02-output-stage.svg)
+
+1. **`w_ready`.** The output register's `out_valid` and the sink's `TREADY` feed `w_ready = ~out_valid | TREADY`.
+2. **`emit`.** The generator may emit only when `run == R_RUN`, `w_ready` and `fir_ok` hold, and `abort_now` and `abort_fill` are low.
+3. **Advance and load.** One `emit` advances the generator state and loads the output register with the next word pair from the two word steps, in the same clock.
+4. **The beat.** The register drives `TVALID` and `TDATA` to the DMA controller. Nothing else touches `TVALID`.
 
 The source also counts the cycles it spent stalled. Software reads the total from the `STALL_CYCLES` register, which makes backpressure visible on the board without a logic analyser.
 
@@ -148,6 +166,34 @@ RESULT: FAIL
 ```
 
 In the recorded run of this experiment the trace contained 15,487 `VALID_GAP` lines and no `PROTOCOL_ERROR` line. A sink that follows the standard would accept this stream at half the throughput. The DMA on this board would not.
+
+A 120 ns window at the start of scenario 1, from that scratch copy and from the unmodified design, drawn together (in both runs `TREADY` is high on every clock):
+
+![Two waveforms of a 120 ns window at the start of scenario 1: as built, TVALID is high on every clock and a beat goes on every edge; with w_ready changed to ~out_valid, TVALID is high only every second clock, so every low clock inside the packet is a TVALID gap.](../diagrams/lab-h02-valid-gap.svg)
+
+1. **As built.** `TVALID` stays high on every clock, and the six beats of the first frame go on six consecutive edges.
+2. **With `w_ready = ~out_valid`.** `TVALID` is high only every second clock, so the same six beats take twice as long.
+3. **A gap inside the packet.** No data is wrong, but each low clock is a `TVALID` gap and the testbench logs a `VALID_GAP` line. This DMA core needs none.
+
+## Do the same in your project
+
+Use this when you build a source that feeds an AXI4-Stream sink and must neither lose a beat nor change data while the sink stalls. The names are this project's: rename them for yours.
+
+1. **Copy the output stage.** One register stage drives the bus: `out_valid`, `out_data`, `out_keep`, `out_last` and `out_tdest`. The three lines that matter are `wire w_ready = ~out_valid | TREADY;`, the clear `if (out_valid & TREADY) out_valid <= 1'b0;`, and the load under `emit`.
+2. **Set the width to your sink's.** Here `out_data` is 64 bits because the DMA is configured for 64 bits; every beat carries two 32-bit words, the earlier one in `TDATA[31:0]`.
+3. **Gate everything on `w_ready`.** Compute the next word and the next generator state combinationally, and let both the register load and the state advance happen only in the branch where `emit` is true, as in `pfdaq_stream_src`. A state that moves on a clock where the beat was not loaded loses or repeats a beat.
+4. **Drive `TVALID` from `out_valid` alone.** Never make it depend on `TREADY` (rule 1).
+5. **Set the side-band signals with the data.** `out_last` is the last beat of your packet; `out_keep` is `8'hFF` on every beat, and `8'h0F` only on the last beat of a packet with an odd number of words.
+6. **Decide whether your sink allows gaps.** This project's DMA core does not: a gap in `TVALID` inside a packet corrupted data and then hung it. The source therefore produces a full beat on every clock. Check your own sink's rules before you accept a slower generator.
+7. **Count the stalled clocks.** `stall_cycles` goes up on every clock in `R_RUN` or `R_FILL` where `w_ready` is low; `STALL_CYCLES` makes backpressure visible without a logic analyser.
+8. **Check it with a random sink.** Copy the three monitors of `hw/tb/tb_pfdaq_stream_src.v` (`PROTOCOL_ERROR`, `VALID_GAP`, `KEEP_ERROR`) and the line that drives `TREADY` high on a random percentage of the clocks, then run your testbench at several percentages between 30 and 100. For this project, `make -C hw sim-stream` runs all 20 scenarios and must end with `RESULT: PASS`. Then make the break of step 3 of "Run it" in a scratch copy: your monitors must report `VALID_GAP`, or they cannot catch the fault.
+
+What not to change:
+
+- **Do not let `TVALID` depend on `TREADY`.**
+- **Do not write the output register while `w_ready` is low.** Data would change under a stalled sink.
+- **Do not test only with `TREADY` tied high.** A source that is wrong under backpressure passes.
+- **Do not leave a `TVALID` gap inside a packet** if your sink is this DMA core (case study K03).
 
 ## Evidence
 

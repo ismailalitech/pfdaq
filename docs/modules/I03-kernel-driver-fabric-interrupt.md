@@ -105,6 +105,14 @@ static irqreturn_t pfdaq_uio_handler(int irq, struct uio_info *info)
 - **`kernel_ack` on:** read `STATUS`; if nothing is pending, say so with `IRQ_NONE` (the kernel counts those and can disable a line that misbehaves); otherwise write `ACK`. The line goes low before the handler returns, so there is nothing left for the interrupt controller to latch. Returning `IRQ_HANDLED` is what makes the UIO core count the event and wake readers.
 - **`kernel_ack` off:** the generic behaviour. Mask the line (once, remembered in `masked`) and let user space acknowledge and unmask.
 
+![The two modes of the handler for the same interrupt: with kernel_ack on the handler reads STATUS, writes ACK and returns IRQ_HANDLED, so the UIO core counts the event and the program only reads statistics; with kernel_ack off the handler masks the line and the program reads STATUS, writes ACK and writes 1 to unmask through irqcontrol.](../diagrams/lab-i03-handler-modes.svg)
+
+1. With `kernel_ack` on (the default), the handler reads `STATUS` and writes `ACK` itself; the line is low before it returns.
+2. `IRQ_HANDLED` makes the UIO core count the event and wake readers.
+3. `pfdaq_lat -k` then only reads statistics, and `empty_wakeups` is 0.
+4. With `kernel_ack` off, the handler masks the line once, and the program does `STATUS`, `ACK` and the 4-byte `1`.
+5. That `1` reaches `pfdaq_uio_irqcontrol`, which unmasks the line through the same `masked` bit.
+
 The offsets are hard-wired to channel 0 of the latency unit: `LAT0_ACK` is `0x8C` and `LAT0_STATUS` `0x90`, from the slot base `0x4000_0F00` (channel 0 is at `+0x80`, `ACK` at `+0x0C` and `STATUS` at `+0x10` within it). Channel 1 belongs to hart 4 and is not touched.
 
 ### `irqcontrol`: the write(1)
@@ -156,6 +164,14 @@ echo 40000f00.uio > /sys/bus/platform/drivers/pfdaq_uio/bind
 
 and afterwards the reverse, with the generic driver named in `driver_override` and the override cleared. `driver_override` names the one driver that may bind to the device; the suite clears it after switching back.
 
+![Switching a device to pfdaq_uio: modprobe the module, unbind 40000f00.uio from uio_pdrv_genirq, set driver_override to pfdaq_uio, bind it, then run pfdaq_lat -k, which checks the driver and kernel_ack.](../diagrams/lab-i03-bind-steps.svg)
+
+1. `modprobe pfdaq_uio` loads the module; nothing is bound yet.
+2. `unbind` takes `40000f00.uio` away from `uio_pdrv_genirq`.
+3. `driver_override` is set to `pfdaq_uio`.
+4. `bind` attaches the device to the `pfdaq_uio` driver.
+5. `pfdaq_lat -k` reads the device's `driver` link and `kernel_ack`, and refuses to run unless the driver is bound and the parameter is `Y`.
+
 ## Run it
 
 The commands are those the board suite ran (`tests/board/pfdaq_final_suite.sh`); nothing was run again for this page.
@@ -179,7 +195,37 @@ Recorded in the board suite, fabric v0.5.1, 100,000 events each:
 
 Compare with module [I02](I02-fabric-interrupts-user-space.md): the same interrupt answered from user space has a mean of 78.31 µs (default priority, idle). The kernel handler is about 18 times faster on average, and `empty_wakeups` is 0 because there is no second delivery to count: the line is already low when the handler returns.
 
+![Two recorded runs of pfdaq_lat on channel 0, 100,000 events each: the generic user-space path with 99,967 empty wake-ups and a mean of 78.31 microseconds, and the in-kernel acknowledge with no empty wake-ups and a mean of 4.41 microseconds; both have a maximum above one millisecond. Unused fields are shown as [...].](../diagrams/lab-i03-two-handlers.svg)
+
+1. `context` says who acknowledged: `linux-uio` (the program) in the first run, `linux-kernel-isr` (the handler) in the second.
+2. `empty_wakeups` is 99,967 in user space and 0 with the kernel handler.
+3. The mean is 78.31 µs against 4.41 µs, about 18 times faster.
+4. The maximum with the kernel handler is still 1298.18 µs.
+5. `pass` is false in both rows because the tool's `pass` needs `overrun` 0, and both runs had some (89 and 6); the suite reports them as measurements.
+
 The maximum is **not** small. In each of the two recorded runs the worst case was about 1.3 ms between the fabric raising the interrupt and the handler writing `ACK`, although the mean is a few microseconds. The cause of those stalls was not investigated; module P02 says so too.
+
+## Do the same in your project
+
+The goal is a small UIO driver that acknowledges your block's interrupt in the kernel, while user space keeps seeing an ordinary UIO device. The names are this project's; rename them together.
+
+1. **Start from `pfdaq_uio.c` and keep its shape.** One platform driver, one `struct uio_info`, a handler, an `irqcontrol`, a probe. The probe gets the memory resource and the interrupt, maps the registers with a plain `devm_ioremap` (the region is not requested, like the generic driver), fills in the UIO description and calls `devm_uio_register_device`.
+2. **Keep the UIO name identical to the device-tree name.** `p->info.name` is `pfdaq_stream_src` so the existing tools find the device unchanged. Use your own `linux,uio-name` value in both places.
+3. **Parameterise the acknowledge.** Replace `LAT0_ACK` (`0x8C`) and `LAT0_STATUS` (`0x90`) with your block's `ACK` and `STATUS` offsets from its base. The project hard-wires channel 0 on purpose; channel 1 belongs to hart 4.
+4. **Keep the page-aligned region code** (`addr & PAGE_MASK`, `offs`, `PAGE_ALIGN(offs + size)`) if your registers do not start on a page boundary.
+5. **Write the handler in the project's order.** In the acknowledging mode: read `STATUS`, return `IRQ_NONE` if bit 0 is clear, otherwise write `ACK` and return `IRQ_HANDLED`. In the other mode: mask the line once with `__test_and_set_bit` under the spinlock, and let `irqcontrol` unmask it through the same bit.
+6. **Drop a pending interrupt in `probe`**, before registering, as the project does.
+7. **Build it with Yocto.** Copy `pfdaq-uio_1.0.bb` and the `Makefile` (`obj-m := pfdaq_uio.o`): `inherit module`, `SRC_URI` naming the two files, `S = "${WORKDIR}"`, and an `RPROVIDES` that gives the package the name the image list uses (`kernel-module-pfdaq-uio`, added in the layer's package-group append). Rename the module, the recipe and that name together. The recipe checks the licence line (line 1 of the source) by checksum, so if you change that line, update the recipe's `md5`.
+8. **Bind it with the three steps** of the previous section (unbind, `driver_override`, bind), and make your tool refuse to run unless the driver is bound and `kernel_ack` reads `Y`, as `pfdaq_lat -k` does.
+9. **Check it.** Run your measurement with the kernel acknowledge: events and acks equal, `empty_wakeups` 0, and `kernel_acks` moving. The recorded runs are `pfdaq_lat -k -p 200 -n 100000`, idle and loaded.
+
+What not to change:
+
+- Do not remove the `STATUS` test before the `ACK` write, and do not return `IRQ_HANDLED` when nothing was pending.
+- Keep the `masked` bit shared by the handler and `irqcontrol`; with `enable_irq` nesting, one extra call gives a warning, not an unmasked line.
+- Do not point the hard-wired offsets at channel 1 while the supervisor is attached.
+- Switch back with `driver_override` cleared; the device is not bound to this driver at boot.
+- Treat the driver as a measuring instrument, not a production driver, and re-test a rebuilt module on the board before you rely on it: the project's notes record that a rebuild is not bit-identical to the one measured here.
 
 ## Evidence
 

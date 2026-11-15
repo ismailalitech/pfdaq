@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450" width="900" height="450" role="img" aria-labelledby="t d">
+<title id="t">How a message gets from Linux to the real-time hart. The supervisor on hart 4 announces the channel pfdaq-supervisor through the shared rings; Linux's virtio_rpmsg_bus creates the channel and a sysfs device; sup_open() binds it to rpmsg_chrdev and opens /dev/rpmsgN; sup_xfer() writes a 7-word message, the supervisor snapshots the fabric and sends one 9-word acknowledgement back.</title><desc id="d">How a message gets from Linux to the real-time hart. The supervisor on hart 4 announces the channel pfdaq-supervisor through the shared rings; Linux's virtio_rpmsg_bus creates the channel and a sysfs device; sup_open() binds it to rpmsg_chrdev and opens /dev/rpmsgN; sup_xfer() writes a 7-word message, the supervisor snapshots the fabric and sends one 9-word acknowledgement back.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 24.40s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 24.40s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}5.74%{opacity:1}8.74%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="450" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M240,87 L340,87" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:1.40s" d="M240,87 L340,87" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="259.24" y="65" width="61.52" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="290" y="77.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">announce</text>
+</g>
+<g id="e1">
+<path d="M560,87 L660,87" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:4.20s" d="M560,87 L660,87" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="566.36" y="65" width="87.28" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="610" y="77.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">name service</text>
+</g>
+<g id="e2">
+<path d="M770,124 L770,190" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:7.00s" d="M770,124 L770,190" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e3">
+<path d="M660,227 L560,227" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:9.80s" d="M660,227 L560,227" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e4">
+<path d="M340,227 L240,227" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:12.60s" d="M340,227 L240,227" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e5">
+<path d="M130,264 L130,320" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:15.40s" d="M130,264 L130,320" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e6">
+<path d="M240,357 L340,357" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:18.20s" d="M240,357 L340,357" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="262.46" y="335" width="55.08" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="290" y="347.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">message</text>
+</g>
+<g id="e7">
+<path d="M450,394 L450,418 L130,418 L130,394" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:21.00s" d="M450,394 L450,418 L130,418 L130,394" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="214.16" y="396" width="151.68" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="290" y="408.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">9-word acknowledgement</text>
+</g>
+<g id="sup">
+<rect x="20" y="50" width="220" height="74" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="130" y="74.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Supervisor on hart 4</text>
+<text x="130" y="91.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">endpoint at address 0</text>
+<text x="130" y="108.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">rpmsg_ns_announce(name)</text>
+<rect class="hl" style="animation-delay:0.00s" x="19" y="49" width="222" height="76" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="ring">
+<rect x="340" y="50" width="220" height="74" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="450" y="74.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Shared memory</text>
+<text x="450" y="91.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">rings 0x91D0_0000, 0x91D0_8000</text>
+<text x="450" y="108.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">pool 0x91D1_0000</text>
+<rect class="hl" style="animation-delay:2.80s" x="339" y="49" width="222" height="76" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="bus">
+<rect x="660" y="50" width="220" height="74" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="770" y="74.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Linux, virtio_rpmsg_bus</text>
+<text x="770" y="91.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">creating channel</text>
+<text x="770" y="108.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">pfdaq-supervisor addr 0x0</text>
+<rect class="hl" style="animation-delay:5.60s" x="659" y="49" width="222" height="76" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="dev">
+<rect x="660" y="190" width="220" height="74" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="770" y="214.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">sysfs device</text>
+<text x="770" y="231.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">/sys/bus/rpmsg/devices/&lt;name&gt;</text>
+<text x="770" y="248.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">only a device so far</text>
+<rect class="hl" style="animation-delay:8.40s" x="659" y="189" width="222" height="76" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="bind">
+<rect x="340" y="190" width="220" height="74" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="450" y="214.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">sup_open() binds it</text>
+<text x="450" y="231.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">driver_override = rpmsg_chrdev</text>
+<text x="450" y="248.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">then write to .../bind</text>
+<rect class="hl" style="animation-delay:11.20s" x="339" y="189" width="222" height="76" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="node">
+<rect x="20" y="190" width="220" height="74" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="130" y="214.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">/dev/rpmsgN</text>
+<text x="130" y="231.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">polled for up to 1 second</text>
+<text x="130" y="248.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">rpmsg_ctrl flow as fallback</text>
+<rect class="hl" style="animation-delay:14.00s" x="19" y="189" width="222" height="76" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="xfer">
+<rect x="20" y="320" width="220" height="74" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="130" y="344.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">sup_xfer()</text>
+<text x="130" y="361.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">write 7 words, poll 1000 ms</text>
+<text x="130" y="378.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">read 9 words, check magic, type</text>
+<rect class="hl" style="animation-delay:16.80s" x="19" y="319" width="222" height="76" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="ack">
+<rect x="340" y="320" width="220" height="74" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="450" y="344.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Supervisor answers</text>
+<text x="450" y="361.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">snapshot, waits 1 ms</text>
+<text x="450" y="378.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">one 9-word acknowledgement</text>
+<rect class="hl" style="animation-delay:19.60s" x="339" y="319" width="222" height="76" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="36" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">Announce</text>
+<text x="20" y="176" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">Bind</text>
+<text x="20" y="306" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">One message, one answer</text>
+</svg>

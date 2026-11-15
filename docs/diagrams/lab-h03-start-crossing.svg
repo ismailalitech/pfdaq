@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" width="900" height="480" role="img" aria-labelledby="t d">
+<title id="t">Waveform from the stream simulation: a START write in PCLK reaches the ACLK side. The write ends at a PCLK edge, where start_tgl_p flips. In ACLK the three-flip-flop chain start_sync_a shifts the new level in over three clock edges; the pulse is high for one clock when bits 2 and 1 differ. At the next ACLK edge the run starts and the configuration is copied: cfg_payload changes from 16 to 8.</title><desc id="d">Waveform from the stream simulation: a START write in PCLK reaches the ACLK side. The write ends at a PCLK edge, where start_tgl_p flips. In ACLK the three-flip-flop chain start_sync_a shifts the new level in over three clock edges; the pulse is high for one clock when bits 2 and 1 differ. At the next ACLK edge the run starts and the configuration is copied: cfg_payload changes from 16 to 8.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 19.00s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 19.00s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}17.89%{opacity:1}20.89%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="480" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="376" fill="#0d1117"/>
+<line x1="140" y1="30" x2="140" y2="370" stroke="#27313d" stroke-dasharray="2 4"/><text x="140" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2260 ns</text>
+<line x1="245.714" y1="30" x2="245.714" y2="370" stroke="#27313d" stroke-dasharray="2 4"/><text x="245.714" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2270 ns</text>
+<line x1="351.429" y1="30" x2="351.429" y2="370" stroke="#27313d" stroke-dasharray="2 4"/><text x="351.429" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2280 ns</text>
+<line x1="457.143" y1="30" x2="457.143" y2="370" stroke="#27313d" stroke-dasharray="2 4"/><text x="457.143" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2290 ns</text>
+<line x1="562.857" y1="30" x2="562.857" y2="370" stroke="#27313d" stroke-dasharray="2 4"/><text x="562.857" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2300 ns</text>
+<line x1="668.571" y1="30" x2="668.571" y2="370" stroke="#27313d" stroke-dasharray="2 4"/><text x="668.571" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2310 ns</text>
+<line x1="774.286" y1="30" x2="774.286" y2="370" stroke="#27313d" stroke-dasharray="2 4"/><text x="774.286" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2320 ns</text>
+<line x1="880" y1="30" x2="880" y2="370" stroke="#27313d" stroke-dasharray="2 4"/><text x="880" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2330 ns</text>
+<text x="12" y="66" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">PCLK</text>
+<path d="M140,74 L140,74 L245.714,74 L245.714,54 L351.429,54 L351.429,74 L457.143,74 L457.143,54 L562.857,54 L562.857,74 L668.571,74 L668.571,54 L774.286,54 L774.286,74 L880,74 L880,54 L880,54" fill="none" stroke="#6b7b8c" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="106" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">ACLK</text>
+<path d="M140,94 L140,94 L182.286,94 L182.286,114 L224.571,114 L224.571,94 L266.857,94 L266.857,114 L309.143,114 L309.143,94 L351.429,94 L351.429,114 L393.714,114 L393.714,94 L436,94 L436,114 L478.286,114 L478.286,94 L520.571,94 L520.571,114 L562.857,114 L562.857,94 L605.143,94 L605.143,114 L647.429,114 L647.429,94 L689.714,94 L689.714,114 L732,114 L732,94 L774.286,94 L774.286,114 L816.571,114 L816.571,94 L858.857,94 L858.857,114 L880,114" fill="none" stroke="#6b7b8c" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="146" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">apb_write</text>
+<path d="M140,154 L140,154 L245.714,154 L245.714,134 L457.143,134 L457.143,154 L880,154" fill="none" stroke="#5aa0d6" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="186" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">start_tgl_p</text>
+<path d="M140,194 L140,194 L457.143,194 L457.143,174 L880,174" fill="none" stroke="#5aa0d6" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="226" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">start_sync_a</text>
+<rect x="140.5" y="213" width="337.286" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="309.143" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">000</text>
+<rect x="478.786" y="213" width="83.5714" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="520.571" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">001</text>
+<rect x="563.357" y="213" width="83.5714" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="605.143" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">011</text>
+<rect x="647.929" y="213" width="231.571" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="763.714" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">111</text>
+<text x="12" y="266" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">start_pulse_a</text>
+<path d="M140,274 L140,274 L562.857,274 L562.857,254 L647.429,254 L647.429,274 L880,274" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="306" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">run</text>
+<rect x="140.5" y="293" width="506.429" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="393.714" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">IDLE</text>
+<rect x="647.929" y="293" width="231.571" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="763.714" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">RUN</text>
+<text x="12" y="346" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">cfg_payload</text>
+<rect x="140.5" y="333" width="506.429" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="393.714" y="348" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">16</text>
+<rect x="647.929" y="333" width="231.571" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="763.714" y="348" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">8</text>
+<rect x="0" y="376" width="900" height="104" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="245.714" y="30" width="211.429" height="340" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="245.714" cy="30" r="11" fill="#ffd166"/><text x="245.714" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="376" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="404" r="13" fill="#ffd166"/><text x="24" y="409" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="402" font-size="15" font-weight="bold" fill="#e6ecf1">The START write</text>
+<text x="48" y="422" font-size="13" fill="#9aa8b5">The access phase of the APB write to CTRL is in PCLK. apb_write is high until the PCLK edge at 2290 ns.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="457.143" y="30" width="105.714" height="340" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="457.143" cy="30" r="11" fill="#ffd166"/><text x="457.143" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="376" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="404" r="13" fill="#ffd166"/><text x="24" y="409" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="402" font-size="15" font-weight="bold" fill="#e6ecf1">The toggle flips</text>
+<text x="48" y="422" font-size="13" fill="#9aa8b5">At that PCLK edge start_tgl_p changes. The event is the change of level, not a short pulse.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="478.286" y="30" width="169.143" height="340" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="478.286" cy="30" r="11" fill="#ffd166"/><text x="478.286" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="376" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="404" r="13" fill="#ffd166"/><text x="24" y="409" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="402" font-size="15" font-weight="bold" fill="#e6ecf1">The chain</text>
+<text x="48" y="422" font-size="13" fill="#9aa8b5">ACLK shifts the new level in: 001 at 2292 ns, 011 at 2300 ns, 111 at 2308 ns.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="562.857" y="30" width="84.5714" height="340" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="562.857" cy="30" r="11" fill="#ffd166"/><text x="562.857" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="376" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="404" r="13" fill="#ffd166"/><text x="24" y="409" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="402" font-size="15" font-weight="bold" fill="#e6ecf1">One pulse</text>
+<text x="48" y="422" font-size="13" fill="#9aa8b5">start_pulse_a is bit 2 xor bit 1: high for exactly one ACLK clock, whatever the level does after.</text>
+</g>
+<g class="co" style="animation-delay:13.60s"><rect x="647.429" y="30" width="84.5714" height="340" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="647.429" cy="30" r="11" fill="#ffd166"/><text x="647.429" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="co cap" style="animation-delay:13.60s">
+<rect x="0" y="376" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="404" r="13" fill="#ffd166"/><text x="24" y="409" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
+<text x="48" y="402" font-size="15" font-weight="bold" fill="#e6ecf1">Copied at once</text>
+<text x="48" y="422" font-size="13" fill="#9aa8b5">At the next ACLK edge run leaves IDLE and cfg_payload takes its value, 8, the one software wrote earlier.</text>
+</g>
+</svg>

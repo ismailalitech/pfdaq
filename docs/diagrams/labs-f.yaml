@@ -1,0 +1,381 @@
+# Figures of the performance and reliability labs P01 to P06 (group F).
+
+# ---------------------------------------------------------------- P01
+- id: lab-p01-throughput-layers
+  alt: "Five stages in a row with the rate and the time per mebibyte of each: the stream source about 933 MB/s, the DMA about 861 MB/s start to interrupt, the copy 70.5 MB/s, the verification 55.4 MB/s, and the whole loop 29.6 MB/s."
+  width: 940
+  height: 270
+  nodes:
+    src:  {x: 8,   y: 30, w: 165, h: 92, kind: fabric, title: "Stream source", sub: "about 933 MB/s\n1.12 ms per MiB\nderived"}
+    dma:  {x: 198, y: 30, w: 165, h: 92, kind: fabric, title: "DMA to DDR", sub: "about 861 MB/s\n1.22 ms per MiB\nmin start to interrupt"}
+    copy: {x: 388, y: 30, w: 165, h: 92, kind: sw,     title: "Copy", sub: "70.5 MB/s\n14.9 ms per MiB\nmeasured"}
+    ver:  {x: 578, y: 30, w: 165, h: 92, kind: sw,     title: "Verify", sub: "55.4 MB/s\n18.9 ms per MiB\nmeasured"}
+    all:  {x: 768, y: 30, w: 165, h: 92, kind: bad,    title: "End to end", sub: "29.6 MB/s\n35.4 ms per MiB\nmeasured, whole loop"}
+  edges:
+    - {from: src.right,  to: dma.left}
+    - {from: dma.right,  to: copy.left}
+    - {from: copy.right, to: ver.left}
+    - {from: ver.right,  to: all.left}
+  steps: [src, e0, dma, e1, copy, e2, ver, e3, all]
+  notes:
+    - {x: 20, y: 168, text: "Counter payload, 32 bursts of 1 MiB with supervision, fabric v0.5.1, one run."}
+    - {x: 20, y: 192, text: "The rate falls where software starts: the first two stages need about 1.1 ms per MiB, the last three about 35 ms."}
+    - {x: 20, y: 216, text: "Copy and verify are one Linux thread, so their times add: 14.9 + 18.9 ms. The DMA of the next burst runs meanwhile."}
+    - {x: 20, y: 240, text: "Adding the supervisor round trip (1.974 ms mean) gives 35.8 ms, within 1 % of the measured 35.4 ms."}
+
+- id: lab-p01-time-for-32-mib
+  type: timeline
+  alt: "Time lanes for moving 32 MiB: the DMA is busy for 0.036 seconds in total, while a counter run spends 0.476 s copying, 0.606 s verifying and 0.063 s on supervisor round trips, a PRBS run 0.477, 0.661 and 0.066 s, and a FIR run 0.502, 3.29 and 0.068 s."
+  width: 900
+  height: 380
+  label_width: 130
+  scale: 190
+  length: 4.1
+  top: 40
+  lane_h: 46
+  play: 9
+  ticks: [[0, "0 s"], [1, "1 s"], [2, "2 s"], [3, "3 s"], [4, "4 s"]]
+  lanes:
+    - name: "Fabric and DMA"
+      segments:
+        - {t0: 0, t1: 0.036, kind: fabric, label: "32 bursts x 1.124 ms = 0.036 s"}
+    - name: "Counter"
+      segments:
+        - {t0: 0,     t1: 0.476, kind: sw,    label: "copy 0.476 s"}
+        - {t0: 0.476, t1: 1.082, kind: hart,  label: "verify 0.606 s"}
+        - {t0: 1.082, t1: 1.145, kind: mem,   label: ""}
+    - name: "PRBS"
+      segments:
+        - {t0: 0,     t1: 0.477, kind: sw,    label: "copy 0.477 s"}
+        - {t0: 0.477, t1: 1.138, kind: hart,  label: "verify 0.661 s"}
+        - {t0: 1.138, t1: 1.204, kind: mem,   label: ""}
+    - name: "FIR"
+      segments:
+        - {t0: 0,     t1: 0.502, kind: sw,    label: "copy 0.502 s"}
+        - {t0: 0.502, t1: 3.792, kind: hart,  label: "verify 3.29 s"}
+        - {t0: 3.792, t1: 3.860, kind: mem,   label: ""}
+  notes:
+    - {x: 20, y: 310, text: "To scale. Copy (purple), verify (blue), supervisor round trips (yellow, 32 x mean round trip)."}
+    - {x: 20, y: 330, text: "Each lane is the sum of its parts: 1.145, 1.204 and 3.860 s. The measured loop times are 1.133, 1.193 and 3.858 s."}
+    - {x: 20, y: 350, text: "The tool alternates copy, verify and report burst by burst; the totals are drawn as single blocks."}
+
+- id: lab-p01-record
+  type: terminal
+  title: "pfdaq_cap, counter payload, recorded run (fields marked ... left out)"
+  alt: "The recorded JSON result of the counter throughput run, with callouts on the end-to-end rate, the start-to-interrupt times, the copy and verify rates, the stall cycles and the supervisor round trip."
+  width: 900
+  height: 340
+  step: 3.6
+  lines:
+    - "$ pfdaq_cap -r -m counter -w 252 -f 1024 -n 32"
+    - '{"pass": true, "bursts": 32, "frames": 32768, "bytes": 33554432, "elapsed_s": 1.133499,'
+    - ' "mb_per_s_end_to_end": 29.60, ..., "start_to_irq_s": {"min": 0.001218, "mean": 0.034325, "max": 0.039303},'
+    - ' "copy_mb_per_s": 70.5, "verify_mb_per_s": 55.4, "bad_seq": 0, "bad_payload": 0, "bad_crc": 0, ...,'
+    - ' "faults_injected": 0, "dma_fail": 0, "fabric_stall_cycles": 301159, "next_seq": 32768,'
+    - ' "supervisor": {"pass": true, "status_rx": 32, "deadline_miss": 0, "seq_mismatch": 0, ...,'
+    - '  "rtt_us": {"min": 1249, "mean": 1974, "max": 10020}}}'
+  callouts:
+    - {lines: [1, 2], title: "End to end: 29.6 MB/s", text: "33,554,432 bytes in 1.133 s of wall-clock time for the whole loop."}
+    - {lines: [2, 2], title: "The DMA is not where the time goes", text: "Fastest start to interrupt 1.218 ms; the mean of 34.3 ms includes waiting for the previous verify."}
+    - {lines: [3, 3], title: "Two software rates", text: "14.9 ms to copy and 18.9 ms to verify one MiB, one after the other on one core."}
+    - {lines: [4, 4], title: "Stall cycles", text: "301,159 over 32 bursts is 9,411 per burst: 131,072 beats plus 9,411 stalls at 8 ns is 933 MB/s."}
+    - {lines: [5, 6], title: "Supervisor round trips", text: "32 messages at a mean of 1.974 ms is 0.063 s of the 1.133 s."}
+
+# ---------------------------------------------------------------- P02
+- id: lab-p02-measured-interval
+  alt: "What the latency unit measures: it raises the interrupt line and starts counting 20 ns cycles, the line reaches the PLIC and then the responding hart, software claims the interrupt and writes ACK, and the write travels back through the MSS, FIC3 and the APB bus to the unit, which stops the count."
+  width: 900
+  height: 300
+  nodes:
+    lat:  {x: 20,  y: 40, w: 230, h: 84, kind: fabric, title: "Latency unit", sub: "starts counting when the\nline is high, stops on ACK"}
+    plic: {x: 340, y: 40, w: 170, h: 84, kind: mss,    title: "PLIC", sub: "source 119 or 123"}
+    resp: {x: 600, y: 40, w: 280, h: 84, kind: hart,   title: "Responder", sub: "trap, claim, find handler,\nthen write ACK"}
+  edges:
+    - {from: lat.right,  to: plic.left, dashed: true, kind: mss, label: "IRQ line high"}
+    - {from: plic.right, to: resp.left, dashed: true, kind: mss, label: "to the hart"}
+    - {from: resp.bottom, to: lat.bottom, bulge: 40, label: "ACK write: MSS, FIC3, APB bus"}
+  steps: [lat, e0, plic, e1, resp, e2, lat]
+  notes:
+    - {x: 20, y: 214, text: "Counted: the way into the PLIC, entering the trap code, finding the handler, whatever the software does before ACK, the write."}
+    - {x: 20, y: 238, text: "Not counted: completing the interrupt in the PLIC, returning from the handler, work done after the ACK."}
+    - {x: 20, y: 262, text: "One count is one 50 MHz clock cycle: 20 ns."}
+
+- id: lab-p02-responders
+  alt: "Four responders to the same kind of event, idle board. On hart 4 a FreeRTOS handler has a mean of 0.52 microseconds and a maximum of 2.10; a task woken by that handler adds a semaphore and a task switch and has a mean of 2.04 and a maximum of 11.66. In Linux the kernel handler has a mean of 4.41 and a maximum of 1298.18; a user-space program adds the scheduler wake-up, poll and reads and has a mean of 78.31 and a maximum of 5130.60."
+  width: 900
+  height: 360
+  nodes:
+    h4a: {x: 110, y: 30,  w: 260, h: 96, kind: hart, title: "FreeRTOS handler (hart 4)", sub: "mean 0.52 us, p99 <= 0.62 us\nmax 2.10 us\nmissed events 0"}
+    h4b: {x: 600, y: 30,  w: 260, h: 96, kind: hart, title: "FreeRTOS task (hart 4)", sub: "mean 2.04 us, p99 <= 2.54 us\nmax 11.66 us\nmissed events 0"}
+    lxa: {x: 110, y: 200, w: 260, h: 96, kind: sw,   title: "Linux kernel handler", sub: "mean 4.41 us, p99 <= 10.22 us\nmax 1298.18 us\nmissed events 6"}
+    lxb: {x: 600, y: 200, w: 260, h: 96, kind: sw,   title: "Linux user space", sub: "mean 78.31 us, p99 <= 122.86 us\nmax 5130.60 us\nmissed events 89"}
+  edges:
+    - {from: h4a.right, to: h4b.left, label: "+ semaphore, task switch"}
+    - {from: lxa.right, to: lxb.left, label: "+ wake, poll, reads"}
+  steps: [h4a, e0, h4b, lxa, e1, lxb]
+  notes:
+    - {x: 20, y: 80,  text: "Hart 4", bold: true}
+    - {x: 20, y: 250, text: "Harts 1-3", bold: true}
+    - {x: 20, y: 328, text: "Idle board, 100,000 events per row, fabric v0.5.1. The user-space row uses a 500 us period, the others 200 us."}
+
+- id: lab-p02-records
+  type: terminal
+  title: "pfdaq_lat on the board, two recorded runs (fields marked ... left out)"
+  alt: "The recorded JSON results of the hart 4 handler run and of the Linux user-space run, with callouts on lost events, the histogram bins and the tail."
+  width: 940
+  height: 440
+  step: 3.6
+  lines:
+    - "$ pfdaq_lat -c 1 -p 200 -n 100000"
+    - '{"pass": true, "channel": 1, "context": "u54_4", "period_us": 200, ...,'
+    - ' "events": 100000, "acks": 100000, "overrun": 0, "spurious": 0, "empty_wakeups": 0, "timeouts": 0,'
+    - ' "latency_us": {"min": 0.52, "mean": 0.52, "max": 2.10, "p50_le": 0.62, "p99_le": 0.62, "p999_le": 0.94},'
+    - ' "histogram_us": [[0.48, 0.64, 99601], [0.64, 0.96, 324], [0.96, 1.28, 61], [1.28, 1.92, 12], [1.92, 2.56, 2]]}'
+    - "$ pfdaq_lat -c 0 -p 500 -n 100000"
+    - '{"pass": false, "channel": 0, "context": "linux-uio", "period_us": 500, ...,'
+    - ' "events": 100000, "acks": 100000, "overrun": 89, "spurious": 0, "empty_wakeups": 99967, "timeouts": 0,'
+    - ' "latency_us": {"min": 4.18, "mean": 78.31, "max": 5130.60, "p50_le": 81.90, "p99_le": 122.86, "p999_le": 163.82},'
+    - ' "histogram_us": [..., [40.96, 61.44, 8499], [61.44, 81.92, 78470], [81.92, 122.88, 12814], ...,'
+    - '                  [1310.72, 1966.08, 6], [1966.08, 2621.44, 3], [2621.44, 3932.16, 3], [3932.16, 5242.88, 5]]}'
+  callouts:
+    - {lines: [0, 0], title: "Channel 1, 200 us period", text: "The latency unit interrupts hart 4; the handler on hart 4 writes ACK."}
+    - {lines: [2, 2], title: "Nothing lost", text: "events equals acks, overrun is 0: every interrupt was answered and none was skipped."}
+    - {lines: [3, 4], title: "One bin holds almost everything", text: "99,601 of 100,000 samples lie between 0.48 and 0.64 us; the largest value is 2.10 us."}
+    - {lines: [5, 5], title: "Channel 0, 500 us period", text: "The same unit interrupts Linux; a user program answers through the generic UIO driver."}
+    - {lines: [7, 7], title: "Missed events and double wake-ups", text: "89 events were due while the last was unanswered; empty_wakeups is the second wake-up per event (I02)."}
+    - {lines: [8, 10], title: "Typical 60 to 80 us, tail to 5 ms", text: "78,470 samples are at 61 to 82 us; the last bin, 3.93 to 5.24 ms, still holds 5 samples."}
+
+# ---------------------------------------------------------------- P03
+- id: lab-p03-injection-points
+  alt: "Where a fault is injected and where it is counted: the FAULT register is read at START by the stream source, which inverts bit 0 of a CRC word, bit 8 of the first payload word or skips a sequence number; the damaged frame travels through the DMA and DDR to the Linux verifier, which counts bad_crc, bad_payload and bad_seq, and the error count goes to the supervisor in each status message."
+  width: 900
+  height: 380
+  nodes:
+    reg:  {x: 20,  y: 20,  w: 230, h: 92, kind: bad,    title: "FAULT register 0x18", sub: "bit 0 CRC, bit 1 sequence,\nbit 2 payload; 31:16 index\nwritten before START"}
+    sup:  {x: 640, y: 20,  w: 240, h: 76, kind: hart,   title: "Supervisor, hart 4", sub: "adds the counts it is told:\nit counts, it does not alarm"}
+    src:  {x: 20,  y: 170, w: 190, h: 76, kind: fabric, title: "Stream source", sub: "injects at the chosen frame"}
+    dma:  {x: 250, y: 170, w: 120, h: 76, kind: fabric, title: "DMA", sub: "carries it"}
+    ddr:  {x: 410, y: 170, w: 150, h: 76, kind: mem,    title: "DDR", sub: "non-cached window"}
+    ver:  {x: 640, y: 170, w: 240, h: 76, kind: sw,     title: "Linux verifier", sub: "pfdaq_cap, software model\nexpects exact counts"}
+    ccrc: {x: 530, y: 300, w: 110, h: 50, kind: good,   title: "bad_crc"}
+    cpay: {x: 665, y: 300, w: 120, h: 50, kind: good,   title: "bad_payload"}
+    cseq: {x: 810, y: 300, w: 80,  h: 50, kind: good,   title: "bad_seq"}
+  edges:
+    - {from: reg.bottom, to: src.top, label: "read at START"}
+    - {from: src.right,  to: dma.left}
+    - {from: dma.right,  to: ddr.left}
+    - {from: ddr.right,  to: ver.left}
+    - {from: ver.bottom@0.2, to: ccrc.top}
+    - {from: ver.bottom@0.55, to: cpay.top}
+    - {from: ver.bottom@0.92, to: cseq.top}
+    - {from: ver.top,    to: sup.bottom, label: "error count"}
+  steps: [reg, e0, src, e1, dma, e2, ddr, e3, ver, e4, e5, e6, e7, sup]
+  notes:
+    - {x: 20, y: 290, text: "CRC fault: only bad_crc rises."}
+    - {x: 20, y: 314, text: "Sequence fault: only bad_seq rises."}
+    - {x: 20, y: 338, text: "Payload fault: bad_payload and bad_crc both rise,"}
+    - {x: 20, y: 358, text: "because the CRC was computed before the bit flip."}
+
+- id: lab-p03-nine-runs
+  type: terminal
+  title: "pfdaq_cap fault runs, counter payload (suite summary rows and supervisor console)"
+  alt: "Three recorded fault-injection runs of the board suite, one per fault type, each with the suite's summary row and the supervisor's closing console line, showing exact counts: 4 CRC errors for 4 faults, 5 sequence errors for 5, and 2 payload plus 2 CRC errors for 2."
+  width: 990
+  height: 340
+  step: 3.6
+  lines:
+    - "$ pfdaq_cap -r -m counter -w 252 -f 1024 -n 20 -F crc -i 7 -e 5"
+    - "T9-crc-counter | PASS | 20480 frames, 21.0 MB, errors seq/pay/crc 0/0/4, faults 4, supervisor ok (20 status, 0 misses)"
+    - "[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 4, latency irqs 0"
+    - "$ pfdaq_cap -r -m counter -w 252 -f 1024 -n 20 -F seq -i 0 -e 4"
+    - "T9-seq-counter | PASS | 20480 frames, 21.0 MB, errors seq/pay/crc 5/0/0, faults 5, supervisor ok (20 status, 0 misses)"
+    - "[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 5, latency irqs 0"
+    - "$ pfdaq_cap -r -m counter -w 252 -f 1024 -n 20 -F payload -i 1023 -e 10"
+    - "T9-pay-counter | PASS | 20480 frames, 21.0 MB, errors seq/pay/crc 0/2/2, faults 2, supervisor ok (20 status, 0 misses)"
+    - "[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 4, latency irqs 0"
+  callouts:
+    - {lines: [0, 2], title: "CRC: 4 injected, 4 found", text: "Bursts 5, 10, 15 and 20 carry a fault; the CRC count is 4 and the other two counts are 0."}
+    - {lines: [3, 5], title: "Sequence: 5 injected, 5 found", text: "Bursts 4, 8, 12, 16 and 20 carry a fault; only the sequence count is not zero."}
+    - {lines: [6, 8], title: "Payload: 2 injected, 4 detections", text: "Two flipped bits give 2 payload and 2 CRC errors, so the supervisor is told 4."}
+
+# ---------------------------------------------------------------- P04
+- id: lab-p04-supervision-loop
+  alt: "What the supervisor watches: Linux verifies a burst and sends a STATUS message over RPMsg; the supervisor on hart 4 waits for it with a timeout equal to the deadline; if none arrives it moves to ALARM and prints a message; on each STATUS it also snapshots the fabric's sequence counter and compares it with the number Linux expects next."
+  width: 900
+  height: 330
+  nodes:
+    lin:  {x: 20,  y: 40,  w: 190, h: 86, kind: sw,     title: "pfdaq_cap on Linux", sub: "verifies burst n,\nthen reports it"}
+    sup:  {x: 350, y: 40,  w: 220, h: 86, kind: hart,   title: "Supervisor, hart 4", sub: "ARMED: waits deadline_ms\nfor the next STATUS"}
+    out:  {x: 710, y: 40,  w: 170, h: 86, kind: bad,    title: "ALARM", sub: "a message and a state\nchange, nothing restarts"}
+    fab:  {x: 350, y: 200, w: 220, h: 76, kind: fabric, title: "Fabric sequence counter", sub: "snapshot at each STATUS"}
+    chk:  {x: 710, y: 200, w: 170, h: 76, kind: plain,  title: "Cross-check", sub: "fabric_seq - next_seq\nabove max_lag: mismatch"}
+  edges:
+    - {from: lin.right, to: sup.left, label: "STATUS per burst"}
+    - {from: sup.right, to: out.left, kind: bad, label: "silence > deadline"}
+    - {from: fab.top,   to: sup.bottom, label: "fabric_seq"}
+    - {from: fab.right, to: chk.left}
+  steps: [lin, e0, sup, e1, out, e2, fab, e3, chk]
+  notes:
+    - {x: 20, y: 316, text: "A late STATUS returns the supervisor to ARMED; a new ARM clears the counters."}
+
+- id: lab-p04-console
+  type: terminal
+  title: "supervisor console (hart 4), recorded in the fresh-card suite: stall test, then kill test"
+  alt: "The supervisor's console lines for the two deliberate failures: in the stall test it arms with a 300 ms deadline, raises one alarm, resumes at burst 5 and disarms with 12 status messages and 1 miss; in the kill test it arms, raises an alarm and stays silent until the next run arms it again, which then passes with 16 status messages and no miss."
+  width: 900
+  height: 340
+  step: 3.6
+  lines:
+    - "[pfdaq-sup] ARMED: deadline 300 ms, max lag 1040 frames, fabric seq 285295"
+    - "[pfdaq-sup] ALARM: no status within 300 ms (miss #1, t=105082 ms)"
+    - "[pfdaq-sup] status resumed at burst 5, back to ARMED"
+    - "[pfdaq-sup] DISARM from ARMED: 12 status, 1 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0"
+    - "[pfdaq-sup] ARMED: deadline 300 ms, max lag 1040 frames, fabric seq 2595920"
+    - "[pfdaq-sup] ALARM: no status within 300 ms (miss #1, t=412557 ms)"
+    - "[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 2654288"
+    - "[pfdaq-sup] DISARM from ARMED: 16 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0"
+  callouts:
+    - {lines: [0, 1], title: "Stall test: pfdaq_cap -r -D 300 -P 5:900 ...", text: "Linux sleeps 900 ms against a 300 ms deadline; one alarm is raised."}
+    - {lines: [2, 3], title: "Late, not wrong", text: "The next STATUS clears the alarm; the miss stays counted: 12 status, 1 miss, no data error."}
+    - {lines: [4, 5], title: "Kill test: pkill -9 two seconds into the run", text: "No DISARM is sent. 300 ms after the last STATUS the supervisor raises the alarm and says no more."}
+    - {lines: [6, 7], title: "The next run recovers it", text: "Its own ARM resets the counters: 16 status messages, 0 misses."}
+
+# ---------------------------------------------------------------- P05
+- id: lab-p05-abort-modes
+  alt: "What an ABORT does: CTRL bit 4 makes the source finish the frame in progress. In per-frame and real-time modes it then stops, because each frame was its own packet. In burst mode it sends zero words until the whole run's word count is out, with TLAST on the last, so the DMA transfer completes and STATUS bit 2 is set. FORCE_ABORT, CTRL bit 5, stops at once and can leave the DMA waiting."
+  width: 900
+  height: 360
+  nodes:
+    abort: {x: 20,  y: 130, w: 190, h: 70, kind: start,  title: "ABORT", sub: "CTRL bit 4, written\nduring a run"}
+    fin:   {x: 270, y: 130, w: 200, h: 70, kind: fabric, title: "Finish the frame", sub: "that is in progress"}
+    pf:    {x: 540, y: 30,  w: 330, h: 80, kind: fabric, title: "Per-frame and real-time modes", sub: "each frame was its own packet:\nstop, nothing to pad"}
+    burst: {x: 540, y: 140, w: 330, h: 90, kind: fabric, title: "Burst mode: one packet per run", sub: "send zero words until FRAME_COUNT x\n(PAYLOAD_WORDS + 4) are out, TLAST on last"}
+    done:  {x: 540, y: 270, w: 330, h: 70, kind: good,   title: "DMA completes", sub: "STATUS bit 2 set; FRAMES_SENT says\nwhere the real data ends"}
+    force: {x: 20,  y: 270, w: 250, h: 70, kind: bad,    title: "FORCE_ABORT (CTRL bit 5)", sub: "stops at once; the DMA may\nwait, only a reboot clears it"}
+  edges:
+    - {from: abort.right, to: fin.left}
+    - {from: fin.right@0.3, to: pf.left}
+    - {from: fin.right@0.7, to: burst.left}
+    - {from: pf.right, to: done.right, bulge: 12}
+    - {from: burst.bottom, to: done.top}
+    - {from: abort.bottom, to: force.top, kind: bad, dashed: true, label: "bit 5 instead"}
+  steps: [abort, e0, fin, e2, burst, e4, done, e1, pf, e3, e5, force]
+
+- id: lab-p05-to-scale
+  type: timeline
+  alt: "Two aborted 8,192,000-byte bursts drawn in proportion to bytes: the 2 ms abort sent 119 real frames, 1.95 MB, then 6.24 MB of zero fill; the 50 microsecond abort sent 128 real frames, 0.13 MB, then 8.06 MB of zero fill. The DMA descriptor was filled completely in both."
+  width: 900
+  height: 376
+  label_width: 140
+  scale: 90
+  length: 8.2
+  top: 40
+  lane_h: 54
+  play: 9
+  ticks: [[0, "0"], [1.95, "1.95 MB"], [4, "4 MB"], [8.192, "8.19 MB"]]
+  lanes:
+    - name: "Stream, -A 2000"
+      segments:
+        - {t0: 0,        t1: 1.949696, kind: fabric, label: "119 frames"}
+        - {t0: 1.949696, t1: 8.192,    kind: plain,  label: "zero fill, 1,560,576 words"}
+    - name: "Stream, -A 50"
+      segments:
+        - {t0: 0,        t1: 0.131072, kind: fabric, label: "128 frames, 0.13 MB"}
+        - {t0: 0.131072, t1: 8.192,    kind: plain,  label: "zero fill, 2,015,232 words"}
+    - name: "DMA descriptor"
+      segments:
+        - {t0: 0, t1: 8.192, kind: mss, label: "one transfer of 8,192,000 bytes, complete: status 0x210"}
+  notes:
+    - {x: 20, y: 284, text: "Drawn in proportion to bytes sent, not to time. 1 MB here is 1,000,000 bytes."}
+    - {x: 20, y: 306, text: "Start to interrupt: 8.899 ms for the first run, 8.904 ms for the second. The fill is streamed at the same rate as data."}
+    - {x: 20, y: 328, text: "Asked for 50 us, the source had already sent 128 frames of 1,024 bytes."}
+
+- id: lab-p05-record
+  type: terminal
+  title: "pfdaq_cap -A 2000, recorded run on the board (the whole JSON line, folded)"
+  alt: "The recorded JSON result of the 2 ms abort run, with callouts on the DMA completion, the number of real frames, the zero fill and the guard bytes."
+  width: 940
+  height: 330
+  step: 3.6
+  lines:
+    - "$ pfdaq_cap -A 2000 -m prbs -w 4092 -f 500"
+    - '{"pass": true, "mode": "abort", "payload_mode": 1, "frames_requested": 500, "abort_after_us": 2000,'
+    - ' "dma_completed": true, "dma_stat": "0x210", "start_to_irq_s": 0.008899, "status": "0x6", "aborted_flag": true,'
+    - ' "frames_sent": 119, "bytes": 1949696, "bad_magic": 0, "bad_seq": 0, "bad_payload": 0, "bad_crc": 0,'
+    - ' "fill_words": 1560576, "fill_nonzero": 0, "nothing_after_burst": true}'
+  callouts:
+    - {lines: [1, 1], title: "500 frames asked for", text: "The descriptor covers all 500 frames; the abort comes 2000 us after START."}
+    - {lines: [2, 2], title: "The DMA still completes", text: "dma_completed is true after 8.899 ms; status 0x6 is done together with aborted."}
+    - {lines: [3, 3], title: "119 real frames", text: "FRAMES_SENT is the measurement, 1,949,696 bytes, and none of them has an error."}
+    - {lines: [4, 4], title: "Zero fill and guard bytes", text: "1,560,576 fill words, none non-zero; the 64 bytes after the burst are untouched."}
+
+# ---------------------------------------------------------------- P06
+- id: lab-p06-reboot-cycle
+  alt: "One cycle of the reboot test: reboot over SSH, wait a fixed 20 seconds, poll SSH every 2 seconds and record the time, wait 3 seconds, then read the remote-processor state, count the supervisor's RPMsg channel, run a supervised capture of 8 bursts, and append one CSV row."
+  width: 900
+  height: 330
+  nodes:
+    reb:  {x: 10,  y: 30,  w: 190, h: 84, kind: start,  title: "Reboot", sub: "ssh ... reboot\nstarts the clock"}
+    w20:  {x: 240, y: 30,  w: 190, h: 84, kind: plain,  title: "Wait 20 s", sub: "fixed, every cycle"}
+    poll: {x: 470, y: 30,  w: 190, h: 84, kind: plain,  title: "Poll SSH", sub: "every 2 s, 40 tries;\nrecords up_s"}
+    w3:   {x: 700, y: 30,  w: 190, h: 84, kind: plain,  title: "Wait 3 s", sub: "the supervisor announces\nits channel"}
+    rp:   {x: 700, y: 200, w: 190, h: 84, kind: hart,   title: "remoteproc0 state", sub: "recorded; attached\nin all 30 cycles"}
+    ch:   {x: 470, y: 200, w: 190, h: 84, kind: hart,   title: "RPMsg channel", sub: "pfdaq-supervisor\ncounted, 1 if present"}
+    cap:  {x: 240, y: 200, w: 190, h: 84, kind: sw,     title: "Supervised capture", sub: "pfdaq_cap -r -w 252\n-f 1024 -n 8"}
+    row:  {x: 10,  y: 200, w: 190, h: 84, kind: good,   title: "One CSV row", sub: "capture_pass, sup_pass,\nconsole bytes"}
+  edges:
+    - {from: reb.right,  to: w20.left}
+    - {from: w20.right,  to: poll.left}
+    - {from: poll.right, to: w3.left}
+    - {from: w3.bottom,  to: rp.top}
+    - {from: rp.left,    to: ch.right}
+    - {from: ch.left,    to: cap.right}
+    - {from: cap.left,   to: row.right}
+  steps: [reb, e0, w20, e1, poll, e2, w3, e3, rp, e4, ch, e5, cap, e6, row]
+  notes:
+    - {x: 10, y: 316, text: "A TIMEOUT row means SSH never came back. The file's last line counts channel 1 rows and rows where capture and supervisor both passed."}
+
+- id: lab-p06-csv
+  type: terminal
+  title: "reboot-30.csv, recorded (rows 1 to 6 and the last line)"
+  alt: "The first six rows and the closing line of the recorded 30-cycle reboot file, with callouts on the header, the first slow cycle, the console byte counts and the closing count."
+  width: 900
+  height: 340
+  step: 3.6
+  lines:
+    - "cycle,up_s,remoteproc,sup_channel,capture_pass,sup_pass,freertos_console_bytes"
+    - "1,61.420734919,attached,1,true,true,581"
+    - "2,46.051575856,attached,1,true,true,581"
+    - "3,46.054565702,attached,1,true,true,581"
+    - "4,46.103952936,attached,1,true,true,581"
+    - "5,48.092580911,attached,1,true,true,515"
+    - "6,50.202464037,attached,1,true,true,647"
+    - "..."
+    - "# supervisor channel present: 30/30, full pass: 30/30"
+  callouts:
+    - {lines: [0, 0], title: "Seven columns", text: "up_s runs from the reboot command to the first SSH that answers."}
+    - {lines: [1, 1], title: "Cycle 1 is the slowest", text: "61.4 s; cycles 2 to 30 take 45.9 to 52.0 s. Why is not known."}
+    - {lines: [5, 6], title: "Console bytes vary", text: "501 to 647 bytes over the 30 cycles, 581 in 21 of them; not investigated."}
+    - {lines: [8, 8], title: "What 30 of 30 says", text: "No failure in 30 boots, which does not show that the failure rate is low (next figure)."}
+
+- id: lab-p06-how-much-it-proves
+  alt: "What clean trials bound: after n trials without a failure the rate is below about 3 over n at 95 percent confidence. For 30 clean boots that is up to 10 percent; if the true rate were 1 boot in 60, 30 clean boots would still occur with probability 0.60; about 300 clean boots would show a rate below 1 percent; 17,408,000 clean frames bound the per-frame error rate below 1.7 times ten to the minus seven; about 57 boots since the one failure would be clean with probability 0.38."
+  width: 900
+  height: 330
+  nodes:
+    root: {x: 270, y: 20,  w: 360, h: 66, kind: start, title: "n trials, no failure", sub: "rate below about 3/n, 95 % confidence"}
+    c1:   {x: 8,   y: 170, w: 165, h: 86, kind: bad,   title: "30 clean boots", sub: "3/30 = 0.1\nup to 10 % possible"}
+    c2:   {x: 185, y: 170, w: 165, h: 86, kind: bad,   title: "1 failure in 60?", sub: "(59/60)^30 = 0.60\n30 clean: likely"}
+    c3:   {x: 362, y: 170, w: 165, h: 86, kind: plain, title: "300 clean boots", sub: "3/300 = 0.01\nshows a rate below 1 %"}
+    c4:   {x: 539, y: 170, w: 165, h: 86, kind: good,  title: "17,408,000 frames", sub: "3/17,408,000 = 1.7e-07\nper frame, none wrong"}
+    c5:   {x: 716, y: 170, w: 176, h: 86, kind: mem,   title: "About 57 boots", sub: "(59/60)^57 = 0.38\nsince the one failure"}
+  edges:
+    - {from: root.bottom, to: c1.top}
+    - {from: root.bottom, to: c2.top}
+    - {from: root.bottom, to: c3.top}
+    - {from: root.bottom, to: c4.top}
+    - {from: root.bottom, to: c5.top}
+  steps: [root, e0, c1, e1, c2, e2, c3, e3, c4, e4, c5]
+  notes:
+    - {x: 20, y: 292, text: "Numbers from the snippet in Run it. The frame bound holds only if every bad word is caught and frames are independent."}
+    - {x: 20, y: 312, text: "The 57 boots span three fabric versions, so they are not repeats of one experiment."}

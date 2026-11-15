@@ -72,6 +72,18 @@ PLIC_EnableIRQ(PLIC_F2M_5_INT_OFFSET);           /* unmask */
 
 The semaphore is binary, created with the task at start-up. The task has the highest priority the kernel offers (`configMAX_PRIORITIES - 1`), so it runs as soon as it is woken. The mode switch is a plain variable, set by the `LATMODE` message; in the bare-metal build the whole task path is compiled out (`#ifndef PFDAQ_BM`) because there are no tasks.
 
+The working order of mode 2, from the interrupt to the next one:
+
+![Deferred interrupt handling for a level-triggered line, in the order that works. The fabric raises F2M[5]; the handler masks the source with PLIC_DisableIRQ, gives the semaphore with xSemaphoreGiveFromISR and calls portEND_SWITCHING_ISR, which runs the task at once. The task wakes, writes LAT1_ACK so the line drops and the fabric timer stops, unmasks the source with PLIC_EnableIRQ and blocks again. The handler's tail returns EXT_IRQ_KEEP_ENABLED.](../diagrams/lab-m07-defer-in-task.svg)
+
+1. The handler masks the source first. The line is level and stays high, so an unmasked source would interrupt again at once.
+2. The handler gives the binary semaphore with the interrupt-safe call.
+3. `portEND_SWITCHING_ISR` runs the woken task right there, inside the handler.
+4. The task, at the top priority, wakes from `xSemaphoreTake`.
+5. The task writes `LAT1_ACK`. The line drops and the fabric's timer stops.
+6. The task unmasks the source and blocks again.
+7. Control returns to the handler's tail, which returns `EXT_IRQ_KEEP_ENABLED`, so nothing is masked afterwards.
+
 ### The detail that decides it
 
 The vendor's interrupt dispatcher offers a tidy way to mask a source: return `EXT_IRQ_DISABLE`, and the dispatcher masks it after the handler returns. The first version of mode 2 used it. It answered one event and then never again.
@@ -87,6 +99,17 @@ The reason is in this RISC-V port of FreeRTOS, where `portEND_SWITCHING_ISR` doe
 | 5 | The handler returns `EXT_IRQ_DISABLE` and the dispatcher **masks** the source |
 
 The unmask comes before the mask, and the line stays masked for ever. The fix is in the code above: the handler masks the source itself, before waking the task, and returns "keep enabled". Case study K06 has the full trace.
+
+The failing order as a picture:
+
+![The first version of task mode, which answered one event and never again. The handler gives the semaphore; portEND_SWITCHING_ISR switches to the task inside the handler; the task acknowledges and unmasks the source; the task blocks and control returns to the handler's tail; the handler returns EXT_IRQ_DISABLE and the dispatcher masks the source afterwards. The mask comes after the unmask, so the line stays masked for good.](../diagrams/lab-m07-wrong-order.svg)
+
+1. The handler gives the semaphore, and the woken task has the top priority.
+2. `portEND_SWITCHING_ISR` switches to the task right there, inside the handler.
+3. The task acknowledges the line and unmasks the source.
+4. The task blocks again and control returns to the tail of the handler.
+5. The handler returns `EXT_IRQ_DISABLE`, and the dispatcher masks the source afterwards.
+6. The unmask of step 3 came before the mask of step 5, so the line stays masked and no second event is taken. The failing run was not recorded; this order is read from the code.
 
 The general rule: in a port that switches inside the macro, **anything the handler leaves for after the macro runs after the task has already run.** Check what your port's macro does before relying on an "on return" action.
 
@@ -116,6 +139,35 @@ Interrupt-to-acknowledge latency on hart 4, in microseconds, from the FreeRTOS s
 | Task | loaded | 2.00 | 2.09 | 3.82 | 9.36 |
 
 The bare-metal suite (`suite-baremetal`) has only the handler rows, since it has no tasks: 0.50 µs mean idle, 3.10 µs worst; 0.51 µs mean loaded, 2.44 µs worst.
+
+The four FreeRTOS rows as the suite summary prints them:
+
+![The four recorded rows of interrupt-to-acknowledge latency on hart 4: handler at idle mean 0.52 microseconds and worst 2.10; handler under load mean 0.53 and worst 1.94; task at idle mean 2.04 and worst 11.66; task under load mean 2.09 and worst 9.36. No event was missed in any row.](../diagrams/lab-m07-latency.svg)
+
+1. The handler acknowledges (mode 1, `pfdaq_cap -L 0`): mean 0.52 µs and worst 2.10 µs at idle.
+2. With one busy loop on each Linux core and a capture loop, the handler barely moves: mean 0.53 µs, worst 1.94 µs.
+3. The task acknowledges (mode 2, `pfdaq_cap -L 1`): mean 2.04 µs at idle, about 1.5 µs more, and a worst case of 11.66 µs.
+4. The task under load: mean 2.09 µs, worst 9.36 µs. Overrun is 0 in all four rows.
+
+## Do the same in your project
+
+You have an interrupt whose work could be done in the handler, and you want to know what moving it to a task costs, and how to do that safely. Work in this order.
+
+1. **Start with the handler-only version.** If the whole job is one register write, as here (`SRC_REG(LAT1_ACK) = 1u`), do it in the handler and return `EXT_IRQ_KEEP_ENABLED`. This is mode 1, and the cheap case.
+2. **Add the task path only for work that needs RTOS services.** Create a binary semaphore and a task at start-up, with the task at the highest priority (`configMAX_PRIORITIES - 1`) so that it runs as soon as it is woken.
+3. **In the handler, mask first.** For a level-triggered line call `PLIC_DisableIRQ(...)`, then `xSemaphoreGiveFromISR(...)`, then `portEND_SWITCHING_ISR(woken)`, then `return EXT_IRQ_KEEP_ENABLED`. Your interrupt number replaces `PLIC_F2M_5_INT_OFFSET`.
+4. **In the task, acknowledge, then unmask.** `xSemaphoreTake(..., portMAX_DELAY)`, write the acknowledge register, do the rest of the work, then `PLIC_EnableIRQ(...)`. Then the task blocks again.
+5. **Read what your port's `portEND_SWITCHING_ISR` does before you trust an "on return" action.** In this RISC-V port it switches to the task inside the handler, so anything left for after the macro runs after the task has already run. That is why the handler masks the source itself and does not return `EXT_IRQ_DISABLE`.
+6. **Keep a way to select the mode at run time.** The supervisor takes it from a `LATMODE` message, and the tool sends it with `pfdaq_cap -L 0` or `-L 1`. Both paths can then be measured on the same hardware, and `-L 0` puts it back to the default.
+7. **Measure both paths, idle and loaded.** The project's commands, with an event source that raises the interrupt and measures until it is acknowledged, are `pfdaq_lat -c 1 -p 200 -n 100000` after `pfdaq_cap -L 0` and again after `pfdaq_cap -L 1`. Compare the mean and the worst case. Here the means are 0.52 µs and 2.04 µs at idle.
+8. **Check that it stays armed.** All 100,000 events must be acknowledged with no overrun. The failure of the first version was the opposite: one event answered and none after.
+
+What not to change:
+
+- **The order mask, give, switch, acknowledge, unmask.** It is the whole design.
+- **The task's priority.** A lower priority would let other tasks delay the acknowledgement; that was not measured here.
+- **The `#ifndef PFDAQ_BM` around the task path.** A bare-metal build has no tasks, and a request for task mode is turned into handler mode.
+- **The expectation of a gain.** In this design deferring buys no speed, since the job is one register write; it costs about 1.5 µs. Defer when the work really needs to block or to parse.
 
 ## Evidence
 

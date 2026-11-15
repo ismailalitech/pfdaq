@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="900" height="500" role="img" aria-labelledby="t d">
+<title id="t">The reserved block of the device tree, drawn in address order and not to scale: the supervisor region at 0x91C00000 (1 MiB), two RPMsg rings of 32 KiB, the 256 KiB message buffer pool and the 4 KiB resource table, after which Linux's System RAM resumes at 0x91D51000. The boot payload, the firmware linker script and the firmware resource table must name the same addresses.</title><desc id="d">The reserved block of the device tree, drawn in address order and not to scale: the supervisor region at 0x91C00000 (1 MiB), two RPMsg rings of 32 KiB, the 256 KiB message buffer pool and the 4 KiB resource table, after which Linux's System RAM resumes at 0x91D51000. The boot payload, the firmware linker script and the firmware resource table must name the same addresses.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 35.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 35.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}7.87%{opacity:1}10.87%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="500" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M520,64 L400,64" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:19.60s" d="M520,64 L400,64" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="416.36" y="42" width="87.28" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="460" y="54.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">same address</text>
+</g>
+<g id="e1">
+<path d="M520,136 L400,136" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:25.20s" d="M520,136 L400,136" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="416.36" y="114" width="87.28" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="460" y="126.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">same address</text>
+</g>
+<g id="e2">
+<path d="M520,366 L400,366" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:30.80s" d="M520,366 L400,366" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="416.36" y="344" width="87.28" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="460" y="356.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">same address</text>
+</g>
+<g id="ctx">
+<rect x="20" y="40" width="380" height="120" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="210" y="87.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">0x91C0_0000  contextb_reserved</text>
+<text x="210" y="104.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">1 MiB, no-map</text>
+<text x="210" y="121.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">the supervisor's code and data</text>
+<rect class="hl" style="animation-delay:0.00s" x="19" y="39" width="382" height="122" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="ring0">
+<rect x="20" y="166" width="380" height="52" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="210" y="188" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">0x91D0_0000  vdev0vring0</text>
+<text x="210" y="205" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">32 KiB, RPMsg ring 0</text>
+<rect class="hl" style="animation-delay:2.80s" x="19" y="165" width="382" height="54" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="ring1">
+<rect x="20" y="224" width="380" height="52" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="210" y="246" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">0x91D0_8000  vdev0vring1</text>
+<text x="210" y="263" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">32 KiB, RPMsg ring 1</text>
+<rect class="hl" style="animation-delay:5.60s" x="19" y="223" width="382" height="54" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="buf">
+<rect x="20" y="282" width="380" height="52" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="210" y="304" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">0x91D1_0000  vdev0buffer</text>
+<text x="210" y="321" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">256 KiB, message buffers</text>
+<rect class="hl" style="animation-delay:8.40s" x="19" y="281" width="382" height="54" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="rsc">
+<rect x="20" y="340" width="380" height="52" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="210" y="362" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">0x91D5_0000  rsctable</text>
+<text x="210" y="379" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">4 KiB, resource table</text>
+<rect class="hl" style="animation-delay:11.20s" x="19" y="339" width="382" height="54" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="ram">
+<rect x="20" y="398" width="380" height="52" rx="9" fill="#1e2530" stroke="#6b7b8c" stroke-width="1.5"/>
+<text x="210" y="420" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">0x91D5_1000  System RAM</text>
+<text x="210" y="437" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">Linux's memory again</text>
+<rect class="hl" style="animation-delay:14.00s" x="19" y="397" width="382" height="54" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="pay">
+<rect x="520" y="36" width="360" height="56" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="700" y="60" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Boot payload (module B02)</text>
+<text x="700" y="77" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">exec-addr 0x91C00000, owner u54_4</text>
+<rect class="hl" style="animation-delay:16.80s" x="519" y="35" width="362" height="58" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="link">
+<rect x="520" y="108" width="360" height="56" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="700" y="132" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Firmware linker script</text>
+<text x="700" y="149" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">links the supervisor for 0x91C00000</text>
+<rect class="hl" style="animation-delay:22.40s" x="519" y="107" width="362" height="58" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="rtab">
+<rect x="520" y="331" width="360" height="70" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="700" y="353.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Firmware resource table</text>
+<text x="700" y="370.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">names the ring and buffer addresses</text>
+<text x="700" y="387.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">copied to 0x91D50000 at start</text>
+<rect class="hl" style="animation-delay:28.00s" x="519" y="330" width="362" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="24" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">Reserved block 0x91C0_0000 to 0x91D5_0FFF (sizes not to scale)</text>
+<text x="20" y="478" text-anchor="start" font-size="12" fill="#9aa8b5">If the three places on the right disagree with the device tree, the system fails in confusing ways.</text>
+</svg>

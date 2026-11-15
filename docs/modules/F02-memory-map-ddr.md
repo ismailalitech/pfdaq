@@ -53,6 +53,15 @@ Non-cached WCB: SEG1_4: offset 0x00d0000000, physical DDR 0x00000000
 Non-cached WCB: SEG1_5: offset 0x1800000000, physical DDR 0x00000000
 ```
 
+![The boot monitor's segment configuration: two cached segments at 0x0080000000 and 0x1000000000, two non-cached at 0x00c0000000 and 0x1400000000, two non-cached write-combining at 0x00d0000000 and 0x1800000000, all with physical DDR 0x00000000.](../diagrams/lab-f02-segment-table.svg)
+
+The figure shows the same lines of the recorded console (`boot-hss`) as the block above.
+
+1. Two cached windows, one at a 32-bit and one at a 64-bit address.
+2. Two non-cached windows, at `0xC000_0000` and `0x14_0000_0000`.
+3. Two non-cached write-combining windows, at `0xD000_0000` and `0x18_0000_0000`.
+4. In all six lines the physical DDR address is `0x00000000`.
+
 Read it as a table. Each kind of window appears twice, once at a 32-bit address and once at a 64-bit one, and **all six point at physical DDR address 0**:
 
 | Behaviour | 32-bit window starts at | 64-bit window starts at |
@@ -61,7 +70,14 @@ Read it as a table. Each kind of window appears twice, once at a 32-bit address 
 | Non-cached | 0x0000_C000_0000 | 0x14_0000_0000 |
 | Non-cached WCB | 0x0000_D000_0000 | 0x18_0000_0000 |
 
-"WCB" is the monitor's label; I read it as write-combining buffer. So physical byte N of the DDR is at `0x8000_0000 + N` cached, at `0xC000_0000 + N` non-cached and at `0xD000_0000 + N` write-combining.
+"WCB" is the monitor's label; this page reads it as write-combining buffer. So physical byte N of the DDR is at `0x8000_0000 + N` cached, at `0xC000_0000 + N` non-cached and at `0xD000_0000 + N` write-combining.
+
+![Three address windows onto the same DDR: the cached window at 0x8000_0000, the non-cached window at 0xC000_0000 and the non-cached write-combining window at 0xD000_0000 all point at physical DDR address 0. The three vendor buffers sit at the same 0x0800_0000 offset in each window.](../diagrams/lab-f02-three-windows.svg)
+
+1. The cached window starts at `0x8000_0000` (64-bit: `0x10_0000_0000`); its buffer, `udmabuf-ddr-c0`, is at `0x8800_0000`.
+2. The non-cached window starts at `0xC000_0000` (`0x14_0000_0000`); its buffer, `udmabuf-ddr-nc0`, is at `0xC800_0000`.
+3. The write-combining window starts at `0xD000_0000` (`0x18_0000_0000`); its buffer, `udmabuf-ddr-nc-wcb0`, is at `0xD800_0000`.
+4. All six windows start at physical DDR address 0, so physical byte N is at `0x8000_0000 + N`, `0xC000_0000 + N` or `0xD000_0000 + N`, and each buffer is at offset `0x0800_0000`. The figure comes from the segment table and the buffers' addresses, not from a test of the aliasing.
 
 ### The three buffers the vendor reserved
 
@@ -110,6 +126,14 @@ desc[0] = DESC_CFG_ARMED;
 dma[DMA_STREAM0 / 4] = (uint32_t)(ddr_phys + DESC_OFF);
 ```
 
+![The two addresses of one buffer in pfdaq_cap: ddr is the program's own virtual address, mapped from /dev/udmabuf-ddr-nc0, and is used to write the descriptor and read the frames; ddr_phys is read from sysfs and is what goes into the descriptor's destination field and into the DMA controller's stream address register.](../diagrams/lab-f02-two-addresses.svg)
+
+1. `ddr_phys` is read from the buffer's `phys_addr` file in sysfs: the hardware's address.
+2. It goes into `desc[2]`, the descriptor's destination, with the offset added.
+3. It goes into the DMA controller's stream address register, with the descriptor's offset added.
+4. `ddr` is the program's virtual address, from `mmap` of `/dev/udmabuf-ddr-nc0`.
+5. The program writes the descriptor and reads the frames through `ddr`, never through `ddr_phys`.
+
 Two addresses of the same buffer are in play. `ddr` is the program's own virtual address, used to write the descriptor and read the frames. `ddr_phys` is what the hardware sees, and is what goes into the descriptor and into the DMA's stream address register. Mixing them up is the classic first mistake; module I04 goes through it.
 
 The price of the non-cached window is stated in a comment in the tool itself: *"non-cached DDR is slow to read: copy each burst once into normal memory, verify the copy"*. The recorded run copied at 70.5 MB/s out of the non-cached window with one core, and verified the copy at 55.4 MB/s (module X02 has the whole run).
@@ -147,13 +171,33 @@ Both pass with **no cache maintenance** in the code. The tests ran at physical a
 
 Two things to read from this. First, hart 4 and Linux saw each other's writes in the cached region without flushing, which is what the project observed on this chip; the vendor documents were not used to prove why. Second, the cached check is faster, but each check includes one RPMsg exchange, so the figure is a cost per check and not a memory bandwidth.
 
+## Do the same in your project
+
+Use this when hardware other than the processor writes memory that a program then reads. The names are this project's.
+
+1. **Read your window table.** Find the "Segment Configuration" block in your boot monitor's console. Write one row per window: its behaviour, its 32-bit base, its 64-bit base and the physical DDR address it points at.
+2. **Pick the window by who touches the memory.** Memory that only processors use can be cached. A buffer that a DMA writes goes in the non-cached window, as the stream buffers do here.
+3. **Reserve the buffer and name it.** Reserve the region in the device tree so Linux does not use it (module B04). On this board the vendor tree already gives a 32 MiB buffer in each window, named by u-dma-buf: `udmabuf-ddr-c0`, `udmabuf-ddr-nc0`, `udmabuf-ddr-nc-wcb0`.
+4. **Keep two addresses in your program.** Read the physical address from `/sys/class/u-dma-buf/<name>/phys_addr` into `ddr_phys`. Map `/dev/<name>` with `mmap` into `ddr`. `pfdaq_cap` opens the non-cached buffer with `O_SYNC` and the cached one without.
+5. **Write the physical address into the hardware** and use the virtual one in your code. Copy `arm()` as the pattern: `ddr + DESC_OFF` for the descriptor in the program, `ddr_phys + dest_off` in the descriptor and `ddr_phys + DESC_OFF` in the DMA's stream address register.
+6. **Read once, work on a copy.** Reading a non-cached buffer is slow. Copy each burst once into ordinary memory and verify the copy, as the tool's own comment says.
+7. **Check it** with the shared-memory test in "Run it" (`pfdaq_cap -X 65536 -n 50`, and with `-c` for the cached window): no mismatches on either side. Here both windows passed with no cache maintenance in the code, on this chip.
+8. **Write the map down.** Keep one table of every reserved region with its address, size and owner, and compare it with `/proc/iomem` on the running board (module B04).
+
+What not to change:
+
+- **Do not swap the two addresses.** A physical address in the program or a virtual one in a descriptor is the classic first mistake (module I04).
+- **Do not give a DMA a cached buffer** without a test of your own: the project did not test the fabric DMA writing a cached buffer.
+- **Do not reuse the project's regions** for anything else: the supervisor and the RPMsg regions stay reserved (`no-map`) from Linux.
+- **Do not use the write-combining window** expecting a tested path: this project does not use it.
+
 ## Evidence
 
 - **Segment table and cache sizes:** the boot monitor console (board, fabric v0.5.1).
 - **Linux memory and the RPMsg link:** the U-Boot and Linux console, which shows the memory line and `remoteproc` attaching.
 - **Shared memory, both windows:** rows `T7-noncached` and `T7-cached` of the board suite, with their raw JSON (board, fabric v0.5.1, single runs of 50 repetitions).
 
-The records show that both windows work for sharing between Linux and hart 4. They do not show what happens when the fabric DMA writes a **cached** buffer: that test was not done, and it is the subject of a planned module.
+The records show that both windows work for sharing between Linux and hart 4. They do not show what happens when the fabric DMA writes a **cached** buffer: that test was not done.
 
 ## When it goes wrong
 

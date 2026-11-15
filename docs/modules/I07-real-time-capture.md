@@ -49,6 +49,16 @@ The DMA has one descriptor per stream destination, up to four. With four armed, 
  */
 ```
 
+![The real-time loop: the stream source sends only with a credit; the DMA writes frame n into descriptor n modulo ndest, in one of four buffers, and its interrupt increments the UIO event count; the program copies the buffer out, re-arms its descriptor, returns one credit and only then verifies the copy.](../diagrams/lab-i07-credit-loop.svg)
+
+1. The stream source sends a frame only while it holds a credit; otherwise it drops the slot and counts it.
+2. The DMA controller writes frame `n` into descriptor `n % ndest`, and so into buffer `BUF_OFF + k * slot_sz`.
+3. Each completion raises the DMA interrupt, and the UIO event count says how many frames have completed.
+4. The program copies buffer `k` out.
+5. It re-arms descriptor `k` with `arm_rt`.
+6. Only then does it return one credit (`SRC_CREDIT = 1`), which the source holds from that moment.
+7. Last, it verifies the copy, with gaps allowed.
+
 **Set-up** (before the fabric is started):
 
 | Step | Register or memory | Why |
@@ -76,6 +86,14 @@ static void arm_rt(int k, uint32_t buf_off, uint32_t nbytes)
 ```
 
 Descriptor `k` is `0x40` bytes after the previous one and is announced in stream address register `k` (`0x460`, `0x464`, `0x468`, `0x46C`). Byte count and destination are written first, then a fence, then the configuration word that marks it valid, then another fence, and only then does the DMA learn its address. The fences matter because these are stores to memory the DMA reads: the "valid" word must not become visible before the fields it vouches for.
+
+![The order in which arm_rt writes one descriptor: byte count and destination, a fence, the valid word 0xD, a fence, the descriptor's address into stream address register k, a fence; the credit is returned only afterwards.](../diagrams/lab-i07-arm-order.svg)
+
+1. Byte count (`desc[1]`) and destination (`desc[2]`) first.
+2. A fence, then `desc[0] = DESC_CFG_ARMED` (`0xD`), which marks the descriptor valid.
+3. A fence, then the descriptor's address into `dma[DMA_STREAM0 / 4 + k]` (`0x460 + 4 * k`).
+4. A last fence; the loop then returns the credit.
+5. A credit returned before the re-arm could let the fabric send into a descriptor the DMA still believes is complete (case study K04).
 
 **Each buffer is a page-aligned slot** in the non-cached region (module I05): buffer `k` starts at `BUF_OFF + k * slot_sz`, with `slot_sz` the frame size rounded up to 4 KiB.
 
@@ -125,14 +143,14 @@ These are the commands the project ran, lines of the board suite (`tests/board/p
 ```sh
 pfdaq_cap -m prbs -w 252 -T 125000 -n 4000 -d 4    # a slot every 1 ms
 pfdaq_cap -m prbs -w 252 -T 6250   -n 4000 -d 4    # a slot every 50 us
-pfdaq_cap -m prbs -w 252 -T 6250   -n 4000 -d 1    # the same with one descriptor
+pfdaq_cap -m counter -w 252 -T 6250 -n 4000 -d 1  # the same slot with one descriptor
 ```
 
 `-T` is the slot interval in 8 ns fabric cycles, `-n` the number of slots, `-d` the number of destinations, `-w 252` a 1,024-byte frame. The suite also runs 12,500, 2,500, 1,250 and 625 cycles, a FIR payload at 6,250, and a payload fault at 12,500.
 
 ## What you should see
 
-Recorded, fabric v0.5.1, 4,000 slots of 1 KiB frames, PRBS payload, four descriptors unless stated:
+Recorded, fabric v0.5.1, 4,000 slots of 1 KiB frames, PRBS payload, four descriptors unless stated (the one-descriptor and the fault rows used the counter payload, as the suite lines above show):
 
 | Slot | Sent | Dropped | Gaps seen | Verified | Ended by timeout | `pass` |
 |---|---|---|---|---|---|---|
@@ -144,6 +162,13 @@ Recorded, fabric v0.5.1, 4,000 slots of 1 KiB frames, PRBS payload, four descrip
 | 5 µs | 463 | 3,537 (88.4 %) | 3,509 | 460 | yes | false |
 | 50 µs, **one descriptor** | 1,993 | 2,007 (50.2 %) | 2,006 | 1,993 | no | true |
 | 100 µs, payload fault at frame 10 | 1,000 of 1,000 | 0 | 0 | 1,000 | no | true |
+
+![Three recorded real-time runs of pfdaq_cap: at a 1,000 microsecond slot nothing is dropped; at 50 microseconds with four descriptors 792 slots are dropped and the run ends by timeout, so pass is false; with one descriptor 2,007 are dropped and the run passes. Fields not discussed are shown as [...].](../diagrams/lab-i07-drop-rows.svg)
+
+1. At a 1,000 µs slot: 4,000 sent, 0 dropped, 4,000 verified, and the run passes.
+2. At 50 µs with four descriptors: 3,208 sent plus 792 dropped is 4,000, and `seq_gaps` (788) does not exceed the drops.
+3. In that run 3,205 were verified against 3,208 sent and `timed_out` is 1, so `pass` is false.
+4. With one descriptor at the same slot, 1,993 were sent and 2,007 dropped; every sent frame was verified and there was no timeout, so it passes.
 
 In every row, `sent + dropped` equals the 4,000 slots, the gaps never exceed the drops, and there are no sequence, payload or CRC errors beyond the injected one (a flipped payload bit shows up as one payload error and one CRC error, as in I06).
 
@@ -158,6 +183,28 @@ The suite's summary script treats these rows as measurements, not as tests: it l
 ### Why the delivered rate looks tiny
 
 The tool prints `delivered_mb_per_s` as verified bytes divided by `elapsed_s`, which includes the 2-second timeout. At 100 µs, 3,998 frames of 1,024 bytes over 2.401 s is 1.7 MB/s, although the frames were offered at 10.24 MB/s and 3,999 of 4,000 were sent. The figure is real arithmetic and a misleading measure. The sent and dropped counts are the data.
+
+## Do the same in your project
+
+The goal is a capture loop that keeps up with a source that cannot wait, and says honestly what it could not deliver. The fabric side is module H06; the names below are this project's.
+
+1. **Build the credit contract into the source first.** It sends a frame only when it holds a credit and is idle, otherwise it drops the slot and counts it; it advances the frame numbering on a drop and the destination rotation only on a sent frame. Give software a credit register where a write with bit 31 set replaces the count (`0x80000000 | ndest`) and a write of 1 hands one credit back.
+2. **Choose the number of descriptors** (the project allows 1 to 4, `-d`). It is also the number of credits you start with.
+3. **Lay out the memory.** Descriptor `k` at `DESC_OFF + k * RT_DESC_STRIDE` (`0x40`), buffer `k` at `BUF_OFF + k * slot_sz`, with `slot_sz` the frame size rounded up to 4 KiB, all in the non-cached region of module I05. Refuse to run if `BUF_OFF + ndest * slot_sz` does not fit.
+4. **Set up in this order:** snapshot the fabric's counters, configure payload, slot count, rate, fault and mode (payload, real-time bit, destinations minus one), arm every descriptor with `arm_rt`, write the credits, restart the model, read the DMA's UIO event count as a base, and write START last.
+5. **Copy `arm_rt` with its fences.** Byte count and destination, fence, the valid word, fence, then the descriptor's address into stream address register `k` (`0x460`, `0x464`, `0x468`, `0x46C`), fence.
+6. **Write the loop as copy, re-arm, credit, verify.** `poll` the DMA's UIO file with a 5 ms timeout; on timeout read the event count from sysfs (`uio_events`) so a missed wake-up cannot stall you. For every completed frame take buffer `k = processed % ndest`, copy it out, `arm_rt`, write one credit, then verify the copy with gaps allowed.
+7. **End the run** when the fabric is done and the frames it reports sent equal the frames you processed, or when nothing has been processed for `timeout_ms` (2,000 ms by default).
+8. **Judge the run against the fabric's own counters.** It is consistent when `sent + drops == slots`, the gaps you saw do not exceed the drops, and the fabric's next sequence number advanced by one per slot (plus one if a sequence-skip fault was injected). Pass only if nothing timed out and every sent frame was processed.
+9. **Check it.** At a slow slot (1,000 µs, four descriptors) you should see 4,000 sent, 0 dropped, 4,000 verified and `pass: true`. At faster slots the books must still balance, even where `pass` is false.
+
+What not to change:
+
+- Return the credit after the re-arm, never before.
+- Copy first, verify second: the buffer is free as soon as it is copied out.
+- Do not assume the rotation advances on drops; it advances only when a frame is sent.
+- Keep the no-progress timeout, and do not read `delivered_mb_per_s` as a throughput when a run ended by timeout: it divides by an elapsed time that includes the wait.
+- Read the sent and dropped counts, not the delivered rate, when you compare slot times.
 
 ## Evidence
 
