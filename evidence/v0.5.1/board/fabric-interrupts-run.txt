@@ -1,0 +1,18 @@
+### F03 3: Linux answers 100000 interrupts on channel 0
+{"pass": true, "channel": 0, "context": "linux-uio", "period_us": 500, "jitter_mask": 1023, "rt_prio": 0, "events": 100000, "acks": 100000, "overrun": 0, "spurious": 0, "empty_wakeups": 99998, "timeouts": 0, "elapsed_s": 51.017, "latency_us": {"min": 45.96, "mean": 79.72, "max": 208.80, "p50_le": 81.90, "p90_le": 122.86, "p99_le": 122.86, "p999_le": 122.86}, "resolution_ns": 20, "histogram_us": [[40.96, 61.44, 3070], [61.44, 81.92, 84564], [81.92, 122.88, 12347], [122.88, 163.84, 16], [163.84, 245.76, 3]]}
+### after step 3: PLIC 119 and UIO event counters
+ 80:     199999          0          0 SiFive PLIC 119 Edge      pfdaq_stream_src
+ 81:          0          0          0 SiFive PLIC 120 Edge      dma-controller@60010000
+fpga_lsram 0
+pfdaq_stream_src 199999
+dma-controller@60010000 0
+### F03 4: hart 4 answers 100000 interrupts on channel 1
+{"pass": true, "mode": "latmode", "requested": 0, "context": "freertos"}
+{"pass": true, "channel": 1, "context": "u54_4", "period_us": 200, "jitter_mask": 1023, "rt_prio": 0, "events": 100000, "acks": 100000, "overrun": 0, "spurious": 0, "empty_wakeups": 0, "timeouts": 0, "elapsed_s": 20.903, "latency_us": {"min": 0.52, "mean": 0.52, "max": 2.10, "p50_le": 0.62, "p90_le": 0.62, "p99_le": 0.62, "p999_le": 0.62}, "resolution_ns": 20, "histogram_us": [[0.48, 0.64, 99947], [0.64, 0.96, 46], [0.96, 1.28, 6], [1.92, 2.56, 1]]}
+### after step 4: PLIC 119 and UIO event counters
+ 80:     199999          0          0 SiFive PLIC 119 Edge      pfdaq_stream_src
+ 81:          0          0          0 SiFive PLIC 120 Edge      dma-controller@60010000
+0
+fpga_lsram 0
+pfdaq_stream_src 199999
+dma-controller@60010000 0

@@ -1,0 +1,97 @@
+### B04 1: reserved regions
+  80200000-80201fff : Reserved
+  81527328-815fffff : Reserved
+  8bff7000-8fff6fff : Reserved
+  8fff7000-8fffcfff : Reserved
+91c00000-91d50fff : Reserved
+  91d50000-91d50fff : remote-context rsc-table@91d50000
+91d51000-91ffffff : System RAM
+c4000000-c9ffffff : Reserved
+  c4000000-c7ffffff : Reserved
+  103d340000-103fbfffff : Reserved
+103fc00000-103fdfffff : Reserved
+  103fe19000-103ff99fff : Reserved
+  103ff9a000-103ffd5fff : Reserved
+  103ffd7000-103ffdafff : Reserved
+  103ffdb000-103ffdcfff : Reserved
+  103ffdd000-103fffffff : Reserved
+1412000000-1421ffffff : Reserved
+  1412000000-1421ffffff : Reserved
+[    0.000000] Reserved memory: created DMA memory pool at 0x00000000c4000000, size 64 MiB
+[    0.000000] OF: reserved mem: initialized node non-cached-low-buffer, compatible id shared-dma-pool
+[    0.000000] OF: reserved mem: 0x00000000c4000000..0x00000000c7ffffff (65536 KiB) nomap non-reusable non-cached-low-buffer
+[    0.000000] Reserved memory: created DMA memory pool at 0x0000001412000000, size 256 MiB
+[    0.000000] OF: reserved mem: initialized node non-cached-high-buffer, compatible id shared-dma-pool
+[    0.000000] OF: reserved mem: 0x0000001412000000..0x0000001421ffffff (262144 KiB) nomap non-reusable non-cached-high-buffer
+[    0.000000] OF: reserved mem: 0x0000000084000000..0x0000000087ffffff (65536 KiB) nomap non-reusable region@84000000
+[    0.000000] Reserved memory: created DMA memory pool at 0x000000103fc00000, size 2 MiB
+[    0.000000] OF: reserved mem: initialized node hss-buffer@103fc00000, compatible id shared-dma-pool
+[    0.000000] OF: reserved mem: 0x000000103fc00000..0x000000103fdfffff (2048 KiB) nomap non-reusable hss-buffer@103fc00000
+[    0.000000] Reserved memory: created DMA memory pool at 0x0000000088000000, size 32 MiB
+[    0.000000] OF: reserved mem: initialized node buffer@88000000, compatible id shared-dma-pool
+[    0.000000] OF: reserved mem: 0x0000000088000000..0x0000000089ffffff (32768 KiB) nomap non-reusable buffer@88000000
+[    0.000000] Reserved memory: created DMA memory pool at 0x00000000c8000000, size 32 MiB
+[    0.000000] OF: reserved mem: initialized node buffer@c8000000, compatible id shared-dma-pool
+[    0.000000] OF: reserved mem: 0x00000000c8000000..0x00000000c9ffffff (32768 KiB) nomap non-reusable buffer@c8000000
+[    0.000000] Reserved memory: created DMA memory pool at 0x00000000d8000000, size 32 MiB
+[    0.000000] OF: reserved mem: initialized node buffer@d8000000, compatible id shared-dma-pool
+[    0.000000] OF: reserved mem: 0x00000000d8000000..0x00000000d9ffffff (32768 KiB) nomap non-reusable buffer@d8000000
+[    0.000000] OF: reserved mem: 0x0000000091c00000..0x0000000091cfffff (1024 KiB) nomap non-reusable contextb_reserved@91c00000
+[    0.000000] OF: reserved mem: 0x0000000091d00000..0x0000000091d07fff (32 KiB) nomap non-reusable vdev0vring0@91d00000
+[    0.000000] OF: reserved mem: 0x0000000091d08000..0x0000000091d0ffff (32 KiB) nomap non-reusable vdev0vring1@91d08000
+[    0.000000] Reserved memory: created DMA memory pool at 0x0000000091d10000, size 0 MiB
+[    0.000000] OF: reserved mem: initialized node vdev0buff@91d10000, compatible id shared-dma-pool
+[    0.000000] OF: reserved mem: 0x0000000091d10000..0x0000000091d4ffff (256 KiB) nomap non-reusable vdev0buff@91d10000
+[    0.000000] OF: reserved mem: 0x0000000091d50000..0x0000000091d50fff (4 KiB) nomap non-reusable rsc-table@91d50000
+[    0.040512] Memory: 552904K/1048576K available (7167K kernel code, 4743K rwdata, 4096K rodata, 2266K init, 312K bss, 493556K reserved, 0K cma-reserved)
+[    1.721043] rproc-virtio rproc-virtio.1.auto: assigned reserved memory node vdev0buff@91d10000
+[    8.150667] u-dma-buf udmabuf0: assigned reserved memory node buffer@88000000
+[    8.518068] u-dma-buf udmabuf1: assigned reserved memory node buffer@c8000000
+[    8.746685] u-dma-buf udmabuf2: assigned reserved memory node buffer@d8000000
+### B04 2: UIO names
+/sys/class/uio/uio0/name:fpga_lsram
+/sys/class/uio/uio1/name:pfdaq_stream_src
+/sys/class/uio/uio2/name:dma-controller@60010000
+### B04 3: online CPUs
+0-2
+0-2
+### F03 1: PLIC in /proc/interrupts (initial)
+           CPU0       CPU1       CPU2       
+ 72:        602          0          0 SiFive PLIC  94 Edge      ttyS1
+ 74:          0          0          0 SiFive PLIC  54 Edge      20108000.spi
+ 75:          0          0          0 SiFive PLIC  55 Edge      20109000.spi
+ 76:        424          0          0 SiFive PLIC  64 Edge      end0
+ 77:          8          0          0 SiFive PLIC  65 Edge      end0
+ 78:        126          0          0 SiFive PLIC  66 Edge      end0
+ 79:         38          0          0 SiFive PLIC  67 Edge      end0
+ 80:          0          0          0 SiFive PLIC 119 Edge      pfdaq_stream_src
+ 81:          0          0          0 SiFive PLIC 120 Edge      dma-controller@60010000
+ 82:          0          0          0 SiFive PLIC  80 Edge      20124000.rtc
+ 83:          0          0          0 SiFive PLIC  58 Edge      2010a000.i2c
+ 84:          0          0          0 SiFive PLIC 122 Edge      40000200.i2c
+ 85:          0          0          0 SiFive PLIC 101 Edge      mpfs-wdt
+ 86:          0          0          0 SiFive PLIC 106 Edge      mpfs-wdt
+ 87:       4831          0          0 SiFive PLIC  88 Edge      mmc0
+ 88:         20          0          0 SiFive PLIC  96 Edge      mpfs-mailbox
+ 89:          3          0          0 SiFive PLIC 180 Edge      miv-ihc-irq
+ 90:          0          0          0 SiFive PLIC 179 Edge      miv-ihc-irq
+ 91:          0          0          0 SiFive PLIC 178 Edge      miv-ihc-irq
+ 92:          0          0          0 SiFive PLIC   1 Edge      ccache_ecc
+ 93:          0          0          0 SiFive PLIC   3 Edge      ccache_ecc
+ 94:          0          0          0 SiFive PLIC   4 Edge      ccache_ecc
+ 95:          0          0          0 SiFive PLIC   2 Edge      ccache_ecc
+ 96:          0          0          0 SiFive PLIC   5 Edge      3000000.dma-controller
+ 97:          0          0          0 SiFive PLIC   6 Edge      3000000.dma-controller
+ 98:          0          0          0 SiFive PLIC   7 Edge      3000000.dma-controller
+ 99:          0          0          0 SiFive PLIC   8 Edge      3000000.dma-controller
+100:          0          0          0 SiFive PLIC   9 Edge      3000000.dma-controller
+101:          0          0          0 SiFive PLIC  10 Edge      3000000.dma-controller
+102:          0          0          0 SiFive PLIC  11 Edge      3000000.dma-controller
+103:          0          0          0 SiFive PLIC  12 Edge      3000000.dma-controller
+IPI2:         0          0          0  CPU stop interrupts
+IPI3:         0          0          0  CPU stop (for crash dump) interrupts
+IPI6:         0          0          0  CPU backtrace interrupts
+### F03 2: UIO event counters (initial)
+fpga_lsram 0
+pfdaq_stream_src 0
+dma-controller@60010000 0
