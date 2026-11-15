@@ -1,0 +1,6 @@
+phase 1 ch 0: 60 samples, latency min/mean/max 11/61.1/112 cycles, overrun 0, bins used [6, 7, 8, 9, 10, 11, 12, 13], event gap 400..400
+phase 1 ch 1: 90 samples, latency min/mean/max 4/29.9/52 cycles, overrun 0, bins used [4, 5, 6, 7, 8, 9, 10, 11], event gap 332..394
+phase 2 ch 0: 25 samples, latency min/mean/max 12/139.9/311 cycles, overrun 19, bins used [7, 8, 9, 10, 11, 12, 13, 14, 15, 16], event gap 120..360
+phase 3 ch 1: 2 samples, latency min/mean/max 2258/19376.5/36495 cycles, overrun 0, bins used [22, 30], event gap 2270..2270
+RESULT: PASS
+RESULT: PASS

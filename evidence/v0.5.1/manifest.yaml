@@ -1,0 +1,103 @@
+# Results for fabric v0.5.1 (design version 6) with the pfdaq-v051 image. One board, single runs
+# unless a count is given. A page may quote a number only by naming one of these entries.
+fabric: "0.5.1"
+image: pfdaq-v051
+results:
+  - id: suite-freertos
+    title: Board suite with FreeRTOS on hart 4, 27 of 27 functional tests
+    file: board/suite-freertos.md
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: tests/board/pfdaq_final_suite.sh on the board, summarised by tests/host/summarise_suite.py
+    conditions: Board idle except where a row says loaded. "Loaded" is one busy loop per Linux CPU plus a continuous capture loop. Latency rows are 100,000 events each.
+  - id: suite-freertos-raw
+    title: Raw output of the FreeRTOS suite, one JSON object per test
+    file: board/suite-freertos.jsonl
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: tests/board/pfdaq_final_suite.sh
+  - id: suite-fresh-card
+    title: The same suite on a freshly written SD card, 27 of 27
+    file: board/suite-fresh-card.md
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: image written to a blank card, cold start, tests/board/pfdaq_final_suite.sh with no manual steps
+    conditions: Proves the published image alone reproduces the result.
+  - id: suite-fresh-card-raw
+    title: Raw output of the fresh-card suite
+    file: board/suite-fresh-card.jsonl
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: tests/board/pfdaq_final_suite.sh
+  - id: suite-baremetal
+    title: Board suite with the bare-metal supervisor on hart 4, 8 of 8
+    file: board/suite-baremetal.md
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: firmware/build_payload.sh, payload written to SD partition 2, tests/board/pfdaq_bm_suite.sh
+    conditions: Same fabric and Linux image; only the hart 4 firmware differs.
+  - id: suite-baremetal-raw
+    title: Raw output of the bare-metal suite
+    file: board/suite-baremetal.jsonl
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: tests/board/pfdaq_bm_suite.sh
+  - id: reboot-30
+    title: Thirty warm reboots, both systems up and a supervised capture passing each time
+    file: board/reboot-30.csv
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: tests/host/amp_reboot_test.sh 30
+    conditions: Warm reboots over SSH. Time is from the reboot command to SSH reachable.
+  - id: supervisor-console
+    title: Supervisor console during the fresh-card suite, with the alarm and recovery messages
+    file: board/supervisor-console.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: hart 4 console (MMUART0) captured on the PC during tests/board/pfdaq_final_suite.sh
+  - id: sim-stream
+    title: Stream source simulation, 20 scenarios checked by the Python model
+    file: sim/stream.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: make -C hw sim-stream
+    conditions: Icarus Verilog 12.0. The checker recomputes every frame and checks the stream protocol beat by beat.
+  - id: sim-latency
+    title: Latency unit simulation, four phases checked by the Python model
+    file: sim/latency.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: make -C hw sim-latency
+  - id: timing
+    title: Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric
+    file: build/timing-and-utilisation.txt
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: hw/libero/build.sh 6
+    conditions: Libero SoC 2026.1, extracted lines of the build log.
+  - id: timing-without-cdc
+    title: Timing analysis without the clock-crossing constraints (the tool's console log; the 40 worst violating paths it lists are the intended crossings)
+    file: build/timing-without-cdc-constraints.txt
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: hw/libero/sta_without_cdc.tcl on the placed design
+  - id: programming
+    title: Programming, verify and device read-back of the v0.5.1 fabric
+    file: build/programming.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: hw/libero/program.sh
+    conditions: FABRIC and SNVM components only. The eNVM digest is the same before and after.

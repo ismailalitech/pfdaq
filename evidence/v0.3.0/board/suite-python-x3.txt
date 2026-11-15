@@ -1,0 +1,86 @@
+run 1: 13 pass, 0 fail, SUITE_DONE
+run 2: 13 pass, 0 fail, SUITE_DONE
+run 3: 13 pass, 0 fail, SUITE_DONE
+run 4: 13 pass, 0 fail, SUITE_DONE
+run 5: 13 pass, 0 fail, SUITE_DONE
+--words 500 --frames 40                              pass=True bytes=80640 host_s=0.000752 fabric_MB/s=947.3 stall=537 detected={}  
+--words 2044 --frames 64                             pass=True bytes=524288 host_s=0.001294 fabric_MB/s=933.3 stall=4627 detected={}  
+--words 4092 --frames 500                            pass=True bytes=8192000 host_s=0.009642 fabric_MB/s=931.6 stall=75200 detected={}  
+  {'min': 507.0, 'median': 521.0, 'p99': 630.0, 'max': 1095.0}
+  {'min': 506.0, 'median': 520.0, 'p99': 628.0, 'max': 1222.0}
+  {'min': 498.0, 'median': 513.0, 'p99': 619.0, 'max': 1058.0}
+  {'min': 505.0, 'median': 518.0, 'p99': 628.0, 'max': 1091.0}
+  {'min': 505.0, 'median': 519.0, 'p99': 624.0, 'max': 1070.0}
+attached
+ 88:          1          0          0 SiFive PLIC 180 Edge      miv-ihc-irq
+4
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000656 fabric_MB/s=0.0 stall=1 detected={}  
+--words 124 --frames 1                               pass=True bytes=512 host_s=0.000649 fabric_MB/s=0.0 stall=1 detected={}  
+--words 1020 --frames 1                              pass=True bytes=4096 host_s=0.000657 fabric_MB/s=0.0 stall=1 detected={}  
+--words 500 --frames 40                              pass=True bytes=80640 host_s=0.000785 fabric_MB/s=947.3 stall=515 detected={}  
+--words 2044 --frames 64                             pass=True bytes=524288 host_s=0.001294 fabric_MB/s=935.0 stall=4606 detected={}  
+--words 4092 --frames 500                            pass=True bytes=8192000 host_s=0.009538 fabric_MB/s=931.6 stall=75189 detected={}  
+--words 13 --frames 20 --per-frame                   pass=True bytes=1360 host_s=0.010796 fabric_MB/s=0.1 stall=20 detected={}  {'min': 496.0, 'median': 506.0, 'p99': 664.0, 'max': 664.0}
+--words 252 --frames 2000 --per-frame                pass=True bytes=2048000 host_s=1.084252 fabric_MB/s=1.9 stall=2000 detected={}  {'min': 507.0, 'median': 521.0, 'p99': 630.0, 'max': 1095.0}
+--words 100 --frames 10 --fault crc --fault-frame 3  pass=True bytes=4160 host_s=0.000654 fabric_MB/s=936.0 stall=1 detected={'crc': [3]}  
+--words 100 --frames 10 --fault seq --fault-frame 5  pass=True bytes=4160 host_s=0.000738 fabric_MB/s=936.0 stall=1 detected={'seq': [5]}  
+--words 100 --frames 10 --fault payload --fault-frame 0 pass=True bytes=4160 host_s=0.000828 fabric_MB/s=936.0 stall=1 detected={'crc': [0], 'payload': [0]}  
+--words 100 --frames 10 --per-frame --fault crc --fault-frame 9 pass=True bytes=4160 host_s=0.005594 fabric_MB/s=0.8 stall=10 detected={'crc': [9]}  {'min': 508.0, 'median': 547.0, 'p99': 677.0, 'max': 677.0}
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000646 fabric_MB/s=0.0 stall=1 detected={}  
+SUITE_DONE
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000659 fabric_MB/s=0.0 stall=1 detected={}  
+--words 124 --frames 1                               pass=True bytes=512 host_s=0.000650 fabric_MB/s=0.0 stall=1 detected={}  
+--words 1020 --frames 1                              pass=True bytes=4096 host_s=0.000661 fabric_MB/s=0.0 stall=1 detected={}  
+--words 500 --frames 40                              pass=True bytes=80640 host_s=0.000816 fabric_MB/s=947.3 stall=520 detected={}  
+--words 2044 --frames 64                             pass=True bytes=524288 host_s=0.001306 fabric_MB/s=935.0 stall=4609 detected={}  
+--words 4092 --frames 500                            pass=True bytes=8192000 host_s=0.009499 fabric_MB/s=931.6 stall=75165 detected={}  
+--words 13 --frames 20 --per-frame                   pass=True bytes=1360 host_s=0.010687 fabric_MB/s=0.1 stall=20 detected={}  {'min': 495.0, 'median': 505.0, 'p99': 657.0, 'max': 657.0}
+--words 252 --frames 2000 --per-frame                pass=True bytes=2048000 host_s=1.080409 fabric_MB/s=1.9 stall=2000 detected={}  {'min': 506.0, 'median': 520.0, 'p99': 628.0, 'max': 1222.0}
+--words 100 --frames 10 --fault crc --fault-frame 3  pass=True bytes=4160 host_s=0.000681 fabric_MB/s=936.0 stall=1 detected={'crc': [3]}  
+--words 100 --frames 10 --fault seq --fault-frame 5  pass=True bytes=4160 host_s=0.000661 fabric_MB/s=936.0 stall=1 detected={'seq': [5]}  
+--words 100 --frames 10 --fault payload --fault-frame 0 pass=True bytes=4160 host_s=0.000658 fabric_MB/s=936.0 stall=1 detected={'crc': [0], 'payload': [0]}  
+--words 100 --frames 10 --per-frame --fault crc --fault-frame 9 pass=True bytes=4160 host_s=0.005712 fabric_MB/s=0.7 stall=10 detected={'crc': [9]}  {'min': 501.0, 'median': 544.0, 'p99': 718.0, 'max': 718.0}
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000651 fabric_MB/s=0.0 stall=1 detected={}  
+SUITE_DONE
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000649 fabric_MB/s=0.0 stall=1 detected={}  
+--words 124 --frames 1                               pass=True bytes=512 host_s=0.000648 fabric_MB/s=0.0 stall=1 detected={}  
+--words 1020 --frames 1                              pass=True bytes=4096 host_s=0.000646 fabric_MB/s=0.0 stall=1 detected={}  
+--words 500 --frames 40                              pass=True bytes=80640 host_s=0.000782 fabric_MB/s=947.3 stall=527 detected={}  
+--words 2044 --frames 64                             pass=True bytes=524288 host_s=0.001301 fabric_MB/s=935.0 stall=4615 detected={}  
+--words 4092 --frames 500                            pass=True bytes=8192000 host_s=0.009525 fabric_MB/s=931.6 stall=75196 detected={}  
+--words 13 --frames 20 --per-frame                   pass=True bytes=1360 host_s=0.010738 fabric_MB/s=0.1 stall=20 detected={}  {'min': 493.0, 'median': 504.0, 'p99': 667.0, 'max': 667.0}
+--words 252 --frames 2000 --per-frame                pass=True bytes=2048000 host_s=1.066983 fabric_MB/s=1.9 stall=2000 detected={}  {'min': 498.0, 'median': 513.0, 'p99': 619.0, 'max': 1058.0}
+--words 100 --frames 10 --fault crc --fault-frame 3  pass=True bytes=4160 host_s=0.000650 fabric_MB/s=936.0 stall=1 detected={'crc': [3]}  
+--words 100 --frames 10 --fault seq --fault-frame 5  pass=True bytes=4160 host_s=0.000756 fabric_MB/s=936.0 stall=1 detected={'seq': [5]}  
+--words 100 --frames 10 --fault payload --fault-frame 0 pass=True bytes=4160 host_s=0.000742 fabric_MB/s=936.0 stall=1 detected={'crc': [0], 'payload': [0]}  
+--words 100 --frames 10 --per-frame --fault crc --fault-frame 9 pass=True bytes=4160 host_s=0.005613 fabric_MB/s=0.7 stall=10 detected={'crc': [9]}  {'min': 508.0, 'median': 547.0, 'p99': 684.0, 'max': 684.0}
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000660 fabric_MB/s=0.0 stall=1 detected={}  
+SUITE_DONE
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000736 fabric_MB/s=0.0 stall=1 detected={}  
+--words 124 --frames 1                               pass=True bytes=512 host_s=0.000731 fabric_MB/s=0.0 stall=1 detected={}  
+--words 1020 --frames 1                              pass=True bytes=4096 host_s=0.000796 fabric_MB/s=0.0 stall=1 detected={}  
+--words 500 --frames 40                              pass=True bytes=80640 host_s=0.000756 fabric_MB/s=947.3 stall=571 detected={}  
+--words 2044 --frames 64                             pass=True bytes=524288 host_s=0.001277 fabric_MB/s=935.0 stall=4623 detected={}  
+--words 4092 --frames 500                            pass=True bytes=8192000 host_s=0.009510 fabric_MB/s=931.6 stall=75202 detected={}  
+--words 13 --frames 20 --per-frame                   pass=True bytes=1360 host_s=0.010687 fabric_MB/s=0.1 stall=20 detected={}  {'min': 493.0, 'median': 503.0, 'p99': 668.0, 'max': 668.0}
+--words 252 --frames 2000 --per-frame                pass=True bytes=2048000 host_s=1.076861 fabric_MB/s=1.9 stall=2000 detected={}  {'min': 505.0, 'median': 518.0, 'p99': 628.0, 'max': 1091.0}
+--words 100 --frames 10 --fault crc --fault-frame 3  pass=True bytes=4160 host_s=0.000664 fabric_MB/s=936.0 stall=1 detected={'crc': [3]}  
+--words 100 --frames 10 --fault seq --fault-frame 5  pass=True bytes=4160 host_s=0.000648 fabric_MB/s=936.0 stall=1 detected={'seq': [5]}  
+--words 100 --frames 10 --fault payload --fault-frame 0 pass=True bytes=4160 host_s=0.000837 fabric_MB/s=936.0 stall=1 detected={'crc': [0], 'payload': [0]}  
+--words 100 --frames 10 --per-frame --fault crc --fault-frame 9 pass=True bytes=4160 host_s=0.006304 fabric_MB/s=0.7 stall=10 detected={'crc': [9]}  {'min': 562.0, 'median': 605.0, 'p99': 766.0, 'max': 766.0}
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000730 fabric_MB/s=0.0 stall=1 detected={}  
+SUITE_DONE
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000737 fabric_MB/s=0.0 stall=1 detected={}  
+--words 124 --frames 1                               pass=True bytes=512 host_s=0.000744 fabric_MB/s=0.0 stall=1 detected={}  
+--words 1020 --frames 1                              pass=True bytes=4096 host_s=0.000757 fabric_MB/s=0.0 stall=1 detected={}  
+--words 500 --frames 40                              pass=True bytes=80640 host_s=0.000752 fabric_MB/s=947.3 stall=537 detected={}  
+--words 2044 --frames 64                             pass=True bytes=524288 host_s=0.001294 fabric_MB/s=933.3 stall=4627 detected={}  
+--words 4092 --frames 500                            pass=True bytes=8192000 host_s=0.009642 fabric_MB/s=931.6 stall=75200 detected={}  
+--words 13 --frames 20 --per-frame                   pass=True bytes=1360 host_s=0.011919 fabric_MB/s=0.1 stall=20 detected={}  {'min': 546.0, 'median': 564.0, 'p99': 747.0, 'max': 747.0}
+--words 252 --frames 2000 --per-frame                pass=True bytes=2048000 host_s=1.079749 fabric_MB/s=1.9 stall=2000 detected={}  {'min': 505.0, 'median': 519.0, 'p99': 624.0, 'max': 1070.0}
+--words 100 --frames 10 --fault crc --fault-frame 3  pass=True bytes=4160 host_s=0.000747 fabric_MB/s=936.0 stall=1 detected={'crc': [3]}  
+--words 100 --frames 10 --fault seq --fault-frame 5  pass=True bytes=4160 host_s=0.000740 fabric_MB/s=936.0 stall=1 detected={'seq': [5]}  
+--words 100 --frames 10 --fault payload --fault-frame 0 pass=True bytes=4160 host_s=0.000741 fabric_MB/s=936.0 stall=1 detected={'crc': [0], 'payload': [0]}  
+--words 100 --frames 10 --per-frame --fault crc --fault-frame 9 pass=True bytes=4160 host_s=0.005671 fabric_MB/s=0.7 stall=10 detected={'crc': [9]}  {'min': 508.0, 'median': 551.0, 'p99': 746.0, 'max': 746.0}
+--words 8 --frames 2                                 pass=True bytes=96 host_s=0.000667 fabric_MB/s=0.0 stall=1 detected={}  
+SUITE_DONE

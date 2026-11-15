@@ -1,0 +1,52 @@
+--- a/MPFS_DISCOVERY_KIT_REFERENCE_DESIGN.tcl
++++ b/MPFS_DISCOVERY_KIT_REFERENCE_DESIGN.tcl
+@@ -79,8 +79,8 @@
+     set project_dir "$local_dir/MPFS_DISCOVERY_AXI4_STREAM_DEMO_BFM"
+ 	set ALTCONFIG 0
+ } elseif {[info exists AXI4_STREAM_DEMO]} {
+-    set project_name "MPFS_DISCOVERY_AXI4_STREAM_DEMO"
+-    set project_dir "$local_dir/MPFS_DISCOVERY_AXI4_STREAM_DEMO"
++    set project_name "PFDAQ"
++    set project_dir "$local_dir/PFDAQ"
+ 	set ALTCONFIG 0
+ } elseif {[info exists BFM_SIMULATION]} {
+     set project_name "MPFS_DISCOVERY_BFM_SIMULATION"
+@@ -268,7 +268,7 @@
+ 			if {[info exists BFM_SIMULATION]} {
+ 				safe_source script_support/additional_configurations/AXI4_STREAM_DATA_GENERATOR/AXI4_STREAM_DATA_GENERATOR_BFM.tcl    
+ 			} else {
+-				safe_source script_support/additional_configurations/AXI4_STREAM_DATA_GENERATOR/AXI4_STREAM_DATA_GENERATOR.tcl    
++				safe_source script_support/additional_configurations/PFDAQ/PFDAQ.tcl
+ 			}
+ 		}
+ 
+@@ -292,6 +292,29 @@
+ 		build_design_hierarchy
+ 		derive_constraints_sdc 
+ 
++		# project: add the pfdaq clock-crossing constraints to timing-driven place and route and to
++		# timing verification. organize_tool_files REPLACES a tool's file list, so the place-and-route
++		# list must repeat every I/O and floorplan PDC from above (v0.5.0 first build dropped them:
++		# pins unplaced, no reference clock, fabric dead, timing still reported clean).
++		if {[info exists AXI4_STREAM_DEMO]} {
++			organize_tool_files -tool {PLACEROUTE} \
++				-file "${project_dir}/constraint/MPFS_DISCOVERY_KIT_derived_constraints.sdc" \
++				-file "${project_dir}/constraint/pfdaq_cdc.sdc" \
++				-file "${project_dir}/constraint/io/MPFS_DISCOVERY_KIT_BANK_SETTINGS.pdc" \
++				-file "${project_dir}/constraint/io/MPFS_DISCOVERY_KIT_BOARD_MISC.pdc" \
++				-file "${project_dir}/constraint/io/MPFS_DISCOVERY_MAC.pdc" \
++				-file "${project_dir}/constraint/io/MPFS_DISCOVERY_mikroBUS.pdc" \
++				-file "${project_dir}/constraint/io/MPFS_DISCOVERY_RPi.pdc" \
++				-file "${project_dir}/constraint/io/MPFS_DISCOVERY_UARTS.pdc" \
++				-file "${project_dir}/constraint/io/MPFS_DISCOVERY_7_SEG.pdc" \
++				-file "${project_dir}/constraint/fp/SW_PLL.pdc" \
++				-module {MPFS_DISCOVERY_KIT::work} -input_type {constraint}
++			organize_tool_files -tool {VERIFYTIMING} \
++				-file "${project_dir}/constraint/MPFS_DISCOVERY_KIT_derived_constraints.sdc" \
++				-file "${project_dir}/constraint/pfdaq_cdc.sdc" \
++				-module {MPFS_DISCOVERY_KIT::work} -input_type {constraint}
++		}
++
+ 		#
+ 		# // Auto layout SmartDesigns
+ 		#

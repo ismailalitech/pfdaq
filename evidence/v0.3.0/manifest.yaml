@@ -1,0 +1,21 @@
+# Results measured on fabric v0.3.0 that have not been repeated on v0.5.1. They are kept because
+# pages still quote them, always together with this version.
+fabric: "0.3.0"
+image: pfdaq (v0.3)
+results:
+  - id: soak-v030
+    title: Ten-minute supervised soak, 17.8 GB, no errors
+    file: board/soak-10min.json
+    class: board
+    fabric: "0.3.0"
+    date: 2026-11-15
+    command: pfdaq_cap -r -w 252 -f 1024 -n 17000
+    conditions: Counter payload only, 1 MiB bursts of 1 KiB frames, FreeRTOS supervisor with a 500 ms deadline, board otherwise idle. 616.8 s.
+  - id: fabric-throughput-v030
+    title: Fabric-side throughput of single bursts, 931 to 947 MB/s
+    file: board/suite-python-x3.txt
+    class: board
+    fabric: "0.3.0"
+    date: 2026-11-15
+    command: tests/legacy/pfdaq_suite.sh, repeated runs
+    conditions: Computed from the fabric's own 125 MHz timestamps over one burst, 80 KB to 8 MB, measured with the earlier Python tool. It is the rate at which the source and the DMA move data into DDR, with no software in the path.

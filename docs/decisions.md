@@ -1,0 +1,43 @@
+# Decisions
+
+Last updated 2026-11-15. D1-D9 are from the M0 desk study; D10 onwards were taken during implementation. "User" marks decisions the project owner approved explicitly because they were hard to reverse.
+
+| # | Date | Decision | Why | Status |
+|---|---|---|---|---|
+| D1 | 2026-11-14 | Application: instrumented stream acquisition with real-time supervision | Gives MSS and fabric real work, is measurable, needs no external hardware, reuses reference-design pieces | Built in reduced form: generator, DMA, Linux consumer, FreeRTOS supervisor. FIFO/FIR, rate control and latency unit not built |
+| D2 | 2026-11-14 | Pin reference design v2026.04, HSS v2026.04.1, meta-mchp linux4microchip-2026.04, Linux 6.18.17, U-Boot v2025.07-mchp | Latest set released together | Held. Libero 2026.1 is what is installed |
+| D3 | 2026-11-14 | Two contexts: Linux on U54_1-3, FreeRTOS on U54_4 | Vendor maximum is two contexts | Held |
+| D4 | 2026-11-14 | Feasibility spikes before custom RTL: Icicle AMP example ported, stock DMA example | Either failing changes the architecture | AMP port done and proven (ping-pong, 0 errors). The stock DMA example was skipped; the stream path was proven with project RTL instead |
+| D5 | 2026-11-14 | Stream buffers in non-cached DDR first | Removes cache coherency as a variable | Held. Window actually used: 0xC800_0000, 32 MiB (`udmabuf-ddr-nc0`), not 0xC400_0000 as drafted. Cost measured: about 70 MB/s copy-out rate |
+| D6 | 2026-11-14 | FreeRTOS console on MMUART0 through the fabric | Other routed UARTs are taken | Held; works only with the v2026.04 fabric (see D11) |
+| D7 | 2026-11-14 | Linux-FreeRTOS channel: RPMsg over Mi-V IHC with remoteproc | Already in the pinned HSS and kernel | Held. Fallback mailbox never needed |
+| D8 | 2026-11-14 | Yocto changes in a project layer, no edits in vendor layers | Reproducibility | Held: `meta-pfdaq` |
+| D9 | 2026-11-14 | Do not rewrite SD or eNVM until the board state is recorded | Only known-good reference | Superseded by D10 once the state was recorded. eNVM never rewritten |
+| D10 | 2026-11-14 | Overwrite the SD card with the vendor prebuilt image for the baseline (User) | Card content was unknown; a checksummed vendor image is a better reference | Done; a copy of the image is kept |
+| D11 | 2026-11-15 | Program the v2026.04 reference fabric over the fabric found on the board (User) | The delivered fabric did not route MMUART0 to USB and caused 8 kernel clock warnings; a known fabric version is needed as a base. No copy of the old fabric exists | Done; warnings gone, FreeRTOS console appeared |
+| D12 | 2026-11-15 | Program FABRIC + SNVM components only; never eNVM | HSS in eNVM already matched; avoids the one step that could stop the board booting | Held for all three programming runs; eNVM digest unchanged each time |
+| D13 | 2026-11-15 | Write our own stream source with the same port list as the vendor generator and reuse the vendor integration script | Smallest change to a known-good platform; all new logic is in one reviewed, simulated file | Done: `pfdaq_stream_src.v`, `PFDAQ.tcl` |
+| D14 | 2026-11-15 | Full 64-bit stream into the DMA instead of the vendor demo's 32-bit data with constant upper lanes | The DMA user guide requires all byte lanes valid except on the last beat | Done |
+| D15 | 2026-11-15 | Generate two words per clock so TVALID is continuous inside a packet | With a beat every other clock, packets above about 360 bytes were corrupted and the core hung. Cause inferred, not documented | Done in v0.3.0; 8 MB bursts clean |
+| D16 | 2026-11-15 | Status readback crosses clock domains as a snapshot copied on a synchronised toggle; "done" travels with it | Direct readback failed timing by 0.707 ns; two separate toggles raced in simulation | Done |
+| D17 | 2026-11-15 | CRC covers the intended payload, not the faulted one | Otherwise an injected payload fault would carry a matching CRC and be undetectable | Done |
+| D18 | 2026-11-15 | DMA protocol: arm the descriptor before START, one burst per transaction; per-frame capture is software-paced | Re-arming after a packet is already waiting is not picked up by the core; changed destinations are ignored | Done. Free-running TLAST-per-frame remains in RTL, simulated only |
+| D19 | 2026-11-15 | Completion = UIO interrupt + descriptor ready bit cleared, not the status flag | The kernel driver clears the flag before userspace can read it | Done |
+| D20 | 2026-11-15 | Linux reaches the source through a `generic-uio` device-tree node and the buffers through `udmabuf-ddr-nc0` | `/dev/mem` needed three fabric drivers unbound after every boot | Done; the Python tool still uses `/dev/mem` and is kept for register-level tests only |
+| D21 | 2026-11-15 | Supervisor replaces the vendor demo menu in the FreeRTOS build, started by HSS at boot | No keypress dependency; supervision exists before Linux is up | Done; `PFDAQ_SUPERVISOR=0` restores the menu |
+| D22 | 2026-11-15 | Supervision = deadline on Linux status messages + independent fabric counter read from hart 4 | The second check does not depend on anything Linux computed | Done |
+| D23 | 2026-11-15 | Iterate on the board over SSH (kernel image, payload partition, tools), then rebuild the full image and prove it from a freshly written card | Avoids a card swap per iteration without giving up reproducibility | Done; the full image is the canonical state |
+| D25 | 2026-11-15 | Latency unit shares the stream source's APB slot behind a new top level `pfdaq_core`; interrupts on F2M[1] (Linux) and F2M[5] (FreeRTOS) | Only two extra wires in the platform; both lines were unused (tied low) in the reference design; one device-tree node and one UIO device cover everything | Done |
+| D26 | 2026-11-15 | Latency unit runs entirely in the 50 MHz bus clock | No clock-domain crossing; 20 ns resolution is far below the latencies being measured | Done |
+| D27 | 2026-11-15 | Statistics (min/max/sum/histogram/overrun) are kept in the fabric, not in software | The measurement must not depend on the software being measured; any context can read the result | Done. Cost: histograms as registers take about 10 % of the device; moving them to RAM blocks is open |
+| D28 | 2026-11-15 | FreeRTOS acknowledges in the interrupt handler; Linux acknowledges from user space through UIO | These are the two response paths that exist today without new kernel code. Kernel-handler and RTOS-task latency are separate, later measurements | Done |
+| D29 | 2026-11-15 | Pseudo-random jitter is added to the event period by default | Keeps events from staying phase-locked to the 1 ms RTOS tick or a Linux timer | Done |
+| D30 | 2026-11-15 | One consolidated fabric v0.5 for the remaining FPGA scope: PRBS and FIR payload modes, real-time mode with credits and four destinations, packet-safe abort, histograms in RAM, explicit CDC constraints | User asked to finish the FPGA part; one build/program cycle per change is about 40 minutes | Done (v0.5.1) |
+| D31 | 2026-11-15 | FIR as a decoupled pipeline with a small FIFO feeding the frame generator | Keeps the multipliers out of the CRC timing path; the generator waits for 12 samples before a packet so it never stalls mid-packet | Done |
+| D32 | 2026-11-15 | Real-time mode gates frames with software credits instead of re-arming descriptors on the fly | The core ignores re-armed descriptors once data waits; credits guarantee a descriptor is armed before its frame starts | Done; no data errors at any rate |
+| D33 | 2026-11-15 | Burst-mode abort finishes the frame and zero-fills to the armed byte count | Found on the board that an early TLAST does not complete a transfer | Done |
+| D34 | 2026-11-15 | Bare metal as an alternative build of the U54_4 context, with the same supervisor, swapped in as a payload | Vendor maximum is two contexts; this gives the comparison without giving Linux a core less | Done; latency 0.50 vs 0.52 us |
+| D35 | 2026-11-15 | Do not rebuild HSS or touch eNVM to fix the remoteproc restart | eNVM is the one thing that can stop the board booting; restart is not needed for the application | Known issue K2 |
+| D36 | 2026-11-15 | Refuse odd frame lengths in multi-frame bursts in `pfdaq_cap` instead of chasing the root cause now | Even lengths are clean; the root cause needs the vendor DMA RTL in simulation | Known issue K1 |
+| D37 | 2026-11-15 | The project is under git, excluding Yocto, reference clones, images and Libero build trees | Reproducibility and history | Done |
+| D24 | 2026-11-15 | Local `docs/` is the canonical place for design documents | The claude.ai project copies cannot be written from the Linux session and are the M0 drafts | Open: project copies are stale |

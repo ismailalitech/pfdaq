@@ -1,0 +1,331 @@
+# Modules that are scoped but not yet written. When a module's page exists, its entry is removed
+# from this file: the page's front matter then carries the metadata. Checked by tools/check_content.py.
+- id: F01
+  title: 'The chip and the board: MSS, fabric and the interfaces between them'
+  track: fundamentals
+  level: 1
+  repro: doc
+  summary: What is fixed silicon, what is programmable, and the four ways the two halves talk.
+- id: F02
+  title: The memory map and the three faces of DDR
+  track: fundamentals
+  level: 1
+  needs:
+  - F01
+  repro: base
+  summary: One physical memory, several address windows with different cache behaviour, and who owns which region.
+- id: F04
+  title: 'Clocks and resets: one PLL, two bus clocks'
+  track: fundamentals
+  level: 2
+  needs:
+  - F01
+  repro: doc
+  summary: Where the 50 MHz and 125 MHz clocks come from and which logic lives in which domain.
+- id: F05
+  title: 'The tool flow in batch: Libero, the IP vault and FlashPro Express'
+  track: fundamentals
+  level: 1
+  repro: doc
+  summary: Building and programming the fabric from scripts, with no GUI step.
+- id: F06
+  title: 'GPIO from both sides: MSS GPIO and fabric CoreGPIO'
+  track: fundamentals
+  level: 2
+  needs:
+  - F01
+  - F03
+  repro: base
+  summary: The same LED driven from the processor's GPIO block and from a GPIO core in the fabric, plus switch inputs and a button interrupt.
+- id: B01
+  title: From power-on to login, stage by stage
+  track: boot
+  level: 1
+  needs:
+  - F01
+  repro: doc
+  summary: 'System controller, HSS, OpenSBI, U-Boot, Linux: what each stage does and what it hands to the next.'
+- id: B02
+  title: 'The HSS payload: starting two operating systems'
+  track: boot
+  level: 2
+  needs:
+  - B01
+  repro: base
+  summary: One payload file that tells the monitor which image runs on which hart, in which privilege mode.
+- id: B03
+  title: A Yocto layer for a board the vendor does not support in AMP
+  track: boot
+  level: 3
+  needs:
+  - B01
+  repro: base
+  summary: Machine definition, payload, device tree and firmware recipe for a configuration the BSP does not ship.
+- id: B04
+  title: 'Device tree for co-design: reserved memory, UIO nodes, a disabled CPU'
+  track: boot
+  level: 2
+  needs:
+  - F02
+  repro: base
+  summary: The device-tree changes that make room for a second operating system and expose fabric logic to user space.
+- id: B05
+  title: Updating a running board over SSH
+  track: boot
+  level: 2
+  needs:
+  - B02
+  repro: base
+  summary: Replacing the kernel, the payload and the tools without removing the SD card.
+- id: B06
+  title: 'Programming safely: components, digests and what never to touch'
+  track: boot
+  level: 2
+  needs:
+  - F05
+  repro: doc
+  summary: What a programming job contains, how to prove what is on the device, and why the boot flash is left alone.
+- id: M01
+  title: Asymmetric multiprocessing on one chip
+  track: multicore
+  level: 2
+  needs:
+  - B02
+  repro: doc
+  summary: Why one hart is taken away from Linux, and what that costs and buys.
+- id: M02
+  title: 'RPMsg in practice: announce, bind, ping'
+  track: multicore
+  level: 3
+  needs:
+  - M01
+  repro: base
+  summary: The smallest working message exchange between Linux and the real-time hart.
+- id: M03
+  title: 'A real-time supervisor: deadlines and independent checks'
+  track: multicore
+  level: 3
+  needs:
+  - M02
+  repro: base
+  summary: A small program that watches Linux, with its own view of the hardware to compare against.
+- id: M04
+  title: 'Same core, same code: FreeRTOS against bare metal'
+  track: multicore
+  level: 3
+  needs:
+  - M03
+  repro: base
+  summary: One supervisor source built both ways, and what the RTOS adds in time and in structure.
+- id: M05
+  title: Shared memory between Linux and a bare-metal hart
+  track: multicore
+  level: 3
+  needs:
+  - F02
+  - M02
+  repro: base
+  summary: Two contexts reading and writing the same DDR region, cached and non-cached, with the result checked from both sides.
+- id: M06
+  title: 'remoteproc: attach, stop, and why restart fails here'
+  track: multicore
+  level: 4
+  needs:
+  - M01
+  repro: doc
+  summary: What Linux can and cannot do to a hart it did not start.
+- id: M07
+  title: Deferred interrupt handling, and a port that switches tasks inside the handler
+  track: multicore
+  level: 4
+  needs:
+  - M03
+  repro: base
+  summary: Moving work from an interrupt handler to a task, and the detail of this FreeRTOS port that breaks the usual pattern.
+- id: M08
+  title: Three ways to signal another hart
+  track: multicore
+  level: 4
+  needs:
+  - M05
+  repro: base
+  summary: RPMsg, a flag in shared memory and a software interrupt, compared by round-trip time.
+- id: M09
+  title: Fencing the real-time hart with physical memory protection
+  track: multicore
+  level: 5
+  needs:
+  - M01
+  repro: full-system
+  summary: Locking the supervisor into its own memory, then proving the lock with a deliberate violation.
+- id: H09
+  title: Integrating custom RTL into a vendor design by script
+  track: fpga
+  level: 3
+  needs:
+  - F05
+  repro: doc
+  summary: Wrapping RTL as a core with bus interfaces and wiring it into the reference design without touching the GUI.
+- id: H10
+  title: Timing closure, and the build that lost its pins
+  track: fpga
+  level: 4
+  needs:
+  - H03
+  - H09
+  repro: doc
+  summary: Reading multi-corner timing results, and a bitstream that met timing but could not boot the board.
+- id: H12
+  title: Assertions and coverage for the stream source
+  track: fpga
+  level: 4
+  needs:
+  - H11
+  repro: sim
+  summary: Which behaviours the scenarios really exercise, and protocol rules written as checks.
+- id: I01
+  title: Reaching fabric registers from Linux
+  track: integration
+  level: 2
+  needs:
+  - H01
+  - B04
+  repro: base
+  summary: '/dev/mem, UIO, and two traps: a locked-down kernel and byte-wise writes.'
+- id: I02
+  title: Fabric interrupts in user space, and the double wake-up
+  track: integration
+  level: 3
+  needs:
+  - I01
+  - F03
+  repro: base
+  summary: Waiting for a fabric interrupt with a blocking read, and why each event arrived twice.
+- id: I03
+  title: A small kernel driver for a fabric interrupt
+  track: integration
+  level: 4
+  needs:
+  - I02
+  repro: base
+  summary: The 128-line driver that answers the interrupt in the kernel, and its Yocto recipe.
+- id: I05
+  title: 'Buffers the DMA can write: non-cached windows and u-dma-buf'
+  track: integration
+  level: 3
+  needs:
+  - F02
+  repro: base
+  summary: Where DMA buffers live, how user space maps them, and why cache behaviour decides the choice.
+- id: I06
+  title: Capturing and verifying a stream
+  track: integration
+  level: 3
+  needs:
+  - I04
+  - I05
+  repro: base
+  summary: Checking every frame against a software model of the hardware, for three payload types.
+- id: I07
+  title: Real-time capture with four descriptors and credits
+  track: integration
+  level: 4
+  needs:
+  - I06
+  - H06
+  repro: base
+  summary: Keeping four transfers armed and paying the fabric one credit for each buffer handed back.
+- id: I08
+  title: 'DMA into cached memory: when you need cache maintenance'
+  track: integration
+  level: 4
+  needs:
+  - I05
+  repro: base
+  summary: What goes wrong when hardware writes memory the processor has cached, measured.
+- id: I09
+  title: Fabric DMA against the MSS DMA
+  track: integration
+  level: 4
+  needs:
+  - I04
+  repro: base
+  summary: Two DMA engines on one chip, compared on the same transfer.
+- id: P01
+  title: 'Where 940 MB/s becomes 30: throughput layer by layer'
+  track: performance
+  level: 4
+  needs:
+  - I06
+  repro: base
+  summary: Fabric rate, transfer rate, copy rate and verified rate, each measured, and where the time goes.
+- id: P03
+  title: Fault injection from the fabric up
+  track: performance
+  level: 3
+  needs:
+  - I06
+  repro: base
+  summary: Corrupting a CRC, skipping a sequence number and flipping a payload bit on purpose, and proving each is caught.
+- id: P04
+  title: Deadline supervision, alarm and recovery
+  track: performance
+  level: 3
+  needs:
+  - M03
+  repro: base
+  summary: Stalling Linux, killing the consumer, and watching the supervisor notice and recover.
+- id: P05
+  title: Abort without wedging the DMA
+  track: performance
+  level: 4
+  needs:
+  - I04
+  repro: base
+  summary: Stopping a transfer the DMA still expects to finish.
+- id: P06
+  title: Soak and reboot testing
+  track: performance
+  level: 3
+  repro: base
+  summary: What a ten-minute soak and thirty reboots do and do not prove.
+- id: P07
+  title: Making Linux more deterministic
+  track: performance
+  level: 5
+  needs:
+  - P02
+  repro: base
+  summary: Interrupt affinity, CPU isolation and priorities against the stalls in the latency measurements.
+- id: P08
+  title: Raising verified throughput with more cores
+  track: performance
+  level: 5
+  needs:
+  - P01
+  repro: base
+  summary: Removing the single-core bottleneck in verification, with before and after.
+- id: X02
+  title: One burst from START to verified
+  track: system
+  level: 3
+  needs:
+  - X01
+  repro: base
+  summary: Following a single burst through every block it touches.
+- id: X03
+  title: Reproduce the board from an empty SD card
+  track: system
+  level: 3
+  needs:
+  - X01
+  repro: base
+  summary: Every step from a blank card and an unprogrammed fabric to the full test suite passing.
+- id: X04
+  title: The validation report
+  track: system
+  level: 3
+  needs:
+  - X01
+  repro: doc
+  summary: Every result, with the conditions it was measured under and the evidence file behind it.

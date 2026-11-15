@@ -1,0 +1,9 @@
+Design Name: MPFS_DISCOVERY_KIT
+EXPORT CHECKSUM[16] = d78d
+EXPORT DESIGNVER[16] = 0006
+EXPORT ENVM digest[256] = 55b852781b9995a44c939b64e441ae2724b96f99c8f4fb9a141cfc9842c4b0e3
+EXPORT Fabric component bitstream digest[256] = a138b144d6dd5ee3c4552c82efe92c173552b1f693136f717bd806b9dcff6504
+EXPORT sNVM component bitstream digest[256] = b0a9e2be29f47fa951a6a131a8dd9a9016e5ba87de5833c742b7f654428ea6e7
+Executing action DEVICE_INFO PASSED.
+Executing action PROGRAM PASSED.
+Executing action VERIFY PASSED.

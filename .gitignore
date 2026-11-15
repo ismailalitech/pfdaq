@@ -1,0 +1,24 @@
+# Large or regenerated content; reproduced from scripts or kept outside version control
+/yocto-dev/
+/refs/
+/images/
+/MPFS_ICICLE_KIT_BASE_DESIGN_2026_04*
+
+
+
+
+
+
+
+
+
+/tests/legacy/libmmio.so
+*.pyc
+__pycache__/
+# raw serial captures are large; summaries and CSV results are kept
+/logs/**/*-if0[0-9].log
+/build/
+/*.out
+# pre-restructure Libero and FlashPro working directories left on disk
+/fpga/
+/.private-patterns

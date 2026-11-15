@@ -1,0 +1,59 @@
+# Where each component sits in the explorer's two views. Positions are boxes on a 1000-unit-wide
+# canvas: [x, y, width, height]. Components not listed here are still reachable from the panel and
+# from docs/system/README.md. tools/check_content.py checks that every id exists and that every step of
+# every walk in architecture.yaml can be shown in at least one view.
+views:
+  - id: hardware
+    title: Hardware and data paths
+    height: 600
+    bands:
+      - {label: Processor subsystem (MSS), box: [10, 20, 980, 190]}
+      - {label: FPGA fabric, box: [10, 250, 980, 150]}
+      - {label: DDR4 memory, box: [10, 440, 980, 140]}
+    nodes:
+      u54-linux: [40, 60, 200, 56]
+      u54-4: [270, 60, 160, 56]
+      plic: [470, 60, 230, 56]
+      mss-gpio2: [740, 60, 220, 56]
+      fic3: [190, 144, 220, 48]
+      fic0: [500, 144, 220, 48]
+      pfdaq-core: [150, 262, 350, 20, 'pfdaq_core']
+      pfdaq-latency: [40, 292, 200, 52]
+      pfdaq-stream-src: [270, 292, 230, 52]
+      pfdaq-cap: [740, 144, 220, 48]
+      dma: [510, 284, 200, 60]
+      ihc: [730, 284, 100, 60]
+      refdesign-peripherals: [845, 284, 135, 60]
+      ddr-noncached: [40, 484, 220, 60]
+      ddr-cached-shared: [280, 484, 220, 60]
+      ddr-rpmsg: [520, 484, 220, 60]
+      ddr-u54-4-image: [760, 484, 220, 60]
+  - id: software
+    title: Software and who runs where
+    height: 640
+    bands:
+      - {label: Boot, box: [10, 20, 980, 100]}
+      - {label: Linux on harts 1 to 3, box: [10, 140, 640, 330]}
+      - {label: Hart 4, box: [670, 140, 320, 330]}
+      - {label: Shared memory and mailbox, box: [10, 490, 980, 120]}
+    nodes:
+      sd-card: [40, 54, 130, 48]
+      envm: [200, 54, 130, 48]
+      hss: [360, 54, 150, 48]
+      u-boot: [540, 54, 130, 48]
+      opensbi: [700, 54, 130, 48]
+      pfdaq-cap: [40, 174, 170, 48]
+      pfdaq-lat: [230, 174, 170, 48]
+      uio: [40, 262, 110, 48]
+      udmabuf: [165, 262, 110, 48]
+      pfdaq-uio: [290, 262, 130, 48]
+      remoteproc-rpmsg: [440, 262, 190, 48]
+      linux-kernel: [40, 346, 590, 48]
+      u54-linux: [40, 410, 590, 44]
+      supervisor: [700, 174, 260, 56]
+      u54-4: [700, 410, 260, 44]
+      e51: [700, 330, 260, 44]
+      ihc: [60, 524, 200, 56]
+      ddr-rpmsg: [290, 524, 220, 56]
+      ddr-cached-shared: [530, 524, 200, 56]
+      ddr-u54-4-image: [750, 524, 210, 56]

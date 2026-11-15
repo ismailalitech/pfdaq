@@ -1,0 +1,21 @@
+scenario  1:   5 frames x  12 words, mode 0, ready 100%, sent   5 dropped   0, detected crc=[] seq=[] pay=[]
+scenario  2:  20 frames x  17 words, mode 0, ready  30%, sent  20 dropped   0, detected crc=[] seq=[] pay=[]
+scenario  3:   6 frames x  12 words, mode 0, ready  70%, sent   6 dropped   0, detected crc=[2] seq=[] pay=[]
+scenario  4:   6 frames x  12 words, mode 0, ready  70%, sent   6 dropped   0, detected crc=[] seq=[1] pay=[]
+scenario  5:   4 frames x  12 words, mode 0, ready  50%, sent   4 dropped   0, detected crc=[0] seq=[] pay=[0]
+scenario  6:   3 frames x   5 words, mode 0, ready  90%, sent   3 dropped   0, detected crc=[] seq=[0] pay=[]
+scenario  7:  40 frames x 504 words, mode 0, ready  95%, sent  40 dropped   0, detected crc=[] seq=[] pay=[]
+scenario  8:   7 frames x  13 words, mode 0, ready  60%, sent   7 dropped   0, detected crc=[] seq=[] pay=[]
+scenario 10:   6 frames x  24 words, mode 1, ready  70%, sent   6 dropped   0, detected crc=[] seq=[] pay=[]
+scenario 11:   5 frames x  37 words, mode 2, ready  60%, sent   5 dropped   0, detected crc=[] seq=[] pay=[]
+scenario 12:   3 frames x 504 words, mode 2, ready 100%, sent   3 dropped   0, detected crc=[] seq=[] pay=[]
+scenario 13:  30 frames x  44 words, mode 0 rt/4 dest rate 200, ready 100%, sent  12 dropped  18, detected crc=[] seq=[] pay=[]
+scenario 14:  20 frames x  44 words, mode 2 rt/2 dest rate 20, ready 100%, sent  10 dropped  10, detected crc=[] seq=[] pay=[]
+scenario 15:  12 frames x  24 words, mode 1 rt/3 dest rate 60, ready  80%, sent  12 dropped   0, detected crc=[1] seq=[] pay=[1]
+scenario 16:  50 frames x 104 words, mode 0, ready  90%, sent  13 dropped   0, detected crc=[] seq=[] pay=[] ABORTED, then 3848 zero words
+scenario 17:  20 frames x  14 words, mode 1, ready 100%, sent   1 dropped   0, detected crc=[] seq=[] pay=[] ABORTED
+scenario 18:  40 frames x  34 words, mode 0 rt/4 dest rate 100, ready 100%, sent   5 dropped   0, detected crc=[] seq=[] pay=[] ABORTED
+scenario 19:   5 frames x  12 words, mode 0, ready  80%, sent   5 dropped   0, detected crc=[] seq=[] pay=[]
+scenario 20:  40 frames x  37 words, mode 2, ready  70%, sent  21 dropped   0, detected crc=[] seq=[] pay=[] ABORTED, then 703 zero words
+scenario 21:  30 frames x  12 words, mode 0, ready 100%, sent   2 dropped   0, detected crc=[] seq=[] pay=[] ABORTED, then 336 zero words
+RESULT: PASS

@@ -1,0 +1,3 @@
+# PolarFire SoC Discovery Kit embedded FlashPro5 (1514:2008): expose UART interfaces 1 and 3.
+# The kernel ftdi_sio driver only claims interface 2 by default. Interface 0 (JTAG) is left unbound.
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="1514", ATTR{idProduct}=="2008", RUN+="/bin/sh -c 'modprobe ftdi_sio; echo 1514 2008 > /sys/bus/usb-serial/drivers/ftdi_sio/new_id; sleep 1; for i in /sys/bus/usb/drivers/ftdi_sio/*:1.0; do [ -e $$i ] && echo $$(basename $$i) > /sys/bus/usb/drivers/ftdi_sio/unbind; done'"

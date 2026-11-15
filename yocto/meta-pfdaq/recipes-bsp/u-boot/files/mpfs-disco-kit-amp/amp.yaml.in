@@ -1,0 +1,11 @@
+#
+# HSS payload: Discovery Kit AMP (Linux on u54_1-3, @@AMP_DEMO@@ on u54_4)
+# Derived from meta-mchp mpfs-icicle-kit-amp/amp.yaml.in (linux4microchip-2026.04).
+#
+set-name: 'PolarFire-SoC-HSS::Disco Linux + @@AMP_DEMO@@ AMP'
+
+hart-entry-points: {u54_1: '0x80200000', u54_2: '0x80200000', u54_3: '0x80200000', u54_4: '0x91C00000'}
+
+payloads:
+  u-boot.bin: {exec-addr: '0x80200000', owner-hart: u54_1, secondary-hart: u54_2, secondary-hart: u54_3, priv-mode: prv_s}
+  @@AMP_PAYLOAD@@: {exec-addr: '0x91C00000', owner-hart: u54_4, priv-mode: prv_m, skip-opensbi: true, skip-autoboot: @@AMP_SKIP-AUTOBOOT@@}

@@ -1,0 +1,462 @@
+#!/usr/bin/env python3
+"""Export the pfdaq documentation into the Hugo source of afismail.com.
+
+  tools/export_site.py <path to a checkout of the site repository>
+
+The pages in this repository stay the single source. This script converts them to the site's
+conventions and writes them into the site checkout; it never edits anything else there:
+
+  content/work/pfdaq-polarfire-soc.md             the case study (hand-written template below)
+  content/topics/fpga/<sub-topic>/...             sub-topics with articles and numbered labs
+  content/topics/microcontrollers/linux-and-rtos/
+  content/resources/pfdaq-*.md                    explorer page, architecture reference, results
+  static/pfdaq/                                   explorer, evidence records, architecture data
+
+Re-running replaces exactly those paths, so the output is reproducible. The result is scanned with
+.private-patterns when that file exists. Nothing is committed or pushed by this script.
+"""
+import json
+import os
+import re
+import shutil
+import sys
+
+import yaml
+
+import content as C
+import gen_explorer as E
+
+DATE = '2026-11-15T12:00:00+01:00'
+BOARD = 'PolarFire SoC Discovery Kit'
+SIM = 'None (RTL simulation)'
+
+# page id -> (topic path, sub-topic, weight, lab number or None, board, core)
+PLACE = {
+    'H02': ('fpga', 'streaming-datapaths', 10, 1, SIM, 'FPGA fabric'),
+    'H04': ('fpga', 'streaming-datapaths', 20, 2, SIM, 'FPGA fabric'),
+    'H05': ('fpga', 'streaming-datapaths', 30, 3, SIM, 'FPGA fabric'),
+    'H06': ('fpga', 'streaming-datapaths', 40, 4, SIM, 'FPGA fabric'),
+    'K03': ('fpga', 'streaming-datapaths', 50, None, None, None),
+    'K09': ('fpga', 'streaming-datapaths', 60, None, None, None),
+    'H01': ('fpga', 'registers-clocks-timing', 10, 5, SIM, 'FPGA fabric'),
+    'H03': ('fpga', 'registers-clocks-timing', 20, 6, SIM, 'FPGA fabric'),
+    'K02': ('fpga', 'registers-clocks-timing', 30, None, None, None),
+    'K07': ('fpga', 'registers-clocks-timing', 40, None, None, None),
+    'K08': ('fpga', 'registers-clocks-timing', 50, None, None, None),
+    'H07': ('fpga', 'verification-and-instruments', 10, 7, SIM, 'FPGA fabric'),
+    'H08': ('fpga', 'verification-and-instruments', 20, 8, SIM, 'FPGA fabric'),
+    'H11': ('fpga', 'verification-and-instruments', 30, 9, SIM, 'FPGA fabric'),
+    'C01': ('fpga', 'soc-integration', 10, None, None, None),
+    'I04': ('fpga', 'soc-integration', 20, 10, BOARD, 'U54 (Linux)'),
+    'F03': ('fpga', 'soc-integration', 30, 11, BOARD, 'U54 (Linux) and U54 hart 4'),
+    'K01': ('fpga', 'soc-integration', 40, None, None, None),
+    'K04': ('fpga', 'soc-integration', 50, None, None, None),
+    'K05': ('fpga', 'soc-integration', 60, None, None, None),
+    'K10': ('fpga', 'soc-integration', 70, None, None, None),
+    'P02': ('microcontrollers', 'linux-and-rtos', 10, 12, BOARD, 'U54 harts 1 to 4'),
+    'K06': ('microcontrollers', 'linux-and-rtos', 20, None, None, None),
+    'K11': ('microcontrollers', 'linux-and-rtos', 30, None, None, None),
+    'K12': ('microcontrollers', 'linux-and-rtos', 40, None, None, None),
+}
+SUBTOPICS = {
+    'streaming-datapaths': ('Streaming datapaths', 'Frames, CRC and filters on AXI4-Stream, a source that cannot be paused, and what a DMA needs from a stream.', 40),
+    'registers-clocks-timing': ('Registers, clocks and timing', 'Register blocks software can trust, crossing between clock domains, and constraints that say exactly what they mean.', 50),
+    'verification-and-instruments': ('Verification and instruments', 'Checking hardware with an independent model, and building measuring instruments into the fabric.', 60),
+    'soc-integration': ('SoC integration', 'Joining FPGA logic to processors: DMA, interrupts and memory, with the failures met on a real board.', 70),
+    'linux-and-rtos': ('Linux and an RTOS on one chip', 'Running Linux and a real-time supervisor side by side, and measuring how each answers an interrupt.', 50),
+}
+LEVEL = {1: 'Beginner', 2: 'Beginner', 3: 'Intermediate', 4: 'Advanced', 5: 'Advanced'}
+STATUS_TEXT = {'validated': 'validated', 'validated-old': 'validated on an earlier fabric version', 'simulated': 'simulated',
+               'experimental': 'experimental', 'planned': 'planned'}
+MERMAID = {
+    'F03': """| Line from the fabric | Source | PLIC source | Enabled for |
+|---|---|---|---|
+| F2M[1] | Latency channel 0 | 119 | Linux, harts 1 to 3 |
+| F2M[2] | DMA controller | 120 | Linux, harts 1 to 3 |
+| F2M[5] | Latency channel 1 | 123 | Hart 4, machine mode |
+""",
+    'C01': """1. The processor writes the descriptor (destination, length, ready flag) into memory.
+2. It points the DMA controller at the descriptor and enables the interrupt.
+3. It starts the data source.
+4. For every bus word, the source sends data to the DMA controller, which writes it to memory.
+5. The DMA controller clears the descriptor's ready flag.
+6. It raises the completion interrupt.
+7. The processor reads the data from memory.
+""",
+}
+
+
+class Site:
+    def __init__(self, root):
+        self.root = root
+        self.urls = {}        # page id -> url
+        self.files = {}       # repo file -> page id
+        for pid, (topic, sub, _w, _l, _b, _c) in PLACE.items():
+            self.urls[pid] = '/topics/%s/%s/' % (topic, sub)
+        self.urls['X01'] = '/work/pfdaq-polarfire-soc/'
+        self.pages = {p['id']: p for p in C.load_pages() if 'id' in p}
+        for pid, p in self.pages.items():
+            self.files[p['file']] = pid
+            if pid in PLACE:
+                topic, sub = PLACE[pid][0], PLACE[pid][1]
+                self.urls[pid] = '/topics/%s/%s/%s/' % (topic, sub, self.slug(p))
+
+    @staticmethod
+    def slug(p):
+        return os.path.basename(p['file'])[:-3].lower()
+
+    def url(self, pid):
+        return self.urls[pid]
+
+
+FIXED = {
+    'docs/architecture.md': '/resources/pfdaq-architecture/',
+    'docs/validation-plan.md': '/resources/pfdaq-results/',
+    'docs/system/README.md': '/resources/pfdaq-explorer/',
+    'docs/modules/README.md': '/topics/',
+    'docs/learning-path.md': '/topics/',
+    'docs/system/architecture.yaml': '/pfdaq/architecture.yaml',
+}
+
+
+def rewrite_links(text, src_file, site):
+    srcdir = os.path.dirname(src_file)
+
+    def fix(m):
+        label, target = m.group(1), m.group(2)
+        if re.match(r'[a-z]+:', target) or target.startswith('#'):
+            return m.group(0)
+        path, _, frag = target.partition('#')
+        rp = os.path.normpath(os.path.join(srcdir, path))
+        frag = ('#' + frag) if frag else ''
+        if rp in site.files and (site.files[rp] in PLACE or site.files[rp] == 'X01'):
+            return '[%s](%s%s)' % (label, site.url(site.files[rp]), frag)
+        if rp == 'docs/system/README.md':
+            return '[%s](/pfdaq/explorer/%s)' % (label, frag)
+        if rp in FIXED:
+            return '[%s](%s%s)' % (label, FIXED[rp], frag if rp != 'docs/system/README.md' else '')
+        if rp.startswith('evidence/') or rp.startswith('experiments/'):
+            return '[%s](/pfdaq/%s)' % (label, rp)
+        return label            # a path in the code repository: shown as text
+    return re.sub(r'(?<!!)\[([^\]]+)\]\(([^)\s]+)\)', fix, text)
+
+
+def body_of(page, site):
+    text = page['body']
+    text = re.sub(r'<!-- nav:begin.*?<!-- nav:end -->\n?', '', text, flags=re.S)
+    text = re.sub(r'<!--.*?-->\n?', '', text, flags=re.S)
+    text = re.sub(r'\A\s*# .*\n', '', text, count=1)
+    text = re.sub(r'\n---\s*\Z', '\n', text.rstrip() + '\n')
+    if page['id'] in MERMAID:
+        text = re.sub(r'```mermaid\n.*?```\n', lambda m: MERMAID[page['id']], text, flags=re.S)
+    text = rewrite_links(text, page['file'], site)
+    return text.strip() + '\n'
+
+
+def at_a_glance(page, site, evidence):
+    rows = [('Level', LEVEL[page['level']]), ('How to run', C.REPRO[page['repro']]), ('Status', STATUS_TEXT[page['status']])]
+    if page.get('needs'):
+        rows.append(('Read first', ', '.join(
+            '[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) if i in site.pages and (i in PLACE or i == 'X01') else '%s (planned)' % i
+            for i in page['needs'])))
+    ids = (page.get('hardware') or []) + (page.get('software') or [])
+    if ids:
+        nodes = {n['id']: n for n in C.load_architecture()['nodes']}
+        rows.append(('In the system', ' · '.join('[%s](/pfdaq/explorer/#%s)' % (nodes[i]['title'], i) for i in ids)))
+    src = C.norm_sources(page.get('sources'))
+    if src:
+        rows.append(('Source files', '; '.join('`%s`%s' % (s['path'], (': ' + ', '.join('`%s`' % x for x in s['symbols'])) if s.get('symbols') else '') for s in src)))
+    if page.get('evidence'):
+        rows.append(('Evidence', '; '.join('[%s](/pfdaq/%s) (%s, fabric v%s)' % (
+            evidence[i]['title'], evidence[i]['path'], evidence[i]['class'], evidence[i]['fabric']) for i in page['evidence'])))
+    if page.get('related'):
+        rows.append(('Related', '; '.join(
+            '[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) if i in site.pages and (i in PLACE or i == 'X01') else '%s (planned)' % i
+            for i in page['related'])))
+    if page['repro'] in ('sim', 'base'):
+        rows.append(('Code', 'The commands on this page run from the pfdaq repository, which is being prepared for public release.'))
+    out = ['## At a glance', '', '| | |', '|---|---|'] + ['| **%s** | %s |' % r for r in rows]
+    return '\n'.join(out) + '\n'
+
+
+def toml_str(s):
+    return json.dumps(s, ensure_ascii=False)
+
+
+def page_file(page, site, evidence):
+    pid = page['id']
+    topic, sub, weight, lab, board, core = PLACE[pid]
+    fm = ['+++', 'title = %s' % toml_str(page['title']), "date = '%s'" % DATE, 'draft = false',
+          'description = %s' % toml_str(page['summary']), 'weight = %d' % weight, '', '[params]']
+    if lab:
+        fm += ['  lab = %d' % lab, '  board = %s' % toml_str(board), '  core = %s' % toml_str(core),
+               '  level = %s' % toml_str(LEVEL[page['level']])]
+    fm.append('+++')
+    banner = ''
+    if page['status'] == 'experimental':
+        banner = ('> **Experimental.** The code on this page has been compiled and reviewed, but some steps have not yet been '
+                  'run on the board. The page says which.\n\n')
+    return '\n'.join(fm) + '\n\n' + banner + body_of(page, site) + '\n' + at_a_glance(page, site, evidence)
+
+
+WORK = """+++
+title = "Instrumented stream acquisition on PolarFire SoC"
+description = "An FPGA data source, a DMA path into DDR, Linux on three RISC-V cores and a real-time supervisor on the fourth, built to be measured and made to fail on purpose."
+date = @DATE@
+draft = false
+weight = 20
+
+[params]
+  problem = "A data path that crosses an FPGA, a DMA, an operating system that is not real-time and a second processor is easy to make work once and hard to trust. Every layer can hide a fault the others cannot see."
+  role = "Designed and built the complete system: the FPGA logic and its testbenches, the Linux image, the real-time firmware, the capture and measurement tools, and the board test suites."
+  result = "27 of 27 functional tests pass from a freshly written SD card; injected faults are caught in every payload mode; the supervisor answers an interrupt in 0.5 microseconds typically, against 78 microseconds for a Linux user-space program."
+  hardware = "Microchip PolarFire SoC Discovery Kit (MPFS095T): one E51 and four U54 RISC-V cores, FPGA fabric, 1 GB DDR4"
+  tools = "Libero SoC 2026.1, Icarus Verilog, Yocto (Scarthgap), FreeRTOS, Python"
+  action = "/resources/pfdaq-explorer/"
+  action_text = "Explore the architecture"
+  toc = true
++++
+
+## Problem
+
+Test data is easy to generate and hard to trust once it has travelled through hardware, a DMA controller, a cache, a
+kernel and a user program. When the end result is wrong, any layer might be at fault. I wanted a system in which every
+layer could be checked independently, made to fail on purpose, and measured, so that a claim about it could be backed
+by a record.
+
+## Hardware and constraints
+
+The board is the PolarFire SoC Discovery Kit. Its chip combines five RISC-V cores with an FPGA, which allows each job
+to run where it fits.
+
+| Core | Runs | Why there |
+|---|---|---|
+| E51 | Hart Software Services (boot monitor) | starts everything else |
+| U54, three cores | Linux 6.18, built with Yocto | configuration, capture, verification, network |
+| U54, fourth core | A supervisor on FreeRTOS, or the same source on bare metal | must keep its timing whatever Linux does |
+
+Constraints that shaped the design:
+
+- Two software contexts is the vendor's maximum, so FreeRTOS and bare metal are alternative builds of the same
+  supervisor, never present together.
+- The boot flash holds the vendor's boot monitor. Nothing in this project reprograms it; only the fabric is programmed.
+- The DMA controller has rules that its documentation does not state. They were found by testing and are collected in
+  [DMA stream descriptors](@I04@).
+
+## My contribution
+
+- **FPGA logic.** A stream source that produces framed data (header, sequence number, timestamp, payload, CRC-32) two
+  words per clock, with counter, pseudo-random and FIR payloads, fault injection, a real-time mode with credits and
+  counted drops, and an abort that never leaves the DMA waiting. A two-channel latency unit that measures how long
+  software takes to answer an interrupt, with 20 ns resolution.
+- **Software.** A Linux capture tool that verifies every frame against a software model, a kernel driver, and a
+  supervisor that checks Linux against the fabric's own counters.
+- **Verification.** Testbenches that only record, judged by independent Python models; a board suite with 27 functional
+  tests, run from a freshly written card.
+- **Measurement.** The interrupt-to-acknowledge latency at five software levels, measured by the fabric itself.
+
+The pieces are written up as separate notes and labs: [streaming datapaths](/topics/fpga/streaming-datapaths/),
+[registers, clocks and timing](/topics/fpga/registers-clocks-timing/),
+[verification and instruments](/topics/fpga/verification-and-instruments/),
+[SoC integration](/topics/fpga/soc-integration/) and [Linux and an RTOS on one chip](/topics/microcontrollers/linux-and-rtos/).
+
+## Architecture
+
+One burst, from start to verified:
+
+1. The Linux capture tool writes a *descriptor* into memory (where the data goes, how many bytes) and tells the DMA
+   controller where it is.
+2. It sets the frame length and count on the stream source and starts it.
+3. The source sends frames as a 64-bit AXI4-Stream, two words per 125 MHz clock.
+4. The DMA writes the stream into DDR; when the byte count is reached it raises an interrupt.
+5. Linux copies the burst out and checks every frame.
+6. It reports to the supervisor over RPMsg. The supervisor enforces a deadline and compares the report with the
+   fabric's own sequence counter, which it reads directly.
+
+The [architecture explorer](/pfdaq/explorer/) shows every component and connection, and plays this walk step by step.
+The full register maps, frame format and protocols are in the [architecture reference](/resources/pfdaq-architecture/).
+
+## Verification
+
+Three kinds of evidence, kept apart on purpose:
+
+- **Simulation.** 20 stream scenarios and 4 latency phases, each judged by a model written separately from the RTL.
+- **Build.** Timing met in all corners, all 64 pins placed, 26 % of the fabric used.
+- **Board.** The full suite on a freshly written SD card, 30 warm reboots, and the latency measurements.
+
+Every number is traced to a record with the command and the conditions that produced it:
+[results and evidence](/resources/pfdaq-results/).
+
+## Results and limits
+
+| Question | Answer |
+|---|---|
+| Does it work from a clean start? | 27 of 27 functional tests pass from a freshly written card |
+| Does it come up every time? | 30 of 30 warm reboots, both systems up |
+| Are injected faults caught? | Every corrupted CRC, skipped sequence number and flipped bit, in all three payload types |
+| Hardware path speed | 931 to 947 MB/s into memory (measured on an earlier fabric version) |
+| Verified path speed | 29.6 MB/s for counter payload: one Linux core copying and checking |
+| Interrupt response, supervisor core | 0.5 microseconds typical, 3.1 microseconds worst seen, none missed in 600,000 |
+| Interrupt response, Linux user space | 78 microseconds typical, up to 5.1 ms |
+
+Limits, stated plainly:
+
+- **Odd frame lengths in multi-frame bursts corrupt data.** The stream is correct in simulation and timing is met; the
+  cause is not found. The capture tool refuses the combination. See [the case study](@K10@).
+- **Linux cannot restart the supervisor core.** It can stop it; the boot monitor rejects the restart. Recovery is a
+  reboot. See [the case study](@K11@).
+- The ten-minute, 17.8 GB soak was run on an earlier fabric version and has not been repeated on the final one.
+- Everything was measured on one board.
+- The code is being prepared for public release; until then the labs describe commands that run from the repository.
+"""
+
+EXPLORER_PAGE = """+++
+title = "pfdaq architecture explorer"
+description = "Every component and connection of the pfdaq system on PolarFire SoC: select a block, a bus or an interrupt line, or play a walk step by step."
+weight = 50
+
+[params]
+  topics = ["Tool"]
+  toc = true
++++
+
+An interactive map of the whole system. It has two views, one for the hardware and data paths and one for the software
+and who runs where. Select a box to see what it does, what it connects to and which labs explain it. Select a line to
+see what it carries. Three walks play a burst, an interrupt and the boot sequence one step at a time.
+
+**[Open the explorer](/pfdaq/explorer/)**
+
+## What it shows
+
+- **Components.** The cores, the interrupt controller, the two buses between the processor subsystem and the fabric, the
+  fabric blocks, the memory regions and the software, with the address, version or clock where it matters.
+- **Connections.** Register buses, memory buses, the data stream, interrupts, messages and boot hand-over, each drawn
+  differently so a line can be read without a legend.
+- **Walks.** One burst from start to verified; one latency measurement on the supervisor core; boot from power-on to
+  both systems running.
+
+## Where the data comes from
+
+Everything on the map comes from one file, [`architecture.yaml`](/pfdaq/architecture.yaml). The same file produces the
+component descriptions in the labs, so the map and the text cannot disagree. Each fact carries the kind of evidence
+behind it: simulation, tool output or measurement on the board.
+
+## Related
+
+- [Architecture reference](/resources/pfdaq-architecture/): register maps, frame format, DMA rules, protocols.
+- [Results and evidence](/resources/pfdaq-results/): every test, its method, its result and its record.
+- [The case study](/work/pfdaq-polarfire-soc/).
+"""
+
+
+def resource_page(title, desc, weight, body):
+    return '+++\ntitle = %s\ndescription = %s\nweight = %d\n\n[params]\n  topics = ["Reference"]\n  toc = true\n+++\n\n%s' % (
+        toml_str(title), toml_str(desc), weight, body)
+
+
+def convert_doc(path, site):
+    with open(os.path.join(C.ROOT, path)) as f:
+        text = f.read()
+    text = re.sub(r'\A# .*\n', '', text, count=1)
+    return rewrite_links(text, path, site).strip() + '\n'
+
+
+def results_extra(evidence):
+    out = ['\n## Evidence records\n',
+           'Each record below can be downloaded. The command and conditions are those under which it was produced; a number on '
+           'any page of this site is quoted from one of these.\n',
+           '| Record | Kind | Fabric | Date | Command | Conditions |', '|---|---|---|---|---|---|']
+    for e in evidence.values():
+        out.append('| [%s](/pfdaq/%s) | %s | v%s | %s | %s | %s |' % (
+            e['title'].replace('|', '/'), e['path'], e['class'], e['fabric'], e['date'],
+            ('`%s`' % e['command']).replace('|', '/'), (e.get('conditions') or '').replace('|', '/')))
+    return '\n'.join(out) + '\n'
+
+
+def write(path, text, written):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w') as f:
+        f.write(text)
+    written.append(path)
+
+
+def main():
+    if len(sys.argv) != 2 or not os.path.isdir(os.path.join(sys.argv[1], 'content')):
+        sys.exit(__doc__)
+    root = os.path.abspath(sys.argv[1])
+    site = Site(root)
+    evidence = C.load_evidence()
+    arch = C.load_architecture()
+    layout = E.load_layout()
+    mods = C.all_modules()
+    written = []
+
+    # remove exactly what this script owns, then regenerate it
+    owned = [os.path.join(root, 'content/topics/fpga', s) for s in SUBTOPICS if PLACE_TOPIC(s) == 'fpga']
+    owned += [os.path.join(root, 'content/topics/microcontrollers', s) for s in SUBTOPICS if PLACE_TOPIC(s) == 'microcontrollers']
+    owned += [os.path.join(root, 'static/pfdaq'), os.path.join(root, 'content/work/pfdaq-polarfire-soc.md')]
+    owned += [os.path.join(root, 'content/resources/pfdaq-%s.md' % n) for n in ('explorer', 'architecture', 'results')]
+    for p in owned:
+        if os.path.isdir(p):
+            shutil.rmtree(p)
+        elif os.path.isfile(p):
+            os.remove(p)
+
+    for sub, (title, desc, weight) in SUBTOPICS.items():
+        topic = PLACE_TOPIC(sub)
+        write(os.path.join(root, 'content/topics', topic, sub, '_index.md'),
+              '+++\ntitle = %s\ndescription = %s\nweight = %d\n+++\n' % (toml_str(title), toml_str(desc), weight), written)
+    for pid in PLACE:
+        p = site.pages[pid]
+        topic, sub = PLACE[pid][0], PLACE[pid][1]
+        write(os.path.join(root, 'content/topics', topic, sub, site.slug(p) + '.md'), page_file(p, site, evidence), written)
+
+    write(os.path.join(root, 'content/work/pfdaq-polarfire-soc.md'),
+          WORK.replace('@DATE@', "'%s'" % DATE).replace('@I04@', site.url('I04')).replace('@K10@', site.url('K10')).replace('@K11@', site.url('K11')), written)
+    write(os.path.join(root, 'content/resources/pfdaq-explorer.md'), EXPLORER_PAGE, written)
+    write(os.path.join(root, 'content/resources/pfdaq-architecture.md'),
+          resource_page('pfdaq architecture reference', 'Register maps, frame format, DMA rules, the RPMsg protocol, boot flow and risks of the pfdaq system on PolarFire SoC.', 60,
+                        'The system as built, with the kind of evidence behind each statement (**B** board, **S** simulation, **BUILD** tool output, **V** vendor document or source, **I** inference, **U** unresolved).\n\n' + convert_doc('docs/architecture.md', site)), written)
+    write(os.path.join(root, 'content/resources/pfdaq-results.md'),
+          resource_page('pfdaq results and evidence', 'Every test of the pfdaq system, its method, result and record, and the failures found along the way.', 70,
+                        convert_doc('docs/validation-plan.md', site) + results_extra(evidence)), written)
+
+    # static: explorer, architecture data, evidence records, the experiment source
+    s = {'url': site.url, 'back': '/resources/pfdaq-explorer/', 'system': '/work/pfdaq-polarfire-soc/', 'yaml': '/pfdaq/architecture.yaml'}
+    write(os.path.join(root, 'static/pfdaq/explorer/index.html'), E.build_html(arch, layout, mods, s), written)
+    shutil.copy(os.path.join(C.DOCS, 'system', 'architecture.yaml'), os.path.join(root, 'static/pfdaq/architecture.yaml'))
+    for d in ('evidence', 'experiments'):
+        if os.path.isdir(os.path.join(C.ROOT, d)):
+            shutil.copytree(os.path.join(C.ROOT, d), os.path.join(root, 'static/pfdaq', d))
+    written.append(os.path.join(root, 'static/pfdaq'))
+
+    # scan what was written for private patterns
+    pat_file = os.path.join(C.ROOT, '.private-patterns')
+    hits = 0
+    if os.path.isfile(pat_file):
+        pats = [l.rstrip('\n').split('\t')[0] for l in open(pat_file) if l.strip()]
+        for base in written:
+            for dp, _dn, fns in os.walk(base) if os.path.isdir(base) else [(os.path.dirname(base), [], [os.path.basename(base)])]:
+                for fn in fns:
+                    fp = os.path.join(dp, fn)
+                    try:
+                        text = open(fp, errors='strict').read()
+                    except UnicodeDecodeError:
+                        continue
+                    for i, line in enumerate(text.split('\n'), 1):
+                        for pt in pats:
+                            if re.search(pt, line):
+                                hits += 1
+                                print('PRIVATE %s:%d /%s/' % (os.path.relpath(fp, root), i, pt[:24]))
+    print('%d pages and resources written; %d private hit(s)' % (len([w for w in written if w.endswith('.md')]), hits))
+    return 1 if hits else 0
+
+
+def PLACE_TOPIC(sub):
+    for v in PLACE.values():
+        if v[1] == sub:
+            return v[0]
+
+
+if __name__ == '__main__':
+    sys.exit(main())

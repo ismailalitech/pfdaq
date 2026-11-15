@@ -1,0 +1,151 @@
+[pfdaq-sup] supervisor starting (FreeRTOS), stream source ID 50464451 (ok)
+[pfdaq-sup] latency channel 1 interrupt (F2M[5]) enabled
+[pfdaq-sup] channel "pfdaq-supervisor" announced, state IDLE
+[pfdaq-sup] latency channel 1 acknowledged by interrupt handler
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 0
+[pfdaq-sup] DISARM from ARMED: 32 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 32768
+[pfdaq-sup] DISARM from ARMED: 32 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 65536
+[pfdaq-sup] DISARM from ARMED: 32 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 53 frames, fabric seq 98304
+[pfdaq-sup] DISARM from ARMED: 16 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 516 frames, fabric seq 98896
+[pfdaq-sup] DISARM from ARMED: 4 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 17 frames, fabric seq 100896
+[pfdaq-sup] DISARM from ARMED: 64 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 100960
+[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 4, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 121440
+[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 5, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 141925
+[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 4, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 162405
+[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 4, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 182885
+[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 5, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 203370
+[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 4, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 223850
+[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 4, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 244330
+[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 5, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 264815
+[pfdaq-sup] DISARM from ARMED: 20 status, 0 deadline misses, 0 seq mismatches, linux errors 4, latency irqs 0
+[pfdaq-sup] ARMED: deadline 300 ms, max lag 1040 frames, fabric seq 285295
+[pfdaq-sup] ALARM: no status within 300 ms (miss #1, t=105082 ms)
+[pfdaq-sup] status resumed at burst 5, back to ARMED
+[pfdaq-sup] DISARM from ARMED: 12 status, 1 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 297832
+[pfdaq-sup] DISARM from ARMED: 8 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written
+[pfdaq-sup] latency channel 1 acknowledged by interrupt handler
+[pfdaq-sup] latency channel 1 acknowledged by task
+[pfdaq-sup] latency channel 1 acknowledged by interrupt handler
+[pfdaq-sup] ARMED: deadline 300 ms, max lag 1040 frames, fabric seq 2595920
+[pfdaq-sup] ALARM: no status within 300 ms (miss #1, t=412557 ms)
+[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 2654288
+[pfdaq-sup] DISARM from ARMED: 16 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
+ **** PolarFire SoC Discovery Kit: FreeRTOS RPMsg remote, pfdaq supervisor ****
+[pfdaq-sup] supervisor starting (FreeRTOS), stream source ID 50464451 (ok)
+[pfdaq-sup] latency channel 1 interrupt (F2M[5]) enabled
+[pfdaq-sup] channel "pfdaq-supervisor" announced, state IDLE

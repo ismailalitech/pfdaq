@@ -1,0 +1,18 @@
+Info:  I/O Bank and Globals Assigner identified 64 fixed I/O macros, 0 unfixed I/O macros
+| 4LUT                      | 22658 | 93516 | 24.23      |
+| DFF                       | 14034 | 93516 | 15.01      |
+| Logic Element             | 24334 | 93516 | 26.02      |
+| I/O Register Flip-Flops   | 0     | 240   | 0.00       |
+Info: Timing constraints have been met.
+Info: Multi-Pass: Iteration 1, Seed Index 1,  Worst Slack = 1.342
+Info: Multi-Pass: Have met stopping criterion (all timing constraints have been met), so ceasing iterations.
+  Worst minimum delay slack:
+  Total violating paths eligible for improvement: 0
+  Total violating paths improved: 0
+| 4LUT                      | 22658 | 93516 | 24.23      |
+| DFF                       | 14034 | 93516 | 15.01      |
+| Logic Element             | 24334 | 93516 | 26.02      |
+| I/O Register Flip-Flops   | 0     | 240   | 0.00       |
+# Seed Index  Seed      Maximum Delay        Worst Slack  Report Analyzed                                Saved Design
+           1         0    N/A                        1.342  MPFS_DISCOVERY_KIT_timing_violations_max_r1_s1.rpt  MPFS_DISCOVERY_KIT_r1_s1
+Info: Timing constraints have been met.
