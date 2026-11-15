@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>pfdaq architecture explorer</title>
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}</script>
 <style>
 :root{--bg:#f5f6f4;--surface:#ffffff;--ink:#1c2321;--muted:#5a6560;--line:#cfd6d2;--band:#ebeeec;
 --hart:#d9e8f5;--hart-b:#2f6f9f;--mss:#e4e9f3;--mss-b:#5470a0;--fab:#e2f0e6;--fab-b:#3d7d54;--mem:#f1ece0;--mem-b:#8a7440;
@@ -26,7 +27,7 @@ h1{font-size:1.45rem;margin:0 0 4px;font-weight:600;text-wrap:balance}
 .sub{color:var(--muted);margin:0;max-width:75ch}
 .bar{max-width:1280px;margin:0 auto 12px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
 .tabs{display:flex;gap:4px;flex-wrap:wrap}
-.tabs button,.walk button,.walk select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+.theme-toggle,.tabs button,.walk button,.walk select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
 .tabs button[aria-pressed="true"]{border-color:var(--sel);box-shadow:inset 0 -2px 0 var(--sel);font-weight:600}
 .walk{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .walk button:disabled{opacity:.45;cursor:default}
@@ -89,6 +90,7 @@ footer{max-width:1280px;margin:18px auto 0;color:var(--muted);font-size:.85rem}
 <p class="sub">pfdaq-v0.5.1 on the MPFS-DISCO-KIT (MPFS095T-FCSG325), fabric v0.5.1. Select a component or a connection. Generated from <code>docs/system/architecture.yaml</code>; the same data drives the component pages.</p>
 </header>
 <div class="bar js-only" hidden>
+<button type="button" id="theme-toggle" class="theme-toggle" aria-label="Switch between light and dark mode"></button>
 <div class="tabs" role="group" aria-label="View"><button type="button" data-view="hardware" aria-pressed="true">Hardware and data paths</button><button type="button" data-view="software" aria-pressed="false">Software and who runs where</button></div>
 <div class="walk" role="group" aria-label="Walks through the system">
 <label for="walk-select">Walk</label>
@@ -208,7 +210,7 @@ footer{max-width:1280px;margin:18px auto 0;color:var(--muted);font-size:.85rem}
 <g class="node n-memory" data-id="ddr-cached-shared" tabindex="0" role="button" aria-label="Cached shared region. 32 MiB of ordinary cached memory that both Linux and hart 4 can reach"><rect x="530" y="524" width="200" height="56" rx="5"/><text x="630.0" y="556.5"><tspan x="630.0" dy="0">Cached shared region</tspan></text></g>
 <g class="node n-memory" data-id="ddr-u54-4-image" tabindex="0" role="button" aria-label="Hart 4 image. 1 MiB reserved for the supervisor&#x27;s code and data, hidden from Linux."><rect x="750" y="524" width="210" height="56" rx="5"/><text x="855.0" y="556.5"><tspan x="855.0" dy="0">Hart 4 image</tspan></text></g>
 </svg></div>
-<div class="legend"><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-apb" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-apb)"/></svg>APB register bus</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-ahb" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-apb);stroke-dasharray:10 3"/></svg>AHB-Lite bus (crypto)</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-axi4" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-axi4)"/></svg>AXI4 memory bus</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-axi4-stream" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-axi4-stream);stroke-width:4"/></svg>AXI4-Stream data</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-irq" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-irq);stroke-dasharray:7 5"/></svg>Interrupt</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-mem" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-mem);stroke-dasharray:2 4"/></svg>Memory access</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-rpmsg" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-rpmsg);stroke-dasharray:9 3 2 3"/></svg>RPMsg message channel</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-boot" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-boot);stroke-width:3"/></svg>Boot hand-over</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-uses" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-uses);stroke-width:1.2"/></svg>Uses / depends on</span></div>
+<div class="legend"><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-apb" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-apb)"/></svg>APB register bus</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-axi4" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-axi4)"/></svg>AXI4 memory bus</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-axi4-stream" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-axi4-stream);stroke-width:4"/></svg>AXI4-Stream data</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-irq" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-irq);stroke-dasharray:7 5"/></svg>Interrupt</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-mem" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-mem);stroke-dasharray:2 4"/></svg>Memory access</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-rpmsg" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-rpmsg);stroke-dasharray:9 3 2 3"/></svg>RPMsg message channel</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-boot" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-boot);stroke-width:3"/></svg>Boot hand-over</span><span><svg viewBox="0 0 34 10" aria-hidden="true"><line class="k-uses" x1="1" y1="5" x2="33" y2="5" style="stroke:var(--c-uses);stroke-width:1.2"/></svg>Uses / depends on</span></div>
 </div>
 <aside id="panel" aria-live="polite"><h2>Components</h2><p>The diagram is drawn as static SVG. Without JavaScript, the full description of every component is on the <a href="README.md">system page</a>.</p></aside>
 </div>
@@ -328,6 +330,13 @@ window.addEventListener('hashchange',fromHash);
 $$('.js-only').forEach(function(x){x.hidden=false});
 resetWalkUI();fromHash();
 })();
+(function(){
+  var btn=document.getElementById('theme-toggle'),root=document.documentElement;
+  function dark(){var a=root.getAttribute('data-theme');return a?a==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches}
+  function label(){btn.textContent=dark()?'Light mode':'Dark mode'}
+  btn.onclick=function(){var t=dark()?'light':'dark';root.setAttribute('data-theme',t);try{localStorage.setItem('theme',t)}catch(e){}label()};
+  label()})();
+
 </script>
 </body>
 </html>
