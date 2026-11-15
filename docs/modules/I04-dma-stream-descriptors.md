@@ -192,11 +192,11 @@ Rules 1, 3 and 4 were established on fabric versions before v0.5.1, by failures 
 
 | | |
 |---|---|
-| **Read first** | [H02 AXI4-Stream: the handshake, backpressure and TLAST](H02-axi4-stream.md)<br>I01 Reaching fabric registers from Linux *(planned)* |
+| **Read first** | [H02 AXI4-Stream: the handshake, backpressure and TLAST](H02-axi4-stream.md)<br>[I01 Reaching fabric registers from Linux](I01-fabric-registers-from-linux.md) |
 | **How to run** | Runs on the shared baseline: fabric v0.5.1 and the pfdaq image |
 | **In the system** | [CoreAXI4DMAController](../system/README.md#dma) · [Non-cached window](../system/README.md#ddr-noncached) · [Stream source](../system/README.md#pfdaq-stream-src) · [pfdaq_cap](../system/README.md#pfdaq-cap) · [UIO devices](../system/README.md#uio) · [u-dma-buf](../system/README.md#udmabuf) |
 | **Source** | [`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c): `arm`, `wait_done`, `open_uio`, `DMA_STREAM0`, `DESC_CFG_ARMED`<br>[`experiments/I04-dma-one-burst/dma_one_burst.c`](../../experiments/I04-dma-one-burst/dma_one_burst.c): `DESC_ARMED`, `DMA_STREAM0`<br>[`yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts`](../../yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts) |
 | **Evidence** | [Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | I05 Buffers the DMA can write: non-cached windows and u-dma-buf *(planned)*<br>I07 Real-time capture with four descriptors and credits *(planned)*<br>[K03 A DMA core that needs TVALID without gaps](../case-studies/K03-tvalid-gaps.md)<br>[K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md)<br>[K09 An early TLAST does not end a transfer](../case-studies/K09-early-tlast.md)<br>[K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md)<br>P05 Abort without wedging the DMA *(planned)* |
+| **Related** | [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](I05-dma-buffers.md)<br>[I07 Real-time capture with four descriptors and credits](I07-real-time-capture.md)<br>[K03 A DMA core that needs TVALID without gaps](../case-studies/K03-tvalid-gaps.md)<br>[K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md)<br>[K09 An early TLAST does not end a transfer](../case-studies/K09-early-tlast.md)<br>[K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md)<br>[P05 Abort without wedging the DMA](P05-abort.md) |
 | **Status** | experimental |
 <!-- nav:end -->

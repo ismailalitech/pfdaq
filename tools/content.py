@@ -83,9 +83,14 @@ def load_pages():
                 continue
             path = os.path.join(full, name)
             with open(path) as f:
-                meta, body = split_front_matter(f.read())
+                try:
+                    meta, body = split_front_matter(f.read())
+                except yaml.YAMLError as e:
+                    meta, body = {'_error': str(e).replace('\n', ' ')}, ''
             if meta is None:
                 meta = {'_no_front_matter': True}
+            if '_error' in meta:
+                meta['_no_front_matter'] = True
             meta['file'] = rel(path)
             meta['body'] = body
             pages.append(meta)

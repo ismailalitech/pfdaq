@@ -79,7 +79,7 @@ def main():
     ids = {}
     for p in pages:
         if p.get('_no_front_matter'):
-            err(p['file'], 'no front matter')
+            err(p['file'], 'front matter missing or not valid YAML (quote any value that contains a colon): %s' % p.get('_error', ''))
             continue
         for k in C.REQUIRED:
             if p.get(k) in (None, ''):

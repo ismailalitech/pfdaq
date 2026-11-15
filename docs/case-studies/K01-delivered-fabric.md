@@ -89,6 +89,6 @@ The raw read-back from before programming is recorded in the project's notes; th
 | **In the system** | [FPGA fabric](../system/README.md#fabric) · [MMUART 0, 1 and 4](../system/README.md#mss-uarts) · [eNVM boot flash](../system/README.md#envm) · [FlashPro5 on USB-C](../system/README.md#debug-usb) |
 | **Source** | [`hw/libero/program.sh`](../../hw/libero/program.sh): `DEVICE_INFO` |
 | **Evidence** | [Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | B06 Programming safely: components, digests and what never to touch *(planned)*<br>F05 The tool flow in batch: Libero, the IP vault and FlashPro Express *(planned)*<br>[K08 Timing met, board dead: the missing pin constraints](K08-timing-met-board-dead.md) |
+| **Related** | [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md)<br>[F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](../modules/F05-tool-flow-in-batch.md)<br>[K08 Timing met, board dead: the missing pin constraints](K08-timing-met-board-dead.md) |
 | **Status** | validated on an earlier fabric |
 <!-- nav:end -->

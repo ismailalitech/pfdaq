@@ -34,7 +34,7 @@ On a good boot it carries on from there to set up its message queues. The projec
 
 1. **Only the fabric had changed.** The SD card and the boot flash were the ones the previous fabric had booted from.
 2. **Where it stopped is consistent with a dead fabric.** The Mi-V inter-hart communication core is a fabric block (module F03 shows its lines), so the first fabric access of the boot monitor is a plausible place to stop. This is an inference from the position of the message, not a measurement.
-3. **Reprogramming the previous job over JTAG recovered the board** (module B06 explains why that is always possible). So the card and the board were healthy and the new bitstream was the problem.
+3. **Reprogramming the previous job over JTAG recovered the board** (module B06 explains why this should be possible: the boot flash is untouched, so the board can be reprogrammed. It was done once, here, and that is the only recovery on record). So the card and the board were healthy and the new bitstream was the problem.
 4. **The build script was read for what place and route had been given.** It had been given two files: the derived timing constraints and the new clock-crossing file. The I/O and floorplan constraint files that the reference design supplies were not in the list.
 
 Step 4 is a reading of the script, not a measurement. How the unconstrained design behaved electrically was not investigated.
@@ -129,6 +129,6 @@ Since this case the build aborts unless all 64 I/Os are placed.
 | **In the system** | [Fabric clocks and resets](../system/README.md#fabric-clocks) · [pfdaq_core](../system/README.md#pfdaq-core) · [Mi-V inter-hart communication](../system/README.md#ihc) |
 | **Source** | [`hw/libero/overlay/reference-design-v2026.04.patch`](../../hw/libero/overlay/reference-design-v2026.04.patch): `organize_tool_files`<br>[`hw/libero/build.sh`](../../hw/libero/build.sh) |
 | **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15) |
-| **Related** | H10 Timing closure, and the build that lost its pins *(planned)*<br>[K07 Three builds lost to brackets in a constraint file](K07-brackets-in-constraints.md)<br>B06 Programming safely: components, digests and what never to touch *(planned)* |
+| **Related** | [H10 Timing closure, and the build that lost its pins](../modules/H10-timing-closure.md)<br>[K07 Three builds lost to brackets in a constraint file](K07-brackets-in-constraints.md)<br>[B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md) |
 | **Status** | validated |
 <!-- nav:end -->

@@ -1,0 +1,90 @@
+[0.52230] Initializing Mi-V IHC V2
+[0.56909] u54 State Change:  [Idle] [Idle] [Idle] [Idle]
+[0.65025] loop 1 took 6532308 ticks (max 6532308 ticks)
+[0.71995] Initializing IPI Queues (3304 bytes @ a023f00)...
+[0.774094] loop 3 took 417006885 ticks (max 417006885 ticks)
+[0.781541] Initializing PMPs
+[0.785647] PolarFire(R) SoC Hart Software Services (HSS) - version 0.99.53-v2026.04.1
+MPFS HAL version 2.3.110 / DDR Driver version 0.4.035 / Mi-V IHC version 2.0.64 / BOARD=mpfs-disco-kit
+(c) Copyright 2017-2025 Microchip FPGA Embedded Systems Solutions.
+incorporating OpenSBI - version 1.2
+(c) Copyright 2019-2022 Western Digital Corporation.
+[0.820975] Build ID: d139127df55e6ef45500d00722d337e0b2549d4e
+[0.828518] Built with the following tools:
+ - riscv64-unknown-elf-gcc (xPack GNU RISC-V Embedded GCC (Microsemi SoftConsole build), 64-bit) 8.3.0
+ - GNU ld () 2.35.1
+[0.846372] Serial Number: 
+<serial>
+[0.860312] Segment Configuration:
+        Cached: SEG0_0: offset 0x0080000000, physical DDR 0x00000000
+        Cached: SEG0_1: offset 0x1000000000, physical DDR 0x00000000
+    Non-cached: SEG1_2: offset 0x00c0000000, physical DDR 0x00000000
+    Non-cached: SEG1_3: offset 0x1400000000, physical DDR 0x00000000
+Non-cached WCB: SEG1_4: offset 0x00d0000000, physical DDR 0x00000000
+Non-cached WCB: SEG1_5: offset 0x1800000000, physical DDR 0x00000000
+[0.905284] L2 Cache Configuration:
+    L2-Scratchpad:  4 ways (512 KiB)
+         L2-Cache:  8 ways (1024 KiB)
+           L2-LIM:  4 ways (512 KiB)
+[0.921229] DESIGNID: MPFS_DISCOVERY_KIT
+[0.926671] DESIGNVER: 00.00.6
+[0.931159] BACKLEVEL: 0000
+[0.935360] startup_service :: [init] -> [boot]
+[0.941470] ipi_poll_service :: [Init] -> [Monitoring]
+[0.948249] startup_service :: [boot] -> [idle]
+Press a key to enter CLI, ESC to skip
+Timeout in 1 second
+..
+[4.386953] CLI boot interrupt timeout
+[4.391918] loop 304276 took 606530760 ticks (max 606530760 ticks)
+[4.399843] Initializing Boot Image ...
+[4.404903] Trying to get boot image via MMC ...
+[4.410823] Attempting to select SDCARD ... Passed
+[4.443087] Preparing to copy from MMC ...
+[4.448555] Validated GPT Header ...
+[4.480697] Validated GPT Partition Entries ...
+[4.486903] Boot Partition found at index 1
+[4.492424] Attempting to read image header (1632 bytes) ...
+[4.501503] Copying 1376656 bytes to 0x103fc00000
+[4.564832] MMC: Boot Image registered ...
+[4.570249] Boot image set name: "PolarFire-SoC-HSS::Disco Linux + freertos AMP"
+[4.579224] healthmon_service :: [init] -> [monitoring]
+[4.586098] boot_service(u54_1) :: [Init] -> [SetupPMP]
+[4.592973] boot_service(u54_2) :: [Init] -> [SetupPMP]
+[4.599847] boot_service(u54_3) :: [Init] -> [SetupPMP]
+[4.606722] boot_service(u54_4):: BOOT_FLAG_SKIP_OPENSBI found
+[4.614265] boot_service(u54_4) :: [Init] -> [SetupPMP]
+>> [4.621426] boot_service(u54_1)::Registering domain "u-boot.bin" (hart mask 0xe)
+[4.630401] boot_service(u54_1) :: [SetupPMP] -> [SetupPMPComplete]
+[4.638421] boot_service(u54_2) :: [SetupPMP] -> [SetupPMPComplete]
+[4.646442] boot_service(u54_3) :: [SetupPMP] -> [SetupPMPComplete]
+[4.654462] boot_service(u54_4) :: [SetupPMP] -> [SetupPMPComplete]
+[4.662482] u54 State Change:  [Booting] [Booting] [Booting] [Booting]
+[4.671839] boot_service(u54_1) :: [SetupPMPComplete] -> [ZeroInit]
+[4.679860] boot_service(u54_2) :: [SetupPMPComplete] -> [ZeroInit]
+[4.687880] boot_service(u54_3) :: [SetupPMPComplete] -> [ZeroInit]
+[4.695900] boot_service(u54_4) :: [SetupPMPComplete] -> [ZeroInit]
+[4.704302] boot_service(u54_1) :: [ZeroInit] -> [Download]
+[4.711559] boot_service(u54_2) :: [ZeroInit] -> [Download]
+[4.718815] boot_service(u54_3) :: [ZeroInit] -> [Download]
+[4.726072] boot_service(u54_4) :: [ZeroInit] -> [Download]
+[4.733328] boot_service(u54_1)::Processing boot image: "u-boot.bin"
+[4.741158] boot_service(u54_2) :: [Download] -> [Complete]
+[4.748414] boot_service(u54_3) :: [Download] -> [Complete]
+[4.755671] boot_service(u54_4)::Processing boot image: "polarfire-soc-freertos-amp-demo.elf"
+[4.765887] boot_service(u54_4)::Skipping chunk 103fc00660 due to ownership 1
+[4.836299] boot_service(u54_4) :: [Download] -> [OpenSBIInit]
+[4.843842] boot_service(u54_4) :: [OpenSBIInit] -> [Wait]
+[4.851307] boot_service(u54_4) :: [Wait] -> [Complete]
+[4.862061] u54 State Change:  [Booting] [Booting] [Booting] [Running]
+[4.885063] boot_service(u54_1) :: [Download] -> [OpenSBIInit]
+[4.892606] boot_service(u54_1)::Registering domain "u-boot.bin" (hart mask 0xe)
+[4.901582] boot_service(u54_1) :: [OpenSBIInit] -> [Wait]
+[4.910071] boot_service(u54_1) :: [Wait] -> [Complete]
+[4.965215] u54 State Change:  [SBIHartInit] [Booting] [Booting] [Running]
+[5.09821] boot_service(u54_1) :: [Complete] -> [Idle]
+[5.22789] boot_service(u54_2) :: [Complete] -> [Idle]
+[5.48152] boot_service(u54_3) :: [Complete] -> [Idle]
+[5.63785] boot_service(u54_4) :: [Complete] -> [Idle]
+[5.154951] u54 State Change:  [Running] [SBIWaitForColdboot] [SBIWaitForColdboot] [Running]
+[22.485161] u54 State Change:  [Running] [Running] [Running] [Running]

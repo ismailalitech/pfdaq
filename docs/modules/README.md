@@ -10,35 +10,35 @@ Every module is one page with the same structure: what it teaches, what you need
 
 | Module | Level | How to run | Status |
 |---|---|---|---|
-| F01 The chip and the board: MSS, fabric and the interfaces between them *(planned)*<br>What is fixed silicon, what is programmable, and the four ways the two halves talk. | 1 | read | planned |
-| F02 The memory map and the three faces of DDR *(planned)*<br>One physical memory, several address windows with different cache behaviour, and who owns which region. | 1 | shared baseline | planned |
+| [F01 The chip and the board: MSS, fabric and the interfaces between them](F01-chip-and-board.md)<br>What is fixed silicon, what is programmable, and the four ways the two halves talk. | 1 | read | validated |
+| [F02 The memory map and the three faces of DDR](F02-memory-map-ddr.md)<br>One physical memory, several address windows with different cache behaviour, and who owns which region. | 1 | shared baseline | validated |
 | [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](F03-fabric-interrupts.md)<br>How a wire in the fabric becomes an interrupt on one chosen hart, and how two operating systems share one controller. | 2 | shared baseline | experimental |
-| F04 Clocks and resets: one PLL, two bus clocks *(planned)*<br>Where the 50 MHz and 125 MHz clocks come from and which logic lives in which domain. | 2 | read | planned |
-| F05 The tool flow in batch: Libero, the IP vault and FlashPro Express *(planned)*<br>Building and programming the fabric from scripts, with no GUI step. | 1 | read | planned |
+| [F04 Clocks and resets: one PLL, two bus clocks](F04-clocks-and-resets.md)<br>Where the 50 MHz and 125 MHz clocks come from and which logic lives in which domain. | 2 | read | validated |
+| [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>Building and programming the fabric from scripts, with no GUI step. | 1 | read | validated |
 | F06 GPIO from both sides: MSS GPIO and fabric CoreGPIO *(planned)*<br>The same LED driven from the processor's GPIO block and from a GPIO core in the fabric, plus switch inputs and a button interrupt. | 2 | shared baseline | planned |
 
 ## Boot and Linux
 
 | Module | Level | How to run | Status |
 |---|---|---|---|
-| B01 From power-on to login, stage by stage *(planned)*<br>System controller, HSS, OpenSBI, U-Boot, Linux: what each stage does and what it hands to the next. | 1 | read | planned |
-| B02 The HSS payload: starting two operating systems *(planned)*<br>One payload file that tells the monitor which image runs on which hart, in which privilege mode. | 2 | shared baseline | planned |
-| B03 A Yocto layer for a board the vendor does not support in AMP *(planned)*<br>Machine definition, payload, device tree and firmware recipe for a configuration the BSP does not ship. | 3 | shared baseline | planned |
-| B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU *(planned)*<br>The device-tree changes that make room for a second operating system and expose fabric logic to user space. | 2 | shared baseline | planned |
-| B05 Updating a running board over SSH *(planned)*<br>Replacing the kernel, the payload and the tools without removing the SD card. | 2 | shared baseline | planned |
-| B06 Programming safely: components, digests and what never to touch *(planned)*<br>What a programming job contains, how to prove what is on the device, and why the boot flash is left alone. | 2 | read | planned |
+| [B01 From power-on to login, stage by stage](B01-power-on-to-login.md)<br>System controller, HSS, OpenSBI, U-Boot, Linux: what each stage does and what it hands to the next. | 1 | read | validated |
+| [B02 The HSS payload: starting two operating systems](B02-hss-payload.md)<br>One payload file that tells the monitor which image runs on which hart, in which privilege mode. | 2 | shared baseline | validated |
+| [B03 A Yocto layer for a board the vendor does not support in AMP](B03-yocto-layer.md)<br>Machine definition, payload, device tree and firmware recipe for a configuration the BSP does not ship. | 3 | shared baseline | validated |
+| [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](B04-device-tree-codesign.md)<br>The device-tree changes that make room for a second operating system and expose fabric logic to user space. | 2 | shared baseline | validated |
+| [B05 Updating a running board over SSH](B05-update-running-board.md)<br>Replacing the kernel, the payload and the tools without removing the SD card. | 2 | shared baseline | validated |
+| [B06 Programming safely: components, digests and what never to touch](B06-programming-safely.md)<br>What a programming job contains, how to prove what is on the device, and why the boot flash is left alone. | 2 | read | validated |
 
 ## Multicore and RTOS
 
 | Module | Level | How to run | Status |
 |---|---|---|---|
-| M01 Asymmetric multiprocessing on one chip *(planned)*<br>Why one hart is taken away from Linux, and what that costs and buys. | 2 | read | planned |
-| M02 RPMsg in practice: announce, bind, ping *(planned)*<br>The smallest working message exchange between Linux and the real-time hart. | 3 | shared baseline | planned |
-| M03 A real-time supervisor: deadlines and independent checks *(planned)*<br>A small program that watches Linux, with its own view of the hardware to compare against. | 3 | shared baseline | planned |
-| M04 Same core, same code: FreeRTOS against bare metal *(planned)*<br>One supervisor source built both ways, and what the RTOS adds in time and in structure. | 3 | shared baseline | planned |
-| M05 Shared memory between Linux and a bare-metal hart *(planned)*<br>Two contexts reading and writing the same DDR region, cached and non-cached, with the result checked from both sides. | 3 | shared baseline | planned |
-| M06 remoteproc: attach, stop, and why restart fails here *(planned)*<br>What Linux can and cannot do to a hart it did not start. | 4 | read | planned |
-| M07 Deferred interrupt handling, and a port that switches tasks inside the handler *(planned)*<br>Moving work from an interrupt handler to a task, and the detail of this FreeRTOS port that breaks the usual pattern. | 4 | shared baseline | planned |
+| [M01 Asymmetric multiprocessing on one chip](M01-asymmetric-multiprocessing.md)<br>Why one hart is taken away from Linux, and what that costs and buys. | 2 | read | validated |
+| [M02 RPMsg in practice: announce, bind, ping](M02-rpmsg-in-practice.md)<br>The smallest working message exchange between Linux and the real-time hart. | 3 | shared baseline | validated |
+| [M03 A real-time supervisor: deadlines and independent checks](M03-real-time-supervisor.md)<br>A small program that watches Linux, with its own view of the hardware to compare against. | 3 | shared baseline | validated |
+| [M04 Same core, same code: FreeRTOS against bare metal](M04-freertos-vs-bare-metal.md)<br>One supervisor source built both ways, and what the RTOS adds in time and in structure. | 3 | shared baseline | validated |
+| [M05 Shared memory between Linux and a bare-metal hart](M05-shared-memory-linux-bare-metal.md)<br>Two contexts reading and writing the same DDR region, cached and non-cached, with the result checked from both sides. | 3 | shared baseline | validated |
+| [M06 remoteproc: attach, stop, and why restart fails here](M06-remoteproc-attach-stop.md)<br>What Linux can and cannot do to a hart it did not start. | 4 | read | validated |
+| [M07 Deferred interrupt handling, and a port that switches tasks inside the handler](M07-deferred-interrupt-handling.md)<br>Moving work from an interrupt handler to a task, and the detail of this FreeRTOS port that breaks the usual pattern. | 4 | shared baseline | validated |
 | M08 Three ways to signal another hart *(planned)*<br>RPMsg, a flag in shared memory and a software interrupt, compared by round-trip time. | 4 | shared baseline | planned |
 | M09 Fencing the real-time hart with physical memory protection *(planned)*<br>Locking the supervisor into its own memory, then proving the lock with a deliberate violation. | 5 | full system | planned |
 
@@ -54,8 +54,8 @@ Every module is one page with the same structure: what it teaches, what you need
 | [H06 Real-time sources: slots, credits and honest drops](H06-real-time-source.md)<br>A source that cannot wait, a consumer that sometimes must, and how every lost frame is still accounted for. | 3 | simulation | validated |
 | [H07 Measuring software from hardware: the latency unit](H07-latency-unit.md)<br>A fabric timer that raises an interrupt on a schedule and measures how long software takes to answer it. | 3 | simulation | validated |
 | [H08 Histograms in block RAM: read-modify-write without hazards](H08-histogram-in-ram.md)<br>Counting samples into a RAM at one per acknowledge, reading it from a bus at the same time, and the one case where a sample is lost. | 3 | simulation | validated |
-| H09 Integrating custom RTL into a vendor design by script *(planned)*<br>Wrapping RTL as a core with bus interfaces and wiring it into the reference design without touching the GUI. | 3 | read | planned |
-| H10 Timing closure, and the build that lost its pins *(planned)*<br>Reading multi-corner timing results, and a bitstream that met timing but could not boot the board. | 4 | read | planned |
+| [H09 Integrating custom RTL into a vendor design by script](H09-rtl-into-vendor-design.md)<br>Wrapping RTL as a core with bus interfaces and wiring it into the reference design without touching the GUI. | 3 | read | validated |
+| [H10 Timing closure, and the build that lost its pins](H10-timing-closure.md)<br>Reading multi-corner timing results, and a bitstream that met timing but could not boot the board. | 4 | read | validated |
 | [H11 Verification with an independent model](H11-independent-model.md)<br>A testbench that only records, and a separate program that decides whether the recording is right. | 3 | simulation | validated |
 | H12 Assertions and coverage for the stream source *(planned)*<br>Which behaviours the scenarios really exercise, and protocol rules written as checks. | 4 | simulation | planned |
 
@@ -63,13 +63,13 @@ Every module is one page with the same structure: what it teaches, what you need
 
 | Module | Level | How to run | Status |
 |---|---|---|---|
-| I01 Reaching fabric registers from Linux *(planned)*<br>/dev/mem, UIO, and two traps: a locked-down kernel and byte-wise writes. | 2 | shared baseline | planned |
-| I02 Fabric interrupts in user space, and the double wake-up *(planned)*<br>Waiting for a fabric interrupt with a blocking read, and why each event arrived twice. | 3 | shared baseline | planned |
-| I03 A small kernel driver for a fabric interrupt *(planned)*<br>The 128-line driver that answers the interrupt in the kernel, and its Yocto recipe. | 4 | shared baseline | planned |
+| [I01 Reaching fabric registers from Linux](I01-fabric-registers-from-linux.md)<br>/dev/mem, UIO, and two traps: a locked-down kernel and byte-wise writes. | 2 | shared baseline | validated |
+| [I02 Fabric interrupts in user space, and the double wake-up](I02-fabric-interrupts-user-space.md)<br>Waiting for a fabric interrupt with a blocking read, and why each event arrived twice. | 3 | shared baseline | validated |
+| [I03 A small kernel driver for a fabric interrupt](I03-kernel-driver-fabric-interrupt.md)<br>The 128-line driver that answers the interrupt in the kernel, and its Yocto recipe. | 4 | shared baseline | validated |
 | [I04 DMA stream descriptors: the rules this core really follows](I04-dma-stream-descriptors.md)<br>How Linux hands a destination to the DMA controller, and the rules the user guide does not state. | 3 | shared baseline | experimental |
-| I05 Buffers the DMA can write: non-cached windows and u-dma-buf *(planned)*<br>Where DMA buffers live, how user space maps them, and why cache behaviour decides the choice. | 3 | shared baseline | planned |
-| I06 Capturing and verifying a stream *(planned)*<br>Checking every frame against a software model of the hardware, for three payload types. | 3 | shared baseline | planned |
-| I07 Real-time capture with four descriptors and credits *(planned)*<br>Keeping four transfers armed and paying the fabric one credit for each buffer handed back. | 4 | shared baseline | planned |
+| [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](I05-dma-buffers.md)<br>Where DMA buffers live, how user space maps them, and why cache behaviour decides the choice. | 3 | shared baseline | validated |
+| [I06 Capturing and verifying a stream](I06-capture-and-verify.md)<br>Checking every frame against a software model of the hardware, for three payload types. | 3 | shared baseline | validated |
+| [I07 Real-time capture with four descriptors and credits](I07-real-time-capture.md)<br>Keeping four transfers armed and paying the fabric one credit for each buffer handed back. | 4 | shared baseline | validated |
 | I08 DMA into cached memory: when you need cache maintenance *(planned)*<br>What goes wrong when hardware writes memory the processor has cached, measured. | 4 | shared baseline | planned |
 | I09 Fabric DMA against the MSS DMA *(planned)*<br>Two DMA engines on one chip, compared on the same transfer. | 4 | shared baseline | planned |
 
@@ -77,12 +77,12 @@ Every module is one page with the same structure: what it teaches, what you need
 
 | Module | Level | How to run | Status |
 |---|---|---|---|
-| P01 Where 940 MB/s becomes 30: throughput layer by layer *(planned)*<br>Fabric rate, transfer rate, copy rate and verified rate, each measured, and where the time goes. | 4 | shared baseline | planned |
+| [P01 Where 940 MB/s becomes 30: throughput layer by layer](P01-throughput-layers.md)<br>Fabric rate, transfer rate, copy rate and verified rate, each measured, and where the time goes. | 4 | shared baseline | validated |
 | [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](P02-interrupt-latency.md)<br>The same fabric interrupt answered at five software levels, measured in the fabric with 20 ns resolution. | 4 | shared baseline | validated |
-| P03 Fault injection from the fabric up *(planned)*<br>Corrupting a CRC, skipping a sequence number and flipping a payload bit on purpose, and proving each is caught. | 3 | shared baseline | planned |
-| P04 Deadline supervision, alarm and recovery *(planned)*<br>Stalling Linux, killing the consumer, and watching the supervisor notice and recover. | 3 | shared baseline | planned |
-| P05 Abort without wedging the DMA *(planned)*<br>Stopping a transfer the DMA still expects to finish. | 4 | shared baseline | planned |
-| P06 Soak and reboot testing *(planned)*<br>What a ten-minute soak and thirty reboots do and do not prove. | 3 | shared baseline | planned |
+| [P03 Fault injection from the fabric up](P03-fault-injection.md)<br>Corrupting a CRC, skipping a sequence number and flipping a payload bit on purpose, and proving each is caught. | 3 | shared baseline | validated |
+| [P04 Deadline supervision, alarm and recovery](P04-deadline-supervision.md)<br>Stalling Linux, killing the consumer, and watching the supervisor notice and recover. | 3 | shared baseline | validated |
+| [P05 Abort without wedging the DMA](P05-abort.md)<br>Stopping a transfer the DMA still expects to finish. | 4 | shared baseline | validated |
+| [P06 Soak and reboot testing](P06-soak-and-reboot.md)<br>What a ten-minute soak and thirty reboots do and do not prove. | 3 | shared baseline | validated |
 | P07 Making Linux more deterministic *(planned)*<br>Interrupt affinity, CPU isolation and priorities against the stalls in the latency measurements. | 5 | shared baseline | planned |
 | P08 Raising verified throughput with more cores *(planned)*<br>Removing the single-core bottleneck in verification, with before and after. | 5 | shared baseline | planned |
 
@@ -108,9 +108,9 @@ Every module is one page with the same structure: what it teaches, what you need
 | Module | Level | How to run | Status |
 |---|---|---|---|
 | [X01 pfdaq in one page](X01-pfdaq-in-one-page.md)<br>What the system is, what runs where, and the results that matter. | 1 | read | validated |
-| X02 One burst from START to verified *(planned)*<br>Following a single burst through every block it touches. | 3 | shared baseline | planned |
-| X03 Reproduce the board from an empty SD card *(planned)*<br>Every step from a blank card and an unprogrammed fabric to the full test suite passing. | 3 | shared baseline | planned |
-| X04 The validation report *(planned)*<br>Every result, with the conditions it was measured under and the evidence file behind it. | 3 | read | planned |
+| [X02 One burst from START to verified](X02-one-burst.md)<br>Following a single burst through every block it touches. | 3 | shared baseline | validated |
+| [X03 Reproduce the board from an empty SD card](X03-reproduce-from-empty-sd.md)<br>Every step from a blank card and an unprogrammed fabric to the full test suite passing. | 3 | shared baseline | validated |
+| [X04 The validation report](X04-validation-report.md)<br>Every result, with the conditions it was measured under and the evidence file behind it. | 3 | read | validated |
 
 ## Security and secure boot
 
@@ -126,4 +126,4 @@ Every module is one page with the same structure: what it teaches, what you need
 |---|---|---|---|
 | [C01 Direct memory access](../concepts/C01-dma.md)<br>Why hardware writes memory by itself, what a descriptor is, and what it costs. | 1 | read | validated |
 
-70 modules, 29 written.
+70 modules, 62 written.

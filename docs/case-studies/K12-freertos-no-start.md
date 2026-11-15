@@ -112,11 +112,11 @@ Because leaving it out would make the validation look better than it is. A syste
 
 | | |
 |---|---|
-| **Read first** | B02 The HSS payload: starting two operating systems *(planned)* |
+| **Read first** | [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md) |
 | **How to run** | Explanation with recorded evidence; nothing to run |
 | **In the system** | [U54 hart 4](../system/README.md#u54-4) · [E51 (hart 0)](../system/README.md#e51) · [Hart Software Services](../system/README.md#hss) · [pfdaq supervisor](../system/README.md#supervisor) |
 | **Source** | [`tests/host/amp_reboot_test.sh`](../../tests/host/amp_reboot_test.sh) |
 | **Evidence** | [Thirty warm reboots, both systems up and a supervised capture passing each time](../../evidence/v0.5.1/board/reboot-30.csv) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | B02 The HSS payload: starting two operating systems *(planned)*<br>P06 Soak and reboot testing *(planned)* |
+| **Related** | [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md)<br>[P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md) |
 | **Status** | validated |
 <!-- nav:end -->

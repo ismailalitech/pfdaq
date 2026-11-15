@@ -92,6 +92,6 @@ Habits that followed:
 | **In the system** | [Stream source](../system/README.md#pfdaq-stream-src) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) |
 | **Source** | [`tests/legacy/mmio.c`](../../tests/legacy/mmio.c): `mmio_wr32`, `mmio_rd32`<br>[`hw/rtl/pfdaq_stream_src.v`](../../hw/rtl/pfdaq_stream_src.v): `apb_write`, `PWDATA` |
 | **Evidence** | [Fabric-side throughput of single bursts, 931 to 947 MB/s](../../evidence/v0.3.0/board/suite-python-x3.txt) (board, fabric v0.3.0, 2026-11-15) |
-| **Related** | [H01 An APB register block that software can trust](../modules/H01-apb-register-block.md)<br>I01 Reaching fabric registers from Linux *(planned)*<br>[K05 Two interrupts for every event](K05-two-interrupts-per-event.md) |
+| **Related** | [H01 An APB register block that software can trust](../modules/H01-apb-register-block.md)<br>[I01 Reaching fabric registers from Linux](../modules/I01-fabric-registers-from-linux.md)<br>[K05 Two interrupts for every event](K05-two-interrupts-per-event.md) |
 | **Status** | validated |
 <!-- nav:end -->
