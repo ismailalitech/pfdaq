@@ -149,7 +149,7 @@ def gen_system(arch, mods):
     hw = [n['id'] for n in arch['nodes'] if n['kind'] in ('hart', 'mss-block', 'bus', 'fabric-block', 'memory')
           and n['id'] not in ('mss-gpio2', 'mss-uarts', 'refdesign-peripherals', 'fabric-clocks', 'pfdaq-fir-src',
                               'ddr-u54-4-image', 'e51')]
-    out.append(mermaid(arch, hw, ('apb', 'axi4', 'axi4-stream', 'irq', 'mem')))
+    out.append(mermaid(arch, hw, ('apb', 'ahb', 'axi4', 'axi4-stream', 'irq', 'mem')))
     out.append('\n## Software and who runs where\n\n')
     sw = [n['id'] for n in arch['nodes'] if n['kind'] in ('software', 'hart')] + ['ddr-rpmsg', 'ihc']
     out.append(mermaid(arch, sw, ('runs', 'rpmsg', 'uses', 'boot'), 'TB'))
@@ -202,9 +202,9 @@ def gen_nav(page, mods, arch, evidence):
             s['path'], os.path.relpath(s['path'], frm),
             ': ' + ', '.join('`%s`' % x for x in s['symbols']) if s.get('symbols') else '') for s in src)))
     if page.get('evidence'):
-        rows.append(('Evidence', '<br>'.join('[%s](%s) (%s, fabric v%s, %s)' % (
+        rows.append(('Evidence', '<br>'.join('[%s](%s) (%s%s, %s)' % (
             evidence[i]['title'], os.path.relpath(evidence[i]['path'], frm), evidence[i]['class'],
-            evidence[i]['fabric'], evidence[i]['date']) for i in page['evidence'])))
+            C.fabric_label(evidence[i]), evidence[i]['date']) for i in page['evidence'])))
     if page.get('related'):
         rows.append(('Related', '<br>'.join(link(mods[i], frm) for i in page['related'])))
     rows.append(('Status', STATUS_LABEL[page['status']]))

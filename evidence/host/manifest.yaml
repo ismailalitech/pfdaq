@@ -1,0 +1,20 @@
+# Results of programs that run on the development PC only: nothing here touched a board or a fabric.
+fabric: "n/a"
+image: "n/a"
+results:
+  - id: secure-boot-chain-demo
+    title: Toy chain of trust, six scenarios
+    file: secure-boot/chain-demo.txt
+    class: host
+    fabric: "n/a"
+    date: 2026-11-15
+    command: python3 experiments/secure-boot-chain/chain_demo.py
+    conditions: Python 3.12 with the cryptography package. Keys are generated fresh on every run, so only the messages are reproducible.
+  - id: secure-boot-sign-verify
+    title: Signing an HSS payload offline and verifying it with two independent implementations
+    file: secure-boot/sign-and-verify.txt
+    class: host
+    fabric: "n/a"
+    date: 2026-11-15
+    command: experiments/secure-boot-chain/sign_and_verify.sh
+    conditions: hss-payload-generator v0.99.44 from the Yocto build, OpenSSL 3.0, throwaway keys, the bare-metal payload configuration built by firmware/build_payload.sh. Nothing was flashed.

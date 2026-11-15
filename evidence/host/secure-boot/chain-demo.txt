@@ -1,0 +1,34 @@
+
+== 1. Everything is genuine
+   ROM: stage 1 (version 2) is genuine, starting it
+   stage 1: stage 2 (version 1) is genuine, starting it
+   stage 2: application (version 1) is genuine, starting it
+   application running: 'hello from the application'
+   -> BOOTED
+
+== 2. One bit of the application is flipped
+   ROM: stage 1 (version 2) is genuine, starting it
+   stage 1: stage 2 (version 1) is genuine, starting it
+   HALT  application: signature is not valid
+   -> stopped, nothing further was run
+
+== 3. An application signed by someone else
+   ROM: stage 1 (version 2) is genuine, starting it
+   stage 1: stage 2 (version 1) is genuine, starting it
+   HALT  application: signature is not valid
+   -> stopped, nothing further was run
+
+== 4. A replacement stage 2 that names the attacker's key
+   ROM: stage 1 (version 2) is genuine, starting it
+   HALT  stage 2: signature is not valid
+   -> stopped, nothing further was run
+
+== 5. An old, genuinely signed stage 1 (rollback)
+   HALT  stage 1: version 1 is older than the minimum 2 (rollback)
+   -> stopped, nothing further was run
+
+== 6. Stage 1 with its embedded key swapped
+   HALT  stage 1: signature is not valid
+   -> stopped, nothing further was run
+
+6 of 6 scenarios behaved as a chain of trust should.

@@ -60,6 +60,9 @@ PLACE = {
     'K06': ('microcontrollers', 'linux-and-rtos', 20, None, None, None),
     'K11': ('microcontrollers', 'linux-and-rtos', 30, None, None, None),
     'K12': ('microcontrollers', 'linux-and-rtos', 40, None, None, None),
+    'S01': ('fpga', 'soc-integration', 80, None, None, None),
+    'S02': ('security', 'secure-boot', 10, None, None, None),
+    'S03': ('security', 'secure-boot', 20, 13, SIM, 'Development PC'),
 }
 SUBTOPICS = {
     'streaming-datapaths': ('Streaming datapaths', 'Frames, CRC and filters on AXI4-Stream, a source that cannot be paused, and what a DMA needs from a stream.', 40),
@@ -182,8 +185,8 @@ def at_a_glance(page, site, evidence):
     if src:
         rows.append(('Source files', '; '.join('[`%s`](%s)%s' % (s['path'], BLOB + s['path'], (': ' + ', '.join('`%s`' % x for x in s['symbols'])) if s.get('symbols') else '') for s in src)))
     if page.get('evidence'):
-        rows.append(('Evidence', '; '.join('[%s](/pfdaq/%s) (%s, fabric v%s)' % (
-            evidence[i]['title'], evidence[i]['path'], evidence[i]['class'], evidence[i]['fabric']) for i in page['evidence'])))
+        rows.append(('Evidence', '; '.join('[%s](/pfdaq/%s) (%s%s)' % (
+            evidence[i]['title'], evidence[i]['path'], evidence[i]['class'], C.fabric_label(evidence[i])) for i in page['evidence'])))
     if page.get('related'):
         rows.append(('Related', '; '.join(
             '[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) if i in site.pages and (i in PLACE or i == 'X01') else '%s (planned)' % i
@@ -382,8 +385,8 @@ def results_extra(evidence):
            'any page of this site is quoted from one of these.\n',
            '| Record | Kind | Fabric | Date | Command | Conditions |', '|---|---|---|---|---|---|']
     for e in evidence.values():
-        out.append('| [%s](/pfdaq/%s) | %s | v%s | %s | %s | %s |' % (
-            e['title'].replace('|', '/'), e['path'], e['class'], e['fabric'], e['date'],
+        out.append('| [%s](/pfdaq/%s) | %s | %s | %s | %s | %s |' % (
+            e['title'].replace('|', '/'), e['path'], e['class'], ('v' + e['fabric']) if e['fabric'] != 'n/a' else 'none', e['date'],
             ('`%s`' % e['command']).replace('|', '/'), (e.get('conditions') or '').replace('|', '/')))
     return '\n'.join(out) + '\n'
 
@@ -407,10 +410,13 @@ def main():
     written = []
 
     # remove exactly what this script owns, then regenerate it
-    owned = [os.path.join(root, 'content/topics/fpga', s) for s in SUBTOPICS if PLACE_TOPIC(s) == 'fpga']
-    owned += [os.path.join(root, 'content/topics/microcontrollers', s) for s in SUBTOPICS if PLACE_TOPIC(s) == 'microcontrollers']
+    owned = [os.path.join(root, 'content/topics', PLACE_TOPIC(s), s) for s in SUBTOPICS]
     owned += [os.path.join(root, 'static/pfdaq'), os.path.join(root, 'content/work/pfdaq-polarfire-soc.md')]
     owned += [os.path.join(root, 'content/resources/pfdaq-%s.md' % n) for n in ('explorer', 'architecture', 'results')]
+    # pages placed in sub-topics that already exist on the site: remove only the files this script writes
+    for pid, (topic, sub, *_rest) in PLACE.items():
+        if sub not in SUBTOPICS and pid in site.pages:
+            owned.append(os.path.join(root, 'content/topics', topic, sub, site.slug(site.pages[pid]) + '.md'))
     for p in owned:
         if os.path.isdir(p):
             shutil.rmtree(p)

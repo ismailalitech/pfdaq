@@ -71,8 +71,8 @@ def main():
         for k in ('title', 'class', 'fabric', 'date', 'command'):
             if not e.get(k):
                 err('evidence %s' % eid, 'missing %s' % k)
-        if e.get('class') not in ('board', 'sim', 'build'):
-            err('evidence %s' % eid, 'class must be board, sim or build')
+        if e.get('class') not in ('board', 'sim', 'build', 'host'):
+            err('evidence %s' % eid, 'class must be board, sim, build or host')
 
     pages = C.load_pages()
     planned = C.load_catalog()

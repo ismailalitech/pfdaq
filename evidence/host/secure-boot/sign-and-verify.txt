@@ -1,0 +1,10 @@
+== 1. Throwaway keys (a real signing key must never be created or kept like this)
+== 2. Build the payload unsigned and signed (the YAML is the same; -p adds the signature)
+   842208 bytes  <build>/secure-boot/signed.bin
+   842208 bytes  <build>/secure-boot/unsigned.bin
+== 3. Verify with the vendor tool and with the independent Python verifier
+   signed, right key                  vendor tool: passed | independent verifier: VALID
+   signed, one bit flipped            vendor tool: failed | independent verifier: NOT VALID
+   never signed                       vendor tool: failed | independent verifier: NOT VALID
+   signed, someone else's key         vendor tool: failed | independent verifier: NOT VALID
+== done: the keys and images are in <build>/secure-boot and can be deleted

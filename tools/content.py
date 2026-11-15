@@ -19,6 +19,7 @@ TRACKS = [
     ('performance', 'P', 'Performance and reliability'),
     ('case-study', 'K', 'Case studies'),
     ('system', 'X', 'The complete system'),
+    ('security', 'S', 'Security and secure boot'),
     ('concept', 'C', 'Concepts'),
 ]
 REPRO = {
@@ -137,3 +138,8 @@ def norm_sources(sources):
             s = {'path': path, 'symbols': [x for x in syms.split(',') if x]}
         out.append(s)
     return out
+
+
+def fabric_label(e):
+    """', fabric v0.5.1' for a result tied to a fabric version, '' for host-only results."""
+    return '' if e['fabric'] == 'n/a' else ', fabric v%s' % e['fabric']
