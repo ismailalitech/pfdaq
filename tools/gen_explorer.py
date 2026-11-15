@@ -19,11 +19,11 @@ import content as C
 
 OUT = 'docs/system/explorer.html'
 KIND_LABEL = {
-    'apb': 'APB register bus', 'ahb': 'AHB-Lite bus (crypto)', 'axi4': 'AXI4 memory bus', 'axi4-stream': 'AXI4-Stream data',
+    'apb': 'APB register bus', 'axi4': 'AXI4 memory bus', 'axi4-stream': 'AXI4-Stream data',
     'irq': 'Interrupt', 'mem': 'Memory access', 'rpmsg': 'RPMsg message channel',
     'uses': 'Uses / depends on', 'runs': 'Runs on', 'boot': 'Boot hand-over',
 }
-LEGEND = ['apb', 'ahb', 'axi4', 'axi4-stream', 'irq', 'mem', 'rpmsg', 'boot', 'uses']
+LEGEND = ['apb', 'axi4', 'axi4-stream', 'irq', 'mem', 'rpmsg', 'boot', 'uses']
 
 
 def load_layout():
@@ -147,7 +147,7 @@ h1{font-size:1.45rem;margin:0 0 4px;font-weight:600;text-wrap:balance}
 .sub{color:var(--muted);margin:0;max-width:75ch}
 .bar{max-width:1280px;margin:0 auto 12px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
 .tabs{display:flex;gap:4px;flex-wrap:wrap}
-.tabs button,.walk button,.walk select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+.theme-toggle,.tabs button,.walk button,.walk select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
 .tabs button[aria-pressed="true"]{border-color:var(--sel);box-shadow:inset 0 -2px 0 var(--sel);font-weight:600}
 .walk{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .walk button:disabled{opacity:.45;cursor:default}
@@ -318,6 +318,13 @@ window.addEventListener('hashchange',fromHash);
 $$('.js-only').forEach(function(x){x.hidden=false});
 resetWalkUI();fromHash();
 })();
+(function(){
+  var btn=document.getElementById('theme-toggle'),root=document.documentElement;
+  function dark(){var a=root.getAttribute('data-theme');return a?a==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches}
+  function label(){btn.textContent=dark()?'Light mode':'Dark mode'}
+  btn.onclick=function(){var t=dark()?'light':'dark';root.setAttribute('data-theme',t);try{localStorage.setItem('theme',t)}catch(e){}label()};
+  label()})();
+
 """
 
 
@@ -347,6 +354,7 @@ def build_html(arch, layout, mods, site=None):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>pfdaq architecture explorer</title>
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}</script>
 <style>%s</style>
 </head>
 <body>
@@ -355,6 +363,7 @@ def build_html(arch, layout, mods, site=None):
 <p class="sub">%s on the %s (%s), fabric v%s. Select a component or a connection. Generated from <code>docs/system/architecture.yaml</code>; the same data drives the component pages.</p>
 </header>
 <div class="bar js-only" hidden>
+<button type="button" id="theme-toggle" class="theme-toggle" aria-label="Switch between light and dark mode"></button>
 <div class="tabs" role="group" aria-label="View">%s</div>
 <div class="walk" role="group" aria-label="Walks through the system">
 <label for="walk-select">Walk</label>
@@ -379,7 +388,7 @@ def build_html(arch, layout, mods, site=None):
 
 
 LEGEND_STYLE = {
-    'apb': 'stroke:var(--c-apb)', 'ahb': 'stroke:var(--c-apb);stroke-dasharray:10 3', 'axi4': 'stroke:var(--c-axi4)', 'axi4-stream': 'stroke:var(--c-axi4-stream);stroke-width:4',
+    'apb': 'stroke:var(--c-apb)', 'axi4': 'stroke:var(--c-axi4)', 'axi4-stream': 'stroke:var(--c-axi4-stream);stroke-width:4',
     'irq': 'stroke:var(--c-irq);stroke-dasharray:7 5', 'mem': 'stroke:var(--c-mem);stroke-dasharray:2 4',
     'rpmsg': 'stroke:var(--c-rpmsg);stroke-dasharray:9 3 2 3', 'boot': 'stroke:var(--c-boot);stroke-width:3',
     'uses': 'stroke:var(--c-uses);stroke-width:1.2',
