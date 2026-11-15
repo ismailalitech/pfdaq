@@ -12,7 +12,7 @@ software: [udmabuf, pfdaq-cap]
 sources:
   - yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts:contextb_reserved,vdev0vring0,vdev0vring1,vdev0buffer,rsctable
   - yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c:arm,run_shm,ddr_phys
-evidence: [boot-hss, boot-uboot-linux, suite-freertos, suite-freertos-raw]
+evidence: [boot-hss, boot-uboot-linux, suite-freertos, suite-freertos-raw, libero-mss-ddr]
 related: [F01, F03, I04, M05, K04]
 ---
 
@@ -114,6 +114,12 @@ Two addresses of the same buffer are in play. `ddr` is the program's own virtual
 
 The price of the non-cached window is stated in a comment in the tool itself: *"non-cached DDR is slow to read: copy each burst once into normal memory, verify the copy"*. The recorded run copied at 70.5 MB/s out of the non-cached window with one core, and verified the copy at 55.4 MB/s (module X02 has the whole run).
 
+### The DDR as configured in Libero
+
+The MSS Configurator's DDR tab describes the memory this map sits on: DDR4, a 16-bit data width, one rank, no ECC and a memory clock of 800 MHz.
+
+![MSS Configurator, DDR memory tab: DDR4 topology and memory clock](../../evidence/v0.5.1/build/libero-mss-ddr.png)
+
 ## Run it
 
 These are the commands the project ran; the board is the only thing that can run them, and the results are in the evidence below.
@@ -174,7 +180,7 @@ The records show that both windows work for sharing between Linux and hart 4. Th
 | **How to run** | Runs on the shared baseline: fabric v0.5.1 and the pfdaq image |
 | **In the system** | [DDR4 memory, 1 GB](../system/README.md#ddr) · [Non-cached window](../system/README.md#ddr-noncached) · [Cached shared region](../system/README.md#ddr-cached-shared) · [RPMsg shared memory](../system/README.md#ddr-rpmsg) · [Hart 4 image](../system/README.md#ddr-u54-4-image) · [U54 harts 1 to 3](../system/README.md#u54-linux) · [U54 hart 4](../system/README.md#u54-4) · [u-dma-buf](../system/README.md#udmabuf) · [pfdaq_cap](../system/README.md#pfdaq-cap) |
 | **Source** | [`yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts`](../../yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts): `contextb_reserved`, `vdev0vring0`, `vdev0vring1`, `vdev0buffer`, `rsctable`<br>[`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c): `arm`, `run_shm`, `ddr_phys` |
-| **Evidence** | [Boot monitor console from power-up to all four application cores running](../../evidence/v0.5.1/board/boot-hss.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15)<br>[Raw output of the FreeRTOS suite, one JSON object per test](../../evidence/v0.5.1/board/suite-freertos.jsonl) (board, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Boot monitor console from power-up to all four application cores running](../../evidence/v0.5.1/board/boot-hss.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15)<br>[Raw output of the FreeRTOS suite, one JSON object per test](../../evidence/v0.5.1/board/suite-freertos.jsonl) (board, fabric v0.5.1, 2026-11-15)<br>[MSS Configurator, DDR Memory tab: DDR4 topology and clock](../../evidence/v0.5.1/build/libero-mss-ddr.png) (build, fabric v0.5.1, 2026-11-15) |
 | **Related** | [F01 The chip and the board: MSS, fabric and the interfaces between them](F01-chip-and-board.md)<br>[F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](F03-fabric-interrupts.md)<br>[I04 DMA stream descriptors: the rules this core really follows](I04-dma-stream-descriptors.md)<br>[M05 Shared memory between Linux and a bare-metal hart](M05-shared-memory-linux-bare-metal.md)<br>[K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md) |
 | **Status** | validated |
 <!-- nav:end -->

@@ -1,0 +1,286 @@
+#!/usr/bin/env python3
+"""Generate the animated SVG diagrams of the documentation from docs/diagrams/diagrams.yaml.
+
+Every diagram is boxes and arrows (or lanes on a time axis) drawn on a small dark card. While it plays, the
+boxes and arrows light up one after the other in the order given by `steps`, so a reader sees the sequence
+and not only the picture. The files are self-contained SVG (no script), animate with CSS, and show the plain
+picture when the reader prefers reduced motion. The generated files are committed;
+`tools/check_content.py` fails if they are out of date.
+
+usage: tools/gen_diagrams.py [--check]
+"""
+import os, sys, re
+import yaml
+from xml.sax.saxutils import escape
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DIR = os.path.join(ROOT, 'docs', 'diagrams')
+SPEC = os.path.join(DIR, 'diagrams.yaml')
+
+FONT = 'Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'
+# kind -> (fill, stroke)
+KINDS = {
+    'plain': ('#1e2530', '#6b7b8c'),
+    'start': ('#2a3140', '#c9d3dd'),
+    'hart':  ('#1b3047', '#5aa0d6'),
+    'mss':   ('#232c44', '#8da6d4'),
+    'fabric': ('#1a3626', '#5fbf84'),
+    'mem':   ('#352f1c', '#c0a95f'),
+    'sw':    ('#2f2447', '#b08fe0'),
+    'good':  ('#17382f', '#4fd1a5'),
+    'bad':   ('#43201f', '#ef6f6c'),
+}
+BG, FG, MUTED, ACCENT = '#12171d', '#e6ecf1', '#9aa8b5', '#ffd166'
+STEP = 1.3      # seconds per step
+HOLD = 2.0      # pause at the end of a cycle
+
+
+def esc(s):
+    return escape(str(s))
+
+
+def text_w(s, size):
+    return 0.56 * size * len(s)
+
+
+class Diagram:
+    def __init__(self, d):
+        self.d = d
+        self.id = d['id']
+        self.w = d.get('width', 780)
+        self.h = d['height']
+        self.out = []
+        self.names = []     # animation targets in order
+
+    # ---------- geometry
+    def port(self, ref):
+        m = re.match(r'^([\w-]+)\.(top|bottom|left|right)(?:@([0-9.]+))?$', ref)
+        if not m:
+            raise SystemExit('%s: bad port %r' % (self.id, ref))
+        n = self.nodes[m.group(1)]
+        f = float(m.group(3)) if m.group(3) else 0.5
+        x, y, w, h = n['x'], n['y'], n['w'], n['h']
+        side = m.group(2)
+        if side == 'top':
+            return (x + w * f, y), side
+        if side == 'bottom':
+            return (x + w * f, y + h), side
+        if side == 'left':
+            return (x, y + h * f), side
+        return (x + w, y + h * f), side
+
+    def route(self, e):
+        (x1, y1), s1 = self.port(e['from'])
+        (x2, y2), s2 = self.port(e['to'])
+        horiz = lambda s: s in ('left', 'right')
+        opp = {('right', 'left'), ('left', 'right'), ('top', 'bottom'), ('bottom', 'top')}
+        pts = [(x1, y1)]
+        if (s1, s2) in opp:
+            if horiz(s1):
+                if abs(y1 - y2) > 0.5:
+                    mx = e.get('mid', (x1 + x2) / 2)
+                    pts += [(mx, y1), (mx, y2)]
+            else:
+                if abs(x1 - x2) > 0.5:
+                    my = e.get('mid', (y1 + y2) / 2)
+                    pts += [(x1, my), (x2, my)]
+        elif s1 == s2:
+            b = e.get('bulge', 26)
+            if s1 == 'right':
+                xo = max(x1, x2) + b; pts += [(xo, y1), (xo, y2)]
+            elif s1 == 'left':
+                xo = min(x1, x2) - b; pts += [(xo, y1), (xo, y2)]
+            elif s1 == 'bottom':
+                yo = max(y1, y2) + b; pts += [(x1, yo), (x2, yo)]
+            else:
+                yo = min(y1, y2) - b; pts += [(x1, yo), (x2, yo)]
+        else:
+            pts += [(x2, y1)] if horiz(s1) else [(x1, y2)]
+        pts.append((x2, y2))
+        return pts
+
+    # ---------- drawing
+    def add(self, s):
+        self.out.append(s)
+
+    def node_svg(self, nid, n):
+        fill, stroke = KINDS[n.get('kind', 'plain')]
+        x, y, w, h = n['x'], n['y'], n['w'], n['h']
+        title = n['title']
+        subs = n.get('sub', '')
+        subs = subs.split('\n') if subs else []
+        lines = [(title, 14, 'bold', FG)] + [(t, 11.5, 'normal', MUTED) for t in subs]
+        for t, sz, _wt, _c in lines:
+            if text_w(t, sz) > w - 10:
+                raise SystemExit('%s: text too wide for box %s: %r (%.0f > %d)' % (self.id, nid, t, text_w(t, sz), w - 10))
+        lh = 17
+        total = lh * len(lines)
+        ty = y + (h - total) / 2 + 13
+        self.add('<g id="%s">' % esc(nid))
+        self.add('<rect x="%g" y="%g" width="%g" height="%g" rx="9" fill="%s" stroke="%s" stroke-width="1.5"/>' % (x, y, w, h, fill, stroke))
+        for i, (t, sz, wt, c) in enumerate(lines):
+            self.add('<text x="%g" y="%g" text-anchor="middle" font-size="%g" font-weight="%s" fill="%s">%s</text>' % (x + w / 2, ty + i * lh, sz, wt, c, esc(t)))
+        if nid in self.steps:
+            self.add('<rect class="hl" style="animation-delay:%.2fs" x="%g" y="%g" width="%g" height="%g" rx="9" fill="%s" fill-opacity="0.10" stroke="%s" stroke-width="3"/>' % (
+                self.delay(nid), x - 1, y - 1, w + 2, h + 2, ACCENT, ACCENT))
+        self.add('</g>')
+
+    def delay(self, name):
+        return self.steps.index(name) * STEP
+
+    def edge_svg(self, eid, e):
+        pts = self.route(e)
+        d = 'M' + ' L'.join('%g,%g' % p for p in pts)
+        kind = e.get('kind', 'plain')
+        col = KINDS[kind][1] if kind != 'plain' else '#7d8c9b'
+        dash = ' stroke-dasharray="5 4"' if e.get('dashed') else ''
+        self.add('<g id="%s">' % esc(eid))
+        self.add('<path d="%s" fill="none" stroke="%s" stroke-width="1.8"%s stroke-linejoin="round" marker-end="url(#ar-%s)"/>' % (d, col, dash, kind))
+        if eid in self.steps:
+            self.add('<path class="hl flow" style="animation-delay:%.2fs" d="%s" fill="none" stroke="%s" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>' % (
+                self.delay(eid), d, ACCENT))
+        label = e.get('label')
+        if label:
+            # longest segment; a label sits above a horizontal line and beside a vertical one
+            segs = list(zip(pts[:-1], pts[1:]))
+            a, b = max(segs, key=lambda s: abs(s[0][0] - s[1][0]) + abs(s[0][1] - s[1][1]))
+            horizontal = abs(a[1] - b[1]) < 0.5
+            lx, ly = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+            if horizontal:
+                lx += e.get('dx', 0); ly += e.get('dy', -13)
+                anchor, bx = 'middle', None
+            else:
+                lx += e.get('dx', 9); ly += e.get('dy', 0)
+                anchor = 'start'
+            lw = text_w(label, 11.5) + 10
+            bx = lx - lw / 2 if anchor == 'middle' else lx - 5
+            self.add('<rect x="%g" y="%g" width="%g" height="17" rx="4" fill="%s" fill-opacity="0.85"/>' % (bx, ly - 9, lw, BG))
+            self.add('<text x="%g" y="%g" text-anchor="%s" font-size="11.5" fill="%s">%s</text>' % (lx, ly + 3.5, anchor, FG, esc(label)))
+        self.add('</g>')
+
+    def note_svg(self, t):
+        anchor = t.get('anchor', 'start')
+        kind = t.get('kind')
+        col = KINDS[kind][1] if kind else MUTED
+        size = t.get('size', 12)
+        for i, line in enumerate(t['text'].split('\n')):
+            self.add('<text x="%g" y="%g" text-anchor="%s" font-size="%g" fill="%s"%s>%s</text>' % (
+                t['x'], t['y'] + i * (size + 5), anchor, size, col, ' font-weight="bold"' if t.get('bold') else '', esc(line)))
+
+    # ---------- flow diagrams
+    def flow(self):
+        d = self.d
+        self.nodes = {}
+        for nid, n in d['nodes'].items():
+            self.nodes[nid] = dict(n)
+        self.edges = []
+        for i, e in enumerate(d.get('edges', [])):
+            self.edges.append((e.get('id', 'e%d' % i), e))
+        self.steps = list(d.get('steps', []))
+        known = set(self.nodes) | {eid for eid, _ in self.edges}
+        for s in self.steps:
+            if s not in known:
+                raise SystemExit('%s: unknown step %r' % (self.id, s))
+        for t in d.get('notes', []):
+            pass
+        for eid, e in self.edges:
+            self.edge_svg(eid, e)
+        for nid, n in self.nodes.items():
+            self.node_svg(nid, n)
+        for t in d.get('notes', []):
+            self.note_svg(t)
+
+    # ---------- timeline diagrams
+    def timeline(self):
+        d = self.d
+        self.steps = []
+        left = d.get('label_width', 120)
+        scale = d['scale']                   # pixels per unit
+        top = d.get('top', 40)
+        lane_h = d.get('lane_h', 64)
+        total = d['length'] * scale
+        for i, lane in enumerate(d['lanes']):
+            y = top + i * (lane_h + 14)
+            self.add('<rect x="10" y="%g" width="%g" height="%g" rx="8" fill="#171d25" stroke="#2a3441"/>' % (y, self.w - 20, lane_h))
+            self.add('<text x="22" y="%g" font-size="13" font-weight="bold" fill="%s">%s</text>' % (y + lane_h / 2 + 4, FG, esc(lane['name'])))
+            for sg in lane['segments']:
+                fill, stroke = KINDS[sg.get('kind', 'plain')]
+                x = left + sg['t0'] * scale
+                w = max((sg['t1'] - sg['t0']) * scale, 4)
+                self.add('<rect x="%g" y="%g" width="%g" height="%g" rx="4" fill="%s" stroke="%s" stroke-width="1.5"/>' % (x, y + 12, w, lane_h - 24, fill, stroke))
+                lab = sg['label']
+                if text_w(lab, 11.5) <= w - 8:
+                    self.add('<text x="%g" y="%g" text-anchor="middle" font-size="11.5" fill="%s">%s</text>' % (x + w / 2, y + lane_h / 2 + 4, FG, esc(lab)))
+                else:
+                    right = x + text_w(lab, 11) > self.w - 10
+                    self.add('<text x="%g" y="%g" text-anchor="%s" font-size="11" fill="%s">%s</text>' % (x + w if right else x - 2, y + 9, 'end' if right else 'start', MUTED, esc(lab)))
+        h_all = top + len(d['lanes']) * (lane_h + 14) - 14
+        # time axis ticks
+        for t, lab in d.get('ticks', []):
+            x = left + t * scale
+            self.add('<line x1="%g" y1="%g" x2="%g" y2="%g" stroke="#2a3441" stroke-dasharray="2 4"/>' % (x, top - 8, x, h_all + 6))
+            end = x + text_w(lab, 11) / 2 > self.w - 8
+            self.add('<text x="%g" y="%g" text-anchor="%s" font-size="11" fill="%s">%s</text>' % (self.w - 12 if end else x, h_all + 22, 'end' if end else 'middle', MUTED, esc(lab)))
+        # playhead
+        dur = d.get('play', 9)
+        self.add('<g class="play" style="animation-duration:%gs; --dx:%gpx"><line x1="%g" y1="%g" x2="%g" y2="%g" stroke="%s" stroke-width="2.5"/></g>' % (
+            dur, total, left, top - 10, left, h_all + 8, ACCENT))
+        for t in d.get('notes', []):
+            self.note_svg(t)
+        self.timeline_dur = dur
+
+    # ---------- document
+    def render(self):
+        d = self.d
+        if d.get('type') == 'timeline':
+            self.timeline()
+            cycle = self.timeline_dur
+        else:
+            self.flow()
+            cycle = max(len(self.steps) * STEP + HOLD, 1)
+        body = '\n'.join(self.out)
+        on = (len(self.steps) and STEP / cycle * 100) or 0
+        css = """
+text{font-family:%s}
+.hl{opacity:0;animation:lit %.2fs linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit %.2fs linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%%{opacity:0}2%%{opacity:1}%.2f%%{opacity:1}%.2f%%{opacity:0}100%%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}}
+""" % (FONT, cycle, cycle, on, on + 3)
+        title = d.get('alt', self.id)
+        marks = ''.join(
+            '<marker id="ar-%s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="%s"/></marker>' % (k, c)
+            for k, c in [('plain', '#7d8c9b')] + [(k, v[1]) for k, v in KINDS.items() if k != 'plain'] + [('hl', ACCENT)])
+        head = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %g %g" width="%g" height="%g" role="img" aria-labelledby="t d">' % (self.w, self.h, self.w, self.h)
+        return '%s\n<title id="t">%s</title><desc id="d">%s</desc>\n<style>%s</style>\n<defs>%s</defs>\n<rect width="%g" height="%g" rx="12" fill="%s"/>\n%s\n</svg>\n' % (
+            head, esc(d.get('title', title)), esc(title), css, marks, self.w, self.h, BG, body)
+
+
+def main():
+    specs = yaml.safe_load(open(SPEC))
+    stale = []
+    for d in specs:
+        svg = Diagram(d).render()
+        path = os.path.join(DIR, d['id'] + '.svg')
+        cur = open(path).read() if os.path.isfile(path) else None
+        if cur != svg:
+            stale.append(d['id'])
+            if '--check' not in sys.argv:
+                open(path, 'w').write(svg)
+    ids = {d['id'] for d in specs}
+    extra = [f for f in os.listdir(DIR) if f.endswith('.svg') and f[:-4] not in ids]
+    if '--check' in sys.argv:
+        if stale or extra:
+            print('diagrams out of date: %s %s' % (stale, extra))
+            return 1
+        print('diagrams: %d current' % len(specs))
+        return 0
+    print('%d diagrams, %d written' % (len(specs), len(stale)))
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

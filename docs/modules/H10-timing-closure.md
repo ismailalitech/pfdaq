@@ -13,7 +13,7 @@ sources:
   - hw/libero/sta_without_cdc.tcl:VERIFYTIMING
   - hw/libero/overlay/pfdaq_cdc.sdc:set_false_path
   - hw/libero/overlay/reference-design-v2026.04.patch:organize_tool_files
-evidence: [timing, timing-without-cdc, programming]
+evidence: [timing, timing-without-cdc, programming, libero-timing-summary]
 related: [H03, H09, F05, K07, K08, B06]
 ---
 
@@ -62,6 +62,12 @@ How to read them:
 - **"Violating paths: 0"** says nothing needed repairing.
 
 The checks are made for several corners. The build's own check (in `hw/libero/build.sh`) greps the tool's `has_violations` file for the `multi_corner` lines and stops if any says `violated`. The console record of the second analysis shows the corner combinations by name: `slow_lv_lt`, `fast_hv_lt` and `slow_lv_ht`, each with a maximum-delay (setup) and a minimum-delay (hold) report. The names read as process speed, voltage and temperature, for example "slow silicon, low voltage, low temperature". The project's notes record that setup and hold were met in all of them for v0.5.1.
+
+The same result as the vendor's GUI shows it, in the multi-corner max-delay report (in Libero: Design, Reports, then Verify Timing, `max_timing_multi_corner.xml`):
+
+![Libero Verify Timing report: required period, frequency and worst slack per clock domain](../../evidence/v0.5.1/build/libero-timing-summary.png)
+
+The two clock domains the project uses are the first two rows: the 125 MHz domain (8 ns) with a worst slack of 1.342 ns and the 50 MHz domain (20 ns) with 2.833 ns. The first path listed under the 125 MHz domain starts and ends inside `pfdaq_core`. These are slacks after place and route in the slow corner; the report says nothing about paths the constraints leave out (see the guard below).
 
 ### Utilisation
 
@@ -164,7 +170,7 @@ The lines quoted above, from the build's console output.
 | **How to run** | Explanation with recorded evidence; nothing to run |
 | **In the system** | [pfdaq_core](../system/README.md#pfdaq-core) · [Fabric clocks and resets](../system/README.md#fabric-clocks) · [FIC0 (AXI4, 125 MHz)](../system/README.md#fic0) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) |
 | **Source** | [`hw/libero/build.sh`](../../hw/libero/build.sh): `multi_corner`, `violated`, `unfixed`<br>[`hw/libero/sta_without_cdc.tcl`](../../hw/libero/sta_without_cdc.tcl): `VERIFYTIMING`<br>[`hw/libero/overlay/pfdaq_cdc.sdc`](../../hw/libero/overlay/pfdaq_cdc.sdc): `set_false_path`<br>[`hw/libero/overlay/reference-design-v2026.04.patch`](../../hw/libero/overlay/reference-design-v2026.04.patch): `organize_tool_files` |
-| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Timing analysis without the clock-crossing constraints (the tool's console log; the 40 worst violating paths it lists are the intended crossings)](../../evidence/v0.5.1/build/timing-without-cdc-constraints.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Timing analysis without the clock-crossing constraints (the tool's console log; the 40 worst violating paths it lists are the intended crossings)](../../evidence/v0.5.1/build/timing-without-cdc-constraints.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Verify Timing report, max delay multi-corner summary](../../evidence/v0.5.1/build/libero-timing-summary.png) (build, fabric v0.5.1, 2026-11-15) |
 | **Related** | [H03 Crossing clock domains: toggles, snapshots and constraints](H03-clock-domain-crossing.md)<br>[H09 Integrating custom RTL into a vendor design by script](H09-rtl-into-vendor-design.md)<br>[F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>[K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md)<br>[K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md)<br>[B06 Programming safely: components, digests and what never to touch](B06-programming-safely.md) |
 | **Status** | validated |
 <!-- nav:end -->

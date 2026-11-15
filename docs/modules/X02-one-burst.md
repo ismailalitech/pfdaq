@@ -101,10 +101,7 @@ The tool uses two buffers in the non-cached window, laid out after the descripto
 
 Burst *b* is armed into one buffer, and **while the fabric fills it, Linux copies and verifies burst *b*-1 out of the other**. Only then does it wait for the interrupt of burst *b*. In the code, step 9 for the previous burst comes *before* the wait in step 8 for the current one:
 
-```text
-  fabric/DMA:   | fill buf0 |            | fill buf1 |            | fill buf0 |
-  Linux:        |           | verify b0 ................ | verify b1 ................ |
-```
+![Time line of two bursts: the fabric fills one buffer in about a millisecond, and Linux then spends about thirty-five milliseconds copying and verifying it, while the fabric fills the next buffer. The fabric is idle for most of each cycle.](../diagrams/burst-pipeline.svg)
 
 The fabric needs about a millisecond per burst; Linux needs about thirty-five. So the fabric is idle for most of every cycle, and the whole system waits for Linux.
 

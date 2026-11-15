@@ -67,12 +67,7 @@ if (ret != RL_SUCCESS)
         printf_to(UART_APP, "[pfdaq-sup] ALARM: no status within %u ms (miss #%u, t=%u ms)\r\n", ...
 ```
 
-```text
-IDLE --ARM--> ARMED --silence longer than the deadline--> ALARM
-                ^                                           |
-                +----------- STATUS (resumed) --------------+
-ARMED or ALARM --ARM--> ARMED (counters reset)      any --DISARM--> IDLE
-```
+![The deadline supervisor's states: IDLE goes to ARMED on ARM; ARMED goes to ALARM when silence lasts longer than the deadline; a STATUS message returns ALARM to ARMED. ARM in ARMED or ALARM resets the counters, and DISARM from any state returns to IDLE.](../diagrams/supervisor-states.svg)
 
 Properties that follow from the code:
 

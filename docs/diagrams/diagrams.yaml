@@ -1,0 +1,149 @@
+# Source of every animated diagram in the documentation. `tools/gen_diagrams.py` turns it into the .svg files
+# next to it. Nodes are placed by hand in pixels; an edge runs from a side of one node to a side of another
+# (side may carry a fraction along the side, e.g. plic.left@0.2). `steps` is the order in which boxes and
+# arrows light up while the diagram plays.
+
+- id: boot-flow
+  alt: "Boot flow: power on, then the system controller, then the Hart Software Services on the E51. They start OpenSBI, U-Boot and Linux on harts 1 to 3, and the real-time supervisor on hart 4. Linux attaches to the supervisor through remoteproc."
+  width: 800
+  height: 400
+  nodes:
+    power:   {x: 20,  y: 24, w: 220, h: 66, kind: start,  title: "Power on"}
+    sysctl:  {x: 270, y: 24, w: 220, h: 66, kind: plain,  title: "System controller", sub: "configures the FPGA fabric\nreleases the processors"}
+    hss:     {x: 520, y: 24, w: 220, h: 66, kind: mss,    title: "HSS on the E51", sub: "from the chip's boot flash\ntrains DDR, reads the SD card"}
+    opensbi: {x: 520, y: 176, w: 220, h: 66, kind: hart,  title: "OpenSBI"}
+    uboot:   {x: 270, y: 176, w: 220, h: 66, kind: hart,  title: "U-Boot"}
+    linux:   {x: 20,  y: 176, w: 220, h: 66, kind: hart,  title: "Linux", sub: "on harts 1 to 3"}
+    sup:     {x: 520, y: 310, w: 220, h: 66, kind: sw,    title: "Real-time supervisor", sub: "FreeRTOS or bare metal"}
+  edges:
+    - {from: power.right,   to: sysctl.left}
+    - {from: sysctl.right,  to: hss.left}
+    - {from: hss.bottom,    to: opensbi.top}
+    - {from: opensbi.left,  to: uboot.right}
+    - {from: uboot.left,    to: linux.right}
+    - {from: hss.right,     to: sup.right, bulge: 24}
+    - {from: linux.bottom,  to: sup.left, label: "attaches through remoteproc"}
+  steps: [power, e0, sysctl, e1, hss, e2, opensbi, e3, uboot, e4, linux, e5, sup, e6]
+  notes:
+    - {x: 20,  y: 162, text: "U54 harts 1 to 3 · supervisor mode"}
+    - {x: 270, y: 296, text: "U54 hart 4 · machine mode,\nstarted without OpenSBI"}
+
+- id: chain-of-trust
+  alt: "A toy chain of trust: the ROM verifies stage 1, stage 1 verifies stage 2, stage 2 verifies the application. A failed check at any link halts the chain."
+  width: 810
+  height: 340
+  nodes:
+    rom:    {x: 20,  y: 40, w: 140, h: 92, kind: start,  title: "ROM", sub: "root public key\nlowest version"}
+    stage1: {x: 230, y: 40, w: 140, h: 92, kind: plain,  title: "Stage 1", sub: "checked by the ROM\nholds the next key"}
+    stage2: {x: 440, y: 40, w: 140, h: 92, kind: plain,  title: "Stage 2", sub: "checked by stage 1\nholds the next key"}
+    app:    {x: 650, y: 40, w: 140, h: 92, kind: good,   title: "Application", sub: "checked by stage 2"}
+    halt:   {x: 275, y: 216, w: 260, h: 66, kind: bad,   title: "HALT", sub: "nothing further is started"}
+  edges:
+    - {from: rom.right,    to: stage1.left, label: "verifies"}
+    - {from: stage1.right, to: stage2.left, label: "verifies"}
+    - {from: stage2.right, to: app.left,    label: "verifies"}
+    - {from: rom.bottom,    to: halt.top, kind: bad, dashed: true}
+    - {from: stage1.bottom, to: halt.top, kind: bad, dashed: true}
+    - {from: stage2.bottom, to: halt.top, kind: bad, dashed: true}
+  steps: [rom, e0, stage1, e1, stage2, e2, app]
+  notes:
+    - {x: 405, y: 312, anchor: middle, text: "A link that fails stops everything after it: bad signature, unsigned image, wrong key or a version that is too old."}
+
+- id: sign-and-verify
+  alt: "Signing and checking a boot payload offline: the payload and a private key go into hss-payload-generator, which produces a signed boot image. Both the vendor tool and an independent Python verifier check the image with the public key and report valid or not valid."
+  width: 810
+  height: 360
+  nodes:
+    payload: {x: 20,  y: 30, w: 220, h: 72, kind: sw,     title: "Payload", sub: "images + configuration\nprivate key, kept offline"}
+    signer:  {x: 295, y: 30, w: 220, h: 72, kind: hart,   title: "hss-payload-generator", sub: "signs with the private key\nSHA-384, ECDSA P-384"}
+    signed:  {x: 570, y: 30, w: 220, h: 72, kind: good,   title: "Signed boot image", sub: "signature field inside"}
+    vendor:  {x: 400, y: 190, w: 180, h: 72, kind: sw,    title: "Vendor tool", sub: "-d image -u key.der"}
+    own:     {x: 610, y: 190, w: 180, h: 72, kind: sw,    title: "Independent verifier", sub: "digest, then signature"}
+    verdict: {x: 505, y: 288, w: 190, h: 56, kind: good,  title: "Verdict", sub: "VALID or NOT VALID"}
+  edges:
+    - {from: payload.right, to: signer.left}
+    - {from: signer.right,  to: signed.left}
+    - {from: signed.bottom@0.3, to: vendor.top}
+    - {from: signed.bottom@0.7, to: own.top}
+    - {from: vendor.bottom, to: verdict.top}
+    - {from: own.bottom,    to: verdict.top}
+  steps: [payload, e0, signer, e1, signed, e2, vendor, e3, own, e4, e5, verdict]
+  notes:
+    - {x: 20, y: 214, text: "Both checkers hold only the public key\n(DER for the vendor tool)."}
+
+- id: supervisor-states
+  alt: "The deadline supervisor's states: IDLE goes to ARMED on ARM; ARMED goes to ALARM when silence lasts longer than the deadline; a STATUS message returns ALARM to ARMED. ARM in ARMED or ALARM resets the counters, and DISARM from any state returns to IDLE."
+  width: 780
+  height: 270
+  nodes:
+    idle:  {x: 30,  y: 50, w: 140, h: 70, kind: plain, title: "IDLE"}
+    armed: {x: 320, y: 50, w: 140, h: 70, kind: good,  title: "ARMED"}
+    alarm: {x: 610, y: 50, w: 140, h: 70, kind: bad,   title: "ALARM"}
+  edges:
+    - {from: idle.right,  to: armed.left, label: "ARM"}
+    - {from: armed.right, to: alarm.left, label: "silence > deadline"}
+    - {from: alarm.bottom, to: armed.bottom, bulge: 44, label: "STATUS resumed"}
+  steps: [idle, e0, armed, e1, alarm, e2]
+  notes:
+    - {x: 30, y: 206, text: "ARM in ARMED or ALARM  →  ARMED, counters reset"}
+    - {x: 30, y: 228, text: "DISARM from any state  →  IDLE"}
+
+- id: burst-pipeline
+  type: timeline
+  alt: "Time line of two bursts: the fabric fills one buffer in about a millisecond, and Linux then spends about thirty-five milliseconds copying and verifying it, while the fabric fills the next buffer. The fabric is idle for most of each cycle."
+  width: 800
+  height: 290
+  label_width: 140
+  scale: 8.6
+  length: 72
+  top: 40
+  lane_h: 64
+  play: 10
+  ticks: [[0, "0 ms"], [36, "about 36 ms"], [72, "about 72 ms"]]
+  lanes:
+    - name: "Fabric and DMA"
+      segments:
+        - {t0: 0,  t1: 2,  kind: fabric, label: "bursts 0 and 1"}
+        - {t0: 36, t1: 37, kind: fabric, label: "burst 2"}
+        - {t0: 71, t1: 72, kind: fabric, label: "burst 3"}
+    - name: "Linux"
+      segments:
+        - {t0: 1,  t1: 36, kind: sw, label: "copy and verify burst 0"}
+        - {t0: 36, t1: 71, kind: sw, label: "copy and verify burst 1"}
+  notes:
+    - {x: 20, y: 246, text: "Drawn to scale: the fabric needs about 1 ms per burst, Linux about 35 ms to copy and verify one."}
+    - {x: 20, y: 266, text: "While Linux verifies burst b-1, the fabric fills burst b. The system waits for Linux."}
+
+- id: fabric-interfaces
+  alt: "How software and fabric are joined: the U54 harts reach fabric registers over FIC3 (APB, 50 MHz); the fabric's DMA writes into DDR over FIC0 (AXI4, 125 MHz) through the MSS; interrupt lines run from the fabric to the harts; the harts also load and store directly to DDR."
+  width: 780
+  height: 340
+  nodes:
+    harts:  {x: 20,  y: 50,  w: 210, h: 80, kind: hart,   title: "U54 harts", sub: "Linux and the supervisor"}
+    fabric: {x: 550, y: 50,  w: 210, h: 80, kind: fabric, title: "FPGA fabric", sub: "pfdaq_core, mailbox, LEDs"}
+    ddr:    {x: 20,  y: 230, w: 210, h: 80, kind: mem,    title: "DDR4, 1 GB", sub: "shared by harts and DMA"}
+  edges:
+    - {id: regs, from: harts.right,  to: fabric.left, label: "FIC3 · APB 50 MHz · registers"}
+    - {id: dma,  from: fabric.bottom, to: ddr.right,  label: "FIC0 · AXI4 125 MHz · DMA writes"}
+    - {id: irq,  from: fabric.top,   to: harts.top, bulge: 34, dashed: true, kind: mss, label: "interrupt lines (F2M)"}
+    - {id: ls,   from: harts.bottom, to: ddr.top, label: "loads and stores"}
+  steps: [harts, regs, fabric, dma, ddr, irq, ls]
+
+- id: fabric-interrupts
+  alt: "Interrupt routing: latency channel 0 (F2M[1], source 119) and the DMA controller (F2M[2], source 120) reach the PLIC and are enabled for Linux on harts 1 to 3; latency channel 1 (F2M[5], source 123) is enabled only for hart 4 in machine mode."
+  width: 800
+  height: 340
+  nodes:
+    lat0: {x: 20,  y: 30,  w: 190, h: 66, kind: fabric, title: "Latency channel 0", sub: "F2M[1] = source 119"}
+    dma:  {x: 20,  y: 137, w: 190, h: 66, kind: fabric, title: "DMA controller",    sub: "F2M[2] = source 120"}
+    lat1: {x: 20,  y: 244, w: 190, h: 66, kind: fabric, title: "Latency channel 1", sub: "F2M[5] = source 123"}
+    plic: {x: 330, y: 120, w: 150, h: 100, kind: mss,   title: "PLIC", sub: "interrupt controller"}
+    linux: {x: 590, y: 50,  w: 190, h: 80, kind: hart,   title: "Harts 1 to 3", sub: "supervisor contexts\nenabled: 119, 120"}
+    h4:    {x: 590, y: 210, w: 190, h: 80, kind: hart,   title: "Hart 4", sub: "machine context\nenabled: 123"}
+  edges:
+    - {from: lat0.right, to: plic.left@0.2, dashed: true, kind: mss}
+    - {from: dma.right,  to: plic.left@0.5, dashed: true, kind: mss}
+    - {from: lat1.right, to: plic.left@0.8, dashed: true, kind: mss}
+    - {from: plic.right@0.3, to: linux.left, dashed: true, kind: mss}
+    - {from: plic.right@0.7, to: h4.left,    dashed: true, kind: mss}
+  steps: [lat0, e0, dma, e1, lat1, e2, plic, e3, linux, e4, h4]

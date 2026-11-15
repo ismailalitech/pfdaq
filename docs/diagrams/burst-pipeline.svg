@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 290" width="800" height="290" role="img" aria-labelledby="t d">
+<title id="t">Time line of two bursts: the fabric fills one buffer in about a millisecond, and Linux then spends about thirty-five milliseconds copying and verifying it, while the fabric fills the next buffer. The fabric is idle for most of each cycle.</title><desc id="d">Time line of two bursts: the fabric fills one buffer in about a millisecond, and Linux then spends about thirty-five milliseconds copying and verifying it, while the fabric fills the next buffer. The fabric is idle for most of each cycle.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl{opacity:0;animation:lit 10.00s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 10.00s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}0.00%{opacity:1}3.00%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="800" height="290" rx="12" fill="#12171d"/>
+<rect x="10" y="40" width="780" height="64" rx="8" fill="#171d25" stroke="#2a3441"/>
+<text x="22" y="76" font-size="13" font-weight="bold" fill="#e6ecf1">Fabric and DMA</text>
+<rect x="140" y="52" width="17.2" height="40" rx="4" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="138" y="49" text-anchor="start" font-size="11" fill="#9aa8b5">bursts 0 and 1</text>
+<rect x="449.6" y="52" width="8.6" height="40" rx="4" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="447.6" y="49" text-anchor="start" font-size="11" fill="#9aa8b5">burst 2</text>
+<rect x="750.6" y="52" width="8.6" height="40" rx="4" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="759.2" y="49" text-anchor="end" font-size="11" fill="#9aa8b5">burst 3</text>
+<rect x="10" y="118" width="780" height="64" rx="8" fill="#171d25" stroke="#2a3441"/>
+<text x="22" y="154" font-size="13" font-weight="bold" fill="#e6ecf1">Linux</text>
+<rect x="148.6" y="130" width="301" height="40" rx="4" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="299.1" y="154" text-anchor="middle" font-size="11.5" fill="#e6ecf1">copy and verify burst 0</text>
+<rect x="449.6" y="130" width="301" height="40" rx="4" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="600.1" y="154" text-anchor="middle" font-size="11.5" fill="#e6ecf1">copy and verify burst 1</text>
+<line x1="140" y1="32" x2="140" y2="188" stroke="#2a3441" stroke-dasharray="2 4"/>
+<text x="140" y="204" text-anchor="middle" font-size="11" fill="#9aa8b5">0 ms</text>
+<line x1="449.6" y1="32" x2="449.6" y2="188" stroke="#2a3441" stroke-dasharray="2 4"/>
+<text x="449.6" y="204" text-anchor="middle" font-size="11" fill="#9aa8b5">about 36 ms</text>
+<line x1="759.2" y1="32" x2="759.2" y2="188" stroke="#2a3441" stroke-dasharray="2 4"/>
+<text x="788" y="204" text-anchor="end" font-size="11" fill="#9aa8b5">about 72 ms</text>
+<g class="play" style="animation-duration:10s; --dx:619.2px"><line x1="140" y1="30" x2="140" y2="190" stroke="#ffd166" stroke-width="2.5"/></g>
+<text x="20" y="246" text-anchor="start" font-size="12" fill="#9aa8b5">Drawn to scale: the fabric needs about 1 ms per burst, Linux about 35 ms to copy and verify one.</text>
+<text x="20" y="266" text-anchor="start" font-size="12" fill="#9aa8b5">While Linux verifies burst b-1, the fabric fills burst b. The system waits for Linux.</text>
+</svg>

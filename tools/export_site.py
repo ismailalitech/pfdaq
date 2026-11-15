@@ -215,7 +215,20 @@ def rewrite_links(text, src_file, site):
             return '[%s](/pfdaq/%s)' % (label, rp)
         link = repo_link(rp)
         return '[%s](%s%s)' % (label, link, frag) if link else label
-    return re.sub(r'(?<!!)\[([^\]]+)\]\(([^)\s]+)\)', fix, text)
+    def fix_image(m):
+        alt, target = m.group(1), m.group(2)
+        if re.match(r'[a-z]+:', target):
+            return m.group(0)
+        rp = os.path.normpath(os.path.join(srcdir, target))
+        if rp.startswith('evidence/'):
+            url = '/pfdaq/' + rp
+        elif rp.startswith('docs/diagrams/'):
+            url = '/pfdaq/diagrams/' + os.path.basename(rp)
+        else:
+            return m.group(0)
+        return '[![%s](%s)](%s)' % (alt, url, url)
+    out = re.sub(r'(?<!!)\[([^\]]+)\]\(([^)\s]+)\)', fix, text)
+    return re.sub(r'!\[([^\]]*)\]\(([^)\s]+)\)', fix_image, out)
 
 
 def body_of(page, site):
@@ -323,6 +336,11 @@ Constraints that shaped the design:
 - The boot flash holds the vendor's boot monitor. Nothing in this project reprograms it; only the fabric is programmed.
 - The DMA controller has rules that its documentation does not state. They were found by testing and are collected in
   [DMA stream descriptors](@I04@).
+
+The fabric half of the system, as the vendor's tool shows it: the project's own block, `pfdaq_core`, feeds the DMA
+controller over an AXI4-Stream link and raises two latency interrupts. The other blocks are the reference design's.
+
+[![The FIC_0_PERIPHERALS canvas in Libero SoC: pfdaq_core, the DMA controller, its initiator and target interconnects and the on-chip SRAM](/pfdaq/evidence/v0.5.1/build/libero-fic0-peripherals.png)](/pfdaq/evidence/v0.5.1/build/libero-fic0-peripherals.png)
 
 ## My contribution
 
@@ -531,6 +549,10 @@ def main():
     for d in ('evidence',):
         if os.path.isdir(os.path.join(C.ROOT, d)):
             shutil.copytree(os.path.join(C.ROOT, d), os.path.join(root, 'static/pfdaq', d))
+    os.makedirs(os.path.join(root, 'static/pfdaq/diagrams'), exist_ok=True)
+    for f in sorted(os.listdir(os.path.join(C.DOCS, 'diagrams'))):
+        if f.endswith('.svg'):
+            shutil.copy(os.path.join(C.DOCS, 'diagrams', f), os.path.join(root, 'static/pfdaq/diagrams', f))
     written.append(os.path.join(root, 'static/pfdaq'))
 
     # scan what was written for private patterns

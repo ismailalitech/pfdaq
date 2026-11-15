@@ -138,6 +138,10 @@ def main():
             if not os.path.exists(os.path.join(C.ROOT, path)):
                 err(f, 'broken link: %s' % target)
 
+    r = subprocess.run([sys.executable, os.path.join(C.ROOT, 'tools', 'gen_diagrams.py'), '--check'], capture_output=True, text=True)
+    if r.returncode != 0:
+        errors.append(r.stdout.strip() or 'gen_diagrams.py --check failed')
+
     # generated files must be current
     r = subprocess.run([sys.executable, os.path.join(C.ROOT, 'tools', 'gen_docs.py'), '--check'],
                        capture_output=True, text=True)

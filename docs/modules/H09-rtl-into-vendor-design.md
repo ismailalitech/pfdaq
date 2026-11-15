@@ -12,7 +12,7 @@ sources:
   - hw/libero/overlay/PFDAQ.tcl:create_hdl_core,hdl_core_add_bif,hdl_core_assign_bif_signal,sd_instantiate_hdl_core,sd_connect_pins,sd_clear_pin_attributes,generate_component
   - hw/libero/overlay/reference-design-v2026.04.patch:organize_tool_files,AXI4_STREAM_DEMO
   - hw/rtl/pfdaq_core.v:pfdaq_core,sel_src,sel_lat0,sel_lat1
-evidence: [timing, programming, sim-latency]
+evidence: [timing, programming, sim-latency, libero-top-smartdesign, libero-fic0-peripherals, libero-fic3-peripherals]
 related: [F05, H03, H10, K07, K08]
 ---
 
@@ -110,6 +110,22 @@ The vendor's top script chooses which integration file to source by build argume
 
 The third hunk is the one with a trap: `organize_tool_files` replaces the tool's file list, so the list must repeat every I/O and floorplan constraint file. The history of that mistake is case study K08.
 
+### What it looks like in Libero
+
+To follow along, open the project (module F05 says how), choose the Design Hierarchy tab at the bottom left and double-click `MPFS_DISCOVERY_KIT`, `FIC_0_PERIPHERALS` and `FIC_3_PERIPHERALS` in turn. Each opens as a canvas.
+
+The reference design's top level is a SmartDesign canvas with four blocks: the clocks and resets, the MSS wrapper, and two blocks of fabric logic, one behind each fabric interface used here.
+
+![Top-level SmartDesign canvas of the project: CLOCKS_AND_RESETS, MSS_WRAPPER, FIC_0_PERIPHERALS and FIC_3_PERIPHERALS](../../evidence/v0.5.1/build/libero-top-smartdesign.png)
+
+Inside `FIC_0_PERIPHERALS` is where `pfdaq_core` sits. Its stream outputs (`TDATA`, `TVALID`, `TLAST`, `TDEST`, `TID`, `TKEEP`, `TSTRB`, `TREADY`) go straight into the stream target of the DMA controller, its two latency interrupts leave the block as `IRQ_LAT0` and `IRQ_LAT1`, and its APB slot is reached through `APB_TARGET`. The DMA controller's initiator goes through `DMA_INITIATOR` to the fabric interface, and `FIC0_INITIATOR` also reaches the on-chip SRAM `MSS_LSRAM`.
+
+![FIC_0_PERIPHERALS canvas: pfdaq_core feeding the DMA controller over AXI4-Stream, with IRQ_LAT0, IRQ_LAT1 and the DMA interrupt as outputs](../../evidence/v0.5.1/build/libero-fic0-peripherals.png)
+
+`FIC_3_PERIPHERALS` is the register side. One address-decode block splits the APB range of the fabric interface into 256-byte slots (`0x4000_00xx` to `0x4000_04xx`, plus `0x4000_0Fxx`, which leaves the block as the port the project's slot is wired to), and behind them sit the reference design's peripherals: the inter-hart mailbox `MIV_IHC_C0`, a GPIO block, a PWM, a UART, a seven-segment SPI block and an I2C wrapper.
+
+![FIC_3_PERIPHERALS canvas: the APB address decode and the reference design peripherals](../../evidence/v0.5.1/build/libero-fic3-peripherals.png)
+
 ## Run it
 
 This is a reading module. The project ran, from the repository root, `hw/libero/build.sh 6`, which applies the patch, copies the files above into the reference design and runs the vendor script with the argument that selects this path (module F05).
@@ -152,7 +168,7 @@ A build whose log ends with the pin-assignment line and a timing verdict (shown 
 | **How to run** | Explanation with recorded evidence; nothing to run |
 | **In the system** | [pfdaq_core](../system/README.md#pfdaq-core) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) · [Platform-level interrupt controller](../system/README.md#plic) · [CoreAXI4DMAController](../system/README.md#dma) |
 | **Source** | [`hw/libero/overlay/PFDAQ.tcl`](../../hw/libero/overlay/PFDAQ.tcl): `create_hdl_core`, `hdl_core_add_bif`, `hdl_core_assign_bif_signal`, `sd_instantiate_hdl_core`, `sd_connect_pins`, `sd_clear_pin_attributes`, `generate_component`<br>[`hw/libero/overlay/reference-design-v2026.04.patch`](../../hw/libero/overlay/reference-design-v2026.04.patch): `organize_tool_files`, `AXI4_STREAM_DEMO`<br>[`hw/rtl/pfdaq_core.v`](../../hw/rtl/pfdaq_core.v): `pfdaq_core`, `sel_src`, `sel_lat0`, `sel_lat1` |
-| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Latency unit simulation, four phases checked by the Python model](../../evidence/v0.5.1/sim/latency.txt) (sim, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Latency unit simulation, four phases checked by the Python model](../../evidence/v0.5.1/sim/latency.txt) (sim, fabric v0.5.1, 2026-11-15)<br>[Top-level SmartDesign canvas: clocks and resets, MSS, FIC_0 and FIC_3 blocks](../../evidence/v0.5.1/build/libero-top-smartdesign.png) (build, fabric v0.5.1, 2026-11-15)<br>[FIC_0_PERIPHERALS canvas: pfdaq_core, DMA controller, initiator and target interconnects, MSS_LSRAM](../../evidence/v0.5.1/build/libero-fic0-peripherals.png) (build, fabric v0.5.1, 2026-11-15)<br>[FIC_3_PERIPHERALS canvas: APB address decode and the reference design peripherals](../../evidence/v0.5.1/build/libero-fic3-peripherals.png) (build, fabric v0.5.1, 2026-11-15) |
 | **Related** | [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>[H03 Crossing clock domains: toggles, snapshots and constraints](H03-clock-domain-crossing.md)<br>[H10 Timing closure, and the build that lost its pins](H10-timing-closure.md)<br>[K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md)<br>[K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md) |
 | **Status** | validated |
 <!-- nav:end -->

@@ -157,24 +157,7 @@ On hart 4 the handler writes `ACK` before it returns, so the line is already low
 
 Under Linux the generic UIO driver does something different, because the acknowledgement belongs to a user program the kernel knows nothing about. Its handler masks the interrupt and wakes the program; the program writes `ACK` and then asks for the interrupt to be unmasked. On this board that sequence produced **two wake-ups per event**: the line was still high when the kernel handler completed, the PLIC recorded a new request, and delivered it when the line was unmasked, although the program had acknowledged by then. `pfdaq_lat` therefore acknowledges only when the fabric's `STATUS` register says an interrupt is really pending, and counts the other wake-ups. In the recorded run of 100,000 events it counted 99,967 empty wake-ups. Module I02 and case study K05 cover this in detail.
 
-```mermaid
-flowchart LR
-  subgraph fabric["FPGA fabric"]
-    lat0["Latency channel 0"]
-    dma["DMA controller"]
-    lat1["Latency channel 1"]
-  end
-  subgraph mss["MSS"]
-    plic["PLIC"]
-    linux["Harts 1 to 3<br>supervisor contexts"]
-    h4["Hart 4<br>machine context"]
-  end
-  lat0 -.->|"F2M[1] = 119"| plic
-  dma -.->|"F2M[2] = 120"| plic
-  lat1 -.->|"F2M[5] = 123"| plic
-  plic -.->|"119, 120 enabled"| linux
-  plic -.->|"123 enabled"| h4
-```
+![Interrupt routing: latency channel 0 (F2M[1], source 119) and the DMA controller (F2M[2], source 120) reach the PLIC and are enabled for Linux on harts 1 to 3; latency channel 1 (F2M[5], source 123) is enabled only for hart 4 in machine mode.](../diagrams/fabric-interrupts.svg)
 
 ## Run it
 
