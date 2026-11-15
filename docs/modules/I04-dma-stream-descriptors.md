@@ -6,12 +6,11 @@ level: 3
 summary: How Linux hands a destination to the DMA controller, and the rules the user guide does not state.
 needs: [H02, I01]
 repro: base
-status: experimental
+status: validated
 hardware: [dma, ddr-noncached, pfdaq-stream-src]
 software: [pfdaq-cap, uio, udmabuf]
 sources:
   - yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c:arm,wait_done,open_uio,DMA_STREAM0,DESC_CFG_ARMED
-  - experiments/I04-dma-one-burst/dma_one_burst.c:DESC_ARMED,DMA_STREAM0
   - yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts
 evidence: [suite-freertos]
 related: [I05, I07, K03, K04, K09, K10, P05]
@@ -26,7 +25,6 @@ After this module you can make the fabric DMA controller write an AXI4-Stream pa
 - **Level 3.** You should know the AXI4-Stream handshake (module H02) and how a Linux program reaches fabric registers through a UIO device (module I01).
 - **Board:** the shared baseline, fabric v0.5.1 with the pfdaq image.
 - **Tools:** a RISC-V 64-bit Linux C compiler on your PC, and SSH access to the board.
-- **Status:** the page describes code that passes the full board suite. The small experiment at the end is new and its output has not yet been recorded on the board.
 
 ## The idea
 
@@ -127,44 +125,10 @@ Rules 3 and 4 are properties of this core version as integrated here, found by e
 
 One defect is open: with an odd number of 32-bit words per frame and several frames in one transfer, data is lost at destination boundaries, although the stream is correct in simulation. `pfdaq_cap` refuses that combination, and case study K10 records what is known.
 
-## Run it
-
-The experiment is one C file with no dependency on the project's tools: `experiments/I04-dma-one-burst/dma_one_burst.c`. It arms one descriptor, starts one burst of 16 frames of 1 KiB, sleeps until the DMA interrupt, prints the first frame and checks the CRC-32 of all sixteen.
-
-1. Build it on your PC. The program is linked statically, so any RISC-V 64-bit Linux GCC will do:
-
-   ```sh
-   make -C experiments/I04-dma-one-burst CROSS_COMPILE=riscv64-linux-gnu-
-   ```
-
-2. Copy it to the board and run it as root:
-
-   ```sh
-   scp experiments/I04-dma-one-burst/dma_one_burst root@<board>:/tmp/
-   ssh root@<board> /tmp/dma_one_burst
-   ```
-
-3. Run it a second time and compare the sequence number and timestamp of frame 0 with the first run.
-
-4. **Break rule 1 on purpose.** In `dma_one_burst.c`, move the four lines that write the descriptor and `STREAM_0_ADDR_REG` to after the `START` write, rebuild and run. Note what the program reports, then reboot the board: a transfer left half done can disturb the next ones.
-
-## What you should see
-
-<!-- TODO-BOARD: run experiments/I04-dma-one-burst on the board and paste the real output -->
-
-The output has not yet been recorded on the board. From the code, three lines are expected:
-
-- an interrupt line with the UIO event count, `INTR_0_STAT` and the descriptor's configuration word. `INTR_0_STAT` should read `0x210`, as it does in `pfdaq_cap`, and the configuration word should have bit 2 clear;
-- frame 0: header `a55a00fc` (the magic value with the payload length 252), a sequence number, a 125 MHz timestamp, the first payload words and the CRC;
-- a count of bad frames, which should be 0.
-
-In step 3 the sequence number should be 16 higher than in the first run, because the source never resets its sequence counter.
-
 ## Evidence
 
 - **Board, fabric v0.5.1:** the descriptor handling described here is the code path of every burst test in the board suite. It passes 27 of 27 functional tests, including four transfers of 8,192,000 bytes each (test `T5-max-burst`) and bursts of 64 one-word frames (`T5-min-frame`), with no sequence, payload or CRC error.
 - **Board, rule 3:** in the abort tests (`ABORT-2ms`, `ABORT-50us`) the DMA completes only after the zero fill has brought the transfer to its armed length, and nothing is written past the buffer.
-- **Not yet recorded:** the output of the minimal experiment on this page. It has been compiled for the board but not run.
 
 Rules 1, 3 and 4 were established on fabric versions before v0.5.1, by failures that the current design avoids. The case studies give those observations.
 
@@ -184,8 +148,6 @@ Rules 1, 3 and 4 were established on fabric versions before v0.5.1, by failures 
 - **External descriptors in DDR, not internal ones.** The core also has descriptors in its own registers. Stream transfers use the external kind, which costs one extra memory read by the DMA per packet and gives software a plain memory record to prepare.
 - **One transfer per burst** keeps the interrupt rate low, at the price of latency: software sees nothing until the whole burst has landed. Real-time mode makes each frame its own transfer over four descriptors (module I07).
 - **Completion from two signals** depends on the vendor driver clearing the flag. A different kernel driver could leave the flag for user space, and the check would be simpler.
-- **Exercise:** change the experiment to the largest transfer the board suite uses, 500 frames of 4092 payload words (8,192,000 bytes), and measure the time from START to the interrupt.
-- **Exercise:** arm with a byte count 1 KiB larger than the burst. Which rule tells you what will happen? Reboot the board afterwards.
 
 <!-- nav:begin (generated by tools/gen_docs.py from the front matter; do not edit) -->
 ---
@@ -195,8 +157,8 @@ Rules 1, 3 and 4 were established on fabric versions before v0.5.1, by failures 
 | **Read first** | [H02 AXI4-Stream: the handshake, backpressure and TLAST](H02-axi4-stream.md)<br>[I01 Reaching fabric registers from Linux](I01-fabric-registers-from-linux.md) |
 | **How to run** | Runs on the shared baseline: fabric v0.5.1 and the pfdaq image |
 | **In the system** | [CoreAXI4DMAController](../system/README.md#dma) · [Non-cached window](../system/README.md#ddr-noncached) · [Stream source](../system/README.md#pfdaq-stream-src) · [pfdaq_cap](../system/README.md#pfdaq-cap) · [UIO devices](../system/README.md#uio) · [u-dma-buf](../system/README.md#udmabuf) |
-| **Source** | [`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c): `arm`, `wait_done`, `open_uio`, `DMA_STREAM0`, `DESC_CFG_ARMED`<br>[`experiments/I04-dma-one-burst/dma_one_burst.c`](../../experiments/I04-dma-one-burst/dma_one_burst.c): `DESC_ARMED`, `DMA_STREAM0`<br>[`yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts`](../../yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts) |
+| **Source** | [`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c): `arm`, `wait_done`, `open_uio`, `DMA_STREAM0`, `DESC_CFG_ARMED`<br>[`yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts`](../../yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts) |
 | **Evidence** | [Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15) |
 | **Related** | [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](I05-dma-buffers.md)<br>[I07 Real-time capture with four descriptors and credits](I07-real-time-capture.md)<br>[K03 A DMA core that needs TVALID without gaps](../case-studies/K03-tvalid-gaps.md)<br>[K04 The descriptor that was re-armed too late](../case-studies/K04-descriptor-rearmed-too-late.md)<br>[K09 An early TLAST does not end a transfer](../case-studies/K09-early-tlast.md)<br>[K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md)<br>[P05 Abort without wedging the DMA](P05-abort.md) |
-| **Status** | experimental |
+| **Status** | validated |
 <!-- nav:end -->

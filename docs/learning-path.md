@@ -28,7 +28,7 @@ Modules are grouped in five levels. Nothing forces an order: every module lists 
 - [I01 Reaching fabric registers from Linux](modules/I01-fabric-registers-from-linux.md). Needs: H01, B04.
 - [K01 The fabric on the board was not the reference design](case-studies/K01-delivered-fabric.md). Needs: nothing.
 - [K02 Python wrote my registers one byte at a time](case-studies/K02-bytewise-register-writes.md). Needs: nothing.
-- [S03 A signed boot chain you can run](modules/S03-signed-boot-chain.md). Needs: S02.
+- [S03 A signed boot chain you can run](modules/S03-signed-boot-chain.md). Needs: nothing.
 
 ## Level 3: subsystem integration
 
@@ -62,8 +62,6 @@ Modules are grouped in five levels. Nothing forces an order: every module lists 
 - [X02 One burst from START to verified](modules/X02-one-burst.md). Needs: X01.
 - [X03 Reproduce the board from an empty SD card](modules/X03-reproduce-from-empty-sd.md). Needs: X01.
 - [X04 The validation report](modules/X04-validation-report.md). Needs: X01.
-- [S01 FIC4 and the user crypto processor](modules/S01-fic4-crypto-processor.md). Needs: nothing.
-- [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](modules/S02-secure-boot.md). Needs: nothing.
 
 ## Level 4: the complete application and its hard parts
 
@@ -164,8 +162,6 @@ flowchart LR
     X04["X04 The validation report"]
   end
   subgraph S["Security and secure boot"]
-    S01["S01 FIC4 and the user crypto processor"]
-    S02["S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone"]
     S03["S03 A signed boot chain you can run"]
   end
   subgraph C["Concepts"]
@@ -229,5 +225,4 @@ flowchart LR
   X01 --> X02
   X01 --> X03
   X01 --> X04
-  S02 --> S03
 ```

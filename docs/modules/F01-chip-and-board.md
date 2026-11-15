@@ -6,10 +6,10 @@ level: 1
 summary: What is fixed silicon, what is programmable, and the four ways the two halves talk.
 repro: doc
 status: validated
-hardware: [board, soc, mss, fabric, e51, u54-linux, u54-4, fic0, fic3, fic4, plic, ddr]
+hardware: [board, soc, mss, fabric, e51, u54-linux, u54-4, fic0, fic3, plic, ddr]
 software: [hss]
 evidence: [boot-hss, boot-uboot-linux]
-related: [F02, F03, F04, S01, X01]
+related: [F02, F03, F04, X01]
 ---
 
 # The chip and the board: MSS, fabric and the interfaces between them
@@ -77,7 +77,7 @@ The shared L2 is split between ordinary cache, a scratchpad and a loosely integr
 | **FIC1** | clocked at 125 MHz by the fabric design | not used | nothing |
 | **FIC2** | clocked at 125 MHz by the fabric design | not used | nothing |
 | **FIC3** | APB, 50 MHz | MSS to fabric registers | the stream source and latency unit at 0x4000_0F00, the inter-hart mailbox at 0x5000_0000, and the reference design's own peripherals |
-| **FIC4** | AHB-Lite | reserved for the on-chip crypto processor | nothing; see module S01 |
+| **FIC4** | AHB-Lite | reserved for the on-chip crypto processor | nothing |
 
 The clock figures are what the fabric design supplies; module F04 shows where they come from. FIC1 and FIC2 are clocked but nothing in this project connects to them, and this page does not describe them further.
 
@@ -146,8 +146,8 @@ These records show the software view of the chip. They do not measure anything a
 | | |
 |---|---|
 | **How to run** | Explanation with recorded evidence; nothing to run |
-| **In the system** | [PolarFire SoC Discovery Kit](../system/README.md#board) · [MPFS095T system-on-chip](../system/README.md#soc) · [Microprocessor subsystem (MSS)](../system/README.md#mss) · [FPGA fabric](../system/README.md#fabric) · [E51 (hart 0)](../system/README.md#e51) · [U54 harts 1 to 3](../system/README.md#u54-linux) · [U54 hart 4](../system/README.md#u54-4) · [FIC0 (AXI4, 125 MHz)](../system/README.md#fic0) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) · [FIC4 (AHB-Lite, crypto)](../system/README.md#fic4) · [Platform-level interrupt controller](../system/README.md#plic) · [DDR4 memory, 1 GB](../system/README.md#ddr) · [Hart Software Services](../system/README.md#hss) |
+| **In the system** | [PolarFire SoC Discovery Kit](../system/README.md#board) · [MPFS095T system-on-chip](../system/README.md#soc) · [Microprocessor subsystem (MSS)](../system/README.md#mss) · [FPGA fabric](../system/README.md#fabric) · [E51 (hart 0)](../system/README.md#e51) · [U54 harts 1 to 3](../system/README.md#u54-linux) · [U54 hart 4](../system/README.md#u54-4) · [FIC0 (AXI4, 125 MHz)](../system/README.md#fic0) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) · [Platform-level interrupt controller](../system/README.md#plic) · [DDR4 memory, 1 GB](../system/README.md#ddr) · [Hart Software Services](../system/README.md#hss) |
 | **Evidence** | [Boot monitor console from power-up to all four application cores running](../../evidence/v0.5.1/board/boot-hss.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | [F02 The memory map and the three faces of DDR](F02-memory-map-ddr.md)<br>[F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](F03-fabric-interrupts.md)<br>[F04 Clocks and resets: one PLL, two bus clocks](F04-clocks-and-resets.md)<br>[S01 FIC4 and the user crypto processor](S01-fic4-crypto-processor.md)<br>[X01 pfdaq in one page](X01-pfdaq-in-one-page.md) |
+| **Related** | [F02 The memory map and the three faces of DDR](F02-memory-map-ddr.md)<br>[F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](F03-fabric-interrupts.md)<br>[F04 Clocks and resets: one PLL, two bus clocks](F04-clocks-and-resets.md)<br>[X01 pfdaq in one page](X01-pfdaq-in-one-page.md) |
 | **Status** | validated |
 <!-- nav:end -->

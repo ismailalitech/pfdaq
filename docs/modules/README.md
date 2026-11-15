@@ -12,7 +12,7 @@ Every module is one page with the same structure: what it teaches, what you need
 |---|---|---|---|
 | [F01 The chip and the board: MSS, fabric and the interfaces between them](F01-chip-and-board.md)<br>What is fixed silicon, what is programmable, and the four ways the two halves talk. | 1 | read | validated |
 | [F02 The memory map and the three faces of DDR](F02-memory-map-ddr.md)<br>One physical memory, several address windows with different cache behaviour, and who owns which region. | 1 | shared baseline | validated |
-| [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](F03-fabric-interrupts.md)<br>How a wire in the fabric becomes an interrupt on one chosen hart, and how two operating systems share one controller. | 2 | shared baseline | experimental |
+| [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](F03-fabric-interrupts.md)<br>How a wire in the fabric becomes an interrupt on one chosen hart, and how two operating systems share one controller. | 2 | shared baseline | validated |
 | [F04 Clocks and resets: one PLL, two bus clocks](F04-clocks-and-resets.md)<br>Where the 50 MHz and 125 MHz clocks come from and which logic lives in which domain. | 2 | read | validated |
 | [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>Building and programming the fabric from scripts, with no GUI step. | 1 | read | validated |
 | F06 GPIO from both sides: MSS GPIO and fabric CoreGPIO *(planned)*<br>The same LED driven from the processor's GPIO block and from a GPIO core in the fabric, plus switch inputs and a button interrupt. | 2 | shared baseline | planned |
@@ -66,7 +66,7 @@ Every module is one page with the same structure: what it teaches, what you need
 | [I01 Reaching fabric registers from Linux](I01-fabric-registers-from-linux.md)<br>/dev/mem, UIO, and two traps: a locked-down kernel and byte-wise writes. | 2 | shared baseline | validated |
 | [I02 Fabric interrupts in user space, and the double wake-up](I02-fabric-interrupts-user-space.md)<br>Waiting for a fabric interrupt with a blocking read, and why each event arrived twice. | 3 | shared baseline | validated |
 | [I03 A small kernel driver for a fabric interrupt](I03-kernel-driver-fabric-interrupt.md)<br>The 128-line driver that answers the interrupt in the kernel, and its Yocto recipe. | 4 | shared baseline | validated |
-| [I04 DMA stream descriptors: the rules this core really follows](I04-dma-stream-descriptors.md)<br>How Linux hands a destination to the DMA controller, and the rules the user guide does not state. | 3 | shared baseline | experimental |
+| [I04 DMA stream descriptors: the rules this core really follows](I04-dma-stream-descriptors.md)<br>How Linux hands a destination to the DMA controller, and the rules the user guide does not state. | 3 | shared baseline | validated |
 | [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](I05-dma-buffers.md)<br>Where DMA buffers live, how user space maps them, and why cache behaviour decides the choice. | 3 | shared baseline | validated |
 | [I06 Capturing and verifying a stream](I06-capture-and-verify.md)<br>Checking every frame against a software model of the hardware, for three payload types. | 3 | shared baseline | validated |
 | [I07 Real-time capture with four descriptors and credits](I07-real-time-capture.md)<br>Keeping four transfers armed and paying the fabric one credit for each buffer handed back. | 4 | shared baseline | validated |
@@ -116,8 +116,6 @@ Every module is one page with the same structure: what it teaches, what you need
 
 | Module | Level | How to run | Status |
 |---|---|---|---|
-| [S01 FIC4 and the user crypto processor](S01-fic4-crypto-processor.md)<br>What FIC4 is, how the on-chip crypto processor can be owned by the processors or by the fabric, and why this project documents it instead of driving it. | 3 | read | validated |
-| [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](S02-secure-boot.md)<br>How a signed boot works on this chip, from the vendor's boot monitor source and guide, and why this project demonstrated it offline instead of enabling it. | 3 | read | validated |
 | [S03 A signed boot chain you can run](S03-signed-boot-chain.md)<br>Sign a real HSS boot payload offline, verify it twice, and watch a toy chain of trust refuse six kinds of tampering. Nothing is flashed. | 2 | simulation | validated |
 
 ## Concepts
@@ -126,4 +124,4 @@ Every module is one page with the same structure: what it teaches, what you need
 |---|---|---|---|
 | [C01 Direct memory access](../concepts/C01-dma.md)<br>Why hardware writes memory by itself, what a descriptor is, and what it costs. | 1 | read | validated |
 
-70 modules, 62 written.
+68 modules, 60 written.

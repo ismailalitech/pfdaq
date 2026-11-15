@@ -85,18 +85,6 @@ nodes:
     parent: mss
     summary: Fabric interface controller 3. An APB master from the MSS into the fabric, used for low-speed register access.
     facts: {protocol: APB, clock: "50 MHz"}
-  - id: fic4
-    title: FIC4 (AHB-Lite, crypto)
-    kind: bus
-    parent: mss
-    summary: The fabric interface controller reserved for the user crypto processor. It gives the fabric an AHB-Lite path to the crypto processor and gives the crypto processor's DMA a path into the fabric. Not used in this design.
-    facts: {protocol: "AHB-Lite", clock_limit: "200 MHz (the crypto processor maximum)", used_here: "no"}
-  - id: crypto-processor
-    title: User crypto processor
-    kind: mss-block
-    parent: mss
-    summary: A hard Athena TeraFire cryptography processor (AES, SHA, HMAC, ECC, RSA, random numbers) that either the MSS or the fabric can own. In this design its mode is set to unused; it is driven only through a vendor library that is not public.
-    facts: {block: "Athena TeraFire EXP-F5200B", clock: "up to 200 MHz", mss_configuration: "CRYPTO = UNUSED"}
   - id: mss-gpio2
     title: MSS GPIO2
     kind: mss-block
@@ -293,7 +281,6 @@ edges:
   - {id: fic3-core, from: fic3, to: pfdaq-core, kind: apb, label: "APB, 0x4000_0F00", detail: "32-bit accesses only"}
   - {id: fic3-ihc, from: fic3, to: ihc, kind: apb, label: "APB, 0x5000_0000"}
   - {id: fic3-refdesign, from: fic3, to: refdesign-peripherals, kind: apb, label: "APB, 0x4000_0000 to 0x4000_04FF"}
-  - {id: crypto-fic4, from: fic4, to: crypto-processor, kind: ahb, label: "AHB-Lite slave for control and data, AHB-Lite master for DMA", detail: "Only in fabric and shared modes. Not used in this design."}
   - {id: linux-fic0, from: u54-linux, to: fic0, kind: axi4, label: "DMA register access"}
   - {id: fic0-dma-regs, from: fic0, to: dma, kind: axi4, label: "AXI4-Lite, 0x6001_0000"}
   - {id: stream, from: pfdaq-stream-src, to: dma, kind: axi4-stream, label: "AXI4-Stream, 64 bit, 125 MHz", detail: "TVALID continuous within a packet; TDEST 0 to 3 selects the descriptor"}

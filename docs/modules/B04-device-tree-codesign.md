@@ -24,7 +24,7 @@ After this page you can read the 74-line device tree that lets Linux share a chi
 ## Before you start
 
 - **Level 2.** You should know what a device tree is: a description of the hardware that the kernel reads at boot, instead of having it built in. Module F02 explains the memory map this page refers to.
-- **Board:** the shared baseline. The checks at the end are commands to run on the board; it was offline while this page was written, so they are marked as not yet run.
+- **Board:** the shared baseline.
 
 ## The idea
 
@@ -124,28 +124,6 @@ Two details matter. UIO maps whole pages, so the window at `0x40000F00` is reach
 ### 5. How the file gets into the kernel
 
 The kernel recipe (module B03) copies the file into the kernel source tree and appends one line to the tree's device-tree Makefile. The machine configuration then selects the result, and U-Boot loads it from the `fitImage` on the card together with the kernel.
-
-## Run it
-
-Nothing here is built by hand. The checks below are for the running board; they were not run while this page was written.
-
-1. Which regions did Linux reserve? <!-- TODO-BOARD: grep -i -E 'reserved|91c00000|91d' /proc/iomem ; dmesg | grep -i reserved -->
-2. Which UIO devices exist, and which is which? <!-- TODO-BOARD: grep -H . /sys/class/uio/uio*/name -->
-3. How many CPUs does Linux have? <!-- TODO-BOARD: cat /sys/devices/system/cpu/online -->
-
-## What you should see
-
-From the recorded console of a cold boot (`boot-uboot-linux`):
-
-```text
-Machine model: Microchip PolarFire-SoC Discovery Kit (AMP)
-Kernel command line: earlycon root=/dev/mmcblk0p3 rootwait uio_pdrv_genirq.of_id=generic-uio clk_ignore_unused
-remoteproc remoteproc0: remote-context is available
-remoteproc remoteproc0: attaching to remote-context
-virtio_rpmsg_bus virtio0: creating channel pfdaq-supervisor addr 0x0
-```
-
-The model string is the device tree's; the command-line word is the one that makes the UIO node work; the remoteproc lines show the node of section 3 being used.
 
 ## Evidence
 

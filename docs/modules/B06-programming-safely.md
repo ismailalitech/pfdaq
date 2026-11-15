@@ -14,7 +14,7 @@ sources:
   - hw/libero/export_job.tcl:export_fpe_job,GENERATEPROGRAMMINGDATA
   - tools/host/99-mpfs-disco-uart.rules
 evidence: [programming, timing, boot-hss]
-related: [F05, S02, K01, K08, B05]
+related: [F05, K01, K08, B05]
 ---
 
 # Programming safely: components, digests and what never to touch
@@ -89,7 +89,7 @@ Read it as a set of claims you can check:
 | Rule | Why |
 |---|---|
 | Never program the ENVM and never use a boot-mode programming command | the boot monitor in the chip is the only way to start from the SD card |
-| Never program user keys, passcodes or security locks | the pages read for this project do not say which can be undone (see module S02) |
+| Never program user keys, passcodes or security locks | the pages read for this project do not say which can be undone |
 | Export every job with the component list `FABRIC SNVM`, so ENVM cannot be selected | the safe choice is made once, when the job is made, not every time it is used |
 | Run `PROGRAM`, `VERIFY` and `DEVICE_INFO` together and compare the ENVM digest with the previous one | a result you did not look at is not a check |
 | Keep the previous job file | it is the way back |
@@ -130,6 +130,6 @@ The output above, in full. Two `PASSED` lines for `PROGRAM` and `VERIFY` mean th
 | **In the system** | [eNVM boot flash](../system/README.md#envm) · [FlashPro5 on USB-C](../system/README.md#debug-usb) · [Development PC](../system/README.md#host) · [MPFS095T system-on-chip](../system/README.md#soc) · [Hart Software Services](../system/README.md#hss) |
 | **Source** | [`hw/libero/program.sh`](../../hw/libero/program.sh): `ACTIONS`, `DEVICE_INFO`<br>[`hw/libero/export_job.tcl`](../../hw/libero/export_job.tcl): `export_fpe_job`, `GENERATEPROGRAMMINGDATA`<br>[`tools/host/99-mpfs-disco-uart.rules`](../../tools/host/99-mpfs-disco-uart.rules) |
 | **Evidence** | [Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Boot monitor console from power-up to all four application cores running](../../evidence/v0.5.1/board/boot-hss.txt) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>[S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](S02-secure-boot.md)<br>[K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md)<br>[K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md)<br>[B05 Updating a running board over SSH](B05-update-running-board.md) |
+| **Related** | [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>[K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md)<br>[K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md)<br>[B05 Updating a running board over SSH](B05-update-running-board.md) |
 | **Status** | validated |
 <!-- nav:end -->

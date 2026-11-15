@@ -126,7 +126,7 @@ def main():
     md = subprocess.run(['git', '-C', C.ROOT, 'ls-files', '-co', '--exclude-standard', '*.md'],
                         capture_output=True, text=True).stdout.split()
     for f in md:
-        if f.startswith('logs/') or f == 'PROJECT_STATE.md':
+        if f.startswith(('logs/', 'docs/platform/')) or f == 'PROJECT_STATE.md':
             continue
         with open(os.path.join(C.ROOT, f), errors='replace') as fh:
             text = fh.read()

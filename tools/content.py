@@ -30,7 +30,7 @@ REPRO = {
     'doc': 'Explanation with recorded evidence; nothing to run',
     'none': 'No board or tools needed',
 }
-STATUS = ['validated', 'validated-old', 'simulated', 'experimental', 'planned']
+STATUS = ['validated', 'validated-old', 'simulated', 'experimental', 'planned', 'held']
 REQUIRED = ['id', 'title', 'track', 'level', 'summary', 'repro', 'status']
 
 

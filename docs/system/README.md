@@ -20,8 +20,6 @@ flowchart LR
         plic["Platform-level interrupt controller"]
         fic0["FIC0 (AXI4, 125 MHz)"]
         fic3["FIC3 (APB, 50 MHz)"]
-        fic4["FIC4 (AHB-Lite, crypto)"]
-        crypto_processor["User crypto processor"]
       end
       subgraph fabric["FPGA fabric"]
         subgraph pfdaq_core["pfdaq_core"]
@@ -42,7 +40,6 @@ flowchart LR
   u54_4 -->|"reads counters, acknowledges latency channel 1"| fic3
   fic3 -->|"APB, 0x4000_0F00"| pfdaq_core
   fic3 -->|"APB, 0x5000_0000"| ihc
-  fic4 -->|"AHB-Lite slave for control and data, AHB-Lite master for DMA"| crypto_processor
   u54_linux -->|"DMA register access"| fic0
   fic0 -->|"AXI4-Lite, 0x6001_0000"| dma
   pfdaq_stream_src ==>|"AXI4-Stream, 64 bit, 125 MHz"| dma
@@ -166,7 +163,7 @@ A hardened RISC-V processor subsystem (the MSS) and an FPGA fabric of 93,516 log
 Five RISC-V harts, their interrupt controllers, the DDR controller, hard peripherals and the interfaces into the fabric. Fixed silicon; only its configuration is chosen.
 
 - **Part of:** [MPFS095T system-on-chip](#soc)
-- **Contains:** [E51 (hart 0)](#e51), [U54 harts 1 to 3](#u54-linux), [U54 hart 4](#u54-4), [Platform-level interrupt controller](#plic), [FIC0 (AXI4, 125 MHz)](#fic0), [FIC3 (APB, 50 MHz)](#fic3), [FIC4 (AHB-Lite, crypto)](#fic4), [User crypto processor](#crypto-processor), [MSS GPIO2](#mss-gpio2), [MMUART 0, 1 and 4](#mss-uarts)
+- **Contains:** [E51 (hart 0)](#e51), [U54 harts 1 to 3](#u54-linux), [U54 hart 4](#u54-4), [Platform-level interrupt controller](#plic), [FIC0 (AXI4, 125 MHz)](#fic0), [FIC3 (APB, 50 MHz)](#fic3), [MSS GPIO2](#mss-gpio2), [MMUART 0, 1 and 4](#mss-uarts)
 - **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md)
 
 ### FPGA fabric
@@ -296,32 +293,6 @@ Fabric interface controller 3. An APB master from the MSS into the fabric, used 
 - ← [U54 harts 1 to 3](#u54-linux): register access
 - ← [U54 hart 4](#u54-4): reads counters, acknowledges latency channel 1
 - **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [F04 Clocks and resets: one PLL, two bus clocks](../modules/F04-clocks-and-resets.md); [M03 A real-time supervisor: deadlines and independent checks](../modules/M03-real-time-supervisor.md); [H01 An APB register block that software can trust](../modules/H01-apb-register-block.md); [H09 Integrating custom RTL into a vendor design by script](../modules/H09-rtl-into-vendor-design.md); [H10 Timing closure, and the build that lost its pins](../modules/H10-timing-closure.md); [I01 Reaching fabric registers from Linux](../modules/I01-fabric-registers-from-linux.md); [K02 Python wrote my registers one byte at a time](../case-studies/K02-bytewise-register-writes.md); [X02 One burst from START to verified](../modules/X02-one-burst.md)
-
-### FIC4 (AHB-Lite, crypto)
-
-<a id="fic4"></a>
-
-The fabric interface controller reserved for the user crypto processor. It gives the fabric an AHB-Lite path to the crypto processor and gives the crypto processor's DMA a path into the fabric. Not used in this design.
-
-- **Part of:** [Microprocessor subsystem (MSS)](#mss)
-- **Protocol:** AHB-Lite
-- **Clock limit:** 200 MHz (the crypto processor maximum)
-- **Used here:** no
-- → [User crypto processor](#crypto-processor): AHB-Lite slave for control and data, AHB-Lite master for DMA. Only in fabric and shared modes. Not used in this design.
-- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [S01 FIC4 and the user crypto processor](../modules/S01-fic4-crypto-processor.md)
-
-### User crypto processor
-
-<a id="crypto-processor"></a>
-
-A hard Athena TeraFire cryptography processor (AES, SHA, HMAC, ECC, RSA, random numbers) that either the MSS or the fabric can own. In this design its mode is set to unused; it is driven only through a vendor library that is not public.
-
-- **Part of:** [Microprocessor subsystem (MSS)](#mss)
-- **Block:** Athena TeraFire EXP-F5200B
-- **Clock:** up to 200 MHz
-- **Mss configuration:** CRYPTO = UNUSED
-- ← [FIC4 (AHB-Lite, crypto)](#fic4): AHB-Lite slave for control and data, AHB-Lite master for DMA. Only in fabric and shared modes. Not used in this design.
-- **Learn how this works:** [S01 FIC4 and the user crypto processor](../modules/S01-fic4-crypto-processor.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
 
 ### MSS GPIO2
 
@@ -514,7 +485,7 @@ The only boot medium besides the chip's own flash. Partition 1 holds the kernel 
 
 - **Part of:** [PolarFire SoC Discovery Kit](#board)
 - → [Hart Software Services](#hss): payload from partition 2
-- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### eNVM boot flash
 
@@ -524,7 +495,7 @@ Non-volatile memory inside the chip that holds the Hart Software Services. This 
 
 - **Part of:** [MPFS095T system-on-chip](#soc)
 - → [Hart Software Services](#hss): stored in
-- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md); [K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md); [K01 The fabric on the board was not the reference design](../case-studies/K01-delivered-fabric.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### FlashPro5 on USB-C
 
@@ -569,7 +540,7 @@ Microchip's boot monitor, v2026.04.1. Trains DDR, loads the payload from the SD 
 - → [pfdaq supervisor](#supervisor): starts on hart 4 without OpenSBI
 - ← [eNVM boot flash](#envm): stored in
 - ← [microSD card](#sd-card): payload from partition 2
-- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M04 Same core, same code: FreeRTOS against bare metal](../modules/M04-freertos-vs-bare-metal.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md); [S03 A signed boot chain you can run](../modules/S03-signed-boot-chain.md)
+- **Learn how this works:** [F01 The chip and the board: MSS, fabric and the interfaces between them](../modules/F01-chip-and-board.md); [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [B06 Programming safely: components, digests and what never to touch](../modules/B06-programming-safely.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M04 Same core, same code: FreeRTOS against bare metal](../modules/M04-freertos-vs-bare-metal.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md); [K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [S03 A signed boot chain you can run](../modules/S03-signed-boot-chain.md)
 
 ### OpenSBI
 
@@ -590,7 +561,7 @@ v2025.07-mchp. Loads the kernel image from the SD card and starts Linux.
 - **Part of:** [Software](#software)
 - → [Linux 6.18.17](#linux-kernel): kernel image from partition 1
 - ← [Hart Software Services](#hss): starts on harts 1 to 3 through OpenSBI
-- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B02 The HSS payload: starting two operating systems](../modules/B02-hss-payload.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### Linux 6.18.17
 
@@ -603,7 +574,7 @@ Built with Yocto from Microchip's BSP plus the project layer. Three CPUs; the fo
 - → [U54 harts 1 to 3](#u54-linux): supervisor mode
 - ← [U-Boot](#u-boot): kernel image from partition 1
 - **Source:** [`yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts`](../../yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts)
-- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [I03 A small kernel driver for a fabric interrupt](../modules/I03-kernel-driver-fabric-interrupt.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md); [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](../modules/S02-secure-boot.md)
+- **Learn how this works:** [B01 From power-on to login, stage by stage](../modules/B01-power-on-to-login.md); [B03 A Yocto layer for a board the vendor does not support in AMP](../modules/B03-yocto-layer.md); [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](../modules/B04-device-tree-codesign.md); [B05 Updating a running board over SSH](../modules/B05-update-running-board.md); [M01 Asymmetric multiprocessing on one chip](../modules/M01-asymmetric-multiprocessing.md); [M06 remoteproc: attach, stop, and why restart fails here](../modules/M06-remoteproc-attach-stop.md); [I03 A small kernel driver for a fabric interrupt](../modules/I03-kernel-driver-fabric-interrupt.md); [P06 Soak and reboot testing](../modules/P06-soak-and-reboot.md); [X01 pfdaq in one page](../modules/X01-pfdaq-in-one-page.md); [X03 Reproduce the board from an empty SD card](../modules/X03-reproduce-from-empty-sd.md)
 
 ### UIO devices
 

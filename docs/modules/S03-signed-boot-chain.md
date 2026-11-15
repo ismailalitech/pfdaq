@@ -4,7 +4,6 @@ title: "A signed boot chain you can run"
 track: security
 level: 2
 summary: Sign a real HSS boot payload offline, verify it twice, and watch a toy chain of trust refuse six kinds of tampering. Nothing is flashed.
-needs: [S02]
 repro: sim
 status: validated
 hardware: [hss]
@@ -13,7 +12,7 @@ sources:
   - experiments/secure-boot-chain/verify_boot_image.py:verify
   - experiments/secure-boot-chain/sign_and_verify.sh
 evidence: [secure-boot-chain-demo, secure-boot-sign-verify]
-related: [S02, S01]
+related: [B06, B02]
 ---
 
 # A signed boot chain you can run
@@ -22,11 +21,13 @@ After this lab you have signed a boot payload with the same tool and format the 
 
 ## Before you start
 
-- **Level 2.** Module S02 explains what is being checked and why.
+- **Level 2.** Module B02 shows where the signed payload comes from; this lab only needs the idea below.
 - **Tools:** Python 3 with the `cryptography` package, OpenSSL. For part 2 also the HSS payload generator (the Yocto build contains one) and the bare-metal payload that `firmware/build_payload.sh` builds.
 - **Board:** none. Nothing in this lab is written to a board or an SD card.
 
 ## The idea
+
+A secure boot answers one question at every stage: *is the code I am about to run the code its owner signed?* A small, unchangeable piece of code (the root of trust) holds the owner's public key and checks a signature on the next stage; only if it passes is that stage started, and it then checks the one after it. A version number that cannot go back stops an attacker from replaying an old, genuinely signed image.
 
 A signature is made over the whole image by the owner's private key. Anyone holding the public key can check it; nobody without the private key can forge it. In both parts of this lab the checker holds only a public key.
 
@@ -105,7 +106,7 @@ Both outputs above are recorded (host-side runs; no board, no fabric). Keys are 
 
 ## Trade-offs and going further
 
-- **This is a model, not the chip.** It shows that the format and the algorithm are understood. It says nothing about how the boot monitor inside a given chip treats a signed payload.
+- **This is a model, not the chip.** It shows that the format and the algorithm are understood. The signed payload was never flashed, so it says nothing about how the boot monitor inside this chip treats one. Enabling the real check means rebuilding that monitor with a public key and rewriting the chip's boot flash, which this project does not do.
 - **Exercise:** add a second signer to the toy chain, so that stage 2 may be signed by either of two keys. What does the ROM now have to trust?
 - **Exercise:** let the ROM's minimum version be stored in the image's own header. Which of the six scenarios now pass that should not?
 - **Exercise:** change the signature algorithm to Ed25519 in `chain_demo.py`. What changes in the sizes?
@@ -115,11 +116,10 @@ Both outputs above are recorded (host-side runs; no board, no fabric). Keys are 
 
 | | |
 |---|---|
-| **Read first** | [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](S02-secure-boot.md) |
 | **How to run** | Simulation only: Icarus Verilog and Python, no board |
 | **In the system** | [Hart Software Services](../system/README.md#hss) |
 | **Source** | [`experiments/secure-boot-chain/chain_demo.py`](../../experiments/secure-boot-chain/chain_demo.py): `check_image`, `boot`, `sign_image`<br>[`experiments/secure-boot-chain/verify_boot_image.py`](../../experiments/secure-boot-chain/verify_boot_image.py): `verify`<br>[`experiments/secure-boot-chain/sign_and_verify.sh`](../../experiments/secure-boot-chain/sign_and_verify.sh) |
 | **Evidence** | [Toy chain of trust, six scenarios](../../evidence/host/secure-boot/chain-demo.txt) (host, 2026-11-15)<br>[Signing an HSS payload offline and verifying it with two independent implementations](../../evidence/host/secure-boot/sign-and-verify.txt) (host, 2026-11-15) |
-| **Related** | [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](S02-secure-boot.md)<br>[S01 FIC4 and the user crypto processor](S01-fic4-crypto-processor.md) |
+| **Related** | [B06 Programming safely: components, digests and what never to touch](B06-programming-safely.md)<br>[B02 The HSS payload: starting two operating systems](B02-hss-payload.md) |
 | **Status** | validated |
 <!-- nav:end -->

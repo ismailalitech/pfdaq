@@ -17,7 +17,7 @@ sources:
   - tests/board/pfdaq_final_suite.sh
   - tests/host/summarise_suite.py
 evidence: [suite-fresh-card, boot-hss, boot-uboot-linux, supervisor-console, programming, timing, reboot-30]
-related: [X04, S02, K08, K11, K12, B01, B02]
+related: [X04, B06, K08, K11, K12, B01, B02]
 ---
 
 # Reproduce the board from an empty SD card
@@ -28,7 +28,7 @@ After this page you know the whole path from a new Discovery Kit, a blank microS
 
 ## Before you start
 
-- **Level 3.** Module X01 describes what the system is. Module S02 lists the things you must never do to this board; read its rules table first.
+- **Level 3.** Module X01 describes what the system is. Module B06 lists the things you must never do to this board; read it first.
 - **Hardware:** a Microchip PolarFire SoC Discovery Kit (MPFS-DISCO-KIT, device MPFS095T), a microSD card (the image has three partitions and needs about 560 MiB), a USB-C cable to the board's debug connector, and Ethernet.
 - **Host:** Ubuntu 24.04 on x86-64 with Libero SoC 2026.1 (including FlashPro Express and a licence), Python 3 and OpenSSL, and enough disk for a Yocto build (the project's tree was 22 GB). The exact versions of everything are in `VERSIONS.md`; nothing else has been tried.
 - **Time:** the fabric build takes roughly 40 minutes. The first Yocto build time was not recorded.
@@ -219,6 +219,6 @@ The two known issues are the two the project reports openly: odd frame lengths i
 | **In the system** | [MPFS095T system-on-chip](../system/README.md#soc) · [eNVM boot flash](../system/README.md#envm) · [microSD card](../system/README.md#sd-card) · [FlashPro5 on USB-C](../system/README.md#debug-usb) · [Gigabit Ethernet](../system/README.md#ethernet) · [Development PC](../system/README.md#host) · [Hart Software Services](../system/README.md#hss) · [U-Boot](../system/README.md#u-boot) · [Linux 6.18.17](../system/README.md#linux-kernel) · [pfdaq_cap](../system/README.md#pfdaq-cap) · [pfdaq supervisor](../system/README.md#supervisor) |
 | **Source** | [`hw/libero/build.sh`](../../hw/libero/build.sh)<br>[`hw/libero/program.sh`](../../hw/libero/program.sh)<br>[`firmware/build_payload.sh`](../../firmware/build_payload.sh)<br>[`yocto/meta-pfdaq/recipes-mchp/polarfire-soc-amp-examples/polarfire-soc-freertos-amp-demo.bbappend`](../../yocto/meta-pfdaq/recipes-mchp/polarfire-soc-amp-examples/polarfire-soc-freertos-amp-demo.bbappend)<br>[`tests/board/pfdaq_final_suite.sh`](../../tests/board/pfdaq_final_suite.sh)<br>[`tests/host/summarise_suite.py`](../../tests/host/summarise_suite.py) |
 | **Evidence** | [The same suite on a freshly written SD card, 27 of 27](../../evidence/v0.5.1/board/suite-fresh-card.md) (board, fabric v0.5.1, 2026-11-15)<br>[Boot monitor console from power-up to all four application cores running](../../evidence/v0.5.1/board/boot-hss.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Supervisor console during the fresh-card suite, with the alarm and recovery messages](../../evidence/v0.5.1/board/supervisor-console.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Thirty warm reboots, both systems up and a supervised capture passing each time](../../evidence/v0.5.1/board/reboot-30.csv) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | [X04 The validation report](X04-validation-report.md)<br>[S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](S02-secure-boot.md)<br>[K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md)<br>[K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md)<br>[K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md)<br>[B01 From power-on to login, stage by stage](B01-power-on-to-login.md)<br>[B02 The HSS payload: starting two operating systems](B02-hss-payload.md) |
+| **Related** | [X04 The validation report](X04-validation-report.md)<br>[B06 Programming safely: components, digests and what never to touch](B06-programming-safely.md)<br>[K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md)<br>[K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md)<br>[K12 One boot in sixty, FreeRTOS never started](../case-studies/K12-freertos-no-start.md)<br>[B01 From power-on to login, stage by stage](B01-power-on-to-login.md)<br>[B02 The HSS payload: starting two operating systems](B02-hss-payload.md) |
 | **Status** | validated |
 <!-- nav:end -->

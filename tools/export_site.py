@@ -60,9 +60,7 @@ PLACE = {
     'K06': ('microcontrollers', 'linux-and-rtos', 20, None, None, None),
     'K11': ('microcontrollers', 'linux-and-rtos', 30, None, None, None),
     'K12': ('microcontrollers', 'linux-and-rtos', 40, None, None, None),
-    'S01': ('fpga', 'soc-integration', 80, None, None, None),
-    'S02': ('security', 'secure-boot', 10, None, None, None),
-    'S03': ('security', 'secure-boot', 20, 13, SIM, 'Development PC'),
+    'S03': ('security', 'secure-boot', 10, 13, SIM, 'Development PC'),
     # boot and images
     'B01': ('embedded-linux', 'boot-and-images', 10, None, None, None),
     'B02': ('embedded-linux', 'boot-and-images', 20, 'auto', None, None),
@@ -232,9 +230,10 @@ def body_of(page, site):
 def at_a_glance(page, site, evidence):
     rows = [('Level', LEVEL[page['level']]), ('How to run', C.REPRO[page['repro']]), ('Status', STATUS_TEXT[page['status']])]
     if page.get('needs'):
-        rows.append(('Read first', ', '.join(
-            '[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) if i in site.pages and (i in PLACE or i == 'X01') else '%s (planned)' % i
-            for i in page['needs'])))
+        shown = ['[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) for i in page['needs']
+                 if i in site.pages and (i in PLACE or i == 'X01')]
+        if shown:
+            rows.append(('Read first', '; '.join(shown)))
     ids = (page.get('hardware') or []) + (page.get('software') or [])
     if ids:
         nodes = {n['id']: n for n in C.load_architecture()['nodes']}
@@ -246,9 +245,10 @@ def at_a_glance(page, site, evidence):
         rows.append(('Evidence', '; '.join('[%s](/pfdaq/%s) (%s%s)' % (
             evidence[i]['title'], evidence[i]['path'], evidence[i]['class'], C.fabric_label(evidence[i])) for i in page['evidence'])))
     if page.get('related'):
-        rows.append(('Related', '; '.join(
-            '[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) if i in site.pages and (i in PLACE or i == 'X01') else '%s (planned)' % i
-            for i in page['related'])))
+        shown = ['[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) for i in page['related']
+                 if i in site.pages and (i in PLACE or i == 'X01')]
+        if shown:
+            rows.append(('Related', '; '.join(shown)))
     if page['repro'] in ('sim', 'base'):
         rows.append(('Code', 'The commands on this page run from the [pfdaq repository](%s).' % REPO))
     out = ['## At a glance', '', '| | |', '|---|---|'] + ['| **%s** | %s |' % r for r in rows]

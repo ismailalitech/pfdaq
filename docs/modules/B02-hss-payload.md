@@ -14,7 +14,7 @@ sources:
   - yocto/meta-pfdaq/conf/machine/mpfs-disco-kit-amp.conf:HSS_PAYLOAD
   - firmware/build_payload.sh
 evidence: [boot-hss, suite-fresh-card, suite-baremetal]
-related: [B01, B03, B04, M01, M04, K11, S02, S03]
+related: [B01, B03, B04, M01, M04, K11, S03]
 ---
 
 # The HSS payload: starting two operating systems
@@ -154,6 +154,6 @@ Swapping the supervisor for its bare-metal build is only a different payload on 
 | **In the system** | [Hart Software Services](../system/README.md#hss) · [E51 (hart 0)](../system/README.md#e51) · [U54 harts 1 to 3](../system/README.md#u54-linux) · [U54 hart 4](../system/README.md#u54-4) · [microSD card](../system/README.md#sd-card) · [Hart 4 image](../system/README.md#ddr-u54-4-image) · [Hart Software Services](../system/README.md#hss) · [U-Boot](../system/README.md#u-boot) · [pfdaq supervisor](../system/README.md#supervisor) |
 | **Source** | [`yocto/meta-pfdaq/recipes-bsp/u-boot/files/mpfs-disco-kit-amp/amp.yaml.in`](../../yocto/meta-pfdaq/recipes-bsp/u-boot/files/mpfs-disco-kit-amp/amp.yaml.in): `hart-entry-points`, `owner-hart`, `skip-opensbi`, `priv-mode`<br>[`yocto/meta-pfdaq/conf/machine/mpfs-disco-kit-amp.conf`](../../yocto/meta-pfdaq/conf/machine/mpfs-disco-kit-amp.conf): `HSS_PAYLOAD`<br>[`firmware/build_payload.sh`](../../firmware/build_payload.sh) |
 | **Evidence** | [Boot monitor console from power-up to all four application cores running](../../evidence/v0.5.1/board/boot-hss.txt) (board, fabric v0.5.1, 2026-11-15)<br>[The same suite on a freshly written SD card, 27 of 27](../../evidence/v0.5.1/board/suite-fresh-card.md) (board, fabric v0.5.1, 2026-11-15)<br>[Board suite with the bare-metal supervisor on hart 4, 8 of 8](../../evidence/v0.5.1/board/suite-baremetal.md) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | [B01 From power-on to login, stage by stage](B01-power-on-to-login.md)<br>[B03 A Yocto layer for a board the vendor does not support in AMP](B03-yocto-layer.md)<br>[B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](B04-device-tree-codesign.md)<br>[M01 Asymmetric multiprocessing on one chip](M01-asymmetric-multiprocessing.md)<br>[M04 Same core, same code: FreeRTOS against bare metal](M04-freertos-vs-bare-metal.md)<br>[K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md)<br>[S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](S02-secure-boot.md)<br>[S03 A signed boot chain you can run](S03-signed-boot-chain.md) |
+| **Related** | [B01 From power-on to login, stage by stage](B01-power-on-to-login.md)<br>[B03 A Yocto layer for a board the vendor does not support in AMP](B03-yocto-layer.md)<br>[B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](B04-device-tree-codesign.md)<br>[M01 Asymmetric multiprocessing on one chip](M01-asymmetric-multiprocessing.md)<br>[M04 Same core, same code: FreeRTOS against bare metal](M04-freertos-vs-bare-metal.md)<br>[K11 remoteproc cannot restart the hart](../case-studies/K11-remoteproc-restart.md)<br>[S03 A signed boot chain you can run](S03-signed-boot-chain.md) |
 | **Status** | validated |
 <!-- nav:end -->
