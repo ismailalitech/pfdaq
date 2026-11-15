@@ -12,7 +12,7 @@ sources:
   - hw/libero/overlay/PFDAQ.tcl:create_hdl_core,hdl_core_add_bif,hdl_core_assign_bif_signal,sd_instantiate_hdl_core,sd_connect_pins,sd_clear_pin_attributes,generate_component
   - hw/libero/overlay/reference-design-v2026.04.patch:organize_tool_files,AXI4_STREAM_DEMO
   - hw/rtl/pfdaq_core.v:pfdaq_core,sel_src,sel_lat0,sel_lat1
-evidence: [timing, programming, sim-latency, libero-top-smartdesign, libero-fic0-peripherals, libero-fic3-peripherals]
+evidence: [timing, programming, sim-latency, libero-top-smartdesign, libero-fic0-peripherals, libero-fic3-peripherals, libero-cfg-dma-controller]
 related: [F05, H03, H10, K07, K08]
 ---
 
@@ -137,6 +137,20 @@ To build the same in your own design: instantiate your block in the sub-design, 
 
 ![FIC_3_PERIPHERALS canvas: the APB address decode and the reference design peripherals](../../evidence/v0.5.1/build/libero-fic3-peripherals.png)
 
+### The DMA controller's configuration
+
+The vendor's DMA controller is configured by the integration script, not by hand: one `configure_core` call turns on the stream input and sets the data width. The window it fills in looks like this, and the picture plays through the settings that matter.
+
+![The DMA controller's configuration window in Libero with five numbered callouts: stream input and 64-bit data, one priority level, four interrupt outputs, four internal descriptors, descriptors tied to interrupt 0](../diagrams/cfg-dma-controller.svg)
+
+1. **Stream input on, 64-bit data.** `AXI4-Stream support` is ticked and the `AXI4 data width` is 64. In the script these are `AXI4_STREAM_IF:true` and `AXI_DMA_DWIDTH:64`.
+2. **One priority level.** `Number of priority levels` is 1, and priority 0 may move up to 256 transfers.
+3. **Four interrupt outputs,** each with a queue depth of 1.
+4. **Four internal descriptors.** These are the core's own; stream transfers use descriptors in memory (module I04).
+5. **Descriptors 0 to 3** are associated with interrupt 0 at priority level 0.
+
+To see it in your own project: in the Design Hierarchy expand `FIC_0_PERIPHERALS` and double-click `DMA_CONTROLLER`. Close the window with Cancel (the Escape key does not close it) so nothing changes. To make the same choice in your own design, tick the stream support and set the data width to match your stream, as in the two settings of item 1.
+
 ## Run it
 
 This is a reading module. The project ran, from the repository root, `hw/libero/build.sh 6`, which applies the patch, copies the files above into the reference design and runs the vendor script with the argument that selects this path (module F05).
@@ -179,7 +193,7 @@ A build whose log ends with the pin-assignment line and a timing verdict (shown 
 | **How to run** | Explanation with recorded evidence; nothing to run |
 | **In the system** | [pfdaq_core](../system/README.md#pfdaq-core) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) · [Platform-level interrupt controller](../system/README.md#plic) · [CoreAXI4DMAController](../system/README.md#dma) |
 | **Source** | [`hw/libero/overlay/PFDAQ.tcl`](../../hw/libero/overlay/PFDAQ.tcl): `create_hdl_core`, `hdl_core_add_bif`, `hdl_core_assign_bif_signal`, `sd_instantiate_hdl_core`, `sd_connect_pins`, `sd_clear_pin_attributes`, `generate_component`<br>[`hw/libero/overlay/reference-design-v2026.04.patch`](../../hw/libero/overlay/reference-design-v2026.04.patch): `organize_tool_files`, `AXI4_STREAM_DEMO`<br>[`hw/rtl/pfdaq_core.v`](../../hw/rtl/pfdaq_core.v): `pfdaq_core`, `sel_src`, `sel_lat0`, `sel_lat1` |
-| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Latency unit simulation, four phases checked by the Python model](../../evidence/v0.5.1/sim/latency.txt) (sim, fabric v0.5.1, 2026-11-15)<br>[Top-level SmartDesign canvas: clocks and resets, MSS, FIC_0 and FIC_3 blocks](../../evidence/v0.5.1/build/libero-top-smartdesign.png) (build, fabric v0.5.1, 2026-11-15)<br>[FIC_0_PERIPHERALS canvas: pfdaq_core, DMA controller, initiator and target interconnects, MSS_LSRAM](../../evidence/v0.5.1/build/libero-fic0-peripherals.png) (build, fabric v0.5.1, 2026-11-15)<br>[FIC_3_PERIPHERALS canvas: APB address decode and the reference design peripherals](../../evidence/v0.5.1/build/libero-fic3-peripherals.png) (build, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Latency unit simulation, four phases checked by the Python model](../../evidence/v0.5.1/sim/latency.txt) (sim, fabric v0.5.1, 2026-11-15)<br>[Top-level SmartDesign canvas: clocks and resets, MSS, FIC_0 and FIC_3 blocks](../../evidence/v0.5.1/build/libero-top-smartdesign.png) (build, fabric v0.5.1, 2026-11-15)<br>[FIC_0_PERIPHERALS canvas: pfdaq_core, DMA controller, initiator and target interconnects, MSS_LSRAM](../../evidence/v0.5.1/build/libero-fic0-peripherals.png) (build, fabric v0.5.1, 2026-11-15)<br>[FIC_3_PERIPHERALS canvas: APB address decode and the reference design peripherals](../../evidence/v0.5.1/build/libero-fic3-peripherals.png) (build, fabric v0.5.1, 2026-11-15)<br>[The DMA controller configurator (CoreAXI4DMAController): stream input, interrupts and descriptors](../../evidence/v0.5.1/build/libero-cfg-dma-controller.png) (build, fabric v0.5.1, 2026-11-15) |
 | **Related** | [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>[H03 Crossing clock domains: toggles, snapshots and constraints](H03-clock-domain-crossing.md)<br>[H10 Timing closure, and the build that lost its pins](H10-timing-closure.md)<br>[K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md)<br>[K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md) |
 | **Status** | validated |
 <!-- nav:end -->

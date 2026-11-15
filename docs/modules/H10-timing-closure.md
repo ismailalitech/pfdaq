@@ -13,7 +13,7 @@ sources:
   - hw/libero/sta_without_cdc.tcl:VERIFYTIMING
   - hw/libero/overlay/pfdaq_cdc.sdc:set_false_path
   - hw/libero/overlay/reference-design-v2026.04.patch:organize_tool_files
-evidence: [timing, timing-without-cdc, programming, libero-timing-summary]
+evidence: [timing, timing-without-cdc, programming, libero-timing-summary, libero-cfg-constraint-timing]
 related: [H03, H09, F05, K07, K08, B06]
 ---
 
@@ -93,6 +93,16 @@ set_false_path -from [ get_cells "$pf/snap_*" ] -to [ get_cells "$pf/snap_*_p*" 
 
 A false path tells the tool not to check that path. This is a statement of trust, so it must be narrow. The proof that it is narrow is the second analysis: the same placed design checked again with the file removed. The published record is the tool's console log, which says "Timing constraints have not been met", and the tool's own reports list the violating paths. The path-level reading is in module H03: all of the 40 worst paths it lists are the intended crossings. The tool lists only the worst 20 per report, so the record supports "the worst paths are the intended ones", not "no others".
 
+The same choice is visible in the constraint manager. The picture plays through its timing tab:
+
+![The constraint manager's timing tab in Libero with three numbered callouts: the tab, the vendor's derived constraints used by all three steps, and pfdaq_cdc.sdc used by place and route and timing verification only](../diagrams/cfg-constraints.svg)
+
+1. **The tab:** the constraint manager has tabs for I/O attributes, timing, floor planner and netlist attributes.
+2. **The vendor's derived constraints** are ticked for synthesis, for place and route and for timing verification.
+3. **The project's `pfdaq_cdc.sdc`** is not ticked for synthesis; it is ticked for place and route and for timing verification.
+
+To see it: Design Flow, Constraints, Manage Constraints, then the Timing tab.
+
 ## The build that lost its pins
 
 The first build of fabric v0.5.0 finished without error, and its timing report was clean. The board, programmed with it, stopped early in the boot monitor and had to be recovered by programming the previous job.
@@ -170,7 +180,7 @@ The lines quoted above, from the build's console output.
 | **How to run** | Explanation with recorded evidence; nothing to run |
 | **In the system** | [pfdaq_core](../system/README.md#pfdaq-core) · [Fabric clocks and resets](../system/README.md#fabric-clocks) · [FIC0 (AXI4, 125 MHz)](../system/README.md#fic0) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) |
 | **Source** | [`hw/libero/build.sh`](../../hw/libero/build.sh): `multi_corner`, `violated`, `unfixed`<br>[`hw/libero/sta_without_cdc.tcl`](../../hw/libero/sta_without_cdc.tcl): `VERIFYTIMING`<br>[`hw/libero/overlay/pfdaq_cdc.sdc`](../../hw/libero/overlay/pfdaq_cdc.sdc): `set_false_path`<br>[`hw/libero/overlay/reference-design-v2026.04.patch`](../../hw/libero/overlay/reference-design-v2026.04.patch): `organize_tool_files` |
-| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Timing analysis without the clock-crossing constraints (the tool's console log; the 40 worst violating paths it lists are the intended crossings)](../../evidence/v0.5.1/build/timing-without-cdc-constraints.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Verify Timing report, max delay multi-corner summary](../../evidence/v0.5.1/build/libero-timing-summary.png) (build, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Timing analysis without the clock-crossing constraints (the tool's console log; the 40 worst violating paths it lists are the intended crossings)](../../evidence/v0.5.1/build/timing-without-cdc-constraints.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Verify Timing report, max delay multi-corner summary](../../evidence/v0.5.1/build/libero-timing-summary.png) (build, fabric v0.5.1, 2026-11-15)<br>[The constraint manager, timing tab: which constraint file serves which step](../../evidence/v0.5.1/build/libero-cfg-constraint-timing.png) (build, fabric v0.5.1, 2026-11-15) |
 | **Related** | [H03 Crossing clock domains: toggles, snapshots and constraints](H03-clock-domain-crossing.md)<br>[H09 Integrating custom RTL into a vendor design by script](H09-rtl-into-vendor-design.md)<br>[F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>[K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md)<br>[K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md)<br>[B06 Programming safely: components, digests and what never to touch](B06-programming-safely.md) |
 | **Status** | validated |
 <!-- nav:end -->

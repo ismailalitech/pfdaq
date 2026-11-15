@@ -191,3 +191,55 @@
     - {box: [1700, 18, 245, 52],  title: "Two latency interrupts", text: "IRQ_LAT0 and IRQ_LAT1 leave the block; the DMA's own interrupt is DMA_CONTROLLER_IRQ."}
     - {box: [30, 268, 380, 30],   title: "The register port", text: "APB_TARGET is the project's slot in the APB address range (0x4000_0Fxx)."}
     - {box: [1408, 730, 270, 132], title: "Where the DMA writes go", text: "DMA_INITIATOR carries the DMA's AXI4 writes to the fabric interface, and from there to DDR."}
+
+- id: cfg-dma-controller
+  type: annotated
+  alt: "The DMA controller's configuration window in Libero, with numbered callouts that light up in turn: the stream input and 64-bit data width, one priority level, four interrupt outputs, four internal descriptors, and the descriptors tied to interrupt 0."
+  image: evidence/v0.5.1/build/libero-cfg-dma-controller.png
+  width: 900
+  height: 1300
+  step: 3.6
+  callouts:
+    - {box: [13, 108, 300, 125], title: "Stream input on, 64-bit data", text: "AXI4-Stream support is ticked and the AXI4 data width is 64 (the script sets AXI4_STREAM_IF and AXI_DMA_DWIDTH)."}
+    - {box: [13, 258, 320, 70],  title: "One priority level", text: "Number of priority levels 1; priority 0 is allowed up to 256 transfers."}
+    - {box: [13, 608, 330, 200], title: "Four interrupt outputs", text: "Number of interrupt outputs 4, each with a queue depth of 1."}
+    - {box: [13, 842, 320, 38],  title: "Four internal descriptors", text: "The core's own descriptors; stream transfers use descriptors in memory (module I04)."}
+    - {box: [18, 915, 600, 125], title: "Descriptors tied to interrupt 0", text: "Descriptors 0 to 3 are associated with interrupt 0, priority level 0."}
+
+- id: cfg-fic0-initiator
+  type: annotated
+  alt: "The FIC0 interconnect's slave configuration in Libero, with numbered callouts: slave 0 is AXI-Lite, 32 bit, at 0x60010000 to 0x6001ffff; slave 1 is AXI4, 64 bit, at 0x60000000 to 0x60000fff; the symbol shows one master port in and two slave ports out."
+  image: evidence/v0.5.1/build/libero-cfg-fic0-initiator-slave.png
+  width: 900
+  height: 880
+  step: 3.6
+  callouts:
+    - {box: [15, 105, 580, 205], title: "Slave 0: the DMA controller's registers", text: "AXI4-Lite, 32 bit wide, addresses 0x60010000 to 0x6001ffff."}
+    - {box: [15, 318, 580, 205], title: "Slave 1: an AXI4 port", text: "AXI4, 64 bit wide, addresses 0x60000000 to 0x60000fff; in the canvas it feeds the on-chip SRAM."}
+    - {box: [630, 380, 340, 160], title: "The resulting block", text: "One master port in (AXI4mmaster0), two slave ports out (AXI4mslave0 and AXI4mslave1)."}
+
+- id: cfg-pf-ccc
+  type: annotated
+  alt: "The clock conditioning circuit's output clocks in Libero, with numbered callouts: a single PLL, outputs 0, 1 and 2 at 125 MHz and output 3 at 50 MHz, each shown with its actual frequency."
+  image: evidence/v0.5.1/build/libero-cfg-pf-ccc-outputs.png
+  width: 900
+  height: 1110
+  step: 3.2
+  callouts:
+    - {box: [18, 88, 946, 45],  title: "One PLL, four outputs", text: "Configuration PLL-Single: every fabric interface clock comes from this block."}
+    - {box: [45, 200, 905, 215], title: "OUT0: 125 MHz", text: "Requested 125, actual 125.000 MHz: the clock of FIC0 and of the stream."}
+    - {box: [45, 430, 905, 215], title: "OUT1: 125 MHz", text: "Requested 125, actual 125.000 MHz: FIC1's clock (nothing else uses it in this design)."}
+    - {box: [45, 660, 905, 215], title: "OUT2: 125 MHz", text: "Requested 125, actual 125.000 MHz: FIC2's clock (nothing else uses it in this design)."}
+    - {box: [45, 889, 905, 215], title: "OUT3: 50 MHz", text: "Requested 50, actual 50.000 MHz: the clock of FIC3, the register bus."}
+
+- id: cfg-constraints
+  type: annotated
+  alt: "The constraint manager's timing tab in Libero, with numbered callouts: the vendor's derived constraints are used by synthesis, place and route and timing verification; the project's pfdaq_cdc.sdc is used only by place and route and timing verification."
+  image: evidence/v0.5.1/build/libero-cfg-constraint-timing.png
+  width: 900
+  height: 260
+  step: 3.4
+  callouts:
+    - {box: [0, 38, 275, 20],    title: "The constraint manager", text: "Tabs for I/O attributes, timing, floor planner and netlist attributes; this is the timing tab."}
+    - {box: [12, 141, 500, 14],  title: "The vendor's derived constraints", text: "Ticked for synthesis, place and route and timing verification."}
+    - {box: [12, 155, 500, 14],  title: "The project's pfdaq_cdc.sdc", text: "Not ticked for synthesis; ticked for place and route and for timing verification."}
