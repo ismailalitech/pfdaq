@@ -38,6 +38,14 @@ The approach here separates the two jobs.
 1. **The testbench drives and records.** It applies register writes and backpressure, and writes every observable event to a text file, the **trace**. It does not judge the data.
 2. **A separate program judges.** A Python script reads the trace and recomputes, from the specification alone, what the hardware should have produced. It never looks at the RTL. It prints a verdict.
 
+![The testbench drives pfdaq_core over APB and plays software; an observer logs interrupt rises, ACK writes, register reads and histogram reads to sim/lat_trace.txt; the separate check_latency.py reads only that trace, recomputes every latency and statistic and prints RESULT: PASS or FAIL; make needs PASS on the last line.](../diagrams/lab-h11-record-and-judge.svg)
+
+1. `tb_pfdaq_latency.v` plays software on the bus: it writes the registers and acknowledges each interrupt after a random delay.
+2. Its observer on the interrupt lines and the bus logs what it sees to the trace.
+3. The trace, `sim/lat_trace.txt`, is plain text: `I` for an interrupt rising, `K` for an `ACK` write, `R` for a register read, `H` for a histogram bin.
+4. `check_latency.py` reads only the trace. It never reads the RTL, and recomputes the latencies, the statistics and its own histogram.
+5. It prints `RESULT: PASS`, or `FAIL` with the first mismatches. `make` succeeds only if the last line says `PASS`.
+
 This helps in three ways. The checker is written in a different language with a different mindset, so it is less likely to repeat the design's mistake. Standard library code does part of the work: the CRC is compared with `zlib.crc32`, which has nothing to do with the Verilog CRC. And the trace is plain text, so a failing run can be read with `grep`.
 
 Independence has a limit. The author of the RTL and of the checker is the same person, working from the same understanding of the specification. The method catches transcription errors and implementation bugs; it cannot catch a wrong specification. That is one reason the board suite exists too (see Evidence, below).
@@ -112,6 +120,15 @@ The latency unit has a different kind of output: timing, not data. `tb_pfdaq_lat
 - **The counters**: `EVENTS` and `ACKS` equal the number of interrupts and acknowledges seen; `MIN`, `MAX` and the 64-bit sum equal the recomputed ones; `SPURIOUS` equals the number of acknowledges with nothing pending.
 - **The histogram**: every one of the 64 bins equals the count the checker gets from its own binning function, `bin_of`, two bins per power of two.
 - **The phases' purposes**: overruns must be non-zero where the acknowledge was deliberately late and zero where not; the number of events must equal `COUNT_LIMIT`; with no jitter the gap between events is exactly the period; with jitter the gaps lie in the jitter range and take more than ten distinct values.
+
+Here are the first six lines of one channel's trace, picked out with `grep`. They are from a run I made of the unmodified testbench; the checker's own arithmetic is written under the lines.
+
+![Six lines of the real trace: an interrupt rise at clock 494, an ACK write at clock 505 with the line high, and a read of LAT_LAST returning 0x0c; then a rise at 894, an ACK at 944 and LAT_LAST 0x33.](../diagrams/lab-h11-trace-to-latency.svg)
+
+1. `I 1 0 494`: in phase 1 the line of channel 0 rose at clock 494. The observer in the testbench writes this, not the unit.
+2. `K 1 0 505 1`: the `ACK` write was seen at clock 505, and the last field, 1, says the line was high.
+3. `R 1 a0 0000000c`: the unit's `LAT_LAST`, read back after the `ACK`, is `0x0c`. The checker computes 505 − 494 + 1 = 12 on its own and compares.
+4. The next event gives 944 − 894 + 1 = 51 = `0x33`. Every event of every phase is checked this way, in order.
 
 ### Scenarios
 
@@ -197,6 +214,36 @@ A second planted bug shows the checker's other layer. Removing the credit decrem
 ```
 
 Every frame is still correct, but the credit accounting is not, and the counters are cross-checked against the stream.
+
+The same method catches a bug in the latency unit. Here the planted bug is the one from module H07: in a scratch copy of `hw/`, `lat_now` loses its `+ 1`. I ran it for this page with `make sim-latency` in the copy.
+
+![A sed command removes the plus one from lat_now in a scratch copy of the RTL; make sim-latency ends with RESULT: FAIL, the LAT_LAST sequence is one lower than the checker's, the minimum is 10 instead of 11, the maximum 111 instead of 112, the sum 3604 instead of 3664 and histogram bin 6 holds 4 samples instead of 1.](../diagrams/lab-h11-planted-bug.svg)
+
+1. The `sed` command changes `lat_now = lat_cnt + 32'd1` to `lat_now = lat_cnt` in `rtl/pfdaq_latency.v` of the copy.
+2. `make sim-latency` prints `RESULT: FAIL`. The compile lines and the four phase summaries above it are left out of the figure; the summaries still look normal, because they are computed from the trace.
+3. The `LAT_LAST` values the unit reports (11, 50, 12 ...) differ from the trace's (12, 51, 13 ...). The checker never used the unit's own value.
+4. The minimum reads 10 instead of 11, the maximum 111 instead of 112 and the sum 3604 instead of 3664: 60 samples, each one count low.
+5. Bin 6 holds 4 samples where the checker's own binning counts 1. The report lists more bins and the other phases after these lines.
+
+## Do the same in your project
+
+The method does not depend on this design. It needs a simulator that can write a text file, and a script in another language.
+
+1. **Write the trace format first.** One line per observable event, the first letter saying what it is (`B` for a transferred word, `I` for an interrupt rising, `R` for a register read, `H` for a histogram bin, as here), and a final `END` line. Everything the checker needs must be in the trace, with the clock cycle where timing matters.
+2. **Make the testbench drive and record, and nothing else.** Copy the structure of `tb_pfdaq_latency.v`: register-bus tasks (`apb_wr`, `apb_rd`), a task that plays the software (`serve`), an observer in an `always @(posedge PCLK)` block that logs with `$fwrite`, and a global timeout so a hang ends the run.
+3. **Put per-cycle rules in monitors inside the testbench.** What a trace of transferred data cannot show (signals stable during a stall, no `TVALID` gap inside a packet, byte lanes) gets an `always @(posedge ACLK)` check that writes a named line (`PROTOCOL_ERROR`, `VALID_GAP`, `KEEP_ERROR`) to the trace.
+4. **Write the checker from the specification, not from the RTL.** In Python, recompute every property from the trace and take what you can from a library that has nothing to do with your design (`zlib.crc32` for a CRC). The checker must reject a line it does not recognise and a trace without `END`.
+5. **Give every scenario a purpose and an expected outcome.** In `check_latency.py` the slow phase must show overruns and the others none; a counted run must have exactly `COUNT_LIMIT` events; a run without jitter must have the exact period. Fix the random seed (the testbench uses `seed = 7`) so a failure can be replayed.
+6. **Fix the verdict contract.** The checker prints `RESULT: PASS` or `RESULT: FAIL` as its last line and exits with a matching status. Copy the Makefile rule of `sim-latency`: compile with `iverilog -g2005`, run `vvp`, pipe the trace to the checker with `tee`, and succeed only if `tail -1` of the result contains `PASS`.
+7. **Plant a bug before you believe a pass.** In a scratch copy change one character of the RTL, as in "Run it", and see the checker fail and say where. A planted bug that the checker misses means the checker is a copy of the design.
+8. **Write down the limits** as this page does: no coverage measurement, one simulator, one author for both sides.
+
+What not to change:
+
+- **The checker never reads the RTL**, and never takes the unit's own value as the expected one: the latency checker computes each latency from `I` and `K` and only then compares it with `LAT_LAST`.
+- **The testbench does not judge data.** If you add a comparison there, it will share the design's misunderstanding.
+- **Unknown lines fail.** A checker that ignores what it does not understand lets a monitor's complaint pass.
+- **Edit a copy, never the repository,** when you plant a bug.
 
 ## Evidence
 

@@ -1,0 +1,316 @@
+# Figures for labs H07, H08, H11, S03, F03 and I04. Waveforms come from real runs of the latency testbench
+# (hw/tb/tb_pfdaq_latency.v, seed and stimulus unchanged); the signal values were read from a VCD dump of the
+# same run, one sample per PCLK cycle (20 ns).
+
+- id: lab-h07-latency-unit
+  alt: "Block diagram of one latency channel. A 16-bit LFSR, masked by JITTER_MASK, sets how far the 32-bit timer reloads. When the timer reaches 0 the pending flag is set and drives IRQ_LAT0 or IRQ_LAT1. While it is high, lat_cnt counts. Software answers by writing ACK over APB; then lat_now (lat_cnt plus one) is stored in LAT_LAST, LAT_MIN, LAT_MAX, LAT_SUM, ACKS and the histogram. If the timer is due while an event is pending, OVERRUN counts it and nothing is raised."
+  width: 900
+  height: 440
+  step: 3
+  nodes:
+    lfsr:    {x: 20,  y: 30,  w: 160, h: 66, kind: fabric, title: "lfsr", sub: "shifts every clock\nstarts at 0xACE1"}
+    timer:   {x: 270, y: 30,  w: 200, h: 66, kind: fabric, title: "timer", sub: "32-bit down-counter\nreload PERIOD + jitter - 1"}
+    pending: {x: 560, y: 30,  w: 180, h: 66, kind: hart,   title: "pending", sub: "is IRQ_LAT0 or IRQ_LAT1\nlevel, stays high"}
+    latcnt:  {x: 560, y: 170, w: 180, h: 66, kind: fabric, title: "lat_cnt", sub: "counts while pending\nis 0 on a new event"}
+    soft:    {x: 770, y: 170, w: 110, h: 66, kind: sw,     title: "Software", sub: "PLIC, core,\nhandler"}
+    ack:     {x: 770, y: 300, w: 110, h: 66, kind: sw,     title: "ACK write", sub: "APB, same\nPCLK"}
+    latnow:  {x: 560, y: 300, w: 180, h: 66, kind: fabric, title: "lat_now", sub: "= lat_cnt + 1"}
+    stats:   {x: 270, y: 300, w: 220, h: 66, kind: good,   title: "stored on ACK", sub: "LAT_LAST, LAT_MIN, LAT_MAX\nLAT_SUM, ACKS, histogram bin"}
+    overrun: {x: 20,  y: 300, w: 190, h: 66, kind: bad,    title: "OVERRUN", sub: "due while pending:\ncounted, not raised"}
+  edges:
+    - {from: lfsr.right,    to: timer.left, label: "lfsr & mask"}
+    - {from: timer.right,   to: pending.left, label: "due"}
+    - {from: pending.bottom, to: latcnt.top, label: "while high"}
+    - {from: pending.right, to: soft.top, label: "IRQ to PLIC"}
+    - {from: soft.bottom,   to: ack.top, label: "ACK"}
+    - {from: latcnt.bottom, to: latnow.top, label: "+ 1"}
+    - {from: latnow.left,   to: stats.right, label: "latency"}
+    - {from: ack.bottom,    to: stats.bottom, bulge: 28, label: "ACK strobe: store"}
+    - {from: timer.bottom,  to: overrun.top, label: "due while pending"}
+  steps: [lfsr, e0, timer, e1, pending, e2, latcnt, e3, soft, e4, ack, e5, latnow, e6, e7, stats, e8, overrun]
+  notes:
+    - {x: 20, y: 424, text: "Everything runs in PCLK (50 MHz): one count is 20 ns, and there is no clock-domain crossing inside the unit."}
+
+- id: lab-h07-first-event
+  type: wave
+  alt: "Waveform from the latency testbench, channel 0, first event of phase 1. IRQ_LAT0 rises; lat_cnt counts 0 up to 11 while it is high; the ACK write arrives in the cycle where lat_cnt is 11 and lat_now is 12; IRQ_LAT0 falls and LAT_LAST becomes 12, which is 240 ns."
+  width: 900
+  height: 340
+  length: 19
+  step: 3.4
+  ticks: [[2, "0"], [4, "2"], [6, "4"], [8, "6"], [10, "8"], [12, "10"], [14, "12"], [16, "14"]]
+  signals:
+    - {name: IRQ_LAT0, kind: fabric, values: [[0, 0], [2, 1], [14, 0]]}
+    - {name: lat_cnt, kind: hart, bus: true, values: [[0, "0"], [3, "1"], [4, "2"], [5, "3"], [6, "4"], [7, "5"], [8, "6"], [9, "7"], [10, "8"], [11, "9"], [12, "10"], [13, "11"], [14, "12"]]}
+    - {name: ACK write, kind: sw, values: [[0, 0], [13, 1], [14, 0]]}
+    - {name: lat_now, kind: hart, bus: true, values: [[0, "1"], [3, "2"], [4, "3"], [5, "4"], [6, "5"], [7, "6"], [8, "7"], [9, "8"], [10, "9"], [11, "10"], [12, "11"], [13, "12"], [14, "13"]]}
+    - {name: LAT_LAST, kind: good, bus: true, values: [[0, "0"], [14, "12"]]}
+  callouts:
+    - {t0: 2, t1: 3, title: "The event", text: "IRQ_LAT0 goes high and lat_cnt restarts at 0. One count is one 50 MHz clock, 20 ns."}
+    - {t0: 3, t1: 13, title: "Software is busy", text: "lat_cnt rises by one every clock while the line is high; software cannot slow or speed it up."}
+    - {t0: 13, t1: 14, title: "The ACK write", text: "It arrives while lat_cnt is 11, so lat_now = lat_cnt + 1 = 12: the cycle of the ACK itself is counted."}
+    - {t0: 14, t1: 19, title: "Line drops, result kept", text: "IRQ_LAT0 falls and LAT_LAST reads 12 counts, 12 x 20 ns = 240 ns. lat_cnt stops at 12."}
+
+- id: lab-h07-overrun
+  type: wave
+  alt: "Waveform from the latency testbench, channel 0, phase 2 (period 120, slow software). The first event raises IRQ_LAT0. The timer is due again 120 clocks later and again after 240, while the line is still high: OVERRUN becomes 1 and then 2 and no new event is raised. The ACK arrives 311 counts after the event and LAT_LAST reads 311."
+  width: 900
+  height: 380
+  length: 340
+  step: 3.4
+  ticks: [[6, "event"], [106, "+100 clocks"], [206, "+200"], [306, "+300 (6 µs)"]]
+  signals:
+    - {name: IRQ_LAT0, kind: fabric, values: [[0, 0], [6, 1], [317, 0]]}
+    - {name: due, kind: hart, values: [[0, 0], [5, 1], [6, 0], [125, 1], [126, 0], [245, 1], [246, 0]]}
+    - {name: ACK write, kind: sw, values: [[0, 0], [316, 1], [317, 0]]}
+    - {name: EVENTS, kind: hart, bus: true, values: [[0, "0"], [6, "1"]]}
+    - {name: OVERRUN, kind: bad, bus: true, values: [[0, "0"], [126, "1"], [246, "2"]]}
+    - {name: LAT_LAST, kind: good, bus: true, values: [[0, "0"], [317, "311"]]}
+  callouts:
+    - {t0: 5, t1: 7, title: "Event 1 is raised", text: "due is high for one clock, IRQ_LAT0 rises and EVENTS becomes 1. The timer reloads with PERIOD = 120."}
+    - {t0: 125, t1: 127, title: "Due again, still pending", text: "Nobody has answered. Nothing is raised; OVERRUN becomes 1 and the line stays high."}
+    - {t0: 245, t1: 247, title: "Missed again", text: "A second period passes unanswered: OVERRUN is 2. Events are missed, not queued."}
+    - {t0: 316, t1: 318, title: "The late ACK", text: "It arrives after 311 counts (6.22 µs). The line drops and LAT_LAST reads 311."}
+
+- id: lab-h08-histogram-datapath
+  alt: "Block diagram of the histogram inside one latency channel. On an ACK, lat_now goes through bin_of to lat_bin, which addresses the RAM copy hist_a. Its registered output ha_q gets one added to make hw_data. The write port takes hw_data from the increment or zero from the clear sweep, the sweep having priority, and writes the same address and data to hist_a and hist_b. The bus reads hist_b through HIST_SEL and HIST_DATA."
+  width: 900
+  height: 440
+  step: 3
+  nodes:
+    ack:   {x: 20,  y: 30,  w: 150, h: 66, kind: sw,     title: "ACK, pending", sub: "inc_pend, inc_bin\nlat_now = lat_cnt + 1"}
+    bin:   {x: 240, y: 30,  w: 170, h: 66, kind: fabric, title: "bin_of", sub: "leading one, next bit\n64 bins"}
+    ha:    {x: 480, y: 30,  w: 190, h: 66, kind: mem,    title: "hist_a", sub: "64 x 32 bits, no reset\nread port: lat_bin"}
+    plus:  {x: 740, y: 30,  w: 140, h: 66, kind: fabric, title: "ha_q + 1", sub: "= hw_data"}
+    sweep: {x: 240, y: 190, w: 170, h: 66, kind: bad,    title: "clear sweep", sub: "clearing, clr_idx\none bin per clock"}
+    wport: {x: 480, y: 190, w: 190, h: 66, kind: mem,    title: "one write port", sub: "hw_en, hw_addr, hw_data\nsweep first, then inc_pend"}
+    hb:    {x: 480, y: 330, w: 190, h: 66, kind: mem,    title: "hist_b", sub: "same writes as hist_a\nread port: hist_sel"}
+    sel:   {x: 20,  y: 330, w: 150, h: 66, kind: sw,     title: "HIST_SEL", sub: "bin to read\nAPB write"}
+    out:   {x: 740, y: 330, w: 140, h: 66, kind: sw,     title: "HIST_DATA", sub: "hb_q, APB read"}
+  edges:
+    - {from: ack.right,   to: bin.left, label: "lat_now"}
+    - {from: bin.right,   to: ha.left, label: "lat_bin"}
+    - {from: ha.right,    to: plus.left, label: "ha_q"}
+    - {from: plus.bottom, to: wport.right, label: "hw_data"}
+    - {from: sweep.right, to: wport.left, label: "writes 0"}
+    - {from: wport.top,   to: ha.bottom, label: "write"}
+    - {from: wport.bottom, to: hb.top, label: "same address, same data"}
+    - {from: sel.right,   to: hb.left, label: "hist_sel"}
+    - {from: hb.right,    to: out.left, label: "hb_q"}
+  steps: [ack, e0, bin, e1, ha, e2, plus, e3, wport, e5, sweep, e4, hb, e6, sel, e7, e8, out]
+  notes:
+    - {x: 20, y: 424, text: "Counting never waits for the bus: each read port is wired to one purpose, so nothing is arbitrated."}
+
+- id: lab-h08-increment
+  type: wave
+  alt: "Waveform from the latency testbench, channel 0, third acknowledge of phase 1. In the ACK cycle lat_now is 13 and lat_bin is 7; ha_q already holds the old count of bin 7, which is 1. The next cycle inc_pend is high, hw_addr is 7 and hw_data is 2. One cycle later ha_q still shows the old 1; one cycle after that it shows 2."
+  width: 900
+  height: 410
+  length: 8
+  step: 3.4
+  ticks: [[2, "t"], [3, "t+1"], [4, "t+2"], [5, "t+3"]]
+  signals:
+    - {name: ACK write, kind: sw, values: [[0, 0], [2, 1], [3, 0]]}
+    - {name: lat_now, kind: hart, bus: true, values: [[0, "11"], [1, "12"], [2, "13"], [3, "14"]]}
+    - {name: lat_bin, kind: hart, bus: true, values: [[0, "6"], [1, "7"]]}
+    - {name: ha_q, kind: mem, bus: true, values: [[0, "0"], [2, "1"], [5, "2"]]}
+    - {name: inc_pend, kind: fabric, values: [[0, 0], [3, 1], [4, 0]]}
+    - {name: hw_addr, kind: mem, bus: true, values: [[0, "11"], [3, "7"]]}
+    - {name: hw_data, kind: mem, bus: true, values: [[0, "1"], [2, "2"], [5, "3"]]}
+  callouts:
+    - {t0: 2, t1: 3, title: "t: the ACK write", text: "lat_now is 13, lat_bin is 7, and ha_q, which follows lat_bin one clock later, holds the old count of bin 7: 1."}
+    - {t0: 3, t1: 4, title: "t+1: the write", text: "inc_pend is high, hw_addr is 7, hw_data is ha_q + 1 = 2. At the end of this cycle 2 is written to the RAM."}
+    - {t0: 4, t1: 5, title: "t+2: still the old count", text: "ha_q still reads 1: a read of bin 7 addressed in t+1 would have got the old count."}
+    - {t0: 5, t1: 6, title: "t+3: the new count", text: "ha_q reads 2: a read of bin 7 addressed in t+2 sees the increment."}
+
+- id: lab-h08-lost-sample
+  type: wave
+  alt: "Waveform from a scratch testbench that drives one latency channel directly. A ONESHOT event is pending when CLEAR is written. The sweep starts. An ACK written during the sweep ends the pending state and sets inc_bin to 7, but in the cycle where inc_pend is high the write port belongs to the sweep: hw_addr is 4 and hw_data is 0, so bin 7 is never incremented."
+  width: 900
+  height: 410
+  length: 14
+  step: 3.4
+  ticks: [[1, "CLEAR"], [5, "ACK"]]
+  signals:
+    - {name: APB write strobe, kind: sw, values: [[0, 0], [1, 1], [2, 0], [5, 1], [6, 0]]}
+    - {name: pending, kind: fabric, values: [[0, 1], [6, 0]]}
+    - {name: clearing, kind: bad, values: [[0, 0], [2, 1]]}
+    - {name: inc_pend, kind: fabric, values: [[0, 0], [6, 1], [7, 0]]}
+    - {name: inc_bin, kind: mem, bus: true, values: [[0, "0"], [6, "7"]]}
+    - {name: hw_addr, kind: mem, bus: true, values: [[0, "0"], [3, "1"], [4, "2"], [5, "3"], [6, "4"], [7, "5"], [8, "6"], [9, "7"], [10, "8"], [11, "9"], [12, "10"], [13, "11"]]}
+    - {name: hw_data, kind: mem, bus: true, values: [[0, "1"], [2, "0"]]}
+  callouts:
+    - {t0: 1, t1: 2, title: "CLEAR with an event pending", text: "CLEAR is written while the interrupt is still pending. The next clock, clearing goes high."}
+    - {t0: 2, t1: 5, title: "The sweep owns the write port", text: "hw_addr steps through the bins and hw_data is 0: one bin cleared per clock, 64 clocks in all."}
+    - {t0: 5, t1: 6, title: "The ACK arrives", text: "The unit records it: pending falls and inc_bin is set to 7, the bin this sample belongs in."}
+    - {t0: 6, t1: 7, title: "The increment is discarded", text: "inc_pend is high for one clock, but hw_addr is the sweep's 4 and hw_data is 0. Bin 7 is never written."}
+
+- id: lab-h11-record-and-judge
+  alt: "The testbench tb_pfdaq_latency.v drives the RTL under test (pfdaq_core) over APB and plays software by acknowledging each interrupt after a random delay. An observer inside the testbench logs interrupt rises, ACK writes, register reads and histogram reads to sim/lat_trace.txt. The separate program check_latency.py reads only that trace, recomputes every latency and statistic, and prints RESULT: PASS or FAIL. make succeeds only when the last line says PASS."
+  width: 900
+  height: 470
+  step: 3
+  nodes:
+    tb:      {x: 20,  y: 60,  w: 250, h: 76, kind: hart,   title: "tb_pfdaq_latency.v", sub: "plays software: random delay,\nthen ACK. Records, does not judge"}
+    dut:     {x: 380, y: 60,  w: 200, h: 76, kind: fabric, title: "pfdaq_core", sub: "two latency channels\nthe RTL under test"}
+    trace:   {x: 20,  y: 230, w: 250, h: 86, kind: mem,    title: "sim/lat_trace.txt", sub: "I: interrupt rose  K: ACK write\nR: register read  H: histogram bin"}
+    check:   {x: 380, y: 230, w: 200, h: 86, kind: sw,     title: "check_latency.py", sub: "never reads the RTL\nrecomputes from I and K\nits own bin_of"}
+    verdict: {x: 690, y: 230, w: 190, h: 86, kind: good,   title: "RESULT: PASS", sub: "or FAIL with the first\nmismatches; make needs\nPASS on the last line"}
+  edges:
+    - {from: tb.right,   to: dut.left, label: "APB writes"}
+    - {from: dut.top,    to: tb.top, bulge: 26, label: "IRQ lines, read data"}
+    - {from: tb.bottom,  to: trace.top, label: "logs what it sees"}
+    - {from: trace.right, to: check.left, label: "read"}
+    - {from: check.right, to: verdict.left, label: "compare"}
+  steps: [tb, e0, dut, e1, e2, trace, e3, check, e4, verdict]
+  notes:
+    - {x: 20, y: 360, text: "The checker recomputes: each latency (ACK clock - rise clock + 1), EVENTS, ACKS, MIN, MAX, SUM,"}
+    - {x: 20, y: 379, text: "SPURIOUS, all 64 histogram bins, the event gaps, and whether OVERRUN was expected."}
+    - {x: 20, y: 415, text: "The stream source follows the same pattern: tb_pfdaq_stream_src.v, sim/trace.txt, check_trace.py."}
+
+- id: lab-h11-trace-to-latency
+  type: terminal
+  title: "sim/lat_trace.txt, phase 1, channel 0"
+  alt: "Six lines of the real trace: an interrupt rise at clock 494, an ACK write at clock 505 with the line high, and a read of LAT_LAST returning 0x0c; then a rise at 894, an ACK at 944 and LAT_LAST 0x33. The checker recomputes 505 - 494 + 1 = 12 and 944 - 894 + 1 = 51."
+  width: 900
+  height: 310
+  step: 3.4
+  lines:
+    - "$ grep -E '^(I|K) 1 0|^R 1 a0' sim/lat_trace.txt | head -6"
+    - "I 1 0 494"
+    - "K 1 0 505 1"
+    - "R 1 a0 0000000c"
+    - "I 1 0 894"
+    - "K 1 0 944 1"
+    - "R 1 a0 00000033"
+  callouts:
+    - {lines: [1, 1], title: "I: the line rose", text: "Phase 1, channel 0, clock 494. The observer in the testbench writes this, not the unit."}
+    - {lines: [2, 2], title: "K: the ACK write", text: "Clock 505; the last field, 1, says the line was high when the write arrived."}
+    - {lines: [3, 3], title: "R: what the unit says", text: "LAT_LAST read back: 0x0c. The checker computes 505 - 494 + 1 = 12 itself and compares."}
+    - {lines: [4, 6], title: "The same for every event", text: "944 - 894 + 1 = 51 = 0x33. All events of all phases are checked this way, in order."}
+
+- id: lab-h11-planted-bug
+  type: terminal
+  title: "scratch copy of hw/ with one planted bug"
+  alt: "A sed command removes the plus one from lat_now in a scratch copy of the RTL. make sim-latency then ends with RESULT: FAIL and lists the differences: the LAT_LAST sequence is one lower than the checker's, the minimum is 10 instead of 11, the maximum 111 instead of 112, the sum 3604 instead of 3664 and histogram bin 6 holds 4 samples instead of 1."
+  width: 900
+  height: 380
+  step: 3.4
+  lines:
+    - "$ sed -i 's/wire \\[31:0\\] lat_now  = lat_cnt + 32.d1;/wire [31:0] lat_now  = lat_cnt;/' rtl/pfdaq_latency.v"
+    - "$ make sim-latency"
+    - "RESULT: FAIL"
+    - "   phase 1 ch 0: LAT_LAST sequence differs: [11, 50, 12, 58, 62, 80] vs [12, 51, 13, 59, 63, 81]"
+    - "   phase 1 ch 0: reg +0x24 = 10, expected 11"
+    - "   phase 1 ch 0: reg +0x28 = 111, expected 112"
+    - "   phase 1 ch 0: reg +0x2c = 3604, expected 3664"
+    - "   phase 1 ch 0: histogram bin 6 = 4, expected 1"
+    - "..."
+  callouts:
+    - {lines: [0, 0], title: "The planted bug", text: "In the copy, lat_now loses its + 1: every latency the unit reports is one count too low."}
+    - {lines: [2, 2], title: "The verdict", text: "The checker prints FAIL, so make stops. Compile lines and the phase summaries above this are left out."}
+    - {lines: [3, 3], title: "The sequence differs", text: "The unit reported 11, 50, 12 ...; the trace says 12, 51, 13 ...: the checker never used the unit's value."}
+    - {lines: [4, 6], title: "Statistics follow", text: "Min 10 not 11, max 111 not 112, sum 3604 not 3664: 60 samples, each one count low."}
+    - {lines: [7, 7], title: "The histogram follows", text: "Bin 6 holds 4 samples where the checker's own binning counts 1. The list goes on beyond this."}
+
+- id: lab-s03-sign-and-verify-run
+  type: terminal
+  title: "sign_and_verify.sh, host only"
+  alt: "Recorded output of the signing script: the signed and unsigned images are both 842,208 bytes. The right key is accepted by the vendor tool and the independent verifier; a flipped bit, an unsigned image and someone else's key are rejected by both."
+  width: 900
+  height: 380
+  step: 3.4
+  lines:
+    - "$ experiments/secure-boot-chain/sign_and_verify.sh"
+    - "== 2. Build the payload unsigned and signed (the YAML is the same; -p adds the signature)"
+    - "   842208 bytes  <build>/secure-boot/signed.bin"
+    - "   842208 bytes  <build>/secure-boot/unsigned.bin"
+    - "== 3. Verify with the vendor tool and with the independent Python verifier"
+    - "   signed, right key                  vendor tool: passed | independent verifier: VALID"
+    - "   signed, one bit flipped            vendor tool: failed | independent verifier: NOT VALID"
+    - "   never signed                       vendor tool: failed | independent verifier: NOT VALID"
+    - "   signed, someone else's key         vendor tool: failed | independent verifier: NOT VALID"
+  callouts:
+    - {lines: [2, 3], title: "Same size, signed or not", text: "Both images are 842,208 bytes; the same YAML builds both, and -p adds the signature."}
+    - {lines: [5, 5], title: "The right key", text: "Both checkers hold only the public key, and both accept the signed image."}
+    - {lines: [6, 6], title: "One bit flipped", text: "One flipped bit in the middle of the image makes both checkers refuse it."}
+    - {lines: [7, 7], title: "Never signed", text: "No special case: a field of zeros is simply not a valid signature."}
+    - {lines: [8, 8], title: "Someone else's key", text: "The image is signed, but not by the key whose public half is checked: both refuse it."}
+
+- id: lab-f03-two-owners-run
+  type: terminal
+  title: "board console: who answers the interrupt"
+  alt: "Recorded board output. Linux answers 100,000 events on channel 0 and the PLIC counter for source 119 reads 199,999, about two interrupts per event, with 99,998 empty wake-ups. After hart 4 answers 100,000 events on channel 1 with no empty wake-ups, the source 119 counter is unchanged and Linux has no line for source 123. The JSON lines are shortened with ... and only the fabric line of the PLIC list is shown."
+  width: 900
+  height: 450
+  step: 3.4
+  lines:
+    - "$ pfdaq_lat -c 0 -p 500 -n 100000"
+    - '{"pass": true, "channel": 0, "context": "linux-uio", ... "events": 100000, "acks": 100000, ...'
+    - '... "overrun": 0, "spurious": 0, "empty_wakeups": 99998, "timeouts": 0, "elapsed_s": 51.017, ...'
+    - "$ grep PLIC /proc/interrupts"
+    - " 80:     199999          0          0 SiFive PLIC 119 Edge      pfdaq_stream_src"
+    - "$ pfdaq_cap -L 0"
+    - '{"pass": true, "mode": "latmode", "requested": 0, "context": "freertos"}'
+    - "$ pfdaq_lat -c 1 -p 200 -n 100000"
+    - '{"pass": true, "channel": 1, "context": "u54_4", ... "events": 100000, "acks": 100000, ...'
+    - '... "overrun": 0, "spurious": 0, "empty_wakeups": 0, "timeouts": 0, "elapsed_s": 20.903, ...'
+    - "$ grep PLIC /proc/interrupts"
+    - " 80:     199999          0          0 SiFive PLIC 119 Edge      pfdaq_stream_src"
+    - "$ grep -c 'PLIC 123' /proc/interrupts"
+    - "0"
+  callouts:
+    - {lines: [1, 2], title: "Linux answers channel 0", text: "100,000 events, 100,000 acks, but 99,998 empty wake-ups: almost every event woke the program twice."}
+    - {lines: [4, 4], title: "Source 119 counts 199,999", text: "About two interrupts per event: the PLIC recorded a new request while the line was still high."}
+    - {lines: [5, 6], title: "Hand over to hart 4", text: "pfdaq_cap -L 0 makes the supervisor acknowledge in its interrupt handler; it reports context freertos."}
+    - {lines: [8, 9], title: "Hart 4 answers channel 1", text: "100,000 of 100,000 acknowledged and no empty wake-ups: one event, one interrupt."}
+    - {lines: [11, 11], title: "Linux saw none of them", text: "Source 119 still reads 199,999 after hart 4's run: channel 1 never reached Linux."}
+    - {lines: [12, 13], title: "No line for source 123", text: "Linux never enabled source 123, so /proc/interrupts has no line for it."}
+
+- id: lab-i04-arm-start-wait
+  alt: "Order of one DMA transfer. Linux writes the descriptor in DDR (byte count, then destination, then 0xD last), writes its physical address to STREAM_0_ADDR_REG of the DMA, and only then starts the stream source. The source sends one packet to the DMA, which fetches the descriptor, writes the burst into the data buffer, clears the descriptor's ready bit and raises the interrupt on F2M[2], PLIC source 120. The blocking read on the DMA's UIO device returns and Linux checks the status and the ready bit."
+  width: 900
+  height: 500
+  step: 3
+  nodes:
+    l1:  {x: 20,  y: 30,  w: 230, h: 66, kind: sw,     title: "1. Write the descriptor", sub: "byte count, then destination,\nthen 0xD last"}
+    d:   {x: 340, y: 30,  w: 220, h: 66, kind: mem,    title: "Descriptor in DDR", sub: "start of the non-cached\nwindow, 0xC800_0000"}
+    buf: {x: 660, y: 30,  w: 220, h: 66, kind: mem,    title: "Data buffer", sub: "one page after the\ndescriptor"}
+    l2:  {x: 20,  y: 170, w: 230, h: 66, kind: sw,     title: "2. Tell the DMA", sub: "STREAM_0_ADDR_REG (0x460)\n= descriptor's physical address"}
+    dma: {x: 340, y: 170, w: 220, h: 66, kind: fabric, title: "CoreAXI4DMAController", sub: "reads the descriptor,\nwrites the stream to memory"}
+    l3:  {x: 20,  y: 310, w: 230, h: 66, kind: sw,     title: "3. START the source", sub: "SRC_CTRL = 0x1, only after\nsteps 1 and 2"}
+    src: {x: 340, y: 310, w: 220, h: 66, kind: fabric, title: "Stream source", sub: "one burst = one packet\nno TVALID gap inside"}
+    irq: {x: 660, y: 310, w: 220, h: 66, kind: hart,   title: "DMA interrupt", sub: "ready bit cleared, then\nF2M[2] = PLIC source 120"}
+    l4:  {x: 20,  y: 410, w: 230, h: 66, kind: sw,     title: "4. Sleep in read()", sub: "on the DMA's /dev/uioN,\nthen check status, ready bit"}
+  edges:
+    - {from: l1.right,  to: d.left, label: "writes"}
+    - {from: l2.right,  to: dma.left, label: "address"}
+    - {from: l3.right,  to: src.left, label: "START"}
+    - {from: src.top,   to: dma.bottom, label: "AXI4-Stream"}
+    - {from: dma.top,   to: d.bottom, label: "fetches"}
+    - {from: dma.right@0.3, to: buf.bottom, label: "writes the burst"}
+    - {from: dma.right@0.8, to: irq.top, label: "full byte count in"}
+    - {from: irq.bottom, to: l4.right, label: "wakes the program"}
+  steps: [l1, e0, d, l2, e1, dma, l3, e2, src, e3, e4, e5, buf, e6, irq, e7, l4]
+
+- id: lab-i04-one-burst-run
+  type: terminal
+  title: "board console: dma_one_burst, run twice"
+  alt: "Recorded output of two runs of the one-burst program. Each reports the DMA interrupt with INTR_0_STAT 0x210 and the descriptor configuration word 0x9, the first frame, and 16 frames of 16384 bytes with 0 bad. The second run starts at sequence 16 and its payload begins 0x00100000."
+  width: 960
+  height: 330
+  step: 3.4
+  lines:
+    - "$ ssh root@<board> /tmp/dma_one_burst"
+    - "DMA interrupt: event count 1, INTR_0_STAT 0x210, descriptor config 0x9 (complete, ready bit cleared by the DMA)"
+    - "frame 0: header a55a00fc  seq 0  timestamp 3211942696  payload 00000000 00000001 00000002 ...  crc a9fba266"
+    - "16 frames, 16384 bytes: 0 bad (header, sequence or CRC-32)"
+    - "$ ssh root@<board> /tmp/dma_one_burst"
+    - "DMA interrupt: event count 2, INTR_0_STAT 0x210, descriptor config 0x9 (complete, ready bit cleared by the DMA)"
+    - "frame 0: header a55a00fc  seq 16  timestamp 3332262599  payload 00100000 00100001 00100002 ...  crc 14ed3c30"
+    - "16 frames, 16384 bytes: 0 bad (header, sequence or CRC-32)"
+  callouts:
+    - {lines: [1, 1], title: "Two signals of completion", text: "The read returned (event count 1). Config 0x9: the DMA cleared the ready bit. 0x210 has no error bits."}
+    - {lines: [2, 2], title: "The first frame", text: "Header a55a00fc is the magic with payload length 252; sequence 0; counter payload 0, 1, 2 ..."}
+    - {lines: [3, 3], title: "Every frame checked", text: "16 frames of 1 KiB: header, sequence number and CRC-32 of each, 0 bad."}
+    - {lines: [6, 6], title: "Second run", text: "The source never resets its sequence counter: seq 16, and the payload starts with 0x0010, then i."}

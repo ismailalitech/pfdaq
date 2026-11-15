@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" width="900" height="340" role="img" aria-labelledby="t d">
+<title id="t">The output stage of the stream source. The sink drives TREADY. The output register drives TVALID. Together they give w_ready, which is high when the register is empty or being emptied this clock. w_ready allows emit, and emit loads the output register with the next word pair and advances the generator state.</title><desc id="d">The output stage of the stream source. The sink drives TREADY. The output register drives TVALID. Together they give w_ready, which is high when the register is empty or being emptied this clock. w_ready allows emit, and emit loads the output register with the next word pair and advances the generator state.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 44.00s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 44.00s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}6.82%{opacity:1}9.82%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="340" rx="12" fill="#12171d"/>
+<g id="e_state">
+<path d="M170,65 L240,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:21.00s" d="M170,65 L240,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="183.9" y="43" width="42.2" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="205" y="55.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">state</text>
+</g>
+<g id="e_pair">
+<path d="M410,65 L490,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:27.00s" d="M410,65 L490,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="416.02" y="43" width="67.96" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="450" y="55.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">word pair</text>
+</g>
+<g id="e_beat">
+<path d="M660,65 L730,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:36.00s" d="M660,65 L730,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="677.12" y="43" width="35.76" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="695" y="55.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">beat</text>
+</g>
+<g id="e_valid">
+<path d="M575,100 L575,200" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:0.00s" d="M575,100 L575,200" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="579" y="141" width="67.96" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="584" y="153.5" text-anchor="start" font-size="11.5" fill="#e6ecf1">out_valid</text>
+</g>
+<g id="e_ready">
+<path d="M805,100 L805,235 L670,235" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.00s" d="M805,100 L805,235 L670,235" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="809" y="158.5" width="48.64" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="814" y="171" text-anchor="start" font-size="11.5" fill="#e6ecf1">TREADY</text>
+</g>
+<g id="e_wr">
+<path d="M480,235 L430,235" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:9.00s" d="M480,235 L430,235" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="427.46" y="213" width="55.08" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="455" y="225.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">w_ready</text>
+</g>
+<g id="e_load">
+<path d="M392,200 L392,150 L507,150 L507,100" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:30.00s" d="M392,200 L392,150 L507,150 L507,100" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="431.62" y="128" width="35.76" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="449.5" y="140.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">load</text>
+</g>
+<g id="e_adv">
+<path d="M240,235 L95,235 L95,100" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:15.00s" d="M240,235 L95,235 L95,100" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="139.96" y="213" width="55.08" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="167.5" y="225.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">advance</text>
+</g>
+<g id="gen">
+<rect x="20" y="30" width="150" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="95" y="52.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Generator state</text>
+<text x="95" y="69.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">ph, pay_idx,</text>
+<text x="95" y="86.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">seq, crc</text>
+<rect class="hl" style="animation-delay:18.00s" x="19" y="29" width="152" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="steps">
+<rect x="240" y="30" width="170" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="325" y="52.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Word steps A and B</text>
+<text x="325" y="69.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">combinational,</text>
+<text x="325" y="86.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">two words per clock</text>
+<rect class="hl" style="animation-delay:24.00s" x="239" y="29" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="reg">
+<rect x="490" y="30" width="170" height="70" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="575" y="52.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Output register</text>
+<text x="575" y="69.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">out_valid, out_data,</text>
+<text x="575" y="86.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">out_last, out_keep</text>
+<rect class="hl" style="animation-delay:33.00s" x="489" y="29" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="sink">
+<rect x="730" y="30" width="150" height="70" rx="9" fill="#232c44" stroke="#8da6d4" stroke-width="1.5"/>
+<text x="805" y="52.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">DMA controller</text>
+<text x="805" y="69.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">takes a beat when</text>
+<text x="805" y="86.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">TVALID and TREADY</text>
+<rect class="hl" style="animation-delay:39.00s" x="729" y="29" width="152" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="emit">
+<rect x="240" y="200" width="190" height="70" rx="9" fill="#1e2530" stroke="#6b7b8c" stroke-width="1.5"/>
+<text x="335" y="222.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">emit</text>
+<text x="335" y="239.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">run == R_RUN, w_ready,</text>
+<text x="335" y="256.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">fir_ok, not aborting</text>
+<rect class="hl" style="animation-delay:12.00s" x="239" y="199" width="192" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="wready">
+<rect x="480" y="200" width="190" height="70" rx="9" fill="#1e2530" stroke="#6b7b8c" stroke-width="1.5"/>
+<text x="575" y="231" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">w_ready</text>
+<text x="575" y="248" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">~out_valid | TREADY</text>
+<rect class="hl" style="animation-delay:6.00s" x="479" y="199" width="192" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="305" text-anchor="start" font-size="12" fill="#9aa8b5">TVALID is out_valid and nothing else, so the source never waits for TREADY. While out_valid is high and TREADY is low,</text>
+<text x="20" y="322" text-anchor="start" font-size="12" fill="#9aa8b5">w_ready is low and nothing is loaded, so every signal holds.</text>
+</svg>

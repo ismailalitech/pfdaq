@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" width="900" height="380" role="img" aria-labelledby="t d">
+<title id="t">sign_and_verify.sh, host only</title><desc id="d">Recorded output of the signing script: the signed and unsigned images are both 842,208 bytes. The right key is accepted by the vendor tool and the independent verifier; a flipped bit, an unsigned image and someone else's key are rejected by both.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 19.00s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 19.00s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}17.89%{opacity:1}20.89%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="380" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="254" fill="#0d1117"/>
+<rect x="0" y="0" width="900" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="450" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">sign_and_verify.sh, host only</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">experiments/secure-boot-chain/sign_and_verify.sh</tspan></text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">== 2. Build the payload unsigned and signed (the YAML is the same; -p adds the signature)</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   842208 bytes  &lt;build&gt;/secure-boot/signed.bin</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   842208 bytes  &lt;build&gt;/secure-boot/unsigned.bin</text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">== 3. Verify with the vendor tool and with the independent Python verifier</text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   signed, right key                  vendor tool: passed | independent verifier: VALID</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   signed, one bit flipped            vendor tool: failed | independent verifier: NOT VALID</text>
+<text x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   never signed                       vendor tool: failed | independent verifier: NOT VALID</text>
+<text x="24" y="218" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   signed, someone else's key         vendor tool: failed | independent verifier: NOT VALID</text>
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="83" width="884" height="43" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="85" r="11" fill="#ffd166"/><text x="8" y="89" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">Same size, signed or not</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">Both images are 842,208 bytes; the same YAML builds both, and -p adds the signature.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="8" y="143" width="884" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="145" r="11" fill="#ffd166"/><text x="8" y="149" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">The right key</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">Both checkers hold only the public key, and both accept the signed image.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="8" y="163" width="884" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="165" r="11" fill="#ffd166"/><text x="8" y="169" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">One bit flipped</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">One flipped bit in the middle of the image makes both checkers refuse it.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="8" y="183" width="884" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="185" r="11" fill="#ffd166"/><text x="8" y="189" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">Never signed</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">No special case: a field of zeros is simply not a valid signature.</text>
+</g>
+<g class="co" style="animation-delay:13.60s"><rect x="8" y="203" width="884" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="205" r="11" fill="#ffd166"/><text x="8" y="209" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="co cap" style="animation-delay:13.60s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">Someone else's key</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">The image is signed, but not by the key whose public half is checked: both refuse it.</text>
+</g>
+</svg>

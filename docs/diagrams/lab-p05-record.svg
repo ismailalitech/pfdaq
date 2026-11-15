@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 330" width="940" height="330" role="img" aria-labelledby="t d">
+<title id="t">pfdaq_cap -A 2000, recorded run on the board (the whole JSON line, folded)</title><desc id="d">The recorded JSON result of the 2 ms abort run, with callouts on the DMA completion, the number of real frames, the zero fill and the guard bytes.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 16.40s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 16.40s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}21.95%{opacity:1}24.95%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="940" height="330" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="940" height="174" fill="#0d1117"/>
+<rect x="0" y="0" width="940" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="470" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">pfdaq_cap -A 2000, recorded run on the board (the whole JSON line, folded)</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">pfdaq_cap -A 2000 -m prbs -w 4092 -f 500</tspan></text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"pass": true, "mode": "abort", "payload_mode": 1, "frames_requested": 500, "abort_after_us": 2000,</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "dma_completed": true, "dma_stat": "0x210", "start_to_irq_s": 0.008899, "status": "0x6", "aborted_flag": true,</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "frames_sent": 119, "bytes": 1949696, "bad_magic": 0, "bad_seq": 0, "bad_payload": 0, "bad_crc": 0,</text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "fill_words": 1560576, "fill_nonzero": 0, "nothing_after_burst": true}</text>
+<rect x="0" y="174" width="940" height="156" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="63" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="65" r="11" fill="#ffd166"/><text x="8" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="174" width="940" height="156" fill="#12171d"/>
+<circle cx="24" cy="200" r="13" fill="#ffd166"/><text x="24" y="205" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="198" font-size="15" font-weight="bold" fill="#e6ecf1">500 frames asked for</text>
+<text x="48" y="218" font-size="13" fill="#9aa8b5">The descriptor covers all 500 frames; the abort comes 2000 us after START.</text>
+</g>
+<g class="co" style="animation-delay:3.60s"><rect x="8" y="83" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="85" r="11" fill="#ffd166"/><text x="8" y="89" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.60s">
+<rect x="0" y="174" width="940" height="156" fill="#12171d"/>
+<circle cx="24" cy="200" r="13" fill="#ffd166"/><text x="24" y="205" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="198" font-size="15" font-weight="bold" fill="#e6ecf1">The DMA still completes</text>
+<text x="48" y="218" font-size="13" fill="#9aa8b5">dma_completed is true after 8.899 ms; status 0x6 is done together with aborted.</text>
+</g>
+<g class="co" style="animation-delay:7.20s"><rect x="8" y="103" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="105" r="11" fill="#ffd166"/><text x="8" y="109" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:7.20s">
+<rect x="0" y="174" width="940" height="156" fill="#12171d"/>
+<circle cx="24" cy="200" r="13" fill="#ffd166"/><text x="24" y="205" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="198" font-size="15" font-weight="bold" fill="#e6ecf1">119 real frames</text>
+<text x="48" y="218" font-size="13" fill="#9aa8b5">FRAMES_SENT is the measurement, 1,949,696 bytes, and none of them has an error.</text>
+</g>
+<g class="co" style="animation-delay:10.80s"><rect x="8" y="123" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="125" r="11" fill="#ffd166"/><text x="8" y="129" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.80s">
+<rect x="0" y="174" width="940" height="156" fill="#12171d"/>
+<circle cx="24" cy="200" r="13" fill="#ffd166"/><text x="24" y="205" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="198" font-size="15" font-weight="bold" fill="#e6ecf1">Zero fill and guard bytes</text>
+<text x="48" y="218" font-size="13" fill="#9aa8b5">1,560,576 fill words, none non-zero; the 64 bytes after the burst are untouched.</text>
+</g>
+</svg>

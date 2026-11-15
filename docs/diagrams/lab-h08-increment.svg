@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 410" width="900" height="410" role="img" aria-labelledby="t d">
+<title id="t">Waveform from the latency testbench, channel 0, third acknowledge of phase 1. In the ACK cycle lat_now is 13 and lat_bin is 7; ha_q already holds the old count of bin 7, which is 1. The next cycle inc_pend is high, hw_addr is 7 and hw_data is 2. One cycle later ha_q still shows the old 1; one cycle after that it shows 2.</title><desc id="d">Waveform from the latency testbench, channel 0, third acknowledge of phase 1. In the ACK cycle lat_now is 13 and lat_bin is 7; ha_q already holds the old count of bin 7, which is 1. The next cycle inc_pend is high, hw_addr is 7 and hw_data is 2. One cycle later ha_q still shows the old 1; one cycle after that it shows 2.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 15.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 15.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}21.79%{opacity:1}24.79%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="410" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="336" fill="#0d1117"/>
+<line x1="325" y1="30" x2="325" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="325" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">t</text>
+<line x1="417.5" y1="30" x2="417.5" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="417.5" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">t+1</text>
+<line x1="510" y1="30" x2="510" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="510" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">t+2</text>
+<line x1="602.5" y1="30" x2="602.5" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="602.5" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">t+3</text>
+<text x="12" y="66" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">ACK write</text>
+<path d="M140,74 L140,74 L325,74 L325,54 L417.5,54 L417.5,74 L880,74" fill="none" stroke="#b08fe0" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="106" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">lat_now</text>
+<rect x="140.5" y="93" width="91.5" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="186.25" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">11</text>
+<rect x="233" y="93" width="91.5" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="278.75" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">12</text>
+<rect x="325.5" y="93" width="91.5" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="371.25" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">13</text>
+<rect x="418" y="93" width="461.5" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="648.75" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">14</text>
+<text x="12" y="146" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">lat_bin</text>
+<rect x="140.5" y="133" width="91.5" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="186.25" y="148" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">6</text>
+<rect x="233" y="133" width="646.5" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="556.25" y="148" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">7</text>
+<text x="12" y="186" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">ha_q</text>
+<rect x="140.5" y="173" width="184" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="232.5" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="325.5" y="173" width="276.5" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="463.75" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="603" y="173" width="276.5" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="741.25" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<text x="12" y="226" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">inc_pend</text>
+<path d="M140,234 L140,234 L417.5,234 L417.5,214 L510,214 L510,234 L880,234" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="266" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">hw_addr</text>
+<rect x="140.5" y="253" width="276.5" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="278.75" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">11</text>
+<rect x="418" y="253" width="461.5" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="648.75" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">7</text>
+<text x="12" y="306" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">hw_data</text>
+<rect x="140.5" y="293" width="184" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="232.5" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="325.5" y="293" width="276.5" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="463.75" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<rect x="603" y="293" width="276.5" height="22" rx="4" fill="#1b2a3a" stroke="#c0a95f" stroke-width="1.2"/>
+<text x="741.25" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">3</text>
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="325" y="30" width="92.5" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="325" cy="30" r="11" fill="#ffd166"/><text x="325" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">t: the ACK write</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">lat_now is 13, lat_bin is 7, and ha_q, which follows lat_bin one clock later, holds the old count of bin 7: 1.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="417.5" y="30" width="92.5" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="417.5" cy="30" r="11" fill="#ffd166"/><text x="417.5" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">t+1: the write</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">inc_pend is high, hw_addr is 7, hw_data is ha_q + 1 = 2. At the end of this cycle 2 is written to the RAM.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="510" y="30" width="92.5" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="510" cy="30" r="11" fill="#ffd166"/><text x="510" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">t+2: still the old count</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">ha_q still reads 1: a read of bin 7 addressed in t+1 would have got the old count.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="602.5" y="30" width="92.5" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="602.5" cy="30" r="11" fill="#ffd166"/><text x="602.5" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="336" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">t+3: the new count</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">ha_q reads 2: a read of bin 7 addressed in t+2 sees the increment.</text>
+</g>
+</svg>

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" width="900" height="380" role="img" aria-labelledby="t d">
+<title id="t">scratch copy of hw/ with one planted bug</title><desc id="d">A sed command removes the plus one from lat_now in a scratch copy of the RTL. make sim-latency then ends with RESULT: FAIL and lists the differences: the LAT_LAST sequence is one lower than the checker's, the minimum is 10 instead of 11, the maximum 111 instead of 112, the sum 3604 instead of 3664 and histogram bin 6 holds 4 samples instead of 1.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 19.00s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 19.00s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}17.89%{opacity:1}20.89%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="380" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="254" fill="#0d1117"/>
+<rect x="0" y="0" width="900" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="450" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">scratch copy of hw/ with one planted bug</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">sed -i 's/wire \[31:0\] lat_now  = lat_cnt + 32.d1;/wire [31:0] lat_now  = lat_cnt;/' rtl/pfdaq_latency.v</tspan></text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">make sim-latency</tspan></text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">RESULT: FAIL</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   phase 1 ch 0: LAT_LAST sequence differs: [11, 50, 12, 58, 62, 80] vs [12, 51, 13, 59, 63, 81]</text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   phase 1 ch 0: reg +0x24 = 10, expected 11</text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   phase 1 ch 0: reg +0x28 = 111, expected 112</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   phase 1 ch 0: reg +0x2c = 3604, expected 3664</text>
+<text x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">   phase 1 ch 0: histogram bin 6 = 4, expected 1</text>
+<text x="24" y="218" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">...</text>
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="43" width="884" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="45" r="11" fill="#ffd166"/><text x="8" y="49" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">The planted bug</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">In the copy, lat_now loses its + 1: every latency the unit reports is one count too low.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="8" y="83" width="884" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="85" r="11" fill="#ffd166"/><text x="8" y="89" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">The verdict</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">The checker prints FAIL, so make stops. Compile lines and the phase summaries above this are left out.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="8" y="103" width="884" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="105" r="11" fill="#ffd166"/><text x="8" y="109" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">The sequence differs</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">The unit reported 11, 50, 12 ...; the trace says 12, 51, 13 ...: the checker never used the unit's value.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="8" y="123" width="884" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="125" r="11" fill="#ffd166"/><text x="8" y="129" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">Statistics follow</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">Min 10 not 11, max 111 not 112, sum 3604 not 3664: 60 samples, each one count low.</text>
+</g>
+<g class="co" style="animation-delay:13.60s"><rect x="8" y="183" width="884" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="185" r="11" fill="#ffd166"/><text x="8" y="189" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="co cap" style="animation-delay:13.60s">
+<rect x="0" y="254" width="900" height="126" fill="#12171d"/>
+<circle cx="24" cy="280" r="13" fill="#ffd166"/><text x="24" y="285" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
+<text x="48" y="278" font-size="15" font-weight="bold" fill="#e6ecf1">The histogram follows</text>
+<text x="48" y="298" font-size="13" fill="#9aa8b5">Bin 6 holds 4 samples where the checker's own binning counts 1. The list goes on beyond this.</text>
+</g>
+</svg>

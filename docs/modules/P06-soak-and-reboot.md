@@ -56,7 +56,7 @@ That is 17,000 bursts of 1 MiB with the counter payload, every frame checked by 
 | Supervisor round trip | min 1.22 ms, mean 1.57 ms, max 10.0 ms |
 | End-to-end rate | 28.9 MB/s |
 
-**Conditions that matter:** fabric v0.3.0, the counter payload only, the FreeRTOS supervisor, the board otherwise idle. The soak was **not** repeated on the final fabric (v0.5.1), and the PRBS payload, the FIR payload and real-time mode were not soaked at all. The 12-hour run that was planned was never done.
+**Conditions that matter:** fabric v0.3.0, the counter payload only, the FreeRTOS supervisor, the board otherwise idle. The soak was **not** repeated on the final fabric (v0.5.1), and the PRBS payload, the FIR payload and real-time mode were not soaked at all. No run longer than ten minutes was done.
 
 ### The reboot test
 
@@ -70,6 +70,17 @@ The closing line of the file counts a cycle as a full pass only if the channel i
 
 The time column is measured from the `reboot` command to the first successful SSH, after a fixed 20 s wait and then polling every two seconds (a failed connection attempt can take up to four seconds more), so its resolution is a few seconds.
 
+![One cycle of the reboot test: reboot over SSH, wait a fixed 20 seconds, poll SSH every 2 seconds and record the time, wait 3 seconds, then read the remote-processor state, count the supervisor's RPMsg channel, run a supervised capture of 8 bursts, and append one CSV row.](../diagrams/lab-p06-reboot-cycle.svg)
+
+1. **Reboot** over SSH. The clock starts.
+2. **Wait 20 s,** the same in every cycle.
+3. **Poll SSH** every 2 s, up to 40 tries. The time to the first answer is `up_s`; if none comes, the row reads `TIMEOUT`.
+4. **Wait 3 s** for the supervisor to announce its channel.
+5. **Read** the state of `remoteproc0`.
+6. **Count** the `pfdaq-supervisor` RPMsg channel.
+7. **Run a supervised capture,** `pfdaq_cap -r -w 252 -f 1024 -n 8`.
+8. **Append one CSV row.** The file's last line counts the rows with the channel present and the rows where the capture and the supervisor both passed.
+
 The 30-cycle record, summarised (the numbers below are from a short Python snippet that I ran over the published CSV):
 
 | | |
@@ -81,6 +92,13 @@ The 30-cycle record, summarised (the numbers below are from a short Python snipp
 | FreeRTOS console bytes per cycle | 501 to 647; exactly 581 in 21 cycles |
 
 The first cycle is 9 s slower than the slowest of the others. Why is not known. The console figure counts the bytes the supervisor's console log grew by per boot; its variation was not investigated.
+
+![The first six rows and the closing line of the recorded 30-cycle reboot file, with callouts on the columns, the first slow cycle, the console byte counts and the closing count.](../diagrams/lab-p06-csv.svg)
+
+1. **Seven columns:** the cycle, `up_s` (reboot command to the first SSH answer), the remote-processor state, the channel count, the two pass flags and the console bytes.
+2. **Cycle 1 is the slowest:** 61.4 s, against 45.9 to 52.0 s for cycles 2 to 30. Why is not known.
+3. **The console bytes vary** between 501 and 647 over the 30 cycles, and are 581 in 21 of them. Not investigated.
+4. **The last line:** 30 of 30 cycles with the channel present and 30 of 30 full passes.
 
 These are **warm reboots** over SSH on the board that stays powered. Separately, the final image was also started cold from a freshly written SD card (record `suite-fresh-card`), and the full 27-test suite was run on that boot. Earlier images were cold-started the same way. Only the 30-cycle record and the fresh-card suite are published.
 
@@ -101,6 +119,15 @@ Here is the arithmetic, which I ran:
 | The same per bit (1.43 × 10¹¹ bits)? | below about 2.1 × 10⁻¹¹ |
 
 The second row is the important one. This project did see **one** boot in about sixty where the supervisor never started (case study K12). Thirty clean boots would have been the expected outcome 60 % of the time even if that rate were real, so the 30-of-30 result does **not** show that the problem is gone. What does count against it is the total: about 57 boots accounted for since the failure, none failing, which would have been about 38 % likely at that rate ((59/60)^57). That is still not small, and those boots span three fabric versions, so they are not repeats of one experiment. Neither number settles it.
+
+![What clean trials bound: after n trials without a failure the rate is below about 3 over n at 95 percent confidence. For 30 clean boots that is up to 10 percent; if the true rate were 1 boot in 60, 30 clean boots would still occur with probability 0.60; about 300 clean boots would show a rate below 1 percent; 17,408,000 clean frames bound the per-frame error rate below 1.7 times ten to the minus seven; about 57 boots since the one failure would be clean with probability 0.38.](../diagrams/lab-p06-how-much-it-proves.svg)
+
+1. **The rule:** after n trials with no failure, the rate is below about 3/n with 95 % confidence.
+2. **30 clean boots:** 3/30 = 0.1, so the failure rate could still be up to 10 %.
+3. **If one boot in 60 failed,** 30 clean boots would still happen with probability (59/60)^30 = 0.60.
+4. **About 300 clean boots** would show a rate below 1 %.
+5. **The soak:** 3/17,408,000 = 1.7 × 10⁻⁷ per frame, if the check catches every bad word and the frames are independent.
+6. **About 57 boots since the failure:** (59/60)^57 = 0.38, over three fabric versions, so not repeats of one experiment.
 
 The per-frame and per-bit bounds hold only if the check catches every corrupted word and the frames are independent. The verifier recomputes every payload, header and CRC independently of the fabric (module P03 shows it catching injected faults), so the first assumption is reasonable; the second cannot be proven for a memory system.
 
@@ -156,6 +183,29 @@ and the last line of the CSV file itself:
 # supervisor channel present: 30/30, full pass: 30/30
 ```
 
+## Do the same in your project
+
+You can run the same two tests on any board that boots more than one system and processes a checked stream.
+
+1. **Write down the two questions.** "Does it keep working?" gets a soak; "does it start every time?" gets a reboot test. Do not let one stand in for the other.
+2. **Make the soak one supervised command with a checker on the data.** Here it is `pfdaq_cap -r -w 252 -f 1024 -n 17000`: 17,000 bursts of 1 MiB, every frame checked, every burst reported to the supervisor. Keep its result line: bursts, frames, bytes, the four error counters, `dma_fail`, the supervisor's status, miss and mismatch counts, the fabric's counters, the round-trip times and the end-to-end rate. Keep the fabric version with it.
+3. **Make the reboot test a script on a second machine,** like `tests/host/amp_reboot_test.sh <N> <out.csv> [board address] [console log]` (the address can also be set in `PFDAQ_BOARD`). It reboots over SSH, waits 20 s, polls every 2 s and writes one CSV row per cycle. Replace the board address, the channel name `pfdaq-supervisor`, the `remoteproc0` path and the capture command with your own.
+4. **Check several things per boot, and make at least one of them exercise the whole chain.** Here: the remote-processor state, the supervisor's RPMsg channel, and a supervised capture from the fabric through the DMA and Linux to the supervisor. Count a cycle as a full pass only if the capture and the supervisor's own result are good.
+5. **Log the consoles on every cycle.** The script takes the supervisor's console log as an optional argument and records how many bytes it grew by. A rare failure is only explainable if its console was captured.
+6. **Run it and read the last line,** which counts the cycles with the channel present and the full passes.
+7. **Do the arithmetic before you write a verdict.** Use the rule of three (3/n), and compute how likely n clean trials are at the failure rate you fear, (1 − p)^n. The snippet under "Run it" does both for the recorded files; change the file name and the counts.
+8. **State what the tests did not cover** next to the result: fabric version, payload types and modes, one board, warm reboots only, a fixed wait.
+
+Check that it works: the CSV ends with `# supervisor channel present: N/N, full pass: N/N`, and the arithmetic reproduces the numbers above for the recorded file.
+
+**What not to change**
+
+- Do not read 30 clean boots as proof that a failure seen once in about 60 boots is gone.
+- Do not apply the bound unless your check catches every failure and the trials are independent.
+- Keep the time column's meaning stated: reboot command to first SSH answer, with a fixed 20 s wait first, so its resolution is a few seconds.
+- Keep warm and cold starts apart; only the fresh-card boots here were cold.
+- Do not repeat a soak result for a different fabric, payload or mode.
+
 ## Evidence
 
 - **Board, fabric v0.5.1:** the 30-cycle reboot record (`reboot-30`), the boot records (`boot-hss`, `boot-uboot-linux`), the full suite from a freshly written card (`suite-fresh-card`) and its supervisor console (`supervisor-console`).
@@ -178,7 +228,7 @@ and the last line of the CSV file itself:
 - **Record the rare event, not only the verdict.** The one failure this project saw was not reproduced, and the data that would have explained it was not captured. Logging all three consoles on every cycle costs nothing during a reboot test.
 - **Vary the conditions.** A fixed wait hides timing-dependent problems. A randomised wait between reboots and a mix of warm and cold starts would not.
 - **Exercise:** how many consecutive clean boots would you want before claiming the K12 failure rate is below 1 in 100 at 95 % confidence? Compare it with what the project has.
-- **Exercise:** the soak ran at 28.9 MB/s for ten minutes. At the same rate, how long would the planned 12 hours move, and how many frames would that be?
+- **Exercise:** the soak ran at 28.9 MB/s for ten minutes. At the same rate, how much data would twelve hours move, and how many frames would that be?
 
 <!-- nav:begin (generated by tools/gen_docs.py from the front matter; do not edit) -->
 ---

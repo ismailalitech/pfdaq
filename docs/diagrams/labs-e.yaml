@@ -1,0 +1,294 @@
+# Figures of the group E labs: M02, M03, M04, M05, M07 and X02 (Linux and a real-time hart).
+# Every console line below is copied from a record in evidence/ or comes from a host-side command
+# run on those records; flow figures use names and numbers from the labs' own source files.
+
+# ---------------------------------------------------------------- M02
+
+- id: lab-m02-rpmsg-handshake
+  alt: "How a message gets from Linux to the real-time hart. The supervisor on hart 4 announces the channel pfdaq-supervisor through the shared rings; Linux's virtio_rpmsg_bus creates the channel and a sysfs device; sup_open() binds it to rpmsg_chrdev and opens /dev/rpmsgN; sup_xfer() writes a 7-word message, the supervisor snapshots the fabric and sends one 9-word acknowledgement back."
+  width: 900
+  height: 450
+  step: 1.4
+  nodes:
+    sup:  {x: 20,  y: 50,  w: 220, h: 74, kind: hart, title: "Supervisor on hart 4", sub: "endpoint at address 0\nrpmsg_ns_announce(name)"}
+    ring: {x: 340, y: 50,  w: 220, h: 74, kind: mem,  title: "Shared memory", sub: "rings 0x91D0_0000, 0x91D0_8000\npool 0x91D1_0000"}
+    bus:  {x: 660, y: 50,  w: 220, h: 74, kind: hart, title: "Linux, virtio_rpmsg_bus", sub: "creating channel\npfdaq-supervisor addr 0x0"}
+    dev:  {x: 660, y: 190, w: 220, h: 74, kind: sw,   title: "sysfs device", sub: "/sys/bus/rpmsg/devices/<name>\nonly a device so far"}
+    bind: {x: 340, y: 190, w: 220, h: 74, kind: sw,   title: "sup_open() binds it", sub: "driver_override = rpmsg_chrdev\nthen write to .../bind"}
+    node: {x: 20,  y: 190, w: 220, h: 74, kind: sw,   title: "/dev/rpmsgN", sub: "polled for up to 1 second\nrpmsg_ctrl flow as fallback"}
+    xfer: {x: 20,  y: 320, w: 220, h: 74, kind: sw,   title: "sup_xfer()", sub: "write 7 words, poll 1000 ms\nread 9 words, check magic, type"}
+    ack:  {x: 340, y: 320, w: 220, h: 74, kind: hart, title: "Supervisor answers", sub: "snapshot, waits 1 ms\none 9-word acknowledgement"}
+  edges:
+    - {from: sup.right,  to: ring.left, label: "announce"}
+    - {from: ring.right, to: bus.left,  label: "name service"}
+    - {from: bus.bottom, to: dev.top}
+    - {from: dev.left,   to: bind.right}
+    - {from: bind.left,  to: node.right}
+    - {from: node.bottom, to: xfer.top}
+    - {from: xfer.right, to: ack.left,  label: "message"}
+    - {from: ack.bottom, to: xfer.bottom, bulge: 24, label: "9-word acknowledgement"}
+  steps: [sup, e0, ring, e1, bus, e2, dev, e3, bind, e4, node, e5, xfer, e6, ack, e7]
+  notes:
+    - {x: 20,  y: 36,  text: "Announce", bold: true}
+    - {x: 20,  y: 176, text: "Bind", bold: true}
+    - {x: 20,  y: 306, text: "One message, one answer", bold: true}
+
+- id: lab-m02-rpmsg-run
+  type: terminal
+  title: "pfdaq_cap JSON (FreeRTOS suite) and hart 4 console (fresh-card suite), JSON wrapped"
+  alt: "A supervised capture seen from both ends: the hart 4 console prints the ARMED line with a 500 ms deadline and a maximum lag of 1040 frames, then the DISARM line with 32 status messages; the capture's own JSON reports 32 status messages received, no transfer failure, and a round trip of 1249, 1974 and 10020 microseconds."
+  width: 900
+  height: 340
+  step: 3.4
+  lines:
+    - "$ pfdaq_cap -r -m counter -w 252 -f 1024 -n 32"
+    - "[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 0"
+    - "[pfdaq-sup] DISARM from ARMED: 32 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0"
+    - '"supervisor": {"pass": true, "status_rx": 32, "deadline_miss": 0, "seq_mismatch": 0,'
+    - '  "fabric_seq": 32768, "fabric_frames": 32768, "xfer_fail": 0, "uptime_ms": 52846,'
+    - '  "rtt_us": {"min": 1249, "mean": 1974, "max": 10020}}'
+  callouts:
+    - {lines: [0],    title: "A supervised capture", text: "-r makes the tool open the channel, send ARM, one STATUS per burst, and DISARM at the end."}
+    - {lines: [1],    title: "The ARM message arrives", text: "500 ms is the tool's default deadline; max lag 1040 is the 1024 frames of a burst plus 16."}
+    - {lines: [2],    title: "DISARM closes the exchange", text: "32 STATUS messages, one per burst, counted by the supervisor itself, with no miss and no mismatch."}
+    - {lines: [3, 4], title: "The same run from Linux", text: "status_rx 32 and xfer_fail 0: every message was acknowledged; fabric_seq is the fabric's own count."}
+    - {lines: [5],    title: "What a round trip costs", text: "Never below 1 ms (min 1249 us), because the supervisor waits 1 ms to snapshot the fabric first."}
+
+# ---------------------------------------------------------------- M03
+
+- id: lab-m03-two-checks
+  alt: "The supervisor's two checks. Linux sends a STATUS message after each verified burst. Check 1 is a deadline kept by the supervisor's own timer: silence for longer than the deadline moves it to ALARM. Check 2 compares the sequence number Linux reports with the one hart 4 reads itself from the stream source's registers over FIC3; a difference above max_lag counts a sequence mismatch."
+  width: 900
+  height: 410
+  step: 1.5
+  nodes:
+    linux: {x: 20,  y: 50,  w: 200, h: 80, kind: hart,   title: "Linux, pfdaq_cap", sub: "verifies a burst, then sends\nSTATUS with its next_seq"}
+    sup:   {x: 350, y: 50,  w: 200, h: 80, kind: hart,   title: "Supervisor, hart 4", sub: "waits for a message,\ntimeout = deadline_ms"}
+    fab:   {x: 680, y: 50,  w: 200, h: 80, kind: fabric, title: "Stream source", sub: "registers at 0x4000_0F00\nSNAP_SEQ: next fabric number"}
+    dl:    {x: 130, y: 230, w: 300, h: 90, kind: bad,    title: "Check 1: the deadline", sub: "kept by the supervisor's own timer\nsilence > deadline: ALARM, miss + 1\nthe next STATUS: back to ARMED"}
+    cmp:   {x: 470, y: 230, w: 300, h: 90, kind: good,   title: "Check 2: the sequence", sub: "fabric_seq - next_seq, unsigned\nabove max_lag: seq_mismatch + 1\nmax_lag = frames per burst + 16"}
+  edges:
+    - {from: linux.right,       to: sup.left,  label: "STATUS over RPMsg"}
+    - {from: sup.bottom@0.25,   to: dl.top,    label: "no message in time"}
+    - {from: sup.right@0.3,     to: fab.left@0.3, label: "snapshot over FIC3"}
+    - {from: fab.bottom,        to: cmp.top@0.8,  label: "fabric_seq"}
+    - {from: sup.bottom@0.75,   to: cmp.top@0.2,  label: "next_seq"}
+  steps: [linux, e0, sup, e1, dl, e2, fab, e3, e4, cmp]
+  notes:
+    - {x: 20, y: 372, text: "The fabric's side of check 2 is read by hart 4 itself, over the bus Linux also uses. Nothing in it comes from Linux."}
+
+- id: lab-m03-deadline-run
+  type: terminal
+  title: "suite commands, and the hart 4 console of the recorded run (two stretches)"
+  alt: "Two recorded stretches of the hart 4 console. With a 300 ms deadline and a 900 ms stall before burst 5 the supervisor prints ALARM and then status resumed at burst 5, and DISARM reports 12 status and 1 deadline miss. After a consumer is killed with SIGKILL the supervisor prints ALARM; the next run is armed again and finishes with 16 status and no miss."
+  width: 900
+  height: 410
+  step: 3.4
+  lines:
+    - "$ pfdaq_cap -r -D 300 -P 5:900 -w 252 -f 1024 -n 12"
+    - "[pfdaq-sup] ARMED: deadline 300 ms, max lag 1040 frames, fabric seq 285295"
+    - "[pfdaq-sup] ALARM: no status within 300 ms (miss #1, t=105082 ms)"
+    - "[pfdaq-sup] status resumed at burst 5, back to ARMED"
+    - "[pfdaq-sup] DISARM from ARMED: 12 status, 1 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0"
+    - "$ ( pfdaq_cap -r -D 300 -w 252 -f 1024 -n 100000 >/dev/null 2>&1 ) &"
+    - "[pfdaq-sup] ARMED: deadline 300 ms, max lag 1040 frames, fabric seq 2595920"
+    - "$ pkill -9 -f 'pfdaq_cap -r -D 300'"
+    - "[pfdaq-sup] ALARM: no status within 300 ms (miss #1, t=412557 ms)"
+    - "$ pfdaq_cap -r -w 252 -f 1024 -n 16"
+    - "[pfdaq-sup] ARMED: deadline 500 ms, max lag 1040 frames, fabric seq 2654288"
+    - "[pfdaq-sup] DISARM from ARMED: 16 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0"
+  callouts:
+    - {lines: [0],         title: "A stall longer than the deadline", text: "-D 300 sets a 300 ms deadline; -P 5:900 sleeps 900 ms before the report of burst 5."}
+    - {lines: [2, 3],      title: "Alarm, then resume", text: "No STATUS within 300 ms: ALARM and one miss. The next STATUS, burst 5, returns the state to ARMED."}
+    - {lines: [4],         title: "One stall, one miss", text: "12 status and exactly 1 deadline miss: the count the stall predicts, which is what the test checks."}
+    - {lines: [5, 8],      title: "A consumer that dies", text: "The tool is killed with SIGKILL while armed; no DISARM comes, and the supervisor alarms by itself."}
+    - {lines: [9, 11],     title: "The next run recovers", text: "ARM resets state and counters: 16 status, 0 misses, with no reboot. The alarm shows only on this console."}
+
+# ---------------------------------------------------------------- M04
+
+- id: lab-m04-one-source
+  alt: "One source file, two builds. pfdaq_supervisor.c is built by Makefile.freertos with -DPFDAQ_SUPERVISOR and by Makefile.bm with -DPFDAQ_SUPERVISOR -DPFDAQ_BM. The flag selects the time base, delay_ms, the receive with timeout and the task path for the latency interrupt. The FreeRTOS payload with U-Boot is 1,376,656 bytes and is carried by the SD image; the bare-metal payload is 842,208 bytes and is built by firmware/build_payload.sh."
+  width: 900
+  height: 450
+  step: 1.6
+  nodes:
+    src:  {x: 275, y: 30,  w: 350, h: 66,  kind: sw,   title: "pfdaq_supervisor.c", sub: "one file; the macro PFDAQ_BM selects\nthe time base, delay, receive and task path"}
+    fr:   {x: 20,  y: 150, w: 410, h: 160, kind: hart, title: "FreeRTOS build, Makefile.freertos", sub: "flag: -DPFDAQ_SUPERVISOR\nnow_ms: xTaskGetTickCount(), 1 ms ticks\ndelay_ms: vTaskDelay(), the task sleeps\nreceive: the RPMsg queue takes the timeout\nlatency ack: handler, or task lat1_task\nbit 31 of uptime_ms: clear"}
+    bm:   {x: 470, y: 150, w: 410, h: 160, kind: mss,  title: "Bare-metal build, Makefile.bm", sub: "flags: -DPFDAQ_SUPERVISOR -DPFDAQ_BM\nnow_ms: machine timer at 1 MHz, divided by 1000\ndelay_ms: busy-wait on the timer\nreceive: sup_recv() polls the queue size\nlatency ack: handler only, no tasks\nbit 31 of uptime_ms: set"}
+    outf: {x: 20,  y: 350, w: 410, h: 70,  kind: mem,  title: "Payload with U-Boot, 1,376,656 bytes", sub: "built by Yocto; the SD image carries it"}
+    outb: {x: 470, y: 350, w: 410, h: 70,  kind: mem,  title: "Payload with U-Boot, 842,208 bytes", sub: "firmware/build_payload.sh, written to partition 2"}
+  edges:
+    - {from: src.bottom@0.25, to: fr.top}
+    - {from: src.bottom@0.75, to: bm.top}
+    - {from: fr.bottom, to: outf.top}
+    - {from: bm.bottom, to: outb.top}
+  steps: [src, e0, fr, e2, outf, e1, bm, e3, outb]
+
+- id: lab-m04-which-build
+  type: terminal
+  title: "evidence/v0.5.1/board: the two suite records, one grep each"
+  alt: "Two recorded suite summaries read with grep. Each starts with a context line naming the build that ran on hart 4: freertos, or bare-metal. The interrupt-handler latency row at idle reads mean 0.52 microseconds and worst 2.10 for FreeRTOS, and mean 0.50 and worst 3.10 for bare metal."
+  width: 900
+  height: 360
+  step: 3.4
+  lines:
+    - "$ cd evidence/v0.5.1/board"
+    - "$ grep -h 'Context\\|T8-u54_4-isr-idle' suite-freertos.md"
+    - "Context: u54_4_context=freertos kernel=6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d-dirty uptime_s=34"
+    - "| T8-u54_4-isr-idle | PASS | events 100000, overrun 0, min 0.52 / mean 0.52 / p99<= 0.62 / max 2.10 us |"
+    - "$ grep -h 'Context\\|T8-u54_4-isr-idle' suite-baremetal.md"
+    - "Context: u54_4_context=bare-metal remoteproc=attached"
+    - "| T8-u54_4-isr-idle | PASS | events 100000, overrun 0, min 0.50 / mean 0.50 / p99<= 0.62 / max 3.10 us |"
+  callouts:
+    - {lines: [2],    title: "Which build ran", text: "The suite's first line names the context. Linux reads it from the supervisor's build tag, bit 31."}
+    - {lines: [3],    title: "FreeRTOS, handler acknowledges", text: "100,000 events at idle: mean 0.52 us, worst 2.10 us, none missed."}
+    - {lines: [5],    title: "The same suite on bare metal", text: "Only the payload on the SD card changed; the context line says bare-metal."}
+    - {lines: [6],    title: "Almost the same cost", text: "Mean 0.50 us: 0.02 us less, one count of the 20 ns instrument. Worst 3.10 us is a single sample."}
+
+# ---------------------------------------------------------------- M05
+
+- id: lab-m05-memchk-turns
+  alt: "One iteration of the shared-memory test, by turns. Linux fills 64 K words with an xorshift32 sequence and executes a full barrier; it sends one MEMCHK message with the physical address, the word count and the seed; hart 4 reads every word, counts those that differ, writes the inverse back and executes fence rw, rw; it replies with the number of mismatches and words checked; Linux then reads every word and expects the inverse."
+  width: 900
+  height: 440
+  step: 1.6
+  nodes:
+    lin1: {x: 20,  y: 50,  w: 250, h: 80, kind: hart, title: "1 Linux fills the region", sub: "xorshift32 sequence from a seed\nthen __sync_synchronize()"}
+    msg:  {x: 325, y: 50,  w: 250, h: 80, kind: plain, title: "2 MEMCHK message, type 6", sub: "physical address, word count,\nseed, over RPMsg"}
+    h4:   {x: 630, y: 50,  w: 250, h: 80, kind: mss,  title: "3 Hart 4 checks", sub: "reads each word, counts differences\nwrites ~x back, fence rw, rw"}
+    ack:  {x: 325, y: 200, w: 250, h: 80, kind: plain, title: "4 Acknowledgement", sub: "mismatches and words checked\n(in fabric_seq, fabric_frames)"}
+    lin2: {x: 20,  y: 200, w: 250, h: 80, kind: hart, title: "5 Linux checks the inverse", sub: "reads each word, expects ~x\ncounts its own mismatches"}
+    ddr:  {x: 20,  y: 340, w: 860, h: 78, kind: mem,  title: "The shared DDR: two 32 MiB windows", sub: "cached: udmabuf-ddr-c0 at 0x8800_0000, test at offset 0x100000\nnon-cached: udmabuf-ddr-nc0 at 0xC800_0000, test at offset 0x1F00000"}
+  edges:
+    - {from: lin1.right, to: msg.left}
+    - {from: msg.right,  to: h4.left}
+    - {from: h4.bottom,  to: ack.right}
+    - {from: ack.left,   to: lin2.right}
+  steps: [lin1, e0, msg, e1, h4, e2, ack, e3, lin2]
+  notes:
+    - {x: 630, y: 300, text: "Only one side touches the data\nat a time; a message marks each turn."}
+
+- id: lab-m05-memchk-run
+  type: terminal
+  title: "pfdaq_cap JSON (FreeRTOS suite, lines wrapped) and hart 4 console (fresh-card suite, 1 of 50 lines)"
+  alt: "The shared-memory test, cached and non-cached. Each run is 50 iterations of 65,536 words with 0 mismatches seen by hart 4 and 0 seen by Linux. The cached run reports a mean check of 20.104 ms at physical address 0x88100000, the non-cached run 31.148 ms at 0xc9f00000. Hart 4's console prints one MEMCHK line per iteration: 65536 words, 0 mismatches, inverse written."
+  width: 900
+  height: 380
+  step: 3.4
+  lines:
+    - "$ pfdaq_cap -X 65536 -n 50 -c"
+    - '{"pass": true, "mode": "shm", "region": "udmabuf-ddr-c0", "cached": true, "phys": "0x88100000",'
+    - ' "words": 65536, "iterations": 50, "mismatch_seen_by_u54_4": 0, "mismatch_seen_by_linux": 0,'
+    - ' "rpmsg_fail": 0, "mean_check_ms": 20.104, "context": "freertos"}'
+    - "[pfdaq-sup] MEMCHK 65536 words at 0x88100000: 0 mismatches, inverse written"
+    - "$ pfdaq_cap -X 65536 -n 50"
+    - '{"pass": true, "mode": "shm", "region": "udmabuf-ddr-nc0", "cached": false, "phys": "0xc9f00000",'
+    - ' "words": 65536, "iterations": 50, "mismatch_seen_by_u54_4": 0, "mismatch_seen_by_linux": 0,'
+    - ' "rpmsg_fail": 0, "mean_check_ms": 31.148, "context": "freertos"}'
+    - "[pfdaq-sup] MEMCHK 65536 words at 0xc9f00000: 0 mismatches, inverse written"
+  callouts:
+    - {lines: [0],    title: "The cached run", text: "-X is the word count, -n the iterations, -c the cached window. Nobody flushes or invalidates a cache."}
+    - {lines: [1, 3], title: "Both sides agree", text: "Hart 4 saw 0 mismatches and Linux saw 0, over 50 passes of 65,536 words; no RPMsg failure."}
+    - {lines: [4],    title: "Hart 4's own line", text: "One MEMCHK line is printed per iteration, 50 per run; the pointer is the physical address from sysfs."}
+    - {lines: [5],    title: "The non-cached run", text: "The same command without -c uses the non-cached window, the one the DMA buffers live in."}
+    - {lines: [6, 8], title: "Slower, not different", text: "mean_check_ms 31.148 against 20.104: the time includes the message exchange and the hart's whole pass."}
+
+# ---------------------------------------------------------------- M07
+
+- id: lab-m07-defer-in-task
+  alt: "Deferred interrupt handling for a level-triggered line, in the order that works. The fabric raises F2M[5]; the handler masks the source with PLIC_DisableIRQ, gives the semaphore with xSemaphoreGiveFromISR and calls portEND_SWITCHING_ISR, which runs the task at once. The task wakes, writes LAT1_ACK so the line drops and the fabric timer stops, unmasks the source with PLIC_EnableIRQ and blocks again. The handler's tail returns EXT_IRQ_KEEP_ENABLED."
+  width: 900
+  height: 380
+  step: 1.4
+  nodes:
+    fab:  {x: 20,  y: 60,  w: 195, h: 76, kind: fabric, title: "Fabric raises F2M[5]", sub: "PLIC source 123\nlevel: stays high"}
+    mask: {x: 246, y: 60,  w: 195, h: 76, kind: hart,   title: "1 Handler masks it", sub: "PLIC_DisableIRQ(F2M_5)"}
+    give: {x: 472, y: 60,  w: 195, h: 76, kind: hart,   title: "2 Handler gives", sub: "xSemaphoreGiveFromISR\nlat1_sem, binary"}
+    swi:  {x: 698, y: 60,  w: 195, h: 76, kind: mss,    title: "3 Switch to the task", sub: "portEND_SWITCHING_ISR\nruns the task right here"}
+    wake: {x: 698, y: 230, w: 195, h: 76, kind: sw,     title: "4 Task wakes", sub: "xSemaphoreTake returns\ntop-priority task"}
+    ack:  {x: 472, y: 230, w: 195, h: 76, kind: fabric, title: "5 Task acknowledges", sub: "LAT1_ACK = 1: line drops,\nfabric timer stops"}
+    unm:  {x: 246, y: 230, w: 195, h: 76, kind: sw,     title: "6 Task unmasks", sub: "PLIC_EnableIRQ(F2M_5)\nthen blocks again"}
+    ret:  {x: 20,  y: 230, w: 195, h: 76, kind: good,   title: "7 Handler's tail", sub: "returns EXT_IRQ_KEEP_ENABLED\nnothing is masked afterwards"}
+  edges:
+    - {from: fab.right,  to: mask.left}
+    - {from: mask.right, to: give.left}
+    - {from: give.right, to: swi.left}
+    - {from: swi.bottom, to: wake.top}
+    - {from: wake.left,  to: ack.right}
+    - {from: ack.left,   to: unm.right}
+    - {from: unm.left,   to: ret.right}
+  steps: [fab, e0, mask, e1, give, e2, swi, e3, wake, e4, ack, e5, unm, e6, ret]
+  notes:
+    - {x: 20, y: 44,  text: "In the interrupt handler", bold: true}
+    - {x: 20, y: 214, text: "In the task lat1_task (priority configMAX_PRIORITIES - 1), then back in the handler", bold: true}
+    - {x: 20, y: 350, text: "The order is the whole design: mask before the task is woken, unmask after the acknowledge."}
+
+- id: lab-m07-wrong-order
+  alt: "The first version of task mode, which answered one event and never again. The handler gives the semaphore; portEND_SWITCHING_ISR switches to the task inside the handler; the task acknowledges and unmasks the source; the task blocks and control returns to the handler's tail; the handler returns EXT_IRQ_DISABLE and the dispatcher masks the source afterwards. The mask comes after the unmask, so the line stays masked for good."
+  width: 900
+  height: 380
+  step: 1.6
+  nodes:
+    a: {x: 20,  y: 50,  w: 250, h: 76, kind: hart,  title: "1 Handler gives the semaphore", sub: "the woken task has the\ntop priority"}
+    b: {x: 325, y: 50,  w: 250, h: 76, kind: mss,   title: "2 portEND_SWITCHING_ISR", sub: "switches to the task right here,\ninside the handler"}
+    c: {x: 630, y: 50,  w: 250, h: 76, kind: sw,    title: "3 Task acknowledges, unmasks", sub: "LAT1_ACK, then PLIC_EnableIRQ:\nthe source is enabled"}
+    d: {x: 20,  y: 210, w: 250, h: 76, kind: sw,    title: "4 Task blocks again", sub: "control returns to the\ntail of the handler"}
+    e: {x: 325, y: 210, w: 250, h: 76, kind: hart,  title: "5 Dispatcher masks it", sub: "the handler returned\nEXT_IRQ_DISABLE"}
+    f: {x: 630, y: 210, w: 250, h: 76, kind: bad,   title: "The line stays masked", sub: "nobody unmasks it again:\nno second event is taken"}
+  edges:
+    - {from: a.right, to: b.left}
+    - {from: b.right, to: c.left}
+    - {from: c.bottom, to: d.top}
+    - {from: d.right, to: e.left}
+    - {from: e.right, to: f.left}
+  steps: [a, e0, b, e1, c, e2, d, e3, e, e4, f]
+  notes:
+    - {x: 20, y: 330, text: "The unmask (step 3) runs before the mask (step 5). The failing run was not recorded; the order is read from the code (K06)."}
+
+- id: lab-m07-latency
+  type: terminal
+  title: "evidence/v0.5.1/board/suite-freertos.md: who acknowledges, 100,000 events each"
+  alt: "The four recorded rows of interrupt-to-acknowledge latency on hart 4: handler at idle mean 0.52 microseconds and worst 2.10; handler under load mean 0.53 and worst 1.94; task at idle mean 2.04 and worst 11.66; task under load mean 2.09 and worst 9.36. No event was missed in any row."
+  width: 900
+  height: 300
+  step: 3.4
+  lines:
+    - "$ grep 'T8-u54_4' evidence/v0.5.1/board/suite-freertos.md"
+    - "| T8-u54_4-isr-idle | PASS | events 100000, overrun 0, min 0.52 / mean 0.52 / p99<= 0.62 / max 2.10 us |"
+    - "| T8-u54_4-isr-load | PASS | events 100000, overrun 0, min 0.52 / mean 0.53 / p99<= 0.94 / max 1.94 us |"
+    - "| T8-u54_4-task-idle | PASS | events 100000, overrun 0, min 2.00 / mean 2.04 / p99<= 2.54 / max 11.66 us |"
+    - "| T8-u54_4-task-load | PASS | events 100000, overrun 0, min 2.00 / mean 2.09 / p99<= 3.82 / max 9.36 us |"
+  callouts:
+    - {lines: [1],    title: "The handler acknowledges", text: "Mode 1, pfdaq_cap -L 0: one register write in the handler. Mean 0.52 us, worst 2.10 us."}
+    - {lines: [2],    title: "Under load the handler barely moves", text: "One busy loop on each Linux core plus a capture loop: mean 0.53 us, worst 1.94 us."}
+    - {lines: [3],    title: "The task acknowledges", text: "Mode 2, pfdaq_cap -L 1: mean 2.04 us, about 1.5 us more, and a worst case of 11.66 us."}
+    - {lines: [4],    title: "Under load", text: "Mean 2.09 us, worst 9.36 us. Overrun 0 in all four rows: the line was re-armed for every event."}
+
+# ---------------------------------------------------------------- X02
+
+- id: lab-x02-recorded-burst
+  type: terminal
+  title: "evidence/v0.5.1/board/suite-freertos.jsonl, test T4-counter (JSON line wrapped at its fields)"
+  alt: "The recorded result of the first functional test: 32 bursts, 32,768 frames and 33,554,432 bytes in 1.1335 s, 29.60 MB/s end to end; start_to_irq mean 34.3 ms; copy 70.5 MB/s and verify 55.4 MB/s; zero errors of every kind; 301,159 stalled fabric clocks; the supervisor counted 32 status messages, no miss and no mismatch."
+  width: 900
+  height: 400
+  step: 3.4
+  lines:
+    - "$ pfdaq_cap -r -m counter -w 252 -f 1024 -n 32"
+    - '{"pass": true, "bursts": 32, "frames": 32768, "bytes": 33554432, "elapsed_s": 1.133499,'
+    - ' "mb_per_s_end_to_end": 29.60, "serial": 0,'
+    - ' "start_to_irq_s": {"min": 0.001218, "mean": 0.034325, "max": 0.039303},'
+    - ' "copy_mb_per_s": 70.5, "verify_mb_per_s": 55.4,'
+    - ' "bad_magic": 0, "bad_seq": 0, "bad_payload": 0, "bad_crc": 0, "faults_injected": 0, "dma_fail": 0,'
+    - ' "fabric_stall_cycles": 301159, "next_seq": 32768,'
+    - ' "supervisor": {"pass": true, "status_rx": 32, "deadline_miss": 0, "seq_mismatch": 0,'
+    - '   "fabric_seq": 32768, "fabric_frames": 32768, "xfer_fail": 0, "uptime_ms": 52846,'
+    - '   "rtt_us": {"min": 1249, "mean": 1974, "max": 10020}}}'
+  callouts:
+    - {lines: [0],    title: "The command", text: "Supervised (-r), counter payload, 252 words per frame, 1,024 frames per burst, 32 bursts."}
+    - {lines: [1, 2], title: "Size and rate", text: "32 bursts, 33,554,432 bytes in 1.1335 s: 29.60 MB/s from START to the last verified frame."}
+    - {lines: [3],    title: "Not the transfer time", text: "Mean 34.3 ms: Linux verifies the previous burst between START and the wait. The minimum is 1.218 ms."}
+    - {lines: [4],    title: "Software sets the rate", text: "Copy 70.5 and verify 55.4 MB/s: about 15 ms and 19 ms for each 1 MiB burst."}
+    - {lines: [5],    title: "Every check clean", text: "No bad magic, sequence, payload or CRC, no injected fault and no DMA failure in 33.5 MB."}
+    - {lines: [6],    title: "Little back-pressure", text: "301,159 stalled clocks at 8 ns is about 2.4 ms over the whole run."}
+    - {lines: [7, 9], title: "The supervisor agrees", text: "32 STATUS, no miss, no mismatch; its fabric_seq 32768 equals next_seq; round trip mean 1,974 us."}

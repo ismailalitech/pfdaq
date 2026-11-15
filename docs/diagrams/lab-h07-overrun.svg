@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" width="900" height="380" role="img" aria-labelledby="t d">
+<title id="t">Waveform from the latency testbench, channel 0, phase 2 (period 120, slow software). The first event raises IRQ_LAT0. The timer is due again 120 clocks later and again after 240, while the line is still high: OVERRUN becomes 1 and then 2 and no new event is raised. The ACK arrives 311 counts after the event and LAT_LAST reads 311.</title><desc id="d">Waveform from the latency testbench, channel 0, phase 2 (period 120, slow software). The first event raises IRQ_LAT0. The timer is due again 120 clocks later and again after 240, while the line is still high: OVERRUN becomes 1 and then 2 and no new event is raised. The ACK arrives 311 counts after the event and LAT_LAST reads 311.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 15.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 15.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}21.79%{opacity:1}24.79%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="380" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="296" fill="#0d1117"/>
+<line x1="153.059" y1="30" x2="153.059" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="153.059" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">event</text>
+<line x1="370.706" y1="30" x2="370.706" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="370.706" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">+100 clocks</text>
+<line x1="588.353" y1="30" x2="588.353" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="588.353" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">+200</text>
+<line x1="806" y1="30" x2="806" y2="290" stroke="#27313d" stroke-dasharray="2 4"/><text x="806" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">+300 (6 µs)</text>
+<text x="12" y="66" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">IRQ_LAT0</text>
+<path d="M140,74 L140,74 L153.059,74 L153.059,54 L829.941,54 L829.941,74 L880,74" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="106" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">due</text>
+<path d="M140,114 L140,114 L150.882,114 L150.882,94 L153.059,94 L153.059,114 L412.059,114 L412.059,94 L414.235,94 L414.235,114 L673.235,114 L673.235,94 L675.412,94 L675.412,114 L880,114" fill="none" stroke="#5aa0d6" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="146" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">ACK write</text>
+<path d="M140,154 L140,154 L827.765,154 L827.765,134 L829.941,134 L829.941,154 L880,154" fill="none" stroke="#b08fe0" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="186" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">EVENTS</text>
+<rect x="140.5" y="173" width="12.0588" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="146.529" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="153.559" y="173" width="725.941" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="516.529" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<text x="12" y="226" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">OVERRUN</text>
+<rect x="140.5" y="213" width="273.235" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="277.118" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="414.735" y="213" width="260.176" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="544.824" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="675.912" y="213" width="203.588" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="777.706" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<text x="12" y="266" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">LAT_LAST</text>
+<rect x="140.5" y="253" width="688.941" height="22" rx="4" fill="#1b2a3a" stroke="#4fd1a5" stroke-width="1.2"/>
+<text x="484.971" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="830.441" y="253" width="49.0588" height="22" rx="4" fill="#1b2a3a" stroke="#4fd1a5" stroke-width="1.2"/>
+<text x="854.971" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">311</text>
+<rect x="0" y="296" width="900" height="84" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="150.882" y="30" width="4.35294" height="260" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="150.882" cy="30" r="11" fill="#ffd166"/><text x="150.882" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="296" width="900" height="84" fill="#12171d"/>
+<circle cx="24" cy="324" r="13" fill="#ffd166"/><text x="24" y="329" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="322" font-size="15" font-weight="bold" fill="#e6ecf1">Event 1 is raised</text>
+<text x="48" y="342" font-size="13" fill="#9aa8b5">due is high for one clock, IRQ_LAT0 rises and EVENTS becomes 1. The timer reloads with PERIOD = 120.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="412.059" y="30" width="4.35294" height="260" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="412.059" cy="30" r="11" fill="#ffd166"/><text x="412.059" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="296" width="900" height="84" fill="#12171d"/>
+<circle cx="24" cy="324" r="13" fill="#ffd166"/><text x="24" y="329" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="322" font-size="15" font-weight="bold" fill="#e6ecf1">Due again, still pending</text>
+<text x="48" y="342" font-size="13" fill="#9aa8b5">Nobody has answered. Nothing is raised; OVERRUN becomes 1 and the line stays high.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="673.235" y="30" width="4.35294" height="260" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="673.235" cy="30" r="11" fill="#ffd166"/><text x="673.235" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="296" width="900" height="84" fill="#12171d"/>
+<circle cx="24" cy="324" r="13" fill="#ffd166"/><text x="24" y="329" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="322" font-size="15" font-weight="bold" fill="#e6ecf1">Missed again</text>
+<text x="48" y="342" font-size="13" fill="#9aa8b5">A second period passes unanswered: OVERRUN is 2. Events are missed, not queued.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="827.765" y="30" width="4.35294" height="260" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="827.765" cy="30" r="11" fill="#ffd166"/><text x="827.765" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="296" width="900" height="84" fill="#12171d"/>
+<circle cx="24" cy="324" r="13" fill="#ffd166"/><text x="24" y="329" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="322" font-size="15" font-weight="bold" fill="#e6ecf1">The late ACK</text>
+<text x="48" y="342" font-size="13" fill="#9aa8b5">It arrives after 311 counts (6.22 µs). The line drops and LAT_LAST reads 311.</text>
+</g>
+</svg>

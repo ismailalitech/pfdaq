@@ -117,7 +117,7 @@ The source side of the same stream is checked in simulation with `make -C hw sim
 
 ## What you should see
 
-The recorded output is one JSON line. The fields that matter, from the run on the freshly written card:
+The recorded output is one JSON line. The fields that matter, from the FreeRTOS suite record (`suite-freertos-raw`):
 
 | Field | Value |
 |---|---|
@@ -131,6 +131,18 @@ The recorded output is one JSON line. The fields that matter, from the run on th
 | `fabric_stall_cycles` | 301,159 |
 | supervisor: `status_rx`, `deadline_miss`, `seq_mismatch` | 32, 0, 0 |
 | supervisor `rtt_us` min / mean / max | 1,249 / 1,974 / 10,020 |
+
+The same record as the tool printed it (one line; here wrapped at its fields):
+
+![The recorded result of the first functional test: 32 bursts, 32,768 frames and 33,554,432 bytes in 1.1335 s, 29.60 MB/s end to end; start_to_irq mean 34.3 ms; copy 70.5 MB/s and verify 55.4 MB/s; zero errors of every kind; 301,159 stalled fabric clocks; the supervisor counted 32 status messages, no miss and no mismatch.](../diagrams/lab-x02-recorded-burst.svg)
+
+1. The command: supervised (`-r`), counter payload, 252 words per frame, 1,024 frames per burst, 32 bursts.
+2. Size and rate: 32 bursts, 33,554,432 bytes in 1.1335 s, which is 29.60 MB/s from START to the last verified frame.
+3. `start_to_irq_s` is not the transfer time: its mean is 34.3 ms because Linux verifies the previous burst between START and the wait. The minimum is 1.218 ms.
+4. Software sets the rate: copy at 70.5 MB/s and verify at 55.4 MB/s are about 15 ms and 19 ms for each 1 MiB burst.
+5. Every check is clean: no bad magic, sequence, payload or CRC, no injected fault and no DMA failure in 33.5 MB.
+6. The DMA applied little back-pressure: 301,159 stalled clocks at 8 ns is about 2.4 ms over the whole run.
+7. The supervisor agrees: 32 STATUS messages, no miss, no mismatch, its own `fabric_seq` of 32,768 equal to `next_seq`, and a mean round trip of 1,974 µs.
 
 ## Where the time goes
 
@@ -151,6 +163,26 @@ Two more readings of the table:
 
 - **`start_to_irq` is not the transfer time.** The tool takes its start time just before step 4 and stops it after step 8, and Linux's verification of the previous burst sits in between. If the first burst, which has nothing to verify, is the minimum of 1.218 ms (plausible, not shown in the record), the other 31 averaged 35.4 ms, which matches the 35.8 ms above. The minimum of 1.218 ms against the 1.05 ms of fabric time is the closest the record gets to the cost of the transfer itself.
 - **The DMA applied little back-pressure.** 301,159 stalled clocks at 8 ns is 2.4 ms over the whole run. Adding that to 32 × 1.05 ms gives 36.0 ms of fabric time for 33.55 MB, which is about 930 MB/s, consistent with the 931 to 947 MB/s measured on an earlier fabric version. That figure is an estimate from this record; this version of the tool does not print the fabric rate directly.
+
+## Do the same in your project
+
+You have a source of data, a DMA into memory, and a Linux program that must check every frame. This is the order in which the project wires one burst, and what to check at each step.
+
+1. **List your hand-overs.** Write down who does what between "start" and "verified": which program prepares the destination, which block produces the data, what moves it into memory and how it signals completion, who checks it and who is told. Then find which runner waits for which; that decides your rate.
+2. **Do the one-time setup before the first burst.** Open the source and the DMA, check the source's identity (`0x50464451` here) and that it is not busy, write the payload mode, take a SNAPSHOT of the sequence counter to learn which number to expect (START does not reset it), then write the frame length and the frame count. Unmask the DMA's interrupt, clear old status, and drain any completion left over from an earlier run.
+3. **Arm in this order, for every burst.** Mark the first 64 bytes of the destination with `0xEE`; write the descriptor's byte count and destination, and its control word `0xD` last; write the descriptor's address to the DMA register `0x460`; only then write START to the source. The order of the last three is not optional (module I04, case study K04).
+4. **Use two buffers.** Lay them out after the descriptor: the descriptor at +0x0, buffer 0 at +0x1000, buffer 1 one page of gap after the first. Arm burst *b* into one, and verify burst *b*-1 out of the other before you wait for the interrupt of burst *b*.
+5. **Copy out of the non-cached buffer, then verify the copy.** Non-cached reads are slow, so read the burst once into ordinary memory and check there.
+6. **Verify every frame against a model.** Magic and length, sequence number, payload against a software model of the generator, and the CRC-32 over all earlier words; count each kind of failure separately. Check the DMA's error bits and the descriptor after the interrupt.
+7. **Report to the second processor after each burst.** The burst number, the next expected sequence number and the error count (module M03).
+8. **Check it.** The run must report `pass` true, zero for each of `bad_magic`, `bad_seq`, `bad_payload` and `bad_crc`, and a supervisor with no miss and no mismatch. Then do the arithmetic of "Where the time goes" with your own numbers: the fabric's time per burst, the copy time, the verify time. If your measured elapsed time is within a few percent of the sum, you understand your pipeline. A `read()` that never returns points back to step 3, and first frames that are still `0xEE` mean the DMA did not write.
+
+What not to change:
+
+- **The order of descriptor, DMA register and START.**
+- **The snapshot before the first burst.** Without it the first frames look like sequence errors.
+- **Odd frame lengths.** The open defect of case study K10; the tool refuses them unless told otherwise.
+- **The stale marker.** It is what makes a missing DMA write visible.
 
 ## Evidence
 

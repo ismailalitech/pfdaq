@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" width="900" height="440" role="img" aria-labelledby="t d">
+<title id="t">Block diagram of one latency channel. A 16-bit LFSR, masked by JITTER_MASK, sets how far the 32-bit timer reloads. When the timer reaches 0 the pending flag is set and drives IRQ_LAT0 or IRQ_LAT1. While it is high, lat_cnt counts. Software answers by writing ACK over APB; then lat_now (lat_cnt plus one) is stored in LAT_LAST, LAT_MIN, LAT_MAX, LAT_SUM, ACKS and the histogram. If the timer is due while an event is pending, OVERRUN counts it and nothing is raised.</title><desc id="d">Block diagram of one latency channel. A 16-bit LFSR, masked by JITTER_MASK, sets how far the 32-bit timer reloads. When the timer reaches 0 the pending flag is set and drives IRQ_LAT0 or IRQ_LAT1. While it is high, lat_cnt counts. Software answers by writing ACK over APB; then lat_now (lat_cnt plus one) is stored in LAT_LAST, LAT_MIN, LAT_MAX, LAT_SUM, ACKS and the histogram. If the timer is due while an event is pending, OVERRUN counts it and nothing is raised.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 56.00s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 56.00s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}5.36%{opacity:1}8.36%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="440" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M180,63 L270,63" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.00s" d="M180,63 L270,63" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="184.58" y="41" width="80.84" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="225" y="53.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">lfsr &amp; mask</text>
+</g>
+<g id="e1">
+<path d="M470,63 L560,63" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:9.00s" d="M470,63 L560,63" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="500.34" y="41" width="29.32" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="515" y="53.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">due</text>
+</g>
+<g id="e2">
+<path d="M650,96 L650,170" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:15.00s" d="M650,96 L650,170" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="654" y="124" width="74.4" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="659" y="136.5" text-anchor="start" font-size="11.5" fill="#e6ecf1">while high</text>
+</g>
+<g id="e3">
+<path d="M740,63 L825,63 L825,170" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:21.00s" d="M740,63 L825,63 L825,170" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="829" y="107.5" width="80.84" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="834" y="120" text-anchor="start" font-size="11.5" fill="#e6ecf1">IRQ to PLIC</text>
+</g>
+<g id="e4">
+<path d="M825,236 L825,300" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:27.00s" d="M825,236 L825,300" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="829" y="259" width="29.32" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="834" y="271.5" text-anchor="start" font-size="11.5" fill="#e6ecf1">ACK</text>
+</g>
+<g id="e5">
+<path d="M650,236 L650,300" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:33.00s" d="M650,236 L650,300" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="654" y="259" width="29.32" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="659" y="271.5" text-anchor="start" font-size="11.5" fill="#e6ecf1">+ 1</text>
+</g>
+<g id="e6">
+<path d="M560,333 L490,333" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:39.00s" d="M560,333 L490,333" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="497.46" y="311" width="55.08" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="525" y="323.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">latency</text>
+</g>
+<g id="e7">
+<path d="M825,366 L825,394 L380,394 L380,366" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:42.00s" d="M825,366 L825,394 L380,394 L380,366" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="542.76" y="372" width="119.48" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="602.5" y="384.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">ACK strobe: store</text>
+</g>
+<g id="e8">
+<path d="M370,96 L370,198 L115,198 L115,300" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:48.00s" d="M370,96 L370,198 L115,198 L115,300" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="182.76" y="176" width="119.48" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="242.5" y="188.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">due while pending</text>
+</g>
+<g id="lfsr">
+<rect x="20" y="30" width="160" height="66" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="100" y="50.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">lfsr</text>
+<text x="100" y="67.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">shifts every clock</text>
+<text x="100" y="84.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">starts at 0xACE1</text>
+<rect class="hl" style="animation-delay:0.00s" x="19" y="29" width="162" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="timer">
+<rect x="270" y="30" width="200" height="66" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="370" y="50.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">timer</text>
+<text x="370" y="67.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">32-bit down-counter</text>
+<text x="370" y="84.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">reload PERIOD + jitter - 1</text>
+<rect class="hl" style="animation-delay:6.00s" x="269" y="29" width="202" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="pending">
+<rect x="560" y="30" width="180" height="66" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="650" y="50.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">pending</text>
+<text x="650" y="67.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">is IRQ_LAT0 or IRQ_LAT1</text>
+<text x="650" y="84.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">level, stays high</text>
+<rect class="hl" style="animation-delay:12.00s" x="559" y="29" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="latcnt">
+<rect x="560" y="170" width="180" height="66" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="650" y="190.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">lat_cnt</text>
+<text x="650" y="207.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">counts while pending</text>
+<text x="650" y="224.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">is 0 on a new event</text>
+<rect class="hl" style="animation-delay:18.00s" x="559" y="169" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="soft">
+<rect x="770" y="170" width="110" height="66" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="825" y="190.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Software</text>
+<text x="825" y="207.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">PLIC, core,</text>
+<text x="825" y="224.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">handler</text>
+<rect class="hl" style="animation-delay:24.00s" x="769" y="169" width="112" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="ack">
+<rect x="770" y="300" width="110" height="66" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="825" y="320.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">ACK write</text>
+<text x="825" y="337.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">APB, same</text>
+<text x="825" y="354.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">PCLK</text>
+<rect class="hl" style="animation-delay:30.00s" x="769" y="299" width="112" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="latnow">
+<rect x="560" y="300" width="180" height="66" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="650" y="329" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">lat_now</text>
+<text x="650" y="346" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">= lat_cnt + 1</text>
+<rect class="hl" style="animation-delay:36.00s" x="559" y="299" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="stats">
+<rect x="270" y="300" width="220" height="66" rx="9" fill="#17382f" stroke="#4fd1a5" stroke-width="1.5"/>
+<text x="380" y="320.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">stored on ACK</text>
+<text x="380" y="337.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">LAT_LAST, LAT_MIN, LAT_MAX</text>
+<text x="380" y="354.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">LAT_SUM, ACKS, histogram bin</text>
+<rect class="hl" style="animation-delay:45.00s" x="269" y="299" width="222" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="overrun">
+<rect x="20" y="300" width="190" height="66" rx="9" fill="#43201f" stroke="#ef6f6c" stroke-width="1.5"/>
+<text x="115" y="320.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">OVERRUN</text>
+<text x="115" y="337.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">due while pending:</text>
+<text x="115" y="354.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">counted, not raised</text>
+<rect class="hl" style="animation-delay:51.00s" x="19" y="299" width="192" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="424" text-anchor="start" font-size="12" fill="#9aa8b5">Everything runs in PCLK (50 MHz): one count is 20 ns, and there is no clock-domain crossing inside the unit.</text>
+</svg>

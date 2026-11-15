@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" width="900" height="440" role="img" aria-labelledby="t d">
+<title id="t">Waveform from the stream simulation, scenario 13: real-time mode, a slot every 200 clocks (1600 ns), 12 credits and none ever returned. The twelfth slot takes the last credit and its frame is sent. The thirteenth slot falls due with zero credits: can_start is low, the slot is dropped, DROPS goes from 0 to 1 and the sequence number advances although no frame was sent.</title><desc id="d">Waveform from the stream simulation, scenario 13: real-time mode, a slot every 200 clocks (1600 ns), 12 credits and none ever returned. The twelfth slot takes the last credit and its frame is sent. The thirteenth slot falls due with zero credits: can_start is low, the slot is dropped, DROPS goes from 0 to 1 and the sequence number advances although no frame was sent.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 15.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 15.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}21.79%{opacity:1}24.79%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="440" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="336" fill="#0d1117"/>
+<line x1="140" y1="30" x2="140" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="140" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">141836 ns</text>
+<line x1="313.709" y1="30" x2="313.709" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="313.709" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">142236 ns</text>
+<line x1="487.418" y1="30" x2="487.418" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="487.418" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">142636 ns</text>
+<line x1="661.127" y1="30" x2="661.127" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="661.127" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">143036 ns</text>
+<line x1="834.836" y1="30" x2="834.836" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="834.836" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">143436 ns</text>
+<text x="12" y="66" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">due</text>
+<path d="M140,74 L140,74 L143.474,74 L143.474,54 L146.948,54 L146.948,74 L838.31,74 L838.31,54 L841.784,54 L841.784,74 L880,74" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="106" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">can_start</text>
+<path d="M140,94 L140,94 L146.948,94 L146.948,114 L880,114" fill="none" stroke="#8da6d4" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="146" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">run</text>
+<rect x="140.5" y="133" width="5.94836" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<rect x="147.448" y="133" width="75.4319" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="185.164" y="148" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">RUN</text>
+<rect x="223.88" y="133" width="655.62" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="551.69" y="148" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">RTWAIT</text>
+<text x="12" y="186" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">credits</text>
+<rect x="140.5" y="173" width="5.94836" height="22" rx="4" fill="#1b2a3a" stroke="#b08fe0" stroke-width="1.2"/>
+<rect x="147.448" y="173" width="732.052" height="22" rx="4" fill="#1b2a3a" stroke="#b08fe0" stroke-width="1.2"/>
+<text x="513.474" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<text x="12" y="226" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">drop_now</text>
+<path d="M140,234 L140,234 L838.31,234 L838.31,214 L841.784,214 L841.784,234 L880,234" fill="none" stroke="#ef6f6c" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="266" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">drops</text>
+<rect x="140.5" y="253" width="700.784" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="490.892" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="842.284" y="253" width="37.216" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="860.892" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<text x="12" y="306" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">seq</text>
+<rect x="140.5" y="293" width="82.3803" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="181.69" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">118</text>
+<rect x="223.88" y="293" width="617.404" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="532.582" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">119</text>
+<rect x="842.284" y="293" width="37.216" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="860.892" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">120</text>
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="143.474" y="30" width="6.94836" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="143.474" cy="30" r="11" fill="#ffd166"/><text x="143.474" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">The last credit</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">Slot 12 is due with credits at 1. can_start is high, the frame is sent, credits go to 0.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="146.948" y="30" width="76.4319" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="146.948" cy="30" r="11" fill="#ffd166"/><text x="146.948" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Its frame</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">run is RUN for 22 clocks. When the frame ends, the sequence number advances from 118 to 119.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="223.38" y="30" width="611.455" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="223.38" cy="30" r="11" fill="#ffd166"/><text x="223.38" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Waiting at zero</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">The source is idle but credits are 0, so can_start stays low. This scenario returns no credits.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="838.31" y="30" width="6.94836" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="838.31" cy="30" r="11" fill="#ffd166"/><text x="838.31" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">No credit, dropped</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">Slot 13 is due: drop_now, DROPS 0 to 1, and seq 119 to 120 with no frame sent.</text>
+</g>
+</svg>

@@ -18,7 +18,7 @@ related: [M01, M03, M04, F03, K11, K12]
 
 # RPMsg in practice: announce, bind, ping
 
-After this module you can follow one message from a Linux program to the real-time core and back: how the real-time side makes itself known, how Linux finds it and opens it, what a message looks like on the wire, and what a round trip costs. The module describes the exchange the project really uses. A minimal "ping" program is described at the end as an exercise; it does not exist in the repository yet.
+After this module you can follow one message from a Linux program to the real-time core and back: how the real-time side makes itself known, how Linux finds it and opens it, what a message looks like on the wire, and what a round trip costs. The module describes the exchange the project really uses.
 
 ## Before you start
 
@@ -39,6 +39,18 @@ Linux implements it on top of virtio, the same framework used for virtual machin
 ## On this board
 
 The shared memory is reserved in the device tree (module M01): two 32 KiB rings at `0x91D0_0000` and `0x91D0_8000`, a 256 KiB buffer pool at `0x91D1_0000`, and a resource table at `0x91D5_0000` that describes them.
+
+The whole path, from the announcement to one answered message:
+
+![Linux and the real-time hart exchange one message: the supervisor on hart 4 announces the channel pfdaq-supervisor through the shared rings, Linux's virtio_rpmsg_bus creates the channel and a sysfs device, sup_open() binds it to rpmsg_chrdev and opens /dev/rpmsgN, sup_xfer() writes a 7-word message, and the supervisor snapshots the fabric and sends one 9-word acknowledgement.](../diagrams/lab-m02-rpmsg-handshake.svg)
+
+1. The supervisor on hart 4 creates an endpoint at address 0 and announces it under the name `pfdaq-supervisor`.
+2. The announcement travels through the shared memory the device tree reserved.
+3. Linux's `virtio_rpmsg_bus` reports that it is creating the channel, and a device appears in sysfs. It is only a device so far.
+4. `sup_open()` sets `driver_override` to `rpmsg_chrdev` and binds the device to that driver.
+5. `/dev/rpmsgN` appears, and `sup_open()` polls for it for up to a second. The `rpmsg_ctrl` flow is the fallback.
+6. `sup_xfer()` writes the 7-word message, waits at most 1000 ms, and reads the 9-word acknowledgement.
+7. The supervisor takes its fabric snapshot, waits 1 ms, and sends the one acknowledgement back.
 
 ### Announce: the supervisor makes itself known
 
@@ -164,6 +176,39 @@ Thirty-two bursts, thirty-two STATUS messages received, none lost (`xfer_fail` 0
 [pfdaq-sup] DISARM from ARMED: 32 status, 0 deadline misses, 0 seq mismatches, linux errors 0, latency irqs 0
 ```
 
+Both ends together, as recorded:
+
+![The hart 4 console prints the ARMED line with a 500 ms deadline and a maximum lag of 1040 frames, then the DISARM line with 32 status messages; the capture's own JSON reports 32 status messages received, no transfer failure, and a round trip of 1249, 1974 and 10020 microseconds.](../diagrams/lab-m02-rpmsg-run.svg)
+
+1. `-r` makes the tool open the channel, send ARM, send one STATUS per burst, and send DISARM at the end.
+2. The ARM line shows the deadline, 500 ms by default, and a maximum lag of 1040 frames: the 1,024 frames of a burst plus 16.
+3. The DISARM line counts 32 STATUS messages, one per burst, with no miss and no mismatch.
+4. The tool's own JSON agrees: `status_rx` 32 and `xfer_fail` 0, so every message was acknowledged.
+5. The round trip is never below 1 ms (minimum 1,249 µs), because the supervisor waits 1 ms for its snapshot before it answers.
+
+The console lines come from the fresh-card run and the JSON from the first FreeRTOS suite run; both are the first supervised test of a suite.
+
+## Do the same in your project
+
+You have Linux on some cores and firmware on another, and you want them to exchange small requests and answers. Work in this order.
+
+1. **Reserve the shared memory.** Copy the reservation from module M01: two 32 KiB rings at `0x91D0_0000` and `0x91D0_8000`, a 256 KiB buffer pool at `0x91D1_0000` and a resource table at `0x91D5_0000`. Change the addresses to ones that are free in your memory map. The resource table describes the other three, so change them together.
+2. **Choose a channel name and an endpoint address.** The project uses the name `pfdaq-supervisor` (`PFDAQ_SUP_CHANNEL` in the firmware, `SUP_CHANNEL` in `pfdaq_cap.c`) and endpoint address 0 (`PFDAQ_SUP_EPT_ADDR`). Use your own name, the same in both files. `sup_open()` finds the device by looking for that name inside the device names under `/sys/bus/rpmsg/devices`.
+3. **Announce from the firmware.** Once the RPMsg stack is up, create the endpoint and announce it, with the two calls shown above, and print one console line afterwards as the supervisor does. That line is how you know on the serial console that the announcement happened.
+4. **Define the two message structures, once in each source file.** Copy `struct sup_msg` (7 words) and `struct sup_ack` (9 words), rename the fields to yours, and keep little-endian 32-bit words. Give each direction its own magic number (`0x53444650` and `0x41444650` here), and make the acknowledgement echo the type it answers.
+5. **Copy `sup_open()` and `sup_xfer()` into your Linux program.** `sup_open()` finds the device, writes `rpmsg_chrdev` to `driver_override`, writes the device name to the `bind` file of the `rpmsg_chrdev` driver, and opens `/dev/rpmsgN`, or goes through `rpmsg_ctrl` if that is what the kernel offers. `sup_xfer()` writes, waits at most 1000 ms with `poll()`, reads, and accepts the reply only if the magic and the type both match.
+6. **Wait for the announcement.** The channel appears only after Linux has attached to the running core and reported the link up. Make your program wait or retry. The project's reboot test waits three seconds after SSH comes up before it looks for the channel.
+7. **Check it.** On the board, `ls /sys/bus/rpmsg/devices/ | grep pfdaq-supervisor` (with your name) must print the device name. Then send a request and look for one acknowledgement per message, your firmware's console line, and no failures counted. The project's own check is the supervised capture `pfdaq_cap -r -w 252 -f 1024 -n 8`, whose JSON ends with the supervisor's view and `xfer_fail` 0.
+8. **Time it.** Measure from just before the write to just after the read, as `sup_xfer()` does, and keep the minimum, the mean and the maximum. Any work your firmware does before it answers is part of the number.
+
+What not to change:
+
+- **Both structures in the same change.** Nothing checks that the two source files agree, and there is no version field.
+- **The type check on the reply.** A reply that does not match counts as a failure, not as the answer to a different question.
+- **Both paths in `sup_open()`.** On Linux 6.18 binding to `rpmsg_chrdev` creates `/dev/rpmsgN` directly; the vendor's ping-pong flow, which uses `rpmsg_ctrl`, did not match this kernel.
+- **The one-second limit on the wait.** It turns a stuck firmware into a clear error (`supervisor did not acknowledge ARM` in `pfdaq_cap`).
+- **Your expectation of the round trip.** The 1 ms floor in this project comes from the supervisor's snapshot wait, not from RPMsg. What the minimum would be without such a wait was not measured here.
+
 ## Evidence
 
 - **The channel appears every time.** In the 30-cycle reboot test, the supervisor channel was present after each warm reboot and a supervised capture passed each time: 30 of 30 (`reboot-30`).
@@ -187,7 +232,7 @@ The first two rows are the code's own error messages, which follow from the symp
 - **Request and acknowledge, one at a time.** It is simple, and the acknowledgement doubles as proof of life. It also means Linux's reporting loop waits for the supervisor on every burst, so the 1 ms wait adds to every burst's reporting time. At the burst rates of the board suite that is small; at much higher message rates it would matter.
 - **Fixed-size structures with a magic word** are the whole protocol. There is no version field. A change to either structure must be made in both source files at once, and nothing checks that they agree.
 - **The supervisor sends with a blocking call.** Read from the code, a reply waits for a free buffer if the ring is full; that was not provoked in testing.
-- **Planned exercise: a ping.** The simplest useful program is not in the repository yet: open the channel as `sup_open()` does, send a QUERY (type 4), and print the acknowledgement and the round-trip time. About sixty lines. It would show the round trip with no capture running. Since the supervisor answers a QUERY after its normal snapshot wait, it would still be at least 1 ms.
+- **Exercise: a ping.** Write the simplest useful program: open the channel as `sup_open()` does, send a QUERY (type 4), and print the acknowledgement and the round-trip time. It shows the round trip with no capture running. Since the supervisor answers a QUERY after its normal snapshot wait, it will still take at least 1 ms.
 - **Exercise:** take the supervisor's `delay_ms(1)` out in a scratch copy and predict the new minimum from the table before you rebuild. What else in the supervisor's design could break?
 
 <!-- nav:begin (generated by tools/gen_docs.py from the front matter; do not edit) -->

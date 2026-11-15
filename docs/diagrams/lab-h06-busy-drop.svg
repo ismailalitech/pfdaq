@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" width="900" height="460" role="img" aria-labelledby="t d">
+<title id="t">Waveform from the stream simulation, scenario 14: real-time mode, a slot every 20 clocks (160 ns), a frame of 44 words that takes 22 clocks (176 ns), 100 credits. The first slot is sent and uses a credit. The next slot falls due while the frame is still going out, so can_start is low and the slot is dropped although credits remain. The slot after that finds the source idle and is sent to the next TDEST.</title><desc id="d">Waveform from the stream simulation, scenario 14: real-time mode, a slot every 20 clocks (160 ns), a frame of 44 words that takes 22 clocks (176 ns), 100 credits. The first slot is sent and uses a credit. The next slot falls due while the frame is still going out, so can_start is low and the slot is dropped although credits remain. The slot after that finds the source idle and is sent to the next TDEST.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 15.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 15.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}21.79%{opacity:1}24.79%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="460" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="336" fill="#0d1117"/>
+<line x1="140" y1="30" x2="140" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="140" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">172692 ns</text>
+<line x1="248.824" y1="30" x2="248.824" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="248.824" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">172792 ns</text>
+<line x1="357.647" y1="30" x2="357.647" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="357.647" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">172892 ns</text>
+<line x1="466.471" y1="30" x2="466.471" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="466.471" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">172992 ns</text>
+<line x1="575.294" y1="30" x2="575.294" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="575.294" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">173092 ns</text>
+<line x1="684.118" y1="30" x2="684.118" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="684.118" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">173192 ns</text>
+<line x1="792.941" y1="30" x2="792.941" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="792.941" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">173292 ns</text>
+<text x="12" y="66" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">due</text>
+<path d="M140,74 L140,74 L157.412,74 L157.412,54 L166.118,54 L166.118,74 L331.529,74 L331.529,54 L340.235,54 L340.235,74 L505.647,74 L505.647,54 L514.353,54 L514.353,74 L679.765,74 L679.765,54 L688.471,54 L688.471,74 L853.882,74 L853.882,54 L862.588,54 L862.588,74 L880,74" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="106" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">can_start</text>
+<path d="M140,94 L140,94 L166.118,94 L166.118,114 L357.647,114 L357.647,94 L514.353,94 L514.353,114 L705.882,114 L705.882,94 L862.588,94 L862.588,114 L880,114" fill="none" stroke="#8da6d4" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="146" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">drop_now</text>
+<path d="M140,154 L140,154 L331.529,154 L331.529,134 L340.235,134 L340.235,154 L679.765,154 L679.765,134 L688.471,134 L688.471,154 L880,154" fill="none" stroke="#ef6f6c" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="186" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">run</text>
+<rect x="140.5" y="173" width="25.1176" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<rect x="166.618" y="173" width="190.529" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="261.882" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">RUN</text>
+<rect x="358.147" y="173" width="155.706" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="436" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">RTWAIT</text>
+<rect x="514.853" y="173" width="190.529" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="610.118" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">RUN</text>
+<rect x="706.382" y="173" width="155.706" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="784.235" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">RTWAIT</text>
+<rect x="863.088" y="173" width="16.4118" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="12" y="226" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">credits</text>
+<rect x="140.5" y="213" width="25.1176" height="22" rx="4" fill="#1b2a3a" stroke="#b08fe0" stroke-width="1.2"/>
+<text x="153.059" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">100</text>
+<rect x="166.618" y="213" width="347.235" height="22" rx="4" fill="#1b2a3a" stroke="#b08fe0" stroke-width="1.2"/>
+<text x="340.235" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">99</text>
+<rect x="514.853" y="213" width="347.235" height="22" rx="4" fill="#1b2a3a" stroke="#b08fe0" stroke-width="1.2"/>
+<text x="688.471" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">98</text>
+<rect x="863.088" y="213" width="16.4118" height="22" rx="4" fill="#1b2a3a" stroke="#b08fe0" stroke-width="1.2"/>
+<text x="12" y="266" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">drops</text>
+<rect x="140.5" y="253" width="199.235" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="240.118" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">18</text>
+<rect x="340.735" y="253" width="347.235" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="514.353" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">19</text>
+<rect x="688.971" y="253" width="190.529" height="22" rx="4" fill="#1b2a3a" stroke="#ef6f6c" stroke-width="1.2"/>
+<text x="784.235" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">20</text>
+<text x="12" y="306" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TDEST</text>
+<rect x="140.5" y="293" width="373.353" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="327.176" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="514.853" y="293" width="347.235" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="688.471" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="863.088" y="293" width="16.4118" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="871.294" y="308" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="0" y="336" width="900" height="124" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="157.412" y="30" width="17.4118" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="157.412" cy="30" r="11" fill="#ffd166"/><text x="157.412" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="336" width="900" height="124" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Slot due, sent</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">can_start is high (idle, 100 credits): the frame starts, credits 100 to 99, run RUN, TDEST 0.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="166.118" y="30" width="191.529" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="166.118" cy="30" r="11" fill="#ffd166"/><text x="166.118" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="336" width="900" height="124" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Frame in progress</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">The frame occupies the stream for 22 clocks, 176 ns. The slot interval is 160 ns.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="331.529" y="30" width="17.4118" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="331.529" cy="30" r="11" fill="#ffd166"/><text x="331.529" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="336" width="900" height="124" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Busy drop</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">The next slot is due with run in RUN: can_start low, drop_now high, DROPS 18 to 19. Credits stay 99.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="505.647" y="30" width="17.4118" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="505.647" cy="30" r="11" fill="#ffd166"/><text x="505.647" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="336" width="900" height="124" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Sent again</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">This slot finds run idle again (RTWAIT): sent, credits 98, TDEST moves to 1.</text>
+</g>
+</svg>

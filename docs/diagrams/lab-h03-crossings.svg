@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" width="900" height="420" role="img" aria-labelledby="t d">
+<title id="t">The clock-domain crossings of the stream source. PCLK side on the left, ACLK side on the right. Configuration registers cross to the cfg registers as held-still values, sampled when the START pulse arrives. Events cross as toggles through a three flip-flop chain that turns a change of level into a one-clock pulse. The other way, the snapshot registers are held still while a toggle crosses to the PCLK side, which then copies them into the snap_p bank in one clock.</title><desc id="d">The clock-domain crossings of the stream source. PCLK side on the left, ACLK side on the right. Configuration registers cross to the cfg registers as held-still values, sampled when the START pulse arrives. Events cross as toggles through a three flip-flop chain that turns a change of level into a one-clock pulse. The other way, the snapshot registers are held still while a toggle crosses to the PCLK side, which then copies them into the snap_p bank in one clock.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 35.00s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 35.00s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}8.57%{opacity:1}11.57%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="420" rx="12" fill="#12171d"/>
+<g id="e_cfg">
+<path d="M280,75 L620,75" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.00s" d="M280,75 L620,75" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="354.84" y="53" width="190.32" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="450" y="65.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">held still, sampled at START</text>
+</g>
+<g id="e_tgl">
+<path d="M280,195 L620,195" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:9.00s" d="M280,195 L620,195" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="425.68" y="173" width="48.64" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="450" y="185.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">toggle</text>
+</g>
+<g id="e_pul">
+<path d="M750,160 L750,110" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:15.00s" d="M750,160 L750,110" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="754" y="126" width="42.2" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="759" y="138.5" text-anchor="start" font-size="11.5" fill="#e6ecf1">pulse</text>
+</g>
+<g id="e_st">
+<path d="M620,311 L280,311" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:24.00s" d="M620,311 L280,311" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="367.72" y="289" width="164.56" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="450" y="301.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">snap_tgl_a, 3 flip-flops</text>
+</g>
+<g id="e_sd">
+<path d="M620,342.5 L280,342.5" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:27.00s" d="M620,342.5 L280,342.5" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="383.82" y="320.5" width="132.36" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="450" y="333" text-anchor="middle" font-size="11.5" fill="#e6ecf1">copied on the pulse</text>
+</g>
+<g id="pcfg">
+<rect x="20" y="40" width="260" height="70" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="150" y="62.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Configuration (PCLK)</text>
+<text x="150" y="79.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">payload_words, rate, coef_p,</text>
+<text x="150" y="96.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">fault, credit_val_p</text>
+<rect class="hl" style="animation-delay:0.00s" x="19" y="39" width="262" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="ptgl">
+<rect x="20" y="160" width="260" height="70" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="150" y="182.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Toggle flip-flops (PCLK)</text>
+<text x="150" y="199.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">start_tgl_p, snap_tgl_p,</text>
+<text x="150" y="216.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">abort_tgl_p, credit_tgl_p</text>
+<rect class="hl" style="animation-delay:6.00s" x="19" y="159" width="262" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="psnap">
+<rect x="20" y="290" width="260" height="70" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="150" y="312.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Bank snap_*_p (PCLK)</text>
+<text x="150" y="329.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">read by APB; done_p;</text>
+<text x="150" y="346.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">snapv_sync_p chain</text>
+<rect class="hl" style="animation-delay:30.00s" x="19" y="289" width="262" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="acfg">
+<rect x="620" y="40" width="260" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="750" y="62.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">cfg_* registers (ACLK)</text>
+<text x="750" y="79.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">loaded in one clock</text>
+<text x="750" y="96.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">on the START pulse</text>
+<rect class="hl" style="animation-delay:18.00s" x="619" y="39" width="262" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="async">
+<rect x="620" y="160" width="260" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="750" y="182.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Chains *_sync_a (ACLK)</text>
+<text x="750" y="199.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">3 flip-flops;</text>
+<text x="750" y="216.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">pulse = [2] xor [1]</text>
+<rect class="hl" style="animation-delay:12.00s" x="619" y="159" width="262" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="asnap">
+<rect x="620" y="290" width="260" height="70" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="750" y="312.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">snap_* registers (ACLK)</text>
+<text x="750" y="329.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">written, then held still;</text>
+<text x="750" y="346.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">snap_tgl_a flips</text>
+<rect class="hl" style="animation-delay:21.00s" x="619" y="289" width="262" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="392" text-anchor="start" font-size="12" fill="#9aa8b5">busy_a crosses as a plain level through two flip-flops. Nothing wider than one bit is ever passed through a synchroniser.</text>
+</svg>

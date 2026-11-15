@@ -108,6 +108,16 @@ The unit needs two reads at unrelated addresses in the same cycle: the acknowled
 
 Both reads are registered (`ha_q`, `hb_q`): the data appears one clock after the address. Writing the memory as an array with a registered read and a write enable, with no reset, is how a RAM is described so that synthesis can place it in a RAM block instead of building it from logic elements and flip-flops. Which kind of RAM block the tool chose is not shown in the build report extract published with this project, so this page does not say.
 
+![Block diagram of the histogram: lat_now goes through bin_of to lat_bin, which addresses hist_a; its registered output ha_q plus one is hw_data; the single write port takes the increment or the clear sweep's zero, the sweep having priority, and writes the same address and data to hist_a and hist_b; the bus reads hist_b through HIST_SEL and HIST_DATA.](../diagrams/lab-h08-histogram-datapath.svg)
+
+1. On an `ACK` with an event pending, `inc_bin` and `inc_pend` are set and `lat_now` (`lat_cnt + 1`) is the latency to bin.
+2. `bin_of` turns the latency into one of 64 bins, `lat_bin`.
+3. `lat_bin` addresses `hist_a`; the registered read comes out as `ha_q`.
+4. `ha_q + 1` is the new count, `hw_data`.
+5. The one write port takes `hw_data` for the increment, or a zero from the clear sweep. The sweep has priority.
+6. The write goes to `hist_a`, and the same address and data to `hist_b`.
+7. The bus selects a bin with `HIST_SEL`; `hist_b` has its own read port, registered as `hb_q`, and `HIST_DATA` shows it. Nothing is arbitrated between counting and reading.
+
 ### The increment, cycle by cycle
 
 When `ACK` is written for a pending interrupt, in clock cycle *t*:
@@ -119,6 +129,15 @@ When `ACK` is written for a pending interrupt, in clock cycle *t*:
 | *t* + 2 | A read of the same bin, started in this cycle, returns the new count. |
 
 So one increment takes two cycles, and the read and the write are one cycle apart. The hazard would be a second sample whose read happens in cycle *t* + 1: it would read the old count of the same bin at the same clock edge at which the first sample's write lands.
+
+The waveform is the third acknowledge of channel 0 in phase 1, taken from the unmodified testbench with the unit's internal signals added to the dump. Its latency, 13, goes to bin 7, which already holds one sample (the first, with latency 12).
+
+![Waveform of an increment: in the ACK cycle lat_now is 13, lat_bin is 7 and ha_q holds the old count 1; in the next cycle inc_pend is high, hw_addr is 7 and hw_data is 2; one cycle later ha_q still reads 1; the cycle after that it reads 2.](../diagrams/lab-h08-increment.svg)
+
+1. Cycle *t*: `ACK` is written. `lat_bin` is 7 and `ha_q`, which follows `lat_bin` one clock later, already holds the old count of bin 7, 1.
+2. Cycle *t* + 1: `inc_pend` is high, `hw_addr` is 7 and `hw_data` is `ha_q + 1`, 2. The new count is written at the end of the cycle.
+3. Cycle *t* + 2: `ha_q` still reads 1. A read of bin 7 addressed in *t* + 1 would have returned the old count; this is the hazard.
+4. Cycle *t* + 3: `ha_q` reads 2. A read of bin 7 addressed in *t* + 2 sees the increment.
 
 The design avoids this without any forwarding logic, for two independent reasons.
 
@@ -170,6 +189,15 @@ B: ACK after sweep:    ACKS 2, LAT_LAST 12, histogram total 1
 ```
 
 In the first line the unit has one acknowledged sample but an empty histogram. The second line is the control: the same sequence with the acknowledge after the sweep puts the sample in the histogram.
+
+I also drew it as a waveform. For the figure I wrote a third scratch testbench, again not in the repository, that drives one channel's write strobe directly: a one-shot event, `CLEAR` 11 clocks after that write, `ACK` 4 clocks after `CLEAR`. It ends with `ACKS 1, LAT_LAST 15, histogram total 0`. Its clock spacing is not the one of the run quoted above, so the latency differs. The control, with the `ACK` 71 clocks after `CLEAR`, ends with `LAT_LAST 82` and histogram total 1.
+
+![Waveform of the lost sample: CLEAR is written while an event is pending; the sweep starts; an ACK during the sweep clears pending and sets inc_bin to 7; in the cycle where inc_pend is high the write port belongs to the sweep, hw_addr is 4 and hw_data is 0, so bin 7 is never incremented.](../diagrams/lab-h08-lost-sample.svg)
+
+1. `CLEAR` is written while the interrupt is still pending. One clock later `clearing` is high.
+2. The sweep owns the write port: `hw_addr` steps through the bins and `hw_data` is 0.
+3. The `ACK` arrives during the sweep. `pending` falls and `inc_bin` becomes 7, the bin the sample belongs in.
+4. `inc_pend` is high for one clock, but `hw_addr` is the sweep's 4 and `hw_data` is 0. Bin 7 is never written.
 
 This is a corner, not a common failure. It needs an interrupt that is pending across a `CLEAR`. The Linux tool `pfdaq_lat` does not hit it: it stops the unit, acknowledges any stale pending interrupt, and only then writes `CLEAR`, before it enables the first event. But software that clears statistics while a measurement is in progress would see a histogram total one lower than `ACKS`, and it is a fact worth knowing when you compare the two. A fix would be to hold the acknowledge's increment until the sweep is done, or to refuse `ACK`-driven increments during `clearing`; neither has been tried, and the design as published is the one in the table of results.
 
@@ -239,6 +267,26 @@ RESULT: FAIL
 ```
 
 Every odd bin from 3 up reads 0 and the even bin below it holds both halves: bin 6 holds the 1 + 5 samples of the expected bins 6 and 7, and bin 12 the 25 + 7 of bins 12 and 13. Everything else in the unit, the latencies, the minimum, the maximum and the sum, still passes, because the histogram does not feed back into them. The checker's own binning is the independent reference that exposes the change.
+
+## Do the same in your project
+
+Use this when you need a distribution of a measured value, in a block RAM, counting at one sample per event with the bus reading at any time.
+
+1. **Choose the bins.** Copy `bin_of` from `hw/rtl/pfdaq_latency.v` for two bins per power of two (64 bins, 6-bit index), or change it for your own range. Write the same function again in your checker, independently, as `check_latency.py` does in one line of Python. The change in step 3 of "Run it", one bin per octave, shows what a different choice does to the report.
+2. **Copy the RAM description.** Two arrays of 64 × 32 bits with no reset (`hist_a`, `hist_b`), one clocked block with one write port (`hw_en`, `hw_addr`, `hw_data`) and two registered reads (`ha_q` from `lat_bin`, `hb_q` from `hist_sel`). `hist_a` is for counting and `hist_b` for the bus. Resize the arrays and the 6-bit addresses together.
+3. **Copy the increment.** In the cycle where the sample arrives, address `hist_a` with the bin and set `inc_bin` and `inc_pend`; in the next cycle write `ha_q + 1` to `inc_bin`. Keep the combinational block that gives the sweep priority over `inc_pend`.
+4. **Copy the clear sweep.** `clearing` and `clr_idx` write 0 to one bin per clock. Reset starts it (`clearing <= 1'b1`), so the RAM is also cleared after power-up. While it runs, hold new events off, as `due` does with `!clearing`, and ignore a one-shot request.
+5. **Check the hazard for your design.** The unit needs no forwarding for two reasons: two `ACK` writes are at least two clocks apart on APB, and two samples in consecutive clocks land in different bins (latencies 1 and 2 or more). Write down the equivalent argument for yours. If a second source of increments, or back-to-back samples of equal value, are possible, add forwarding: when the bin being written equals the bin being read, use the value being written.
+6. **Read it from software.** Write the bin to `HIST_SEL`, then read `HIST_DATA`; the value is valid two clock edges after the write. Read the 64 bins after the run has finished and the unit has stopped, because they are not a snapshot while events flow.
+7. **Run the check.** Add the 64-bin comparison to your testbench and checker (`H` lines in the trace, `Counter` of `bin_of` over every measured latency in `check_latency.py`). `make -C hw sim-latency` must end with `RESULT: PASS`.
+8. **Plant the bug.** Replace the upper-half bit of `bin_of` by a constant zero in a scratch copy. The run must fail and name the bins; if it does not, the checker is not independent of the design.
+
+What not to change:
+
+- **The sweep's priority over increments**, and the rule that events wait while it runs.
+- **The separate read copy `hist_b`**, unless you take on arbitrating the bus read against the counting.
+- **The order in software**: stop, acknowledge anything pending, `CLEAR`, wait for `STATUS` bit 2 to fall, then start. An interrupt that is pending across `CLEAR` and acknowledged during the sweep is counted in `ACKS` but missing from the histogram.
+- **The reading of percentiles.** They are upper bin edges, so a value can be overstated by up to 50 %.
 
 ## Evidence
 

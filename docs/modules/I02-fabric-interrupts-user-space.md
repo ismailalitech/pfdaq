@@ -12,7 +12,7 @@ software: [pfdaq-lat, uio]
 sources:
   - yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_lat.c:open_uio,empty_wakeups,L_STATUS,L_ACK
   - yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts
-evidence: [suite-freertos-raw, suite-freertos, boot-uboot-linux]
+evidence: [suite-freertos-raw, suite-freertos, boot-uboot-linux, fabric-interrupts-run]
 related: [F03, I03, K05, P02, H07]
 ---
 
@@ -24,7 +24,7 @@ The story of how the double wake-up was found and explained is a case study, [K0
 
 ## Before you start
 
-- **Level 3.** You should know how a fabric line becomes a PLIC source (module [F03](F03-fabric-interrupts.md)) and how a user program reaches fabric registers (module I01, planned).
+- **Level 3.** You should know how a fabric line becomes a PLIC source (module [F03](F03-fabric-interrupts.md)) and how a user program reaches fabric registers (module [I01](I01-fabric-registers-from-linux.md)).
 - **Board:** the shared baseline, fabric v0.5.1 with the pfdaq image. Everything on this page about the board is quoted from the recorded suite; it was not run again while writing.
 
 ## The idea
@@ -43,6 +43,14 @@ The interrupt contract, as the generic driver implements it and as this project'
 3. The program does whatever the device needs to drop its interrupt, then **writes a 4-byte `1`** to the file to unmask the line again.
 
 The kernel cannot do step 3's first half for you: it has no idea which register of an arbitrary device acknowledges the interrupt. That is the point of UIO, and it is also where the trouble starts, because there is a gap between "the program has acknowledged" and "the kernel has unmasked".
+
+![The UIO interrupt contract for one event: the latency unit raises a level, the PLIC delivers source 119, the kernel handler masks the line and wakes the reader, the program reads STATUS, writes ACK only if bit 0 is set, and then writes 1 so the kernel unmasks the line.](../diagrams/lab-i02-uio-contract.svg)
+
+1. The fabric's latency unit raises a level on F2M[1], which reaches the PLIC as source 119.
+2. The kernel handler masks the line and wakes the program that waits on the file.
+3. `read()` returns a 4-byte count and the program reads `STATUS`.
+4. If `STATUS` bit 0 is set the program writes `ACK`, and the level goes low; if not, there is nothing to acknowledge.
+5. The program writes a 4-byte `1`, and the kernel unmasks the line again.
 
 ## On this board
 
@@ -107,6 +115,14 @@ In words:
 | **read `STATUS`; acknowledge only if bit 0 is set** | the rule this page is about |
 | `write(1)` | unmask the line so the next event can arrive |
 
+![One event wakes the program twice: after the first wake-up STATUS bit 0 is set, so the program writes ACK and counts an ack; after the second STATUS bit 0 is clear, so it writes no ACK and counts an empty wake-up. Both end with a write of 1 to unmask the line.](../diagrams/lab-i02-double-wakeup.svg)
+
+1. A fabric event raises the level.
+2. Wake-up 1 finds `STATUS` bit 0 set, writes `ACK`, and `acks` goes up by one.
+3. The program writes `1`, and the line is unmasked.
+4. Wake-up 2 finds `STATUS` bit 0 clear, so it writes no `ACK`; `empty_wakeups` goes up by one.
+5. The program writes `1` again.
+
 ## Run it
 
 The commands below are the ones the project ran, as lines of the board suite (`tests/board/pfdaq_final_suite.sh`). They were not run while this page was written; the results are the recorded ones.
@@ -135,11 +151,40 @@ Read it like this:
 - **`spurious` is 0:** the fabric never saw an `ACK` with nothing pending, which is exactly what the `STATUS` check prevents. Without the check, the second wake-up of each event would have been an unnecessary write to a register.
 - **`overrun`** counts events that became due while the previous one was still unanswered. It is small, and it is the other side of the latency story: module [P02](P02-interrupt-latency.md) shows the same runs as latency figures.
 
+The kernel's own counters agree with this. In the recorded run `fabric-interrupts-run`, taken right after a warm reboot, the tool saw 100,000 events and 99,998 empty wake-ups, and afterwards both the PLIC source 119 line of `/proc/interrupts` and the UIO event counter of `pfdaq_stream_src` read 199,999: about two interrupts per event.
+
+![A recorded run of pfdaq_lat on channel 0 with 100,000 events: acks equal events and empty_wakeups is 99,998; afterwards the PLIC source 119 counter and the UIO event counter both read 199,999.](../diagrams/lab-i02-wakeup-count.svg)
+
+1. One run of 100,000 events, one every 500 microseconds, answered from a user program.
+2. `acks` equals `events`; `empty_wakeups` is 99,998; `spurious` is 0.
+3. The fabric measured a mean latency of 79.72 µs and a maximum of 208.80 µs in this run (the table above has the suite's run).
+4. After the run the kernel's counter for PLIC source 119 and the UIO event count both read 199,999.
+
 For comparison, the rows in which Linux's generic UIO path is not involved all show `empty_wakeups` of 0: the in-kernel acknowledge of module I03, and the four runs in which hart 4 answers.
+
+## Do the same in your project
+
+The goal is a user program that waits for an interrupt from your own fabric block, answers it correctly, and stays correct however many times the kernel wakes it. The names below are this project's.
+
+1. **Make the interrupt something a program can check.** The project's latency unit raises a level that stays high until software writes the channel's `ACK` register, and a `STATUS` register whose bit 0 says "interrupt pending". Give your block the same pair; the program's shape follows from them.
+2. **Declare the interrupt in the device tree** on the same node as the registers (module I01): `interrupt-parent = <&plic>; interrupts = <119>;`. Replace 119 with 118 plus your F2M index, as the project's tree comments it.
+3. **Open the device by name and map the registers** with the `open_uio` pattern of I01. Then write a 4-byte `1` to the file to enable the line.
+4. **Drain old events before you start.** Loop `poll(&p, 1, 0)` and `read(fd, &cnt, 4)`, writing `1` after each, so a count left by an earlier program does not look like your first event.
+5. **Start the source, then loop.** `poll` with a timeout (so a lost interrupt cannot hang the program), `read` 4 bytes, read `STATUS`, write `ACK` only if bit 0 is set, otherwise add one to an `empty_wakeups` counter, then write the 4-byte `1`. Leave the loop when `STATUS` says the run is finished.
+6. **Keep two counters apart.** If your block can count `ACK` writes that found nothing pending (the project's reports it as `spurious`), read it at the end; it is the proof that the `STATUS` test works.
+7. **Check it.** Run a long burst of events, as the suite does with `pfdaq_lat -c 0 -p 500 -n 100000`. You should see `acks` equal to `events` and `spurious` at 0. A large `empty_wakeups` is expected on this board, about 99.97 % of `events` in the recorded run.
+
+What not to change:
+
+- Keep the order of the contract: `ACK` first, then the 4-byte `1`, as `pfdaq_lat` does. (What unmasking first would do was not tested.)
+- Do not write `ACK` on every wake-up; trust `STATUS`, not the number of times you were woken.
+- Do not assume one wake-up per event.
+- Do not leave the program with the line masked: a later `read()` would never return.
 
 ## Evidence
 
 - **Board, fabric v0.5.1:** the table above comes from the [raw suite record](../../evidence/v0.5.1/board/suite-freertos.jsonl) (rows `T8-linux-uio-idle`, `T8-linux-uio-fifo-idle`, `T8-linux-uio-fifo-load`), one run each.
+- **Wake-up count:** the [recorded run](../../evidence/v0.5.1/board/fabric-interrupts-run.txt) (`fabric-interrupts-run`) behind the figure above: one run of `pfdaq_lat -c 0 -p 500 -n 100000`, with the interrupt counters read afterwards.
 - **Kernel command line:** the boot record shows the `uio_pdrv_genirq.of_id=generic-uio` that binds the node.
 
 The explanation of *why* the second wake-up happens is the one recorded when it was found, summarised in K05 and F03: the level is latched again by the interrupt controller when the kernel handler completes, and delivered once the line is unmasked, although the program has acknowledged by then. The PLIC was not traced to confirm it. What is established is the count, and that the `STATUS` check makes the program correct regardless of the cause.
@@ -171,7 +216,7 @@ The explanation of *why* the second wake-up happens is the one recorded when it 
 | **How to run** | Runs on the shared baseline: fabric v0.5.1 and the pfdaq image |
 | **In the system** | [Latency unit (two channels)](../system/README.md#pfdaq-latency) · [Platform-level interrupt controller](../system/README.md#plic) · [U54 harts 1 to 3](../system/README.md#u54-linux) · [pfdaq_lat](../system/README.md#pfdaq-lat) · [UIO devices](../system/README.md#uio) |
 | **Source** | [`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_lat.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_lat.c): `open_uio`, `empty_wakeups`, `L_STATUS`, `L_ACK`<br>[`yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts`](../../yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts) |
-| **Evidence** | [Raw output of the FreeRTOS suite, one JSON object per test](../../evidence/v0.5.1/board/suite-freertos.jsonl) (board, fabric v0.5.1, 2026-11-15)<br>[Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Raw output of the FreeRTOS suite, one JSON object per test](../../evidence/v0.5.1/board/suite-freertos.jsonl) (board, fabric v0.5.1, 2026-11-15)<br>[Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15)<br>[100,000 fabric interrupts answered by Linux, then by hart 4, with the interrupt counters after each](../../evidence/v0.5.1/board/fabric-interrupts-run.txt) (board, fabric v0.5.1, 2026-11-15) |
 | **Related** | [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](F03-fabric-interrupts.md)<br>[I03 A small kernel driver for a fabric interrupt](I03-kernel-driver-fabric-interrupt.md)<br>[K05 Two interrupts for every event](../case-studies/K05-two-interrupts-per-event.md)<br>[P02 Interrupt latency: bare metal, RTOS task, kernel, user space](P02-interrupt-latency.md)<br>[H07 Measuring software from hardware: the latency unit](H07-latency-unit.md) |
 | **Status** | validated |
 <!-- nav:end -->

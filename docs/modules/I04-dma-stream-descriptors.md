@@ -91,6 +91,17 @@ dma[DMA_STREAM0 / 4] = (uint32_t)(ddr_phys + DESC_OFF);
 
 The order is deliberate. Byte count and destination are written first and the configuration word last, so the descriptor never looks valid while it is half written. Only then does the DMA learn its address. The stream source is started after this, never before.
 
+The whole transfer, in the order the program does it:
+
+![Order of one DMA transfer: Linux writes the descriptor in DDR (byte count, destination, then 0xD last), writes its physical address to STREAM_0_ADDR_REG of the DMA, and only then starts the stream source; the source sends one packet to the DMA, which fetches the descriptor, writes the burst into the data buffer, clears the descriptor's ready bit and raises the interrupt on F2M[2], PLIC source 120; the blocking read on the DMA's UIO device returns and Linux checks the status and the ready bit.](../diagrams/lab-i04-arm-start-wait.svg)
+
+1. Linux writes the descriptor into DDR: byte count, then destination, then the configuration word `0xD` last.
+2. Linux writes the descriptor's physical address to `STREAM_0_ADDR_REG` (`0x460`).
+3. Only then does Linux start the source, with `SRC_CTRL` = `0x1`.
+4. The source sends the burst as one packet with no `TVALID` gap in it. The DMA fetches the descriptor and writes the stream into the data buffer.
+5. When the full byte count has arrived, the DMA clears the descriptor's ready bit and raises its interrupt, F2M[2], PLIC source 120.
+6. Linux, asleep in `read()` on the DMA's UIO device, wakes, and checks the error bits and the ready bit.
+
 ### Waiting for completion
 
 The DMA's interrupt output is wired to fabric-to-MSS line F2M[2], which is PLIC source 120. The vendor's device tree describes the DMA as `dma-controller@60010000` with that interrupt, and the kernel driver `uio-microchip-dma` turns it into a UIO device. A user program therefore waits for the DMA with an ordinary blocking `read()` on `/dev/uioN`, which returns a 4-byte event count when the interrupt has fired.
@@ -159,10 +170,40 @@ frame 0: header a55a00fc  seq 16  timestamp 3332262599  payload 00100000 0010000
 16 frames, 16384 bytes: 0 bad (header, sequence or CRC-32)
 ```
 
+![Recorded output of two runs of the one-burst program on the board: each reports the DMA interrupt with INTR_0_STAT 0x210 and descriptor configuration word 0x9, the first frame, and 16 frames of 16384 bytes with 0 bad; the second run starts at sequence 16 and its payload begins 0x00100000.](../diagrams/lab-i04-one-burst-run.svg)
+
+1. The `read()` returned (event count 1), the configuration word reads `0x9` (the DMA cleared the ready bit), and `INTR_0_STAT` is `0x210` with no error bits.
+2. Frame 0 has header `a55a00fc`, sequence 0 and the counter payload 0, 1, 2 ...
+3. All 16 frames pass the header, sequence and CRC-32 checks: 0 bad.
+4. In the second run the sequence number continues at 16, and the payload starts with `0x0010` followed by the word index.
+
 - `INTR_0_STAT` reads `0x210` (stream operation complete, no error bits), the same value `pfdaq_cap` sees.
 - The descriptor's configuration word reads `0x9` afterwards: the DMA cleared bit 2, the ready bit, when it used the descriptor.
 - The header `a55a00fc` is the magic value with the payload length 252.
 - The second run's frame 0 has sequence number 16, because the source never resets its sequence counter, and its first payload word is `0x00100000`, not 0: in the counter payload mode word *i* of a frame is the low 16 bits of the sequence number followed by *i* (`hw/rtl/pfdaq_stream_src.v`), and 16 is `0x0010`. All 16 frames of both runs passed the header, sequence and CRC checks.
+
+## Do the same in your project
+
+This is the minimum to land an AXI4-Stream packet from your own fabric source in a buffer that a Linux program reads. `experiments/I04-dma-one-burst/dma_one_burst.c` is the template: 138 lines, no dependency on the project's tools.
+
+1. **Check what the core requires of your source.** `TVALID` held high through the packet with no gap, `TKEEP` = `TSTRB` = all ones on every beat except the last, and a packet whose length equals the descriptor's byte count (rules 2 to 5). An early `TLAST` does not complete a transfer. Give your source's `TDEST` the stream number whose address register you arm; `TDEST` 0 uses `STREAM_0_ADDR_REG`.
+2. **Reserve a buffer the DMA can write and Linux can read without cache maintenance.** Use a non-cached window and u-dma-buf as here (module I05): `/dev/udmabuf-ddr-nc0`, with its physical address in `/sys/class/u-dma-buf/udmabuf-ddr-nc0/phys_addr`. Put the descriptor at the start, 8-byte aligned, and the data one page later (`DESC_OFF` 0, `BUF_OFF` 0x1000).
+3. **Open the devices by name.** Copy `open_uio()` and change the names: `pfdaq_stream_src` becomes your block's UIO name, and `dma-controller@60010000` is the DMA's UIO device, whose interrupt arrives as F2M[2] (module F03). Change the source's register offsets (`SRC_CTRL`, `SRC_PAYLOAD`, `SRC_FRAMES` and the rest) to yours.
+4. **Prepare the DMA once.** Write `0xF` to `INTR_0_MASK_REG` (`0x14`) and to `INTR_0_CLEAR_REG` (`0x18`), then drain any completion left from an earlier program with `poll()` and `read()`.
+5. **Arm, in this order.** `desc[1]` = byte count; `desc[2]` = the buffer's physical address; `desc[0]` = `0xD` last; then the descriptor's physical address into `STREAM_0_ADDR_REG` (`0x460`). Virtual addresses go nowhere near the descriptor.
+6. **Start the source after arming, then sleep.** Write your source's `START`, then `poll()` and `read()` on the DMA's UIO device with a timeout.
+7. **Decide success from two signals.** `INTR_0_STAT` & `0xE` must be 0 (the error bits) and the descriptor's configuration word must have bit 2 clear. Do not wait for the complete flag; the kernel driver has already cleared it. Write `0xF` to `INTR_0_CLEAR_REG` afterwards.
+8. **Check what arrived.** Verify every frame in software, as the program does (header, sequence number, CRC-32), and make the byte count in step 5 equal what the source will send: frames × (payload words + 4) × 4, as `bytes` is computed in the program. Use an even number of 32-bit words per frame when a transfer holds several frames (case study K10).
+9. **Build and run the template first,** as in "Run it", and compare its output with the recorded one. Then change one thing at a time.
+
+What not to change:
+
+- **Arm before START.** A descriptor re-armed while a packet is already waiting is not picked up (case study K04).
+- **Configuration word last.** The descriptor must never look valid while half written.
+- **Physical addresses** in the descriptor and in `STREAM_0_ADDR_REG`.
+- **One transfer is at most 8 MB.**
+- **Do not depend on an early `TLAST`** to end a transfer. An aborted burst has to be padded up to the armed length (case study K09).
+- **Do not read the buffer through a cached mapping** unless you add the cache maintenance (module I05).
 
 ## Evidence
 

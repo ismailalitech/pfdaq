@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 270" width="940" height="270" role="img" aria-labelledby="t d">
+<title id="t">Five stages in a row with the rate and the time per mebibyte of each: the stream source about 933 MB/s, the DMA about 861 MB/s start to interrupt, the copy 70.5 MB/s, the verification 55.4 MB/s, and the whole loop 29.6 MB/s.</title><desc id="d">Five stages in a row with the rate and the time per mebibyte of each: the stream source about 933 MB/s, the DMA about 861 MB/s start to interrupt, the copy 70.5 MB/s, the verification 55.4 MB/s, and the whole loop 29.6 MB/s.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 13.70s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 13.70s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}9.49%{opacity:1}12.49%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="940" height="270" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M173,76 L198,76" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:1.30s" d="M173,76 L198,76" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e1">
+<path d="M363,76 L388,76" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.90s" d="M363,76 L388,76" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e2">
+<path d="M553,76 L578,76" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:6.50s" d="M553,76 L578,76" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e3">
+<path d="M743,76 L768,76" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:9.10s" d="M743,76 L768,76" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="src">
+<rect x="8" y="30" width="165" height="92" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="90.5" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Stream source</text>
+<text x="90.5" y="72" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">about 933 MB/s</text>
+<text x="90.5" y="89" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">1.12 ms per MiB</text>
+<text x="90.5" y="106" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">derived</text>
+<rect class="hl" style="animation-delay:0.00s" x="7" y="29" width="167" height="94" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="dma">
+<rect x="198" y="30" width="165" height="92" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="280.5" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">DMA to DDR</text>
+<text x="280.5" y="72" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">about 861 MB/s</text>
+<text x="280.5" y="89" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">1.22 ms per MiB</text>
+<text x="280.5" y="106" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">min start to interrupt</text>
+<rect class="hl" style="animation-delay:2.60s" x="197" y="29" width="167" height="94" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="copy">
+<rect x="388" y="30" width="165" height="92" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="470.5" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Copy</text>
+<text x="470.5" y="72" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">70.5 MB/s</text>
+<text x="470.5" y="89" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">14.9 ms per MiB</text>
+<text x="470.5" y="106" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">measured</text>
+<rect class="hl" style="animation-delay:5.20s" x="387" y="29" width="167" height="94" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="ver">
+<rect x="578" y="30" width="165" height="92" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="660.5" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Verify</text>
+<text x="660.5" y="72" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">55.4 MB/s</text>
+<text x="660.5" y="89" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">18.9 ms per MiB</text>
+<text x="660.5" y="106" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">measured</text>
+<rect class="hl" style="animation-delay:7.80s" x="577" y="29" width="167" height="94" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="all">
+<rect x="768" y="30" width="165" height="92" rx="9" fill="#43201f" stroke="#ef6f6c" stroke-width="1.5"/>
+<text x="850.5" y="55" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">End to end</text>
+<text x="850.5" y="72" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">29.6 MB/s</text>
+<text x="850.5" y="89" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">35.4 ms per MiB</text>
+<text x="850.5" y="106" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">measured, whole loop</text>
+<rect class="hl" style="animation-delay:10.40s" x="767" y="29" width="167" height="94" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="168" text-anchor="start" font-size="12" fill="#9aa8b5">Counter payload, 32 bursts of 1 MiB with supervision, fabric v0.5.1, one run.</text>
+<text x="20" y="192" text-anchor="start" font-size="12" fill="#9aa8b5">The rate falls where software starts: the first two stages need about 1.1 ms per MiB, the last three about 35 ms.</text>
+<text x="20" y="216" text-anchor="start" font-size="12" fill="#9aa8b5">Copy and verify are one Linux thread, so their times add: 14.9 + 18.9 ms. The DMA of the next burst runs meanwhile.</text>
+<text x="20" y="240" text-anchor="start" font-size="12" fill="#9aa8b5">Adding the supervisor round trip (1.974 ms mean) gives 35.8 ms, within 1 % of the measured 35.4 ms.</text>
+</svg>

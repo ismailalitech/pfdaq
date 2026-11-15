@@ -60,6 +60,14 @@ n_seq = seq + 32'd1 + ((cfg_fault_en[1] && fault_next && !last_frame) ? 32'd1 : 
 - **Payload fault:** bit 8 of the first payload word of the chosen frame is inverted. The CRC is computed over the intended payload, before the flip (module H04), so this frame carries a payload that does not match its own CRC. One injected fault therefore produces two detections.
 - **Sequence fault:** the sequence number jumps by one on the way into the chosen frame, so that number is never sent. Frame zero is a special case, handled when the run starts.
 
+![Where a fault is injected and where it is counted: the FAULT register is read at START by the stream source, which inverts bit 0 of a CRC word, bit 8 of the first payload word or skips a sequence number; the damaged frame travels through the DMA and DDR to the Linux verifier, which counts bad_crc, bad_payload and bad_seq, and the error count goes to the supervisor.](../diagrams/lab-p03-injection-points.svg)
+
+1. **The `FAULT` register** holds the enable bits and the frame index. The source reads it when START is written.
+2. **The stream source** damages one frame: one CRC bit, one payload bit, or a skipped sequence number.
+3. **The DMA and the DDR** carry the damaged frame as ordinary data, so they are part of what is tested.
+4. **The Linux verifier** compares each frame with its software model and counts `bad_crc`, `bad_payload` and `bad_seq`. A CRC fault raises only the first, a sequence fault only the last, a payload fault the first two.
+5. **The supervisor** is sent the error count in each status message. It counts; it does not alarm.
+
 ### What the tool does
 
 `pfdaq_cap` takes `-F crc|seq|payload`, `-i` for the frame index and `-e K` to inject in every K-th burst, counting from one:
@@ -102,6 +110,14 @@ From the board record (fabric v0.5.1, FreeRTOS supervisor), the same counts in a
 | Payload | 2 | `bad_payload` 2 **and** `bad_crc` 2; sequence 0 | 4 |
 
 The last row is the double detection described above: two payload faults give two payload errors and two CRC errors, so the supervisor, which is sent the sum, reports 4. Each of the nine runs passed with exactly these counts, and in every one the supervisor round trip also passed.
+
+![Three recorded fault-injection runs of the board suite, one per fault type, each with the suite's summary row and the supervisor's closing console line, showing exact counts: 4 CRC errors for 4 faults, 5 sequence errors for 5, and 2 payload plus 2 CRC errors for 2.](../diagrams/lab-p03-nine-runs.svg)
+
+The figure shows the three counter-payload runs: the command, the suite's summary row (without its table bars) and the supervisor's closing line for that run.
+
+1. **CRC:** bursts 5, 10, 15 and 20 carry a fault. The errors are 0/0/4 (sequence/payload/CRC), 4 faults injected, and the supervisor reports `linux errors 4`.
+2. **Sequence:** bursts 4, 8, 12, 16 and 20 carry a fault. The errors are 5/0/0, 5 injected, `linux errors 5`.
+3. **Payload:** bursts 10 and 20 carry a fault. The errors are 0/2/2: two payload errors and two CRC errors for two injected faults, so the supervisor reports `linux errors 4`.
 
 Three observations from the same records:
 
@@ -146,6 +162,28 @@ One line per run, with the expected counts. For the CRC run in counter mode:
 "bad_magic": 0, "bad_seq": 0, "bad_payload": 0, "bad_crc": 4, "faults_injected": 4, ...
 "supervisor": {"pass": true, ... "seq_mismatch": 0, ...}
 ```
+
+## Do the same in your project
+
+You can build the same check into any stream generator you control, so that each of your checks is seen to fire at least once.
+
+1. **List what your checker claims to catch** and give each class one fault. Here the classes are a bad CRC, a skipped sequence number and a payload that does not match its CRC.
+2. **Put the injection in the generator, as early as you can.** Every stage after it, the DMA, the memory, the copy and the software model, is then part of what is tested.
+3. **Add a register that selects the fault and the place.** Here it is `FAULT` at offset `0x18` of the stream source: bit 0 corrupts the CRC, bit 1 skips a sequence number, bit 2 flips a payload bit, and bits 31:16 give the frame index counted from zero within the run. Sample it when START is written, as the other configuration registers are (module H01), and say so in the register's description.
+4. **Write each fault as one small expression** on the generator's output, next to the line it changes. In `pfdaq_stream_src.v`: `crc_final ^ 32'h00000001` for the CRC word, `pay_good ^ 32'h00000100` for the first payload word (with the CRC still computed over the intended payload), and an extra `32'd1` in `n_seq = seq + 32'd1 + (...)` for the skip, except on the last frame. Replace the constants and signal names with your own frame format.
+5. **Let the tool choose which bursts carry a fault, and clear it in between.** `pfdaq_cap` takes `-F crc|seq|payload`, `-i` for the frame index and `-e K` for every K-th burst counting from one. It writes the register before every burst, zero for a burst without a fault, so a fault never outlives its burst.
+6. **Compute the expected counts before you look at the result.** The tool expects `injected` CRC errors for a CRC or payload fault, `injected` sequence errors for a sequence fault and `injected` payload errors for a payload fault, and passes only if the counts are equal to those, not merely non-zero.
+7. **Run the grid.** Three payload types and three faults, 20 bursts each, with the loop under "Run it". If you have a simulation, inject the same faults there and let an independent model do the checking (`make -C hw sim-stream`).
+
+Check that it works: every run reports exactly the expected counts (4 CRC, 5 sequence, 2 payload plus 2 CRC), the supervisor reports the sum, and the next, clean run reports zero.
+
+**What not to change**
+
+- Write the `FAULT` register before START, not after; otherwise the fault shows up in the next run.
+- Keep to one fault per burst. It keeps "exactly the number injected" statable.
+- Keep the equality test. A verifier that reports ten errors for four faults must fail.
+- Compute the payload fault's CRC before the flip. That is what makes one injection fire two checks.
+- Do not claim more than the injection point proves. A fault that starts inside the DMA or the memory was not injected here.
 
 ## Evidence
 

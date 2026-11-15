@@ -40,6 +40,14 @@ Two rules keep such a comparison honest:
 
 One burst in the standard test is 1 MiB: 1,024 frames of 256 words (252 payload words plus a four-word header and CRC), which is 131,072 beats of 8 bytes on the stream. The capture tool double-buffers: while the fabric fills one buffer, it copies the other out of the non-cached DMA window into ordinary memory (`copy`) and then checks every frame against a software model (`verify`). Between bursts it reports to the supervisor and waits for the answer. These are the stages, and the time each takes per megabyte.
 
+![Five stages in a row with the rate and the time per MiB of each: the stream source about 933 MB/s, the DMA about 861 MB/s start to interrupt, the copy 70.5 MB/s, the verification 55.4 MB/s, and the whole loop 29.6 MB/s.](../diagrams/lab-p01-throughput-layers.svg)
+
+1. **Stream source:** about 933 MB/s, 1.12 ms per MiB. Derived from the stall counters (stage 1 below), not measured directly.
+2. **DMA to DDR:** about 861 MB/s, 1.22 ms per MiB, from the smallest start-to-interrupt time (stage 2).
+3. **Copy:** 70.5 MB/s, 14.9 ms per MiB, measured by the tool (stage 3).
+4. **Verify:** 55.4 MB/s, 18.9 ms per MiB, measured by the tool (stage 4). Counter payload.
+5. **End to end:** 29.6 MB/s, 35.4 ms per MiB, the whole loop. The rate falls where software starts.
+
 ### Stage 1: the fabric and the DMA
 
 The stream source offers one 8-byte beat per 125 MHz clock whenever the DMA accepts it, so the ceiling is 1 GB/s. It counts the clocks it was held off:
@@ -87,6 +95,15 @@ All rows below are from one run each of the board suite, FreeRTOS supervisor on 
 
 Each "copy + verify" cell is 33,554,432 bytes divided by the copy rate plus the same divided by the verify rate. The supervisor cell uses the mean round trip of the record for the 32 status messages. The sums land within about 1 % of the measured loop time in every row.
 
+![Time lanes for moving 32 MiB, to scale: the DMA is busy for 0.036 seconds in total, while a counter run spends 0.476 s copying, 0.606 s verifying and 0.063 s on supervisor round trips, a PRBS run 0.477, 0.661 and 0.066 s, and a FIR run 0.502, 3.29 and 0.068 s.](../diagrams/lab-p01-time-for-32-mib.svg)
+
+1. **Fabric and DMA:** 32 bursts at 1.124 ms each, 0.036 s in all. It is a sliver of every lane below, and it overlaps with them.
+2. **Counter:** 0.476 s copying, 0.606 s verifying, 0.063 s on supervisor round trips; the sum of 1.145 s against a measured 1.133 s.
+3. **PRBS:** nearly the same copy time, a slightly longer verify (0.661 s); the sum of 1.204 s against 1.193 s.
+4. **FIR:** the copy is unchanged (0.502 s) but the verify takes 3.29 s, so the sum of 3.860 s is almost all verification. Only that step changes with the payload.
+
+The blocks are the totals drawn side by side; the tool actually alternates copy, verify and report burst by burst. The copy and verify times are 33,554,432 bytes divided by the rates of the table, so they are derived, as are the sums.
+
 ## What this says
 
 - **The DMA is not the limit.** It needs about 1.1 ms per mebibyte, and the software needs about 34 ms per mebibyte for counter payload (copy 14.9 ms plus verify 18.9 ms). The DMA is busy about 3 % of the time.
@@ -120,6 +137,38 @@ For the counter run, in the v0.5.1 record:
 "start_to_irq_s": {"min": 0.001218, "mean": 0.034325, "max": 0.039303},
 "fabric_stall_cycles": 301159,  ...  "rtt_us": {"min": 1249, "mean": 1974, "max": 10020}
 ```
+
+![The recorded JSON result of the counter throughput run, with callouts on the end-to-end rate, the start-to-interrupt times, the copy and verify rates, the stall cycles and the supervisor round trip.](../diagrams/lab-p01-record.svg)
+
+The figure shows the same record with the line folded; fields marked `...` are left out. In order:
+
+1. `elapsed_s` and `mb_per_s_end_to_end`: 33,554,432 bytes in 1.133 s, which is 29.6 MB/s.
+2. `start_to_irq_s`: the smallest value, 1.218 ms, is the DMA and its wake-up. The mean of 34.3 ms mostly measures waiting for the previous burst to be verified.
+3. `copy_mb_per_s` and `verify_mb_per_s`: 14.9 ms and 18.9 ms per MiB, one after the other on one core.
+4. `fabric_stall_cycles`: 301,159 over 32 bursts, 9,411 per burst, which is the 933 MB/s of stage 1.
+5. `rtt_us`: 32 round trips at a mean of 1.974 ms are 0.063 s of the 1.133 s.
+
+## Do the same in your project
+
+The method is the same for any producer, memory and consumer chain: count where the producer is held off, time each software stage on its own, and check that the parts add up to the whole.
+
+1. **Name your stages and their two end points.** Here they are fabric to DDR, copy out of the DMA window, verify, and the whole loop. For each, write down which bytes are counted, between which two instants, and who takes the time (rule 1 above).
+2. **Count the producer's stalls in hardware.** Copy the `stall_cycles` expression of `hw/rtl/pfdaq_stream_src.v`: a 32-bit counter that adds one in every clock in which the source has data to offer (`run == R_RUN` or `R_FILL`) and the sink is not ready (`~w_ready`). Rename the two signals to your own producer's. Expose the counter through a register and read it before and after a burst, as the tool does with `SRC_SNAP_STALL`.
+3. **Turn the stall count into a rate.** Bytes per burst divided by (beats + stall cycles) × the clock period. Here 1,048,576 bytes in (131,072 + 9,411) × 8 ns gives 933 MB/s. This assumes one beat per clock when not stalled, so check it against one direct measurement of your own, as the v0.3.0 record does.
+4. **Time the software stages separately.** In `pfdaq_cap.c`, `copy_s` and `verify_s` accumulate the seconds of each stage over the run, and the tool prints bytes divided by each (`copy_mb_per_s`, `verify_mb_per_s`) next to the wall-clock rate (`mb_per_s_end_to_end`) and `start_to_irq_s`. Keep each stage in its own accumulator.
+5. **Do the arithmetic.** Per stage, bytes divided by rate; add the stages, add the round trips to any supervisor or peer (count × mean), and compare with the measured loop time. The sums here land within about 1 %. A larger gap means something else is using the core.
+6. **Run every payload type you have.** The same fabric and copy gave 29.6, 28.14 and 8.7 MB/s here because only the verify step changed. If your verify cost depends on the data, one run says little.
+7. **Write the fabric version next to every number.** Compare only runs of the same version, as the page does when it calls the 933 MB/s derived and the v0.3.0 soak a consistency check.
+
+Check that it works: the arithmetic in step 5 closes within a few percent for every payload, and the stall count per burst is the same from run to run (here 9,411 in the suite and 9,406 in the ten-minute soak).
+
+**What not to change**
+
+- Do not quote the best stage as the throughput of the path, and do not quote the last without saying why it is lower.
+- Do not compare a rate from another version of the hardware or another frame size with these rows.
+- Keep the copy out of the non-cached window (module I05) unless you add cache maintenance around each transfer.
+- Keep the software model that verifies the data independent of the fabric's own check; that independence is why it is slow and why it is trusted.
+- Treat a rate with bad headers in the run as meaningless: skipped frames make the verify look fast (K10).
 
 ## Evidence
 

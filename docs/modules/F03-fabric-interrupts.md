@@ -155,7 +155,7 @@ Both latency channels hold their line high from the event until software writes 
 
 On hart 4 the handler writes `ACK` before it returns, so the line is already low when the trap code completes the interrupt. One event, one interrupt.
 
-Under Linux the generic UIO driver does something different, because the acknowledgement belongs to a user program the kernel knows nothing about. Its handler masks the interrupt and wakes the program; the program writes `ACK` and then asks for the interrupt to be unmasked. On this board that sequence produced **two wake-ups per event**: the line was still high when the kernel handler completed, the PLIC recorded a new request, and delivered it when the line was unmasked, although the program had acknowledged by then. `pfdaq_lat` therefore acknowledges only when the fabric's `STATUS` register says an interrupt is really pending, and counts the other wake-ups. In the recorded run of 100,000 events it counted 99,967 empty wake-ups. Module I02 and case study K05 cover this in detail.
+Under Linux the generic UIO driver does something different, because the acknowledgement belongs to a user program the kernel knows nothing about. Its handler masks the interrupt and wakes the program; the program writes `ACK` and then asks for the interrupt to be unmasked. On this board that sequence produced **two wake-ups per event**: the line was still high when the kernel handler completed, the PLIC recorded a new request, and delivered it when the line was unmasked, although the program had acknowledged by then. `pfdaq_lat` therefore acknowledges only when the fabric's `STATUS` register says an interrupt is really pending, and counts the other wake-ups. In the board suite's run of 100,000 events it counted 99,967 empty wake-ups, and 99,998 in the run recorded for this module. Module I02 and case study K05 cover this in detail.
 
 ![Interrupt routing: latency channel 0 (F2M[1], source 119) and the DMA controller (F2M[2], source 120) reach the PLIC and are enabled for Linux on harts 1 to 3; latency channel 1 (F2M[5], source 123) is enabled only for hart 4 in machine mode.](../diagrams/fabric-interrupts.svg)
 
@@ -239,12 +239,41 @@ dma-controller@60010000 0
 
 Hart 4 acknowledged all 100,000 interrupts, and Linux saw none of them: source 119 still reads 199,999, the UIO event counter is unchanged, and `grep -c 'PLIC 123' /proc/interrupts` prints 0.
 
+The two runs side by side, as recorded. The JSON lines are shortened with `...` and only the fabric line of the PLIC list is shown; every other character is from the recording.
+
+![Recorded board output: Linux answers 100,000 events on channel 0 and the PLIC counter of source 119 reads 199,999 with 99,998 empty wake-ups; after hart 4 answers 100,000 events on channel 1 with no empty wake-ups, the source 119 counter is unchanged and Linux has no line for source 123.](../diagrams/lab-f03-two-owners-run.svg)
+
+1. Linux answers channel 0: 100,000 events and 100,000 acknowledges, with 99,998 empty wake-ups.
+2. The PLIC counter of source 119 reads 199,999, about two interrupts per event.
+3. `pfdaq_cap -L 0` hands the acknowledge to the supervisor's interrupt handler and reports context `freertos`.
+4. Hart 4 answers channel 1: 100,000 of 100,000 acknowledged, no empty wake-ups.
+5. The counter of source 119 still reads 199,999: Linux saw none of channel 1's interrupts.
+6. `grep -c 'PLIC 123' /proc/interrupts` prints 0: Linux never enabled source 123.
+
 The supervisor reports its side on the hart 4 console at start-up and when the mode is selected:
 
 ```text
 [pfdaq-sup] latency channel 1 interrupt (F2M[5]) enabled
 [pfdaq-sup] latency channel 1 acknowledged by interrupt handler
 ```
+
+## Do the same in your project
+
+This is how to bring a signal from your fabric to a chosen processor of the chip, on Linux or bare metal, without disturbing the other side.
+
+1. **Choose a free F2M line and work out its source.** PLIC source = 118 + F2M index. The table of lines above shows which are taken; F2M[1] and F2M[5] were tied to ground in the reference design, as are the unused ones. Check the number against `mss_plic.h` (`PLIC_F2M_5_INT_OFFSET` is 123).
+2. **Make the fabric signal a level.** Keep it high until software acknowledges it, as `irq` (`pending`) does in `pfdaq_latency.v`, so that no event is lost while a handler is busy. Name it as an output of your block, as `IRQ_LAT0` and `IRQ_LAT1` are in `pfdaq_core.v`.
+3. **Replace the tie-off in the integration script.** In `hw/libero/overlay/PFDAQ.tcl` the two `sd_clear_pin_attributes` calls remove the tie-off of `MSS_INT_F2M[1:1]` and `[5:5]`, and the two `sd_connect_pins` calls connect your output instead. Change the pin names and the index.
+4. **Give the source one owner.** For Linux, add a node with `interrupt-parent = <&plic>;` and `interrupts = <119>;` (your number) to the device tree, as `pfdaq_src` does. For hart 4 in machine mode, call `PLIC_SetPriority` with a non-zero priority and `PLIC_EnableIRQ` for your source, and define the handler under the name of the vendor's table entry (`PLIC_f2m_5_IRQHandler` for F2M[5]).
+5. **Acknowledge inside the handler, before it returns.** The supervisor's handler writes `ACK` and returns `EXT_IRQ_KEEP_ENABLED`. Under Linux's generic UIO driver the program acknowledges, and should do so only when the device says an interrupt is pending, counting the other wake-ups, as `pfdaq_lat` does with `empty_wakeups`.
+6. **Check it on the board.** Run your event source and compare the three counters: the events your block raised, what the handler saw, and the PLIC line in `grep PLIC /proc/interrupts` (and the UIO event counter). Expect about two PLIC interrupts per event under generic UIO. For a source owned by hart 4, `grep -c 'PLIC <source>' /proc/interrupts` must print 0 and the supervisor console should print its enable message.
+
+What not to change:
+
+- **The formula and the context numbers.** F2M[0] is source 118, not 119; hart 4 machine mode is context 7.
+- **One owner per source.** Nothing in the PLIC stops two contexts enabling the same source.
+- **Priority 0 means never delivered.** Set a priority above the context's threshold.
+- **Tie off the F2M inputs you do not use.** The reference design does, and a floating line looks like an active one.
 
 ## Evidence
 

@@ -76,6 +76,14 @@ There are two reasons for a drop, and the hardware does not distinguish them:
 | **No credit** | Software has not freed a buffer in time |
 | **Busy** | The previous frame is still going out, because the receiver (the DMA) applied backpressure or because the frame is long compared to the slot |
 
+![What the real-time source does when a slot is due: the slot timer counts down and reloads; the source sends the frame if it is idle and holds a credit, which uses one credit and moves to the next TDEST; otherwise it drops the slot, DROPS goes up by one and the sequence number still advances; software returns credits by writing CREDIT.](../diagrams/lab-h06-send-or-drop.svg)
+
+1. **The timer.** `rt_timer` counts down and reloads at once, so a slot is due every `RATE` clocks whatever the data path does.
+2. **The question.** When a slot is due the source asks `can_start`: is it idle in `R_RTWAIT`, and is `credits` not zero?
+3. **Yes.** The frame is sent. It uses one credit, takes the next `TDEST` and carries the time at which the slot was due.
+4. **Credits come from software.** It writes `CREDIT` after it has freed a buffer.
+5. **No.** The slot is dropped: `DROPS` goes up by one and the sequence number still advances. The two reasons, no credit and busy, look the same here.
+
 ### The sequence number
 
 A frame carries a sequence number, one more than the previous frame's. A dropped slot also consumes one:
@@ -147,7 +155,25 @@ scenario 18:  40 frames x  34 words, mode 0 rt/4 dest rate 100, ready 100%, sent
 
 The first number after `frames` is the number of slots, not the number of frames sent: scenario 13 had 30 slots and sent 12 frames, one per credit, and dropped the other 18. For every real-time scenario the checker verifies that `sent + dropped` equals the number of slots, that every sent frame uses the next destination in turn, that credits left equal credits given minus frames sent, that no sequence gap exceeds `DROPS`, and that the timestamps lie on the slot grid.
 
+Scenario 13 around its twelfth slot, from the same simulation. The time axis starts 8 ns before that slot falls due.
+
+![Waveform of scenario 13: the twelfth slot takes the last credit and its frame is sent; the thirteenth slot falls due with zero credits, can_start is low, the slot is dropped, DROPS goes from 0 to 1 and the sequence number advances although no frame was sent.](../diagrams/lab-h06-credit-drop.svg)
+
+1. **The last credit.** Slot 12 is due with one credit left. `can_start` is high, the frame is sent and `credits` goes to 0.
+2. **Its frame.** `run` is `R_RUN` for 22 clocks. When the frame ends, the sequence number advances from 118 to 119.
+3. **Waiting at zero.** The source is idle but `credits` is 0, so `can_start` stays low. This scenario returns no credits.
+4. **No credit, dropped.** Slot 13 is due: `drop_now` goes high, `DROPS` goes from 0 to 1, and `seq` goes from 119 to 120 although no frame was sent.
+
 The other scenarios show the second kind of drop. Scenario 14 has 100 credits, plenty, but slots every 20 cycles and a 44-word frame that occupies the stream for 22 beats of two words each, and half of the slots are dropped for being **busy**, with no credit involved. Scenario 15 injects a payload error into one frame, and shows that it is detected (`crc=[1] pay=[1]`) even in this mode.
+
+Scenario 14 from the same simulation, over about four slots. `drops` starts at 18 because scenario 13 left 18 drops behind: the counters run since reset.
+
+![Waveform of scenario 14: a slot every 160 ns and a frame that takes 176 ns. The first slot is sent and uses a credit; the next slot falls due while the frame is still going out, so can_start is low and the slot is dropped although credits remain; the slot after that finds the source idle and is sent to the next TDEST.](../diagrams/lab-h06-busy-drop.svg)
+
+1. **Slot due, sent.** `can_start` is high (idle, 100 credits). The frame starts, `credits` goes from 100 to 99, `run` is `R_RUN` and `TDEST` is 0.
+2. **Frame in progress.** The frame occupies the stream for 22 clocks, which is 176 ns. The slot interval is 160 ns.
+3. **Busy drop.** The next slot falls due while `run` is `R_RUN`: `can_start` is low, `drop_now` goes high and `DROPS` goes from 18 to 19. `credits` stays 99.
+4. **Sent again.** The slot after that finds `run` idle again (`R_RTWAIT`). The frame is sent, `credits` goes to 98 and `TDEST` moves to 1.
 
 In step 3 (30 credits instead of 12), recorded in a scratch copy:
 
@@ -158,6 +184,27 @@ RESULT: FAIL
 ```
 
 Thirty credits cover thirty slots, and nothing is dropped. The run still ends in FAIL, but not because the hardware is wrong: the checker has a line that pins scenario 13 to exactly 12 sent and 18 dropped (`if n == 13 and (nfr, drops) != (12, 18)`), because that scenario exists to show credit-limited drops. The checker is judging the *scenario*, not just the hardware. Setting the credits to 0 in the same way gives `sent 0 dropped 30` and the same kind of failure line. In both cases all the general checks pass: the accounting is exact at every value.
+
+## Do the same in your project
+
+Use this when your source is driven by a clock you do not control (a converter, a sensor) and your consumer sometimes falls behind. The names are this project's: rename them for yours.
+
+1. **Run the slot timer on its own.** `rt_timer` is loaded with `rate - 1` at START and reloads when it reaches zero (`rt_timer <= due ? cfg_rate - 32'd1 : rt_timer - 32'd1`). It counts in `R_RTWAIT` and in `R_RUN` alike, so the slots never wait for the data path. Store the interval in a register and give it a minimum (here 2).
+2. **Decide with two wires.** Copy `can_start = (run == R_RTWAIT) && (credits != 16'd0) && !abort_pend` and `drop_now = due && !can_start`. If a slot is due and `can_start` holds, start the frame; if `drop_now` holds, count the drop.
+3. **Make a credit mean a buffer.** One register holds the credits: a write adds, a write with bit 31 set replaces (`CREDIT`), and one credit is used in the same clock in which a frame starts. In the software, arm every buffer first, then write `0x80000000 | n`; after each copy and re-arm write `1` (`run_realtime` in `pfdaq_cap.c`).
+4. **Let a drop leave a trace.** A dropped slot adds one to `DROPS` and one to the sequence number (`seq <= seq + 32'd1` in `R_RTWAIT`; `seq_adv` while a frame is going out). Expose both `DROPS` and `NEXT_SEQ`.
+5. **Stamp the frame with the time it was due**, not the time it was sent, so a receiver can see how long a frame waited.
+6. **Rotate the destination only on a send.** `tdest_idx` advances when a frame starts, never on a drop, so the receiver can predict it.
+7. **Make every frame its own packet.** `TLAST` goes on the CRC word of every frame (`cfg_tlast_pf <= tlast_per_frame | mode_rt`), so each frame is an independent transfer.
+8. **Check the accounting, not only the data.** For every real-time scenario `hw/tb/check_trace.py` requires `sent + dropped` to equal the number of slots, each sent frame to use the next destination in turn, credits left to equal credits given minus frames sent, no sequence gap larger than `DROPS`, and timestamps on the slot grid. Run `make -C hw sim-stream`; scenarios 13, 14, 15 and 18 are the real-time ones.
+9. **Move the numbers and watch the accounting hold.** Make the change of step 3 of "Run it" (credits 12 to 30, then to 0) in a scratch copy: only the check that pins scenario 13 to 12 sent and 18 dropped should complain.
+
+What not to change:
+
+- **Return a credit only after the copy.** A credit returned early lets the source overwrite a buffer that is still being read.
+- **Never drop silently.** `sent + dropped` must equal the slots, and the numbering must show the gap.
+- **Do not hold a real-time source with backpressure.** A converter does not wait; use burst mode for a source that must deliver every frame.
+- **Do not advance the destination on a drop.**
 
 ## Evidence
 

@@ -14,7 +14,7 @@ sources:
   - yocto/meta-pfdaq/recipes-kernel/pfdaq-uio/files/pfdaq_uio.c:pfdaq_uio_probe
   - yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts:pfdaq_src
   - tests/legacy/pfdaq_setup.sh
-evidence: [suite-freertos, boot-uboot-linux]
+evidence: [suite-freertos, boot-uboot-linux, device-tree-checks]
 related: [K02, H01, I02, I03, I04, B04]
 ---
 
@@ -86,6 +86,14 @@ Three things make this work:
 2. The UIO driver maps the registers **without requesting the region**, so it does not collide with the three other drivers' claims. The project's own UIO driver (module I03) says so in its comment: "plain ioremap: the region is not requested, exactly like uio_pdrv_genirq".
 3. The interrupt, fabric line F2M[1] as PLIC source 119, becomes the device's wake-up (module I02).
 
+![Why /dev/mem was refused and UIO works: the page at 0x4000_0000 holds a PWM, an I2C and a UART, each claimed by a driver, plus the project's stream source; strict devmem refuses a mapping of a page a driver has claimed, while the UIO driver maps the page without requesting the region.](../diagrams/lab-i01-shared-page.svg)
+
+1. `/dev/mem` maps any physical address, and the kernel's strict devmem options look at the whole page.
+2. The page at `0x4000_0000` holds the PWM, the I2C and the UART of the reference design, each claimed by a driver, so the mapping is refused.
+3. The UIO node is bound to the generic UIO driver.
+4. That driver maps the page with a plain `ioremap` and does not request the region, so it does not collide with the three claims.
+5. The stream source at `0x4000_0F00` is reached through that mapping.
+
 ### Trap 1b: UIO maps whole pages
 
 The UIO core can only map page-aligned regions, and `0x4000_0F00` is not aligned. Both the stock driver and the project's driver therefore map the page and record the offset:
@@ -119,6 +127,15 @@ if (src[SRC_ID / 4] != SRC_ID_VALUE) { fprintf(stderr, "stream source ID %08x\n"
 
 `SRC_ID_VALUE` is `0x50464451`, the ASCII letters "PFDQ". Reading it first catches a wrong device, a wrong offset and an unprogrammed fabric with one comparison.
 
+![The path from the device-tree node to a register: the node hands the block to the UIO driver, pfdaq_cap finds the device by its name, maps the page and adds the offset 0xF00, checks the ID word and then uses 32-bit accesses to the stream source.](../diagrams/lab-i01-register-path.svg)
+
+1. The device-tree node `uio@40000f00` names the device `pfdaq_stream_src` and says it is `generic-uio`.
+2. The UIO driver maps the page at `0x4000_0000` and exposes it as `/dev/uioN`.
+3. `open_uio` in `pfdaq_cap.c` finds `uioN` by that name, maps the page and adds `SRC_OFF` (`0xF00`).
+4. Every access is a 32-bit load or store through a `volatile uint32_t *`; byte stores are decoded as whole-register writes.
+5. The stream source answers at `0x4000_0F00` over FIC3.
+6. The first read is the ID word, which must be `0x50464451`; if it is not, the tool stops.
+
 ### Trap 2: 32-bit stores
 
 The registers belong to an APB slave that has no byte strobes. A byte store to a register is decoded as a whole-register write. Python's memory-mapped slices copy bytes, so the first tool corrupted its own configuration. The fix was a two-line C helper doing a real `*p = v` through a `volatile uint32_t *`. Case study K02 is the full story; the rule is part of the register contract (module H01): **32-bit accesses only**, and the C tools declare every register pointer as `volatile uint32_t *`.
@@ -128,7 +145,7 @@ The registers belong to an APB slave that has no byte strobes. A byte store to a
 These are the commands the project ran. The tools do the opening themselves, so the evidence of success is that the whole board suite runs through them.
 
 ```sh
-# what the tools look up: UIO devices and their names (output not recorded in the project's evidence)
+# what the tools look up: UIO devices and their names (the board's output is in the device-tree-checks record)
 grep -H . /sys/class/uio/uio*/name
 
 # the capture tool: maps both UIO devices, checks the ID, runs a burst
@@ -139,12 +156,38 @@ To see the old trap, the legacy script `tests/legacy/pfdaq_setup.sh` shows the u
 
 ## What you should see
 
-- The boot record shows the command line that enables the generic UIO driver for the device-tree node.
+- The boot record shows the command line that enables the generic UIO driver for the device-tree node, and the device-tree check shows the three UIO names the kernel created.
+
+![Recorded board output: the kernel command line with uio_pdrv_genirq.of_id=generic-uio, and the names of the three UIO devices, fpga_lsram, pfdaq_stream_src and dma-controller@60010000.](../diagrams/lab-i01-uio-names.svg)
+
+1. The kernel command line carries `uio_pdrv_genirq.of_id=generic-uio`, which is what lets `compatible = "generic-uio"` bind (the time stamp of the line is cut in the figure).
+2. `pfdaq_stream_src` is the name the device-tree node gave the device, and the name the tools search for.
+3. It is `uio1` in this record, but the number depends on probe order; the DMA controller is a second UIO device, also found by name.
 - The suite (`suite-freertos`) passes every functional test through UIO: bursts, faults, real-time mode and the latency measurements all reach the registers this way. The capture tool refuses to run if the ID check fails, so a pass implies the mapping and the offset were right.
+
+## Do the same in your project
+
+The goal is a user-space program that reaches your own register block through UIO, finds it by name and cannot silently talk to the wrong place. The names below are this project's; replace them with yours.
+
+1. **Describe the block in the device tree.** Copy the `pfdaq_src` node and change four things: the unit address and `reg` (here `0x40000f00` and `0x100` bytes), `linux,uio-name` (here `pfdaq_stream_src`), `interrupt-parent` and `interrupts` (here PLIC source 119, which the project's tree comments as 118 plus the F2M index). Keep `compatible = "generic-uio"`.
+2. **Tell the kernel to use the generic driver.** Put `uio_pdrv_genirq.of_id=generic-uio` on the kernel command line, as the project's boot does.
+3. **Work out your page offset.** UIO maps whole pages, so the program maps the page and adds the low 12 bits of your `reg` address itself. Here that is `0xF00`, the constant `SRC_OFF` in `pfdaq_cap.c`.
+4. **Copy `open_uio`.** It walks `/sys/class/uio`, reads each `name` file, compares it with your name, then opens `/dev/uioN` with `O_RDWR | O_SYNC` and maps one page with `MAP_SHARED`. Pass your own name; never write `/dev/uio1` into a tool.
+5. **Declare every register pointer as `volatile uint32_t *`** and do whole-word loads and stores only. No `memcpy`, no byte helpers, and no Python slices on the mapped memory (case study K02).
+6. **Give your block an ID register and read it first.** This project's block has one at offset 0 with the value `0x50464451`; choose your own four letters, define the constant next to the offsets, and make the tool stop if the read differs. It catches a wrong device, a wrong offset and an unprogrammed fabric in one comparison.
+7. **Check it.** List the names with `grep -H . /sys/class/uio/uio*/name` and look for yours. Then run your tool: if it gets past the ID check, the name lookup, the mapping and the offset are right. The project's own proof is the suite, which reaches every register through this path.
+
+What not to change:
+
+- Do not map the block through `/dev/mem` on a kernel built with `CONFIG_IO_STRICT_DEVMEM` when a driver has claimed another block in the same page.
+- Do not rely on the UIO number; look the device up by name.
+- Do not give the UIO core an unaligned address if you write your own driver: map the page and record the offset (`ENODEV` otherwise).
+- Do not let a second program map the same register window at the same time.
 
 ## Evidence
 
 - **Boot record** (`boot-uboot-linux`): the kernel command line with `uio_pdrv_genirq.of_id=generic-uio`.
+- **Device-tree checks** (`device-tree-checks`): the `/sys/class/uio/uio*/name` lines shown above: `fpga_lsram`, `pfdaq_stream_src` and `dma-controller@60010000`.
 - **Suite** (`suite-freertos`): 27 of 27 functional tests, all through the UIO devices.
 - **Kernel configuration:** `CONFIG_STRICT_DEVMEM` and `CONFIG_IO_STRICT_DEVMEM` are set in the Yocto build's kernel configuration (not part of the repository).
 - **The `/dev/mem` refusal** was observed on the board during bring-up and is recorded in the project's notes; the failing output was not kept.
@@ -177,7 +220,7 @@ To see the old trap, the legacy script `tests/legacy/pfdaq_setup.sh` shows the u
 | **How to run** | Runs on the shared baseline: fabric v0.5.1 and the pfdaq image |
 | **In the system** | [FIC3 (APB, 50 MHz)](../system/README.md#fic3) · [pfdaq_core](../system/README.md#pfdaq-core) · [Stream source](../system/README.md#pfdaq-stream-src) · [UIO devices](../system/README.md#uio) · [pfdaq_uio kernel driver](../system/README.md#pfdaq-uio) · [pfdaq_cap](../system/README.md#pfdaq-cap) · [u-dma-buf](../system/README.md#udmabuf) |
 | **Source** | [`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c): `open_uio`, `SRC_OFF`<br>[`yocto/meta-pfdaq/recipes-kernel/pfdaq-uio/files/pfdaq_uio.c`](../../yocto/meta-pfdaq/recipes-kernel/pfdaq-uio/files/pfdaq_uio.c): `pfdaq_uio_probe`<br>[`yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts`](../../yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts): `pfdaq_src`<br>[`tests/legacy/pfdaq_setup.sh`](../../tests/legacy/pfdaq_setup.sh) |
-| **Evidence** | [Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Reserved memory, UIO devices, online CPUs and PLIC sources on the running board](../../evidence/v0.5.1/board/device-tree-checks.txt) (board, fabric v0.5.1, 2026-11-15) |
 | **Related** | [K02 Python wrote my registers one byte at a time](../case-studies/K02-bytewise-register-writes.md)<br>[H01 An APB register block that software can trust](H01-apb-register-block.md)<br>[I02 Fabric interrupts in user space, and the double wake-up](I02-fabric-interrupts-user-space.md)<br>[I03 A small kernel driver for a fabric interrupt](I03-kernel-driver-fabric-interrupt.md)<br>[I04 DMA stream descriptors: the rules this core really follows](I04-dma-stream-descriptors.md)<br>[B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](B04-device-tree-codesign.md) |
 | **Status** | validated |
 <!-- nav:end -->

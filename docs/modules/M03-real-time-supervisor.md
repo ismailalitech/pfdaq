@@ -36,6 +36,13 @@ A monitor is only worth having if it can notice a failure that the thing it moni
 
 The pfdaq supervisor does both, on a core that Linux cannot starve.
 
+![The supervisor's two checks. Linux sends a STATUS message after each verified burst. Check 1 is a deadline kept by the supervisor's own timer: silence for longer than the deadline moves it to ALARM. Check 2 compares the sequence number Linux reports with the one hart 4 reads itself from the stream source's registers over FIC3; a difference above max_lag counts a sequence mismatch.](../diagrams/lab-m03-two-checks.svg)
+
+1. Linux verifies a burst and sends one STATUS message with the sequence number it expects next.
+2. Check 1, the deadline: the supervisor waits with its own timer. Silence longer than the deadline moves it to ALARM and counts one miss; the next STATUS returns it to ARMED.
+3. On every message the supervisor also snapshots the stream source's registers (`0x4000_0F00`) over FIC3 and reads the fabric's next sequence number.
+4. Check 2, the sequence: the unsigned difference between the fabric's number and Linux's must not exceed `max_lag`, the frames of one burst plus 16. If it does, a sequence mismatch is counted.
+
 ## On this board
 
 Linux (`pfdaq_cap`) verifies every frame of every burst, then sends the supervisor one STATUS message per burst. The supervisor, in `pfdaq_supervisor()`, runs a loop that has three states:
@@ -147,6 +154,36 @@ Reading them:
 - **Test 2.** Line 145 is the supervisor alarming on a consumer that no longer exists. The killed process never sent DISARM, so the supervisor stayed in ALARM until the next ARM, which resets state and counters. The row's "0 misses" belongs to the *next* run, which is the point of the test: the supervisor recovered without a reboot. The alarm itself is visible only on the hart 4 console, because Linux's side of that run was dead.
 
 The same pair of tests passes with the bare-metal supervisor (`T9-deadline`: 12 status, 1 miss; `suite-baremetal`).
+
+The same two stretches of the hart 4 console, with the commands that caused them (the commands are the suite's, the console lines are from the recorded run):
+
+![Two recorded stretches of the hart 4 console. With a 300 ms deadline and a 900 ms stall before burst 5 the supervisor prints ALARM and then status resumed at burst 5, and DISARM reports 12 status and 1 deadline miss. After a consumer is killed with SIGKILL the supervisor prints ALARM; the next run is armed again and finishes with 16 status and no miss.](../diagrams/lab-m03-deadline-run.svg)
+
+1. `-D 300` sets a 300 ms deadline and `-P 5:900` sleeps 900 ms before the report of burst 5.
+2. With no STATUS within 300 ms the supervisor prints ALARM and counts one miss. The next STATUS, burst 5, returns it to ARMED.
+3. The DISARM line reports 12 status and exactly 1 deadline miss, the count the stall predicts.
+4. A supervised run started with a 300 ms deadline is killed with SIGKILL. It never sends DISARM, and the supervisor raises the alarm on its own.
+5. The next run is armed again, resets the state and the counters, and finishes with 16 status and no miss, with no reboot. The alarm of the killed run is visible only on this console.
+
+## Do the same in your project
+
+You have a program that does the real work and a second core or task that must notice when the work goes wrong. Work in this order.
+
+1. **Decide what the monitored program reports and what it can be checked against.** Here the report is one STATUS message per verified burst, carrying the sequence number Linux expects next. The independent source is a counter in the hardware that the monitor reads itself: `SRC_SNAP_SEQ` at offset `0x30` of the stream source's registers at `0x4000_0F00`. Pick your own counter, one the monitored program does not compute.
+2. **Copy the message layout and the three states.** `struct pfdaq_msg` and `struct pfdaq_ack` are the ones of module M02. The states are IDLE, ARMED and ALARM: ARM enters ARMED, a timeout while ARMED enters ALARM, a STATUS in ALARM returns to ARMED, and DISARM returns to IDLE.
+3. **Give the monitor its own clock.** Wait for the next message with the deadline as the timeout, and take the timeout from a clock the monitored program cannot stall: the tick count on FreeRTOS, the machine timer on bare metal (module M04).
+4. **Raise the alarm once per stall.** In ALARM, block without a timeout, so the same silence is not counted twice. Count the miss, set the state, print one line.
+5. **Set the deadline far above the report period.** The project reports every 36 ms or so and uses 500 ms, about fourteen periods, as the default sent by `pfdaq_cap` (`-D` changes it). If the ARM message carries 0, the supervisor uses 1000 ms.
+6. **Add the independent check.** On every message, write the snapshot bit, wait, read the counter, and compare with the unsigned subtraction `fabric_seq - msg.next_seq > max_lag`. Send `max_lag` in ARM as the frames of one burst plus 16 (`frames + 16`). The 1 ms wait after the snapshot write is the project's generous margin for a snapshot that crosses two clock domains; your own hardware may need a different one.
+7. **Test the deadline and the recovery the way the project did.** Run a stall longer than the deadline, `pfdaq_cap -r -D 300 -P 5:900 -w 252 -f 1024 -n 12`, and expect one ALARM line, one "status resumed" line, and `1 deadline misses` in the DISARM line. Then kill the consumer with `pkill -9`, start a normal supervised run, and expect it to pass with no miss. Make the pass condition exact, as `pfdaq_cap` does: a miss counted if and only if a stall longer than the deadline was requested.
+
+What not to change:
+
+- **Unsigned arithmetic in the comparison.** It is what makes "the fabric is behind Linux" fail the check, because the difference wraps to a huge number.
+- **ARM resets the state and the counters.** That is how a run after a killed consumer recovers without a reboot.
+- **The deadline against the report period.** A deadline shorter than one period alarms on every report. That row is reasoning from the design, not an observed failure.
+- **What you claim for the sequence check.** In this project `seq_mismatch` was 0 in every recorded run, so the check was never seen to fire. The consumer that is behind, or that claims frames the fabric never sent, is argued from the code and was not provoked.
+- **The alarm only reports.** Nothing is stopped or reset by it in this version.
 
 ## Evidence
 

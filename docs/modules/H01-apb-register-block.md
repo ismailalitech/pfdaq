@@ -55,6 +55,15 @@ The register block is the top half of `pfdaq_core`'s APB slot: offsets `0x00` to
 
 The last row has a practical consequence. A byte-sized store from the processor still reaches this slave as a write of the whole word. What `PWDATA` carries for the other three bytes depends on the bus bridge in front of the slave, which was not investigated; the early Python capture tool hit exactly this, and the register contract below says "32-bit accesses only" because of it (case study K02).
 
+Here is a START write and a read of STATUS in the simulation, drawn as the testbench's `apb_wr` and `apb_rd` make them. The rows are the bus signals, the toggle that the write flips, and the value of `PRDATA`.
+
+![Waveform of the stream simulation: the testbench writes 1 to CTRL at offset 0x08, which is START, then reads STATUS at offset 0x1C. The write has a setup phase and an access phase, PREADY is always high so it ends after one clock, and at its end the toggle start_tgl_p flips; the START bit itself is not stored. The read returns STATUS through a combinational multiplexer.](../diagrams/lab-h01-apb-start.svg)
+
+1. **Setup phase.** `PSEL` is high and `PENABLE` low. The master puts offset `0x08` (CTRL) and the data `0x01` (START) on the bus.
+2. **Access phase.** `PENABLE` is high. `PREADY` is tied high, so the write completes at the end of this one clock.
+3. **A toggle, not a bit.** At that edge `start_tgl_p` flips. START is stored nowhere; the flip is the event.
+4. **A read of STATUS.** Offset `0x1C` in the setup phase. `PRDATA` is a multiplexer on `PADDR`, with no wait state, and it reads `0x01` (busy) by the end of the access phase.
+
 ### The register table
 
 Checked against `hw/rtl/pfdaq_stream_src.v` (the write `case` and the `prdata_mux` read multiplexer); it is the same table as section 6.1 of the [architecture document](../architecture.md).
@@ -84,6 +93,14 @@ Checked against `hw/rtl/pfdaq_stream_src.v` (the write `case` and the `prdata_mu
 Reading a "write-only" register is not an error; it returns whatever the RTL puts there, which for CTRL is only bit 8.
 
 ### Why each kind exists
+
+![How register accesses reach the logic: a write goes to a configuration register, which the stream logic copies once at START, or to a CTRL pulse bit, which flips a toggle that the stream logic sees as one event; the stream logic copies its counters into a snapshot bank on SNAPSHOT and at the end of a run; a read goes through prdata_mux, which returns constants, configuration registers or the snapshot bank.](../diagrams/lab-h01-register-paths.svg)
+
+1. **A write to a configuration register** is stored in the 50 MHz domain.
+2. **The stream logic copies it once, at START.** Until the next START it uses only its own copy.
+3. **A write of 1 to a CTRL pulse bit** is not stored; it flips a toggle that the stream logic sees as one event.
+4. **The stream logic copies its counters into the snapshot bank** when software writes SNAPSHOT and when a run ends.
+5. **A read goes through `prdata_mux`.** It returns the constants `ID` and `VERSION`, the configuration registers or the snapshot bank, so the read path holds 50 MHz flip-flops only.
 
 **Identity.** `ID` is a constant and `VERSION` a parameter. Linux checks `ID` before it touches anything else. The fabric build, the Linux tools and the supervisor on the real-time core all read it, so a stale bitstream or a wrong address shows up as a failed check at start-up, not as strange data later. When the contract changes, the version changes with it: the checker in this module's simulation refuses a version it was not written for (see the exercise below).
 
@@ -153,6 +170,16 @@ R 2 20 00000019        FRAMES_SENT = 25 = 5 + 20
 
 In scenario 13 (real-time mode), `R 13 40 00000012` reads the DROPS snapshot: 18 frames dropped, which is the same 18 that the result line reports: `sent 12 dropped 18`.
 
+The same trace as a console, with the five places to look at. The figure ran the command of step 2 on a run made with `OUT=/tmp/pfdaq-h01` and keeps the first 22 lines:
+
+![Console: register reads recorded by the testbench for scenarios 0, 1 and the start of 2. R lines are reads and P lines are snapshot reads before START. The ID reads 50464451, the coefficients read back as written, and after scenario 1 the snapshot registers hold 5 frames, 60 words and next sequence number 5.](../diagrams/lab-h01-trace.svg)
+
+1. **Identity.** `ID` reads `50464451`, the ASCII text `PFDQ`, and `VERSION` reads `00050000`. Both are constants.
+2. **Configuration.** The coefficients read back as written: `2ee0` is 12000 and `c568` is -15000 in 16 bits. The upper bits read zero.
+3. **Before START.** The snapshot reads taken before scenario 1 starts are all zero: nothing has been sent.
+4. **After the run.** STATUS `2` is done and not busy. The bank holds 5 frames, `0x3c` (60) words and next sequence number 5.
+5. **Counts since reset.** Scenario 2 starts from 5 frames: the snapshot counts since reset, not since START.
+
 Step 5 fails. In the recorded run the checker's last lines were:
 
 ```
@@ -161,6 +188,26 @@ RESULT: FAIL
 ```
 
 `327681` is `0x00050001`. Nothing is wrong with the data; the contract check is what stopped. That is its job: it forces whoever changes the version to change the checker, and with it the documentation, in the same commit.
+
+## Do the same in your project
+
+Use this when software must configure and control a block in your fabric over APB, and read its counters. The names are this project's: rename them for yours.
+
+1. **Start the block with `ID` and `VERSION`.** Return a constant at offset `0x00` and a parameter (`VERSION_VALUE`) at `0x04`; choose your own four letters. Your software reads them first and stops if they differ.
+2. **Decode simply.** Use `apb_write = PSEL & PENABLE & PWRITE` for writes and `addr = {PADDR[7:2], 2'b00}` for the address, and make `PRDATA` a combinational multiplexer on `addr`. Tie `PREADY` high and `PSLVERR` low if your master accepts a slave without wait states or errors, as this one does.
+3. **Sort every register into a kind.** Identity, configuration, action (pulse) or status/snapshot, and write the table next to the RTL, as the table of this page does.
+4. **Sample configuration at one moment.** Keep the registers in the bus domain and copy them into `cfg_*` registers in the logic's domain on the START event; use only the copies during the run. Clamp what the logic cannot use, as `PAYLOAD_WORDS` (0 becomes 1) and `RATE` (below 2 becomes 2) do, and write the clamp in the table.
+5. **Make actions toggles.** For each pulse bit, write `if (PWDATA[n]) x_tgl_p <= ~x_tgl_p;` and store nothing. Let a START write also clear the `done` flag at once, so a wait loop cannot be satisfied by the previous run. How the toggle crosses is module H03.
+6. **Read counters through a snapshot bank.** Copy them into registers of the bus domain when software writes SNAPSHOT and when a run ends, and let the read multiplexer see only that bank. Tell software to write SNAPSHOT, wait a few cycles and then read (the testbench waits six `PCLK` cycles).
+7. **Make the testbench read like software.** Use the same two-phase `apb_wr` and `apb_rd` tasks, log every read, and let a Python model compare each read with what it expects, as `hw/tb/check_trace.py` does for `ID`, `VERSION`, the coefficients, the snapshot counters and `STATUS`.
+8. **Check it.** `make -C hw sim-stream` must end with `RESULT: PASS`. Then make the break of step 5 of "Run it" (a version the checker does not expect): the run must fail with the ID/VERSION message, which shows that the contract check can stop a mismatch.
+
+What not to change:
+
+- **Use 32-bit accesses only.** The slave takes every write as a whole word, so what a byte store does to the other three bytes depends on the bus bridge, and the early Python tool hit exactly this (case study K02).
+- **Do not write configuration while a run is busy.** It changes the next run, not the current one.
+- **Do not read live counters across the clock boundary.** Read the bank.
+- **Do not change the table without changing `VERSION` and the checker** in the same commit.
 
 ## Evidence
 

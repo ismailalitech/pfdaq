@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" width="900" height="340" role="img" aria-labelledby="t d">
+<title id="t">Waveform from the latency testbench, channel 0, first event of phase 1. IRQ_LAT0 rises; lat_cnt counts 0 up to 11 while it is high; the ACK write arrives in the cycle where lat_cnt is 11 and lat_now is 12; IRQ_LAT0 falls and LAT_LAST becomes 12, which is 240 ns.</title><desc id="d">Waveform from the latency testbench, channel 0, first event of phase 1. IRQ_LAT0 rises; lat_cnt counts 0 up to 11 while it is high; the ACK write arrives in the cycle where lat_cnt is 11 and lat_now is 12; IRQ_LAT0 falls and LAT_LAST becomes 12, which is 240 ns.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 15.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 15.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}21.79%{opacity:1}24.79%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="340" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="256" fill="#0d1117"/>
+<line x1="217.895" y1="30" x2="217.895" y2="250" stroke="#27313d" stroke-dasharray="2 4"/><text x="217.895" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">0</text>
+<line x1="295.789" y1="30" x2="295.789" y2="250" stroke="#27313d" stroke-dasharray="2 4"/><text x="295.789" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">2</text>
+<line x1="373.684" y1="30" x2="373.684" y2="250" stroke="#27313d" stroke-dasharray="2 4"/><text x="373.684" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">4</text>
+<line x1="451.579" y1="30" x2="451.579" y2="250" stroke="#27313d" stroke-dasharray="2 4"/><text x="451.579" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">6</text>
+<line x1="529.474" y1="30" x2="529.474" y2="250" stroke="#27313d" stroke-dasharray="2 4"/><text x="529.474" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">8</text>
+<line x1="607.368" y1="30" x2="607.368" y2="250" stroke="#27313d" stroke-dasharray="2 4"/><text x="607.368" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">10</text>
+<line x1="685.263" y1="30" x2="685.263" y2="250" stroke="#27313d" stroke-dasharray="2 4"/><text x="685.263" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">12</text>
+<line x1="763.158" y1="30" x2="763.158" y2="250" stroke="#27313d" stroke-dasharray="2 4"/><text x="763.158" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">14</text>
+<text x="12" y="66" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">IRQ_LAT0</text>
+<path d="M140,74 L140,74 L217.895,74 L217.895,54 L685.263,54 L685.263,74 L880,74" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="106" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">lat_cnt</text>
+<rect x="140.5" y="93" width="115.842" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="198.421" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="257.342" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="276.316" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="296.289" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="315.263" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<rect x="335.237" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="354.211" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">3</text>
+<rect x="374.184" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="393.158" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">4</text>
+<rect x="413.132" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="432.105" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">5</text>
+<rect x="452.079" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="471.053" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">6</text>
+<rect x="491.026" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="510" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">7</text>
+<rect x="529.974" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="548.947" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">8</text>
+<rect x="568.921" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="587.895" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">9</text>
+<rect x="607.868" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="626.842" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">10</text>
+<rect x="646.816" y="93" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="665.789" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">11</text>
+<rect x="685.763" y="93" width="193.737" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="782.632" y="108" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">12</text>
+<text x="12" y="146" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">ACK write</text>
+<path d="M140,154 L140,154 L646.316,154 L646.316,134 L685.263,134 L685.263,154 L880,154" fill="none" stroke="#b08fe0" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="186" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">lat_now</text>
+<rect x="140.5" y="173" width="115.842" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="198.421" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="257.342" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="276.316" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<rect x="296.289" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="315.263" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">3</text>
+<rect x="335.237" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="354.211" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">4</text>
+<rect x="374.184" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="393.158" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">5</text>
+<rect x="413.132" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="432.105" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">6</text>
+<rect x="452.079" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="471.053" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">7</text>
+<rect x="491.026" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="510" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">8</text>
+<rect x="529.974" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="548.947" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">9</text>
+<rect x="568.921" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="587.895" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">10</text>
+<rect x="607.868" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="626.842" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">11</text>
+<rect x="646.816" y="173" width="37.9474" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="665.789" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">12</text>
+<rect x="685.763" y="173" width="193.737" height="22" rx="4" fill="#1b2a3a" stroke="#5aa0d6" stroke-width="1.2"/>
+<text x="782.632" y="188" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">13</text>
+<text x="12" y="226" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">LAT_LAST</text>
+<rect x="140.5" y="213" width="544.263" height="22" rx="4" fill="#1b2a3a" stroke="#4fd1a5" stroke-width="1.2"/>
+<text x="412.632" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="685.763" y="213" width="193.737" height="22" rx="4" fill="#1b2a3a" stroke="#4fd1a5" stroke-width="1.2"/>
+<text x="782.632" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">12</text>
+<rect x="0" y="256" width="900" height="84" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="217.895" y="30" width="38.9474" height="220" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="217.895" cy="30" r="11" fill="#ffd166"/><text x="217.895" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="256" width="900" height="84" fill="#12171d"/>
+<circle cx="24" cy="284" r="13" fill="#ffd166"/><text x="24" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="282" font-size="15" font-weight="bold" fill="#e6ecf1">The event</text>
+<text x="48" y="302" font-size="13" fill="#9aa8b5">IRQ_LAT0 goes high and lat_cnt restarts at 0. One count is one 50 MHz clock, 20 ns.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="256.842" y="30" width="389.474" height="220" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="256.842" cy="30" r="11" fill="#ffd166"/><text x="256.842" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="256" width="900" height="84" fill="#12171d"/>
+<circle cx="24" cy="284" r="13" fill="#ffd166"/><text x="24" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="282" font-size="15" font-weight="bold" fill="#e6ecf1">Software is busy</text>
+<text x="48" y="302" font-size="13" fill="#9aa8b5">lat_cnt rises by one every clock while the line is high; software cannot slow or speed it up.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="646.316" y="30" width="38.9474" height="220" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="646.316" cy="30" r="11" fill="#ffd166"/><text x="646.316" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="256" width="900" height="84" fill="#12171d"/>
+<circle cx="24" cy="284" r="13" fill="#ffd166"/><text x="24" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="282" font-size="15" font-weight="bold" fill="#e6ecf1">The ACK write</text>
+<text x="48" y="302" font-size="13" fill="#9aa8b5">It arrives while lat_cnt is 11, so lat_now = lat_cnt + 1 = 12: the cycle of the ACK itself is counted.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="685.263" y="30" width="194.737" height="220" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="685.263" cy="30" r="11" fill="#ffd166"/><text x="685.263" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="256" width="900" height="84" fill="#12171d"/>
+<circle cx="24" cy="284" r="13" fill="#ffd166"/><text x="24" y="289" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="282" font-size="15" font-weight="bold" fill="#e6ecf1">Line drops, result kept</text>
+<text x="48" y="302" font-size="13" fill="#9aa8b5">IRQ_LAT0 falls and LAT_LAST reads 12 counts, 12 x 20 ns = 240 ns. lat_cnt stops at 12.</text>
+</g>
+</svg>

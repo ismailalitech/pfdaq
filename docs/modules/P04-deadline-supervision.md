@@ -76,6 +76,14 @@ Properties that follow from the code:
 - **A new ARM wipes the slate**, whatever state the supervisor was in. That is how a fresh run recovers from a dead one.
 - **Time is one millisecond.** Under FreeRTOS the tick is 1 ms; the bare-metal build uses the 1 MHz machine timer divided by 1,000. The bare-metal supervisor gave the same result in the stall test.
 
+![What the supervisor watches: Linux verifies a burst and sends a STATUS message over RPMsg; the supervisor on hart 4 waits for it with a timeout equal to the deadline; if none arrives it moves to ALARM and prints a message; on each STATUS it also snapshots the fabric's sequence counter and compares it with the number Linux expects next.](../diagrams/lab-p04-supervision-loop.svg)
+
+1. **Linux** verifies a burst, then sends a STATUS message.
+2. **The supervisor** in ARMED waits for the next STATUS for at most `deadline_ms`.
+3. **If the deadline passes**, it moves to ALARM and prints a message. That is all: nothing is restarted.
+4. **On every STATUS** it also snapshots the fabric's sequence counter (`fabric_seq`).
+5. **The cross-check** compares `fabric_seq` with the sequence number Linux says it expects next and counts a mismatch if the difference is larger than `max_lag`.
+
 ### The cross-check
 
 On every STATUS the supervisor also takes a snapshot of the fabric's own sequence counter and compares:
@@ -156,6 +164,38 @@ The console lines quoted above. In the suite's summary:
 ```
 
 The bare-metal supervisor, built from the same source, gives the same stall result in its suite: `T9-deadline` passes with 12 status messages and 1 miss. The kill test is not in the bare-metal suite.
+
+![The supervisor's console lines for the two deliberate failures: in the stall test it arms with a 300 ms deadline, raises one alarm, resumes at burst 5 and disarms with 12 status messages and 1 miss; in the kill test it arms, raises an alarm and stays silent until the next run arms it again, which then passes with 16 status messages and no miss.](../diagrams/lab-p04-console.svg)
+
+The figure shows the two console records in order.
+
+1. **Stall test**, `pfdaq_cap -r -D 300 -P 5:900 ...`: the supervisor arms with a 300 ms deadline and raises one alarm, because Linux sleeps for 900 ms.
+2. **Late, not wrong:** the next STATUS clears the alarm ("back to ARMED"). The miss stays counted: 12 status messages, 1 deadline miss, no data error.
+3. **Kill test**, `pkill -9` two seconds into a run: no DISARM arrives. 300 ms after the last STATUS the supervisor raises the alarm and says nothing more.
+4. **The next run recovers it:** its own ARM resets the counters, and its 16 status messages pass with no miss.
+
+## Do the same in your project
+
+You can add the same watchdog to any producer-consumer pair where the consumer must report progress.
+
+1. **Settle the three decisions before writing code:** what counts as alive (here a status message per verified burst), how long a silence is allowed (the deadline), and what happens on a miss (here a state change and a message, nothing else).
+2. **Run the watcher on its own core,** with its own timer and its own interrupt, so that it does not depend on the thing it watches. Here that is the supervisor on hart 4.
+3. **Make the deadline the timeout of the watcher's receive call.** Copy the pattern: `timeout = (state == PFDAQ_S_ARMED) ? deadline_ms : RL_BLOCK`, and when the receive fails while armed, count the miss, set the state to ALARM and print the message. Once in ALARM the watcher waits without a timeout again, which gives one alarm per silence.
+4. **Define three messages and have the watcher answer each:** ARM (carries `deadline_ms` and `max_lag`; sets ARMED and clears the counters), STATUS (burst number, the next sequence number the consumer expects, the consumer's error count; restarts the deadline) and DISARM (back to IDLE; print the totals). Let a late STATUS return ALARM to ARMED, and let a new ARM reset everything.
+5. **Send the messages from the consumer.** In `pfdaq_cap`, `-r` turns on supervision, `-D <ms>` sets the deadline (the default is 500 ms), and the tool reports after every verified burst.
+6. **Add the sequence cross-check if the producer has a counter.** On every STATUS, snapshot the producer's counter and test `(uint32_t)(fabric_seq - msg.next_seq) > max_lag`. Let the consumer set `max_lag` at ARM to the burst length plus 16 frames (1,040 here). The unsigned subtraction makes a consumer that claims to be ahead fail as well.
+7. **Choose the deadline from the normal gap.** Here the normal gap is one burst, about 34 ms for a counter and about 120 ms for FIR, and the test deadlines of 300 and 500 ms are an order of magnitude above it.
+8. **Test both failures.** Stall the consumer on purpose with `-P <burst>:<ms>` (900 ms against a 300 ms deadline), and kill it with `pkill -9` so that it cannot send DISARM. Make the tool require a miss when it stalled longer than the deadline and forbid one otherwise, so that every other supervised run checks for false alarms.
+
+Check that it works: the console shows ARMED, one ALARM, "status resumed ... back to ARMED" and a DISARM with 1 miss for the stall; the kill test is followed by a run that passes with 0 misses (suite rows `T9-deadline` and `T9-after-kill`).
+
+**What not to change**
+
+- Keep one alarm per silence; do not make the watcher repeat the alarm.
+- Keep ARM as the way to recover. A new ARM wipes the counters whatever the state was.
+- Keep the watcher detect-only unless you have decided what the safe state is; acting on a miss turns a diagnostic into a safety function.
+- Keep the deadline an order of magnitude above the normal gap, or healthy runs raise alarms.
+- Do not assume the cross-check works because it never fired: no published record shows it firing.
 
 ## Evidence
 

@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 440" width="900" height="440" role="img" aria-labelledby="t d">
+<title id="t">Waveform from the stream simulation, scenario 2 with TREADY high on 30 percent of the clocks. A beat transfers on every rising clock edge where TVALID and TREADY are both high. While TREADY is low, TVALID stays high and TDATA does not change. The last beat of the packet has TLAST high and TKEEP 0F, and TVALID is low for seven clocks before the next packet. A dash means TVALID is low.</title><desc id="d">Waveform from the stream simulation, scenario 2 with TREADY high on 30 percent of the clocks. A beat transfers on every rising clock edge where TVALID and TREADY are both high. While TREADY is low, TVALID stays high and TDATA does not change. The last beat of the packet has TLAST high and TKEEP 0F, and TVALID is low for seven clocks before the next packet. A dash means TVALID is low.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 22.40s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 22.40s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}15.18%{opacity:1}18.18%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="440" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="336" fill="#0d1117"/>
+<line x1="140" y1="30" x2="140" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="140" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">4500 ns</text>
+<line x1="272.143" y1="30" x2="272.143" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="272.143" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">4540 ns</text>
+<line x1="404.286" y1="30" x2="404.286" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="404.286" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">4580 ns</text>
+<line x1="536.429" y1="30" x2="536.429" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="536.429" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">4620 ns</text>
+<line x1="668.571" y1="30" x2="668.571" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="668.571" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">4660 ns</text>
+<line x1="800.714" y1="30" x2="800.714" y2="330" stroke="#27313d" stroke-dasharray="2 4"/><text x="800.714" y="22" text-anchor="middle" font-size="11" fill="#9aa8b5">4700 ns</text>
+<text x="12" y="66" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">ACLK</text>
+<path d="M140,54 L140,54 L153.214,54 L153.214,74 L166.429,74 L166.429,54 L179.643,54 L179.643,74 L192.857,74 L192.857,54 L206.071,54 L206.071,74 L219.286,74 L219.286,54 L232.5,54 L232.5,74 L245.714,74 L245.714,54 L258.929,54 L258.929,74 L272.143,74 L272.143,54 L285.357,54 L285.357,74 L298.571,74 L298.571,54 L311.786,54 L311.786,74 L325,74 L325,54 L338.214,54 L338.214,74 L351.429,74 L351.429,54 L364.643,54 L364.643,74 L377.857,74 L377.857,54 L391.071,54 L391.071,74 L404.286,74 L404.286,54 L417.5,54 L417.5,74 L430.714,74 L430.714,54 L443.929,54 L443.929,74 L457.143,74 L457.143,54 L470.357,54 L470.357,74 L483.571,74 L483.571,54 L496.786,54 L496.786,74 L510,74 L510,54 L523.214,54 L523.214,74 L536.429,74 L536.429,54 L549.643,54 L549.643,74 L562.857,74 L562.857,54 L576.071,54 L576.071,74 L589.286,74 L589.286,54 L602.5,54 L602.5,74 L615.714,74 L615.714,54 L628.929,54 L628.929,74 L642.143,74 L642.143,54 L655.357,54 L655.357,74 L668.571,74 L668.571,54 L681.786,54 L681.786,74 L695,74 L695,54 L708.214,54 L708.214,74 L721.429,74 L721.429,54 L734.643,54 L734.643,74 L747.857,74 L747.857,54 L761.071,54 L761.071,74 L774.286,74 L774.286,54 L787.5,54 L787.5,74 L800.714,74 L800.714,54 L813.929,54 L813.929,74 L827.143,74 L827.143,54 L840.357,54 L840.357,74 L853.571,74 L853.571,54 L866.786,54 L866.786,74 L880,74 L880,54 L880,54" fill="none" stroke="#6b7b8c" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="106" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TVALID</text>
+<path d="M140,94 L140,94 L615.714,94 L615.714,114 L800.714,114 L800.714,94 L880,94" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="146" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TREADY</text>
+<path d="M140,154 L140,154 L219.286,154 L219.286,134 L245.714,134 L245.714,154 L272.143,154 L272.143,134 L298.571,134 L298.571,154 L325,154 L325,134 L351.429,134 L351.429,154 L377.857,154 L377.857,134 L404.286,134 L404.286,154 L457.143,154 L457.143,134 L510,134 L510,154 L562.857,154 L562.857,134 L642.143,134 L642.143,154 L668.571,154 L668.571,134 L695,134 L695,154 L747.857,154 L747.857,134 L774.286,134 L774.286,154 L800.714,154 L800.714,134 L827.143,134 L827.143,154 L880,154" fill="none" stroke="#5aa0d6" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="186" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TVALID &amp; TREADY</text>
+<path d="M140,194 L140,194 L219.286,194 L219.286,174 L245.714,174 L245.714,194 L272.143,194 L272.143,174 L298.571,174 L298.571,194 L325,194 L325,174 L351.429,174 L351.429,194 L377.857,194 L377.857,174 L404.286,174 L404.286,194 L457.143,194 L457.143,174 L510,174 L510,194 L562.857,194 L562.857,174 L615.714,174 L615.714,194 L800.714,194 L800.714,174 L827.143,174 L827.143,194 L880,194" fill="none" stroke="#4fd1a5" stroke-width="2" stroke-linejoin="round"/>
+<text x="12" y="226" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TDATA (beat no.)</text>
+<rect x="140.5" y="213" width="104.714" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="192.857" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<rect x="246.214" y="213" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="272.143" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">2</text>
+<rect x="299.071" y="213" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="325" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">3</text>
+<rect x="351.929" y="213" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="377.857" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">4</text>
+<rect x="404.786" y="213" width="78.2857" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="443.929" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">5</text>
+<rect x="484.071" y="213" width="25.4286" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="496.786" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">6</text>
+<rect x="510.5" y="213" width="78.2857" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="549.643" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">7</text>
+<rect x="589.786" y="213" width="25.4286" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="602.5" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">8</text>
+<rect x="616.214" y="213" width="184" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="708.214" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="801.214" y="213" width="25.4286" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="813.929" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0</text>
+<rect x="827.643" y="213" width="51.8571" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="853.571" y="228" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">1</text>
+<text x="12" y="266" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TKEEP</text>
+<rect x="140.5" y="253" width="448.286" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="364.643" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">FF</text>
+<rect x="589.786" y="253" width="25.4286" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="602.5" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">0F</text>
+<rect x="616.214" y="253" width="184" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="708.214" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">-</text>
+<rect x="801.214" y="253" width="78.2857" height="22" rx="4" fill="#1b2a3a" stroke="#5fbf84" stroke-width="1.2"/>
+<text x="840.357" y="268" text-anchor="middle" font-size="11" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">FF</text>
+<text x="12" y="306" font-size="12" fill="#e6ecf1" font-family="IBM Plex Mono, ui-monospace, monospace">TLAST</text>
+<path d="M140,314 L140,314 L589.286,314 L589.286,294 L800.714,294 L800.714,314 L880,314" fill="none" stroke="#5fbf84" stroke-width="2" stroke-linejoin="round"/>
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="140" y="30" width="79.2857" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="140" cy="30" r="11" fill="#ffd166"/><text x="140" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Stalled</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">TREADY is low. The source keeps TVALID high and TDATA unchanged: beat 1 waits, nothing moves.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="219.286" y="30" width="26.4286" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="219.286" cy="30" r="11" fill="#ffd166"/><text x="219.286" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">One beat</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">TVALID and TREADY are both high at the clock edge that ends this cycle: beat 1 transfers.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="404.286" y="30" width="79.2857" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="404.286" cy="30" r="11" fill="#ffd166"/><text x="404.286" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Stalled again</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">TREADY drops for two clocks. TDATA still shows beat 5; it changes only after beat 5 has gone.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="457.143" y="30" width="79.2857" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="457.143" cy="30" r="11" fill="#ffd166"/><text x="457.143" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">No clock lost</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">TREADY stays high for two clocks: beats 5 and 6 go on consecutive edges, one beat per clock.</text>
+</g>
+<g class="co" style="animation-delay:13.60s"><rect x="589.286" y="30" width="26.4286" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="589.286" cy="30" r="11" fill="#ffd166"/><text x="589.286" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="co cap" style="animation-delay:13.60s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Last beat</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">TLAST is high and TKEEP is 0F: this packet has 17 words, so the last beat carries only the CRC word.</text>
+</g>
+<g class="co" style="animation-delay:17.00s"><rect x="615.714" y="30" width="185" height="300" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="615.714" cy="30" r="11" fill="#ffd166"/><text x="615.714" y="34" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">6</text></g>
+<g class="co cap" style="animation-delay:17.00s">
+<rect x="0" y="336" width="900" height="104" fill="#12171d"/>
+<circle cx="24" cy="364" r="13" fill="#ffd166"/><text x="24" y="369" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">6</text>
+<text x="48" y="362" font-size="15" font-weight="bold" fill="#e6ecf1">Between packets</text>
+<text x="48" y="382" font-size="13" fill="#9aa8b5">TVALID is low for 7 clocks (GAP_CYCLES is 7 here). That is allowed: the packet has ended.</text>
+</g>
+</svg>
