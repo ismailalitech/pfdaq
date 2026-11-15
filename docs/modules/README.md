@@ -112,10 +112,18 @@ Every module is one page with the same structure: what it teaches, what you need
 | X03 Reproduce the board from an empty SD card *(planned)*<br>Every step from a blank card and an unprogrammed fabric to the full test suite passing. | 3 | shared baseline | planned |
 | X04 The validation report *(planned)*<br>Every result, with the conditions it was measured under and the evidence file behind it. | 3 | read | planned |
 
+## Security and secure boot
+
+| Module | Level | How to run | Status |
+|---|---|---|---|
+| [S01 FIC4 and the user crypto processor](S01-fic4-crypto-processor.md)<br>What FIC4 is, how the on-chip crypto processor can be owned by the processors or by the fabric, and why this project documents it instead of driving it. | 3 | read | validated |
+| [S02 Secure boot on PolarFire SoC: the chain of trust, and what we left alone](S02-secure-boot.md)<br>How a signed boot works on this chip, from the vendor's boot monitor source and guide, and why this project demonstrated it offline instead of enabling it. | 3 | read | validated |
+| [S03 A signed boot chain you can run](S03-signed-boot-chain.md)<br>Sign a real HSS boot payload offline, verify it twice, and watch a toy chain of trust refuse six kinds of tampering. Nothing is flashed. | 2 | simulation | validated |
+
 ## Concepts
 
 | Module | Level | How to run | Status |
 |---|---|---|---|
 | [C01 Direct memory access](../concepts/C01-dma.md)<br>Why hardware writes memory by itself, what a descriptor is, and what it costs. | 1 | read | validated |
 
-67 modules, 26 written.
+70 modules, 29 written.

@@ -19,11 +19,11 @@ import content as C
 
 OUT = 'docs/system/explorer.html'
 KIND_LABEL = {
-    'apb': 'APB register bus', 'axi4': 'AXI4 memory bus', 'axi4-stream': 'AXI4-Stream data',
+    'apb': 'APB register bus', 'ahb': 'AHB-Lite bus (crypto)', 'axi4': 'AXI4 memory bus', 'axi4-stream': 'AXI4-Stream data',
     'irq': 'Interrupt', 'mem': 'Memory access', 'rpmsg': 'RPMsg message channel',
     'uses': 'Uses / depends on', 'runs': 'Runs on', 'boot': 'Boot hand-over',
 }
-LEGEND = ['apb', 'axi4', 'axi4-stream', 'irq', 'mem', 'rpmsg', 'boot', 'uses']
+LEGEND = ['apb', 'ahb', 'axi4', 'axi4-stream', 'irq', 'mem', 'rpmsg', 'boot', 'uses']
 
 
 def load_layout():
@@ -171,12 +171,12 @@ svg.diagram{display:block;width:100%;min-width:640px;height:auto}
 .edge{cursor:pointer}
 .edge .hit{stroke:transparent;stroke-width:14;fill:none}
 .edge .line{fill:none;stroke-width:1.6}
-.k-apb .line{stroke:var(--c-apb)}.k-axi4 .line{stroke:var(--c-axi4);stroke-width:2.2}
+.k-apb .line,.k-ahb .line{stroke:var(--c-apb)}.k-ahb .line{stroke-dasharray:10 3}.k-axi4 .line{stroke:var(--c-axi4);stroke-width:2.2}
 .k-axi4-stream .line{stroke:var(--c-axi4-stream);stroke-width:4.5}
 .k-irq .line{stroke:var(--c-irq);stroke-dasharray:7 5}.k-mem .line{stroke:var(--c-mem);stroke-dasharray:2 4;stroke-width:2.4}
 .k-rpmsg .line{stroke:var(--c-rpmsg);stroke-dasharray:9 3 2 3}.k-boot .line{stroke:var(--c-boot);stroke-width:2.6}
 .k-uses .line,.k-runs .line{stroke:var(--c-uses);stroke-width:1.2}
-.mk path{fill:var(--c-uses)}.mk-apb path{fill:var(--c-apb)}.mk-axi4 path{fill:var(--c-axi4)}.mk-axi4-stream path{fill:var(--c-axi4-stream)}
+.mk path{fill:var(--c-uses)}.mk-apb path,.mk-ahb path{fill:var(--c-apb)}.mk-axi4 path{fill:var(--c-axi4)}.mk-axi4-stream path{fill:var(--c-axi4-stream)}
 .mk-irq path{fill:var(--c-irq)}.mk-mem path{fill:var(--c-mem)}.mk-rpmsg path{fill:var(--c-rpmsg)}.mk-boot path{fill:var(--c-boot)}
 .has-sel .node,.has-sel .edge{opacity:.22;transition:opacity .15s}
 .has-sel .node.on,.has-sel .edge.on{opacity:1}
@@ -379,7 +379,7 @@ def build_html(arch, layout, mods, site=None):
 
 
 LEGEND_STYLE = {
-    'apb': 'stroke:var(--c-apb)', 'axi4': 'stroke:var(--c-axi4)', 'axi4-stream': 'stroke:var(--c-axi4-stream);stroke-width:4',
+    'apb': 'stroke:var(--c-apb)', 'ahb': 'stroke:var(--c-apb);stroke-dasharray:10 3', 'axi4': 'stroke:var(--c-axi4)', 'axi4-stream': 'stroke:var(--c-axi4-stream);stroke-width:4',
     'irq': 'stroke:var(--c-irq);stroke-dasharray:7 5', 'mem': 'stroke:var(--c-mem);stroke-dasharray:2 4',
     'rpmsg': 'stroke:var(--c-rpmsg);stroke-dasharray:9 3 2 3', 'boot': 'stroke:var(--c-boot);stroke-width:3',
     'uses': 'stroke:var(--c-uses);stroke-width:1.2',
