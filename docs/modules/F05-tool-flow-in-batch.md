@@ -13,7 +13,7 @@ sources:
   - hw/libero/export_job.tcl:GENERATEPROGRAMMINGDATA
   - hw/libero/sta_without_cdc.tcl:VERIFYTIMING
   - hw/libero/overlay/reference-design-v2026.04.patch:organize_tool_files
-evidence: [timing, programming]
+evidence: [timing, programming, libero-design-flow, libero-hierarchy]
 related: [B06, H09, H10, K07, K08]
 ---
 
@@ -94,6 +94,18 @@ Info:  I/O Bank and Globals Assigner identified 64 fixed I/O macros, 0 unfixed I
 Info: Timing constraints have been met.
 ```
 
+### The same flow in the Libero GUI
+
+The scripts drive the steps the GUI lists. The left panel of the GUI is the design flow: create the design, constrain it, synthesise, place and route, verify timing, generate the programming data, program, export. The batch build in `hw/libero/build.sh` walks the same list.
+
+![The Design Flow panel of Libero SoC 2026.1 with the project open](../../evidence/v0.5.1/build/libero-design-flow.png)
+
+The panel is a screenshot of the project's own build, opened read-only. The yellow triangles are Libero's status markers on steps that finished with warnings; this page does not interpret them one by one.
+
+The design hierarchy of the same project shows what the build assembled: the reference design's four blocks, and under `FIC_0_PERIPHERALS` the one block this project adds, `pfdaq_core`, which is plain Verilog (`pfdaq_core.v`) and so has a different icon from the IP cores around it.
+
+![The Design Hierarchy panel: MPFS_DISCOVERY_KIT with FIC_0_PERIPHERALS and FIC_3_PERIPHERALS expanded](../../evidence/v0.5.1/build/libero-hierarchy.png)
+
 ## Run it
 
 This is a reading module. What the project ran, in order, from the repository root:
@@ -149,7 +161,7 @@ and the programming prints a checksum, a design version and the component digest
 | **How to run** | Explanation with recorded evidence; nothing to run |
 | **In the system** | [Development PC](../system/README.md#host) · [FlashPro5 on USB-C](../system/README.md#debug-usb) · [FPGA fabric](../system/README.md#fabric) |
 | **Source** | [`hw/libero/build.sh`](../../hw/libero/build.sh): `LM_LICENSE_FILE`, `PFDAQ_REFDESIGN`, `DESIGN_VERSION`<br>[`hw/libero/program.sh`](../../hw/libero/program.sh): `FPEXPRESS`<br>[`hw/libero/export_job.tcl`](../../hw/libero/export_job.tcl): `GENERATEPROGRAMMINGDATA`<br>[`hw/libero/sta_without_cdc.tcl`](../../hw/libero/sta_without_cdc.tcl): `VERIFYTIMING`<br>[`hw/libero/overlay/reference-design-v2026.04.patch`](../../hw/libero/overlay/reference-design-v2026.04.patch): `organize_tool_files` |
-| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Place and route result, timing met in all corners, 64 of 64 pins placed, 26 % of the fabric](../../evidence/v0.5.1/build/timing-and-utilisation.txt) (build, fabric v0.5.1, 2026-11-15)<br>[Programming, verify and device read-back of the v0.5.1 fabric](../../evidence/v0.5.1/build/programming.txt) (board, fabric v0.5.1, 2026-11-15)<br>[The Libero design flow as listed for the project](../../evidence/v0.5.1/build/libero-design-flow.png) (build, fabric v0.5.1, 2026-11-15)<br>[The design hierarchy: reference design blocks and the added pfdaq_core](../../evidence/v0.5.1/build/libero-hierarchy.png) (build, fabric v0.5.1, 2026-11-15) |
 | **Related** | [B06 Programming safely: components, digests and what never to touch](B06-programming-safely.md)<br>[H09 Integrating custom RTL into a vendor design by script](H09-rtl-into-vendor-design.md)<br>[H10 Timing closure, and the build that lost its pins](H10-timing-closure.md)<br>[K07 Three builds lost to brackets in a constraint file](../case-studies/K07-brackets-in-constraints.md)<br>[K08 Timing met, board dead: the missing pin constraints](../case-studies/K08-timing-met-board-dead.md) |
 | **Status** | validated |
 <!-- nav:end -->

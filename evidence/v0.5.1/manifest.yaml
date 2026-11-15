@@ -141,3 +141,93 @@ results:
     date: 2026-11-15
     command: experiments/I04-dma-one-burst/dma_one_burst, built statically with a RISC-V Linux GCC, copied to the board and run as root
     conditions: Proven pfdaq-v051 image; nothing else using the stream source. The second run follows the first without a reboot.
+  - id: libero-design-flow
+    title: "The Libero design flow as listed for the project"
+    file: build/libero-design-flow.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: Design Flow panel of the Libero SoC 2026.1 GUI, project opened read-only (a copy)
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+
+  - id: libero-hierarchy
+    title: "The design hierarchy: reference design blocks and the added pfdaq_core"
+    file: build/libero-hierarchy.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: Design Hierarchy panel with MPFS_DISCOVERY_KIT, FIC_0_PERIPHERALS and FIC_3_PERIPHERALS expanded
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+
+  - id: libero-top-smartdesign
+    title: "Top-level SmartDesign canvas: clocks and resets, MSS, FIC_0 and FIC_3 blocks"
+    file: build/libero-top-smartdesign.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: SmartDesign canvas of MPFS_DISCOVERY_KIT
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+
+  - id: libero-fic0-peripherals
+    title: "FIC_0_PERIPHERALS canvas: pfdaq_core, DMA controller, initiator and target interconnects, MSS_LSRAM"
+    file: build/libero-fic0-peripherals.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: SmartDesign canvas of FIC_0_PERIPHERALS
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+
+  - id: libero-fic3-peripherals
+    title: "FIC_3_PERIPHERALS canvas: APB address decode and the reference design peripherals"
+    file: build/libero-fic3-peripherals.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: SmartDesign canvas of FIC_3_PERIPHERALS
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+
+  - id: libero-mss-peripherals
+    title: "MSS Configurator, Peripherals tab: enabled peripherals and I/O mux"
+    file: build/libero-mss-peripherals.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: MSS Configurator opened from the MSS component in read-only mode
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+
+  - id: libero-mss-fics
+    title: "MSS Configurator, fabric interface controllers tab"
+    file: build/libero-mss-fics.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: MSS Configurator, tab MSS to/from Fabric Interface Controllers
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+
+  - id: libero-mss-clocks
+    title: "MSS Configurator, Clocks tab: MSS PLL, dividers and the clock tree"
+    file: build/libero-mss-clocks.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: MSS Configurator, tab Clocks
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+
+  - id: libero-mss-ddr
+    title: "MSS Configurator, DDR Memory tab: DDR4 topology and clock"
+    file: build/libero-mss-ddr.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: MSS Configurator, tab DDR Memory
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+
+  - id: libero-timing-summary
+    title: "Verify Timing report, max delay multi-corner summary"
+    file: build/libero-timing-summary.png
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: Reports view of Libero, file max_timing_multi_corner
+    conditions: Screenshot of Libero SoC 2026.1 running on the development PC, taken from a copy of the project built from the restructured layout (design version 7), whose fabric component digest equals the one programmed on the board. Nothing was built, saved or programmed while taking it.
+

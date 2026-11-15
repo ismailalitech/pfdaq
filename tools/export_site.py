@@ -215,6 +215,13 @@ def rewrite_links(text, src_file, site):
             return '[%s](/pfdaq/%s)' % (label, rp)
         link = repo_link(rp)
         return '[%s](%s%s)' % (label, link, frag) if link else label
+    def fix_image(m):
+        alt, target = m.group(1), m.group(2)
+        if re.match(r'[a-z]+:', target):
+            return m.group(0)
+        rp = os.path.normpath(os.path.join(srcdir, target))
+        return '![%s](/pfdaq/%s)' % (alt, rp) if rp.startswith('evidence/') else m.group(0)
+    text = re.sub(r'!\[([^\]]*)\]\(([^)\s]+)\)', fix_image, text)
     return re.sub(r'(?<!!)\[([^\]]+)\]\(([^)\s]+)\)', fix, text)
 
 
@@ -323,6 +330,11 @@ Constraints that shaped the design:
 - The boot flash holds the vendor's boot monitor. Nothing in this project reprograms it; only the fabric is programmed.
 - The DMA controller has rules that its documentation does not state. They were found by testing and are collected in
   [DMA stream descriptors](@I04@).
+
+The fabric half of the system, as the vendor's tool shows it: the project's own block, `pfdaq_core`, feeds the DMA
+controller over an AXI4-Stream link and raises two latency interrupts. The other blocks are the reference design's.
+
+![The FIC_0_PERIPHERALS canvas in Libero SoC: pfdaq_core, the DMA controller, its initiator and target interconnects and the on-chip SRAM](/pfdaq/evidence/v0.5.1/build/libero-fic0-peripherals.png)
 
 ## My contribution
 

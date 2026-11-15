@@ -8,7 +8,7 @@ repro: doc
 status: validated
 hardware: [board, soc, mss, fabric, e51, u54-linux, u54-4, fic0, fic3, plic, ddr]
 software: [hss]
-evidence: [boot-hss, boot-uboot-linux]
+evidence: [boot-hss, boot-uboot-linux, libero-mss-fics, libero-mss-peripherals]
 related: [F02, F03, F04, X01]
 ---
 
@@ -80,6 +80,14 @@ The shared L2 is split between ordinary cache, a scratchpad and a loosely integr
 
 The clock figures are what the fabric design supplies; module F04 shows where they come from. FIC1 and FIC2 are clocked but nothing in this project connects to them, and this page does not describe them further.
 
+The MSS Configurator, which Libero opens from the MSS component, shows the same choices. The fabric interface tab has FIC0 and FIC1 with both an initiator and a target interface, FIC2 with a target interface, and FIC3 (APB) with an initiator interface. Having an interface enabled is not the same as using it: as the table says, nothing in this project connects to FIC1 or FIC2.
+
+![MSS Configurator, fabric interface controllers: FIC_0 to FIC_3 settings](../../evidence/v0.5.1/build/libero-mss-fics.png)
+
+The peripherals tab lists what the MSS exposes on the board's pins. Highlighted in green: the Gigabit Ethernet MAC 0, the SD interface on the bank 4 I/Os, SPI 0 and 1, MMUART 0, 1 and 4, I2C 0, GPIO 1 on the bank 2 I/Os and GPIO 2 routed to the fabric.
+
+![MSS Configurator, peripherals tab: enabled peripherals highlighted and the I/O multiplexing table](../../evidence/v0.5.1/build/libero-mss-peripherals.png)
+
 The picture to keep is this:
 
 ```text
@@ -146,7 +154,7 @@ These records show the software view of the chip. They do not measure anything a
 |---|---|
 | **How to run** | Explanation with recorded evidence; nothing to run |
 | **In the system** | [PolarFire SoC Discovery Kit](../system/README.md#board) · [MPFS095T system-on-chip](../system/README.md#soc) · [Microprocessor subsystem (MSS)](../system/README.md#mss) · [FPGA fabric](../system/README.md#fabric) · [E51 (hart 0)](../system/README.md#e51) · [U54 harts 1 to 3](../system/README.md#u54-linux) · [U54 hart 4](../system/README.md#u54-4) · [FIC0 (AXI4, 125 MHz)](../system/README.md#fic0) · [FIC3 (APB, 50 MHz)](../system/README.md#fic3) · [Platform-level interrupt controller](../system/README.md#plic) · [DDR4 memory, 1 GB](../system/README.md#ddr) · [Hart Software Services](../system/README.md#hss) |
-| **Evidence** | [Boot monitor console from power-up to all four application cores running](../../evidence/v0.5.1/board/boot-hss.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15) |
+| **Evidence** | [Boot monitor console from power-up to all four application cores running](../../evidence/v0.5.1/board/boot-hss.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Key lines of the U-Boot and Linux console from OpenSBI to login, including remoteproc attaching to hart 4](../../evidence/v0.5.1/board/boot-uboot-linux.txt) (board, fabric v0.5.1, 2026-11-15)<br>[MSS Configurator, fabric interface controllers tab](../../evidence/v0.5.1/build/libero-mss-fics.png) (build, fabric v0.5.1, 2026-11-15)<br>[MSS Configurator, Peripherals tab: enabled peripherals and I/O mux](../../evidence/v0.5.1/build/libero-mss-peripherals.png) (build, fabric v0.5.1, 2026-11-15) |
 | **Related** | [F02 The memory map and the three faces of DDR](F02-memory-map-ddr.md)<br>[F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](F03-fabric-interrupts.md)<br>[F04 Clocks and resets: one PLL, two bus clocks](F04-clocks-and-resets.md)<br>[X01 pfdaq in one page](X01-pfdaq-in-one-page.md) |
 | **Status** | validated |
 <!-- nav:end -->
