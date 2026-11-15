@@ -26,6 +26,9 @@ import yaml
 import content as C
 import gen_explorer as E
 
+REPO = 'https://github.com/ismailalitech/pfdaq'
+BLOB = REPO + '/blob/main/'
+TREE = REPO + '/tree/main/'
 DATE = '2026-11-15T12:00:00+01:00'
 BOARD = 'PolarFire SoC Discovery Kit'
 SIM = 'None (RTL simulation)'
@@ -119,6 +122,17 @@ FIXED = {
 }
 
 
+def repo_link(rp):
+    """URL of a path in the public pfdaq repository, or None for paths that are not published."""
+    if rp.startswith(('docs/platform', 'docs/vendor', 'docs/source-index', 'docs/system-guide', 'logs/', 'tools/private')) or not rp.startswith(
+            ('hw/', 'firmware/', 'yocto/', 'tests/', 'tools/', 'docs/', 'experiments/')):
+        return None
+    full = os.path.join(C.ROOT, rp)
+    if os.path.isdir(full):
+        return TREE + rp
+    return BLOB + rp if os.path.isfile(full) else None
+
+
 def rewrite_links(text, src_file, site):
     srcdir = os.path.dirname(src_file)
 
@@ -135,9 +149,10 @@ def rewrite_links(text, src_file, site):
             return '[%s](/pfdaq/explorer/%s)' % (label, frag)
         if rp in FIXED:
             return '[%s](%s%s)' % (label, FIXED[rp], frag if rp != 'docs/system/README.md' else '')
-        if rp.startswith('evidence/') or rp.startswith('experiments/'):
+        if rp.startswith('evidence/'):
             return '[%s](/pfdaq/%s)' % (label, rp)
-        return label            # a path in the code repository: shown as text
+        link = repo_link(rp)
+        return '[%s](%s%s)' % (label, link, frag) if link else label
     return re.sub(r'(?<!!)\[([^\]]+)\]\(([^)\s]+)\)', fix, text)
 
 
@@ -165,7 +180,7 @@ def at_a_glance(page, site, evidence):
         rows.append(('In the system', ' · '.join('[%s](/pfdaq/explorer/#%s)' % (nodes[i]['title'], i) for i in ids)))
     src = C.norm_sources(page.get('sources'))
     if src:
-        rows.append(('Source files', '; '.join('`%s`%s' % (s['path'], (': ' + ', '.join('`%s`' % x for x in s['symbols'])) if s.get('symbols') else '') for s in src)))
+        rows.append(('Source files', '; '.join('[`%s`](%s)%s' % (s['path'], BLOB + s['path'], (': ' + ', '.join('`%s`' % x for x in s['symbols'])) if s.get('symbols') else '') for s in src)))
     if page.get('evidence'):
         rows.append(('Evidence', '; '.join('[%s](/pfdaq/%s) (%s, fabric v%s)' % (
             evidence[i]['title'], evidence[i]['path'], evidence[i]['class'], evidence[i]['fabric']) for i in page['evidence'])))
@@ -174,7 +189,7 @@ def at_a_glance(page, site, evidence):
             '[%s %s](%s)' % (i, site.pages[i]['title'], site.url(i)) if i in site.pages and (i in PLACE or i == 'X01') else '%s (planned)' % i
             for i in page['related'])))
     if page['repro'] in ('sim', 'base'):
-        rows.append(('Code', 'The commands on this page run from the pfdaq repository, which is being prepared for public release.'))
+        rows.append(('Code', 'The commands on this page run from the [pfdaq repository](%s).' % REPO))
     out = ['## At a glance', '', '| | |', '|---|---|'] + ['| **%s** | %s |' % r for r in rows]
     return '\n'.join(out) + '\n'
 
@@ -307,7 +322,7 @@ Limits, stated plainly:
   reboot. See [the case study](@K11@).
 - The ten-minute, 17.8 GB soak was run on an earlier fabric version and has not been repeated on the final one.
 - Everything was measured on one board.
-- The code is being prepared for public release; until then the labs describe commands that run from the repository.
+- The code is public: [github.com/ismailalitech/pfdaq](https://github.com/ismailalitech/pfdaq). The labs run from it.
 """
 
 EXPLORER_PAGE = """+++
@@ -422,10 +437,10 @@ def main():
                         convert_doc('docs/validation-plan.md', site) + results_extra(evidence)), written)
 
     # static: explorer, architecture data, evidence records, the experiment source
-    s = {'url': site.url, 'back': '/resources/pfdaq-explorer/', 'system': '/work/pfdaq-polarfire-soc/', 'yaml': '/pfdaq/architecture.yaml'}
+    s = {'root': BLOB, 'url': site.url, 'back': '/resources/pfdaq-explorer/', 'system': '/work/pfdaq-polarfire-soc/', 'yaml': '/pfdaq/architecture.yaml'}
     write(os.path.join(root, 'static/pfdaq/explorer/index.html'), E.build_html(arch, layout, mods, s), written)
     shutil.copy(os.path.join(C.DOCS, 'system', 'architecture.yaml'), os.path.join(root, 'static/pfdaq/architecture.yaml'))
-    for d in ('evidence', 'experiments'):
+    for d in ('evidence',):
         if os.path.isdir(os.path.join(C.ROOT, d)):
             shutil.copytree(os.path.join(C.ROOT, d), os.path.join(root, 'static/pfdaq', d))
     written.append(os.path.join(root, 'static/pfdaq'))

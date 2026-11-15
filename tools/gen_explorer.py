@@ -207,7 +207,7 @@ footer{max-width:1280px;margin:18px auto 0;color:var(--muted);font-size:.85rem}
 JS = r"""
 (function(){
 var D=JSON.parse(document.getElementById('data').textContent);
-var ROOT=D.site?null:'../../';
+var ROOT=D.root||(D.site?null:'../../');
 var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var stage=$('#stage'),panel=$('#panel'),tabs=$$('.tabs button'),sel=null,selKind=null,walk=null,stepI=0;
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
@@ -324,6 +324,7 @@ resetWalkUI();fromHash();
 def build_html(arch, layout, mods, site=None):
     data = build_data(arch, mods, site)
     data['site'] = bool(site)
+    data['root'] = site.get('root') if site else None
     b = arch['baseline']
     views = layout['views']
     svgs = ''.join('<div class="diagram-wrap"%s>%s</div>' % ('' if i == 0 else ' hidden', view_svg(v, arch)) for i, v in enumerate(views))
@@ -335,7 +336,7 @@ def build_html(arch, layout, mods, site=None):
     if site:
         back = '<p class="sub"><a href="%s">Back to the explorer page</a></p>' % site['back']
         sysurl = site['system']
-        foot = 'Every fact in this diagram comes from one data file, <a href="%s">architecture.yaml</a>. Source files are named by their path in the pfdaq repository.' % site['yaml']
+        foot = 'Every fact in this diagram comes from one data file, <a href="%s">architecture.yaml</a>. Source files link to the pfdaq repository.' % site['yaml']
     else:
         back = ''
         sysurl = 'README.md'
