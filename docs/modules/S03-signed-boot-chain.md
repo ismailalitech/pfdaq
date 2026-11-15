@@ -33,9 +33,7 @@ A signature is made over the whole image by the owner's private key. Anyone hold
 
 ## Part 1: a toy chain of trust
 
-```text
-ROM  --verifies-->  stage 1  --verifies-->  stage 2  --verifies-->  application
-```
+![A toy chain of trust: the ROM verifies stage 1, stage 1 verifies stage 2, stage 2 verifies the application. A failed check at any link halts the chain.](../diagrams/chain-of-trust.svg)
 
 The ROM holds only the root public key and the lowest version it will accept. Each image carries the public key for the next link inside the part its own signature covers. Algorithms: SHA-384 and ECDSA on curve P-384, the same as the boot monitor.
 
@@ -76,6 +74,8 @@ experiments/secure-boot-chain/sign_and_verify.sh
 ```
 
 The script makes throwaway keys, builds the payload unsigned and signed (`hss-payload-generator -c … -p …`), then verifies four images with the vendor tool (`-d … -u …`) and with `verify_boot_image.py`.
+
+![Signing and checking a boot payload offline: the payload and a private key go into hss-payload-generator, which produces a signed boot image. Both the vendor tool and an independent Python verifier check the image with the public key and report valid or not valid.](../diagrams/sign-and-verify.svg)
 
 ### What you should see
 

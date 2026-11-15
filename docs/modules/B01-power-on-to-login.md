@@ -30,15 +30,7 @@ After this page you can read a PolarFire SoC boot log and say which stage printe
 
 A system with several processors and several operating systems cannot just "start the CPU". Something has to bring up memory, decide which image runs on which core in which privilege mode, load those images, and start the cores in the right order. Each stage here does one part of that and then hands over to a stage that is bigger, slower to start and less trusted.
 
-```text
-power on
-  → system controller: configures the FPGA fabric, releases the processor subsystem
-  → E51 runs the Hart Software Services (HSS) from the chip's boot flash (eNVM)
-  → HSS trains DDR, reads the payload from the SD card, starts the four U54 cores
-        U54 1-3: OpenSBI → U-Boot → Linux          (supervisor mode)
-        U54 4:   the real-time supervisor directly   (machine mode, no OpenSBI)
-  → Linux attaches to the running supervisor through remoteproc
-```
+![Boot flow: power on, then the system controller, then the Hart Software Services on the E51. They start OpenSBI, U-Boot and Linux on harts 1 to 3, and the real-time supervisor on hart 4. Linux attaches to the supervisor through remoteproc.](../diagrams/boot-flow.svg)
 
 ## On this board
 

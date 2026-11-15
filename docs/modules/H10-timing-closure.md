@@ -63,7 +63,7 @@ How to read them:
 
 The checks are made for several corners. The build's own check (in `hw/libero/build.sh`) greps the tool's `has_violations` file for the `multi_corner` lines and stops if any says `violated`. The console record of the second analysis shows the corner combinations by name: `slow_lv_lt`, `fast_hv_lt` and `slow_lv_ht`, each with a maximum-delay (setup) and a minimum-delay (hold) report. The names read as process speed, voltage and temperature, for example "slow silicon, low voltage, low temperature". The project's notes record that setup and hold were met in all of them for v0.5.1.
 
-The same result as the vendor's GUI shows it, in the multi-corner max-delay report:
+The same result as the vendor's GUI shows it, in the multi-corner max-delay report (in Libero: Design, Reports, then Verify Timing, `max_timing_multi_corner.xml`):
 
 ![Libero Verify Timing report: required period, frequency and worst slack per clock domain](../../evidence/v0.5.1/build/libero-timing-summary.png)
 

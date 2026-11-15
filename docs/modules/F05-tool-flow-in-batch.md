@@ -100,7 +100,7 @@ The scripts drive the steps the GUI lists. The left panel of the GUI is the desi
 
 ![The Design Flow panel of Libero SoC 2026.1 with the project open](../../evidence/v0.5.1/build/libero-design-flow.png)
 
-The panel is a screenshot of the project's own build, opened read-only. The yellow triangles are Libero's status markers on steps that finished with warnings; this page does not interpret them one by one.
+The panel is a screenshot of the project's own build, opened read-only. To see it yourself: run `hw/libero/build.sh` once, start Libero and open `build/libero/work/PFDAQ/PFDAQ.prjx` (Project, Open Project). Opening a project can touch its files, so open a copy of the folder if you want the original left as it is. The yellow triangles are Libero's status markers on steps that finished with warnings; this page does not interpret them one by one.
 
 The design hierarchy of the same project shows what the build assembled: the reference design's four blocks, and under `FIC_0_PERIPHERALS` the one block this project adds, `pfdaq_core`, which is plain Verilog (`pfdaq_core.v`) and so has a different icon from the IP cores around it.
 

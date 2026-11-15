@@ -80,7 +80,7 @@ The shared L2 is split between ordinary cache, a scratchpad and a loosely integr
 
 The clock figures are what the fabric design supplies; module F04 shows where they come from. FIC1 and FIC2 are clocked but nothing in this project connects to them, and this page does not describe them further.
 
-The MSS Configurator, which Libero opens from the MSS component, shows the same choices. The fabric interface tab has FIC0 and FIC1 with both an initiator and a target interface, FIC2 with a target interface, and FIC3 (APB) with an initiator interface. Having an interface enabled is not the same as using it: as the table says, nothing in this project connects to FIC1 or FIC2.
+The MSS Configurator, which Libero opens from the MSS component, shows the same choices. To open it: in the Design Hierarchy double-click `MSS_WRAPPER`, then double-click the MSS block in the canvas that opens. Its tabs are the ones in the pictures. The fabric interface tab has FIC0 and FIC1 with both an initiator and a target interface, FIC2 with a target interface, and FIC3 (APB) with an initiator interface. Having an interface enabled is not the same as using it: as the table says, nothing in this project connects to FIC1 or FIC2.
 
 ![MSS Configurator, fabric interface controllers: FIC_0 to FIC_3 settings](../../evidence/v0.5.1/build/libero-mss-fics.png)
 
@@ -90,14 +90,7 @@ The peripherals tab lists what the MSS exposes on the board's pins. Highlighted 
 
 The picture to keep is this:
 
-```text
-  U54 harts ---- FIC3 (APB, registers) ----> fabric: pfdaq_core, mailbox, LEDs ...
-       |                                          |
-       |  ---- FIC0 (AXI4) <--- DMA writes -------+--> DDR through the MSS
-       |  <---- interrupt lines (F2M) ------------+
-       v
-      DDR (1 GB), shared by all harts and by the DMA
-```
+![How software and fabric are joined: the U54 harts reach fabric registers over FIC3 (APB, 50 MHz); the fabric's DMA writes into DDR over FIC0 (AXI4, 125 MHz) through the MSS; interrupt lines run from the fabric to the harts; the harts also load and store directly to DDR.](../diagrams/fabric-interfaces.svg)
 
 Interrupts take a third path: a wire from the fabric into the MSS, described in module F03.
 

@@ -220,9 +220,12 @@ def rewrite_links(text, src_file, site):
         if re.match(r'[a-z]+:', target):
             return m.group(0)
         rp = os.path.normpath(os.path.join(srcdir, target))
-        if not rp.startswith('evidence/'):
+        if rp.startswith('evidence/'):
+            url = '/pfdaq/' + rp
+        elif rp.startswith('docs/diagrams/'):
+            url = '/pfdaq/diagrams/' + os.path.basename(rp)
+        else:
             return m.group(0)
-        url = '/pfdaq/' + rp
         return '[![%s](%s)](%s)' % (alt, url, url)
     out = re.sub(r'(?<!!)\[([^\]]+)\]\(([^)\s]+)\)', fix, text)
     return re.sub(r'!\[([^\]]*)\]\(([^)\s]+)\)', fix_image, out)
@@ -546,6 +549,10 @@ def main():
     for d in ('evidence',):
         if os.path.isdir(os.path.join(C.ROOT, d)):
             shutil.copytree(os.path.join(C.ROOT, d), os.path.join(root, 'static/pfdaq', d))
+    os.makedirs(os.path.join(root, 'static/pfdaq/diagrams'), exist_ok=True)
+    for f in sorted(os.listdir(os.path.join(C.DOCS, 'diagrams'))):
+        if f.endswith('.svg'):
+            shutil.copy(os.path.join(C.DOCS, 'diagrams', f), os.path.join(root, 'static/pfdaq/diagrams', f))
     written.append(os.path.join(root, 'static/pfdaq'))
 
     # scan what was written for private patterns

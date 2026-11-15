@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 810 360" width="810" height="360" role="img" aria-labelledby="t d">
+<title id="t">Signing and checking a boot payload offline: the payload and a private key go into hss-payload-generator, which produces a signed boot image. Both the vendor tool and an independent Python verifier check the image with the public key and report valid or not valid.</title><desc id="d">Signing and checking a boot payload offline: the payload and a private key go into hss-payload-generator, which produces a signed boot image. Both the vendor tool and an independent Python verifier check the image with the public key and report valid or not valid.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl{opacity:0;animation:lit 17.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 17.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}7.39%{opacity:1}10.39%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="810" height="360" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M240,66 L295,66" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:1.30s" d="M240,66 L295,66" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e1">
+<path d="M515,66 L570,66" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.90s" d="M515,66 L570,66" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e2">
+<path d="M636,102 L636,146 L490,146 L490,190" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:6.50s" d="M636,102 L636,146 L490,146 L490,190" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e3">
+<path d="M724,102 L724,146 L700,146 L700,190" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:9.10s" d="M724,102 L724,146 L700,146 L700,190" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e4">
+<path d="M490,262 L490,275 L600,275 L600,288" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:11.70s" d="M490,262 L490,275 L600,275 L600,288" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e5">
+<path d="M700,262 L700,275 L600,275 L600,288" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:13.00s" d="M700,262 L700,275 L600,275 L600,288" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="payload">
+<rect x="20" y="30" width="220" height="72" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="130" y="53.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Payload</text>
+<text x="130" y="70.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">images + configuration</text>
+<text x="130" y="87.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">private key, kept offline</text>
+<rect class="hl" style="animation-delay:0.00s" x="19" y="29" width="222" height="74" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="signer">
+<rect x="295" y="30" width="220" height="72" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="405" y="53.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">hss-payload-generator</text>
+<text x="405" y="70.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">signs with the private key</text>
+<text x="405" y="87.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">SHA-384, ECDSA P-384</text>
+<rect class="hl" style="animation-delay:2.60s" x="294" y="29" width="222" height="74" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="signed">
+<rect x="570" y="30" width="220" height="72" rx="9" fill="#17382f" stroke="#4fd1a5" stroke-width="1.5"/>
+<text x="680" y="62" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Signed boot image</text>
+<text x="680" y="79" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">signature field inside</text>
+<rect class="hl" style="animation-delay:5.20s" x="569" y="29" width="222" height="74" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="vendor">
+<rect x="400" y="190" width="180" height="72" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="490" y="222" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Vendor tool</text>
+<text x="490" y="239" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">-d image -u key.der</text>
+<rect class="hl" style="animation-delay:7.80s" x="399" y="189" width="182" height="74" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="own">
+<rect x="610" y="190" width="180" height="72" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="700" y="222" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Independent verifier</text>
+<text x="700" y="239" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">digest, then signature</text>
+<rect class="hl" style="animation-delay:10.40s" x="609" y="189" width="182" height="74" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="verdict">
+<rect x="505" y="288" width="190" height="56" rx="9" fill="#17382f" stroke="#4fd1a5" stroke-width="1.5"/>
+<text x="600" y="312" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Verdict</text>
+<text x="600" y="329" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">VALID or NOT VALID</text>
+<rect class="hl" style="animation-delay:14.30s" x="504" y="287" width="192" height="58" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="214" text-anchor="start" font-size="12" fill="#9aa8b5">Both checkers hold only the public key</text>
+<text x="20" y="231" text-anchor="start" font-size="12" fill="#9aa8b5">(DER for the vendor tool).</text>
+</svg>

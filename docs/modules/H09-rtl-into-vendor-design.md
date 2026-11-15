@@ -112,6 +112,8 @@ The third hunk is the one with a trap: `organize_tool_files` replaces the tool's
 
 ### What it looks like in Libero
 
+To follow along, open the project (module F05 says how), choose the Design Hierarchy tab at the bottom left and double-click `MPFS_DISCOVERY_KIT`, `FIC_0_PERIPHERALS` and `FIC_3_PERIPHERALS` in turn. Each opens as a canvas.
+
 The reference design's top level is a SmartDesign canvas with four blocks: the clocks and resets, the MSS wrapper, and two blocks of fabric logic, one behind each fabric interface used here.
 
 ![Top-level SmartDesign canvas of the project: CLOCKS_AND_RESETS, MSS_WRAPPER, FIC_0_PERIPHERALS and FIC_3_PERIPHERALS](../../evidence/v0.5.1/build/libero-top-smartdesign.png)
