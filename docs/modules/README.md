@@ -40,8 +40,8 @@ Every module is one page with the same structure: what it teaches, what you need
 | [M05 Shared memory between Linux and a bare-metal hart](M05-shared-memory-linux-bare-metal.md)<br>Two contexts reading and writing the same DDR region, cached and non-cached, with the result checked from both sides. | 3 | shared baseline | validated |
 | [M06 remoteproc: attach, stop, and why restart fails here](M06-remoteproc-attach-stop.md)<br>What Linux can and cannot do to a hart it did not start. | 4 | read | validated |
 | [M07 Deferred interrupt handling, and a port that switches tasks inside the handler](M07-deferred-interrupt-handling.md)<br>Moving work from an interrupt handler to a task, and the detail of this FreeRTOS port that breaks the usual pattern. | 4 | shared baseline | validated |
-| M08 Three ways to signal another hart *(planned)*<br>RPMsg, a flag in shared memory and a software interrupt, compared by round-trip time. | 4 | shared baseline | planned |
-| M09 Fencing the real-time hart with physical memory protection *(planned)*<br>Locking the supervisor into its own memory, then proving the lock with a deliberate violation. | 5 | full system | planned |
+| [M08 Three ways to signal another hart](M08-three-ways-to-signal.md)<br>RPMsg, a flag in shared memory and an interrupt raised by a register write, compared by round-trip time between a Linux program and the real-time hart. | 4 | shared baseline | validated |
+| [M09 Fencing the real-time hart with physical memory protection](M09-fencing-the-real-time-hart-with-pmp.md)<br>Reading what the boot monitor left in the real-time hart's PMP, and a deliberate violation from user mode that proves whether a fence holds. | 5 | full system | validated |
 | [M10 A four-core monitoring station: acquire, analyse, report, protect](M10-four-core-monitoring-station.md)<br>Four cores with four different jobs, exchanging frames through shared memory and messages through RPMsg, with a protection trip on the real-time hart that stops the data source. | 4 | full system | validated |
 
 ## FPGA design
@@ -73,7 +73,7 @@ Every module is one page with the same structure: what it teaches, what you need
 | [I06 Capturing and verifying a stream](I06-capture-and-verify.md)<br>Checking every frame against a software model of the hardware, for three payload types. | 3 | shared baseline | validated |
 | [I07 Real-time capture with four descriptors and credits](I07-real-time-capture.md)<br>Keeping four transfers armed and paying the fabric one credit for each buffer handed back. | 4 | shared baseline | validated |
 | [I08 DMA into cached memory: when you need cache maintenance](I08-dma-cached-memory.md)<br>What a processor sees when hardware writes memory it has cached, measured through the cached and the non-cached window of the same DDR. | 4 | shared baseline | validated |
-| I09 Fabric DMA against the MSS DMA *(planned)*<br>Two DMA engines on one chip, compared on the same transfer. | 4 | shared baseline | planned |
+| [I09 Fabric DMA against the MSS DMA](I09-fabric-dma-vs-mss-dma.md)<br>Two DMA engines on one chip, compared on the same transfer: what the board offers for the hard MSS DMA, how a Linux program drives it without a kernel change, and what it costs in time and in processor time next to the fabric DMA and a plain memcpy. | 4 | shared baseline | validated |
 
 ## Performance and reliability
 
@@ -126,4 +126,4 @@ Every module is one page with the same structure: what it teaches, what you need
 |---|---|---|---|
 | [C01 Direct memory access](../concepts/C01-dma.md)<br>Why hardware writes memory by itself, what a descriptor is, and what it costs. | 1 | read | validated |
 
-70 modules, 67 written.
+70 modules, 70 written.

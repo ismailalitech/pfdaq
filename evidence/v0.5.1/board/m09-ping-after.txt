@@ -1,0 +1,21 @@
+ping 1: answered after 1824 us, supervisor state 0, hart 4 uptime 68937 ms
+ping 2: answered after 1739 us, supervisor state 0, hart 4 uptime 68941 ms
+ping 3: answered after 1908 us, supervisor state 0, hart 4 uptime 68945 ms
+ping 4: answered after 1968 us, supervisor state 0, hart 4 uptime 68949 ms
+ping 5: answered after 1853 us, supervisor state 0, hart 4 uptime 68953 ms
+ping 6: answered after 1879 us, supervisor state 0, hart 4 uptime 68957 ms
+ping 7: answered after 1924 us, supervisor state 0, hart 4 uptime 68961 ms
+ping 8: answered after 1932 us, supervisor state 0, hart 4 uptime 68965 ms
+ping 9: answered after 1843 us, supervisor state 0, hart 4 uptime 68969 ms
+ping 10: answered after 1886 us, supervisor state 0, hart 4 uptime 68973 ms
+ping 11: answered after 1889 us, supervisor state 0, hart 4 uptime 68977 ms
+ping 12: answered after 1887 us, supervisor state 0, hart 4 uptime 68981 ms
+ping 13: answered after 1889 us, supervisor state 0, hart 4 uptime 68985 ms
+ping 14: answered after 1891 us, supervisor state 0, hart 4 uptime 68989 ms
+ping 15: answered after 1890 us, supervisor state 0, hart 4 uptime 68993 ms
+ping 16: answered after 1892 us, supervisor state 0, hart 4 uptime 68997 ms
+ping 17: answered after 1889 us, supervisor state 0, hart 4 uptime 69001 ms
+ping 18: answered after 1889 us, supervisor state 0, hart 4 uptime 69005 ms
+ping 19: answered after 1890 us, supervisor state 0, hart 4 uptime 69009 ms
+ping 20: answered after 1893 us, supervisor state 0, hart 4 uptime 69013 ms
+{"experiment": "m09", "command": "ping", "sent": 20, "answered": 20}

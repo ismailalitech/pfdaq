@@ -22,3 +22,4 @@ __pycache__/
 # pre-restructure Libero and FlashPro working directories left on disk
 /fpga/
 /.private-patterns
+/experiments/*/build/

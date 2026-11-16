@@ -1,0 +1,2 @@
+run: result REFUSED (1), 0 access faults caught, ended 0 (1 = the test's own ecall), after 14125 us
+{"experiment": "m09", "command": "run", "answered": true, "result": "REFUSED", "faults": 0, "ended": 0, "active": 1, "locked": 1, "round_trip_us": 14125}

@@ -91,6 +91,12 @@ nodes:
     parent: mss
     summary: A hard GPIO block whose pins are routed through the fabric to the LEDs, DIP switches 5 to 8 and the Raspberry Pi header.
     facts: {address: "0x2012_2000"}
+  - id: mss-pdma
+    title: MSS PDMA
+    kind: mss-block
+    parent: mss
+    summary: The hard memory-to-memory DMA of the processor subsystem. Four channels, each with a done and an error interrupt. Linux binds the sf-pdma driver to it; the fabric DMA is a separate engine.
+    facts: {address: "0x0300_0000", size: "32 KiB", channels: "4", plic: "5 to 12"}
   - id: mss-uarts
     title: MMUART 0, 1 and 4
     kind: mss-block
@@ -247,6 +253,13 @@ nodes:
     kind: software
     parent: linux-kernel
     summary: Exposes the reserved DDR regions to user space as mappable devices.
+  - id: dma-proxy
+    title: dma-proxy (MSS DMA)
+    kind: software
+    parent: linux-kernel
+    summary: The vendor's character devices /dev/dma-proxy0 to 3. Two ioctls take physical source and destination addresses and a length, and run one PDMA memory-to-memory copy on that channel.
+    sources:
+      - {path: experiments/I09-dma-comparison/dma_compare.c, symbols: [op_pdma]}
   - id: remoteproc-rpmsg
     title: remoteproc and RPMsg
     kind: software
@@ -317,6 +330,8 @@ edges:
   - {id: hss-supervisor, from: hss, to: supervisor, kind: boot, label: "starts on hart 4 without OpenSBI"}
   - {id: uboot-linux, from: u-boot, to: linux-kernel, kind: boot, label: "kernel image from partition 1"}
   - {id: gpio-userio, from: mss-gpio2, to: user-io, kind: uses, label: "LEDs, DIP 5 to 8, header pins (through the fabric)"}
+  - {id: proxy-pdma, from: dma-proxy, to: mss-pdma, kind: uses, label: "one memory-to-memory copy per ioctl pair"}
+  - {id: pdma-ddr, from: mss-pdma, to: ddr-noncached, kind: mem, label: "copies between DDR buffers (any window)"}
   - {id: coregpio-userio, from: refdesign-peripherals, to: user-io, kind: uses, label: "LEDs (OR'd with MSS GPIO2)"}
   - {id: uart-debug, from: mss-uarts, to: debug-usb, kind: uart, label: "three consoles"}
   - {id: host-jtag, from: host, to: debug-usb, kind: jtag, label: "fabric programming, FABRIC and SNVM only"}

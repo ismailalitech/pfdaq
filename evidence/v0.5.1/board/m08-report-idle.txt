@@ -1,0 +1,21 @@
+m08_rtt: cpu 2 (Linux cpu N is hart N+1), shared block at 0xc9e00000, board
+running rpmsg-query ...
+running rpmsg-ping ...
+running flag ...
+running irq ...
+
+round trip in microseconds, 2000 trials per method after 50 warm-up, timeout 5000 us, grace 50 ms, gap 1000 us, cpu 2
+(clock_gettime cost on this cpu: about 2000 ns, included in every figure)
+
+method           ok  late  lost       min    median       p95       max
+rpmsg-query    2000     0     0    1803.0    1888.0    1900.0    3891.0
+rpmsg-ping     2000     0     0     827.0     890.0     900.0     926.0
+flag           2000     0     0       3.0       3.0       4.0       4.0
+             hart 4 counted 2050 answers for 2050 requests
+irq            2000     0     0       3.0       4.0       4.0       5.0
+             hart 4 counted 2050 answers for 2050 requests
+             fabric reading, interrupt raised to acknowledged: min 54 median 54 p95 65 max 74 cycles (2000 samples; 20 ns per cycle if PCLK is 50 MHz)
+{"experiment": "m08", "method": "rpmsg-query", "cpu": 2, "trials": 2000, "ok": 2000, "late": 0, "lost": 0, "min_us": 1803.0, "median_us": 1888.0, "p95_us": 1900.0, "max_us": 3891.0, "timeout_us": 5000, "gap_us": 1000, "hart4_answers": -1, "sim": false}
+{"experiment": "m08", "method": "rpmsg-ping", "cpu": 2, "trials": 2000, "ok": 2000, "late": 0, "lost": 0, "min_us": 827.0, "median_us": 890.0, "p95_us": 900.0, "max_us": 926.0, "timeout_us": 5000, "gap_us": 1000, "hart4_answers": -1, "sim": false}
+{"experiment": "m08", "method": "flag", "cpu": 2, "trials": 2000, "ok": 2000, "late": 0, "lost": 0, "min_us": 3.0, "median_us": 3.0, "p95_us": 4.0, "max_us": 4.0, "timeout_us": 5000, "gap_us": 1000, "hart4_answers": 2050, "sim": false}
+{"experiment": "m08", "method": "irq", "cpu": 2, "trials": 2000, "ok": 2000, "late": 0, "lost": 0, "min_us": 3.0, "median_us": 4.0, "p95_us": 4.0, "max_us": 5.0, "timeout_us": 5000, "gap_us": 1000, "hart4_answers": 2050, "sim": false}

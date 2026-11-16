@@ -1,0 +1,76 @@
+## kernel
+Linux mpfs-disco-kit-amp 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d-dirty #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux
+## uptime
+ 07:02:16 up  4:41,  0 user,  load average: 0.05, 0.01, 0.00
+## devicetree: PDMA node
+compatible: microchip,mpfs-pdma sifive,pdma0 
+dma-channels:  0 0 0 4  (big-endian bytes)
+reg (bytes, big-endian):  00 00 00 00 03 00 00 00 00 00 00 00 00 00 80 00
+interrupts (bytes, big-endian):  00 00 00 05 00 00 00 06 00 00 00 07 00 00 00 08
+ 00 00 00 09 00 00 00 0a 00 00 00 0b 00 00 00 0c
+## devicetree: dma-proxy node
+compatible: microchip,mpfs-dma-proxy 
+dma-names: dma-proxy0 dma-proxy1 dma-proxy2 dma-proxy3 
+## drivers bound
+/sys/bus/platform/drivers/mpfs_dma_proxy:
+bind
+mpfs-dma-proxy
+uevent
+unbind
+
+/sys/bus/platform/drivers/sf-pdma:
+3000000.dma-controller
+bind
+uevent
+unbind
+## /sys/class/dma
+dma0chan0 in_use=1 memcpy_count=0 bytes_transferred=0
+dma0chan1 in_use=1 memcpy_count=0 bytes_transferred=0
+dma0chan2 in_use=1 memcpy_count=0 bytes_transferred=0
+dma0chan3 in_use=1 memcpy_count=0 bytes_transferred=0
+## device nodes
+crw------- 1 root root 241, 0 Nov 16 02:20 /dev/dma-proxy0
+crw------- 1 root root 240, 0 Nov 16 02:20 /dev/dma-proxy1
+crw------- 1 root root 239, 0 Nov 16 02:20 /dev/dma-proxy2
+crw------- 1 root root 238, 0 Nov 16 02:20 /dev/dma-proxy3
+crw------- 1 root root 236, 0 Nov 16 02:20 /dev/udmabuf-ddr-c0
+crw------- 1 root root 236, 2 Nov 16 02:20 /dev/udmabuf-ddr-nc-wcb0
+crw------- 1 root root 236, 1 Nov 16 02:20 /dev/udmabuf-ddr-nc0
+## kernel config (DMA engine, PDMA, proxy, dmatest)
+CONFIG_NO_HZ_IDLE=y
+CONFIG_RISCV_DMA_NONCOHERENT=y
+CONFIG_MPFS_DMA_NONCOHERENT=y
+CONFIG_HZ=250
+CONFIG_MPFS_DMA_PROXY=y
+CONFIG_DMADEVICES=y
+CONFIG_DMA_ENGINE=y
+CONFIG_SF_PDMA=y
+# CONFIG_DMATEST is not set
+# CONFIG_UDMABUF is not set
+CONFIG_UIO_MICROCHIP_DMA=y
+## modules loaded
+Module                  Size  Used by
+rpmsg_ctrl             12288  0
+u_dma_buf              65536  0
+rpmsg_char             24576  1 rpmsg_ctrl
+autofs4                90112  0
+## /proc/iomem (PDMA)
+03000000-03007fff : 3000000.dma-controller dma-controller@3000000
+## interrupts with dma in the name
+ 81:        674          0          0 SiFive PLIC 120 Edge      dma-controller@60010000
+ 96:       2021          0          0 SiFive PLIC   5 Edge      3000000.dma-controller
+ 97:          0          0          0 SiFive PLIC   6 Edge      3000000.dma-controller
+ 98:         28          0          0 SiFive PLIC   7 Edge      3000000.dma-controller
+ 99:          0          0          0 SiFive PLIC   8 Edge      3000000.dma-controller
+100:         28          0          0 SiFive PLIC   9 Edge      3000000.dma-controller
+101:          0          0          0 SiFive PLIC  10 Edge      3000000.dma-controller
+102:         28          0          0 SiFive PLIC  11 Edge      3000000.dma-controller
+103:          0          0          0 SiFive PLIC  12 Edge      3000000.dma-controller
+## u-dma-buf regions
+udmabuf-ddr-c0 phys=0x0000000088000000 size=33554432
+udmabuf-ddr-nc0 phys=0x00000000c8000000 size=33554432
+udmabuf-ddr-nc-wcb0 phys=0x00000000d8000000 size=33554432
+## cpus online
+0-2
+## remoteproc
+attached

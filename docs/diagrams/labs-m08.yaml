@@ -1,0 +1,97 @@
+# Figures of module M08 (three ways to signal another hart). No figure shows a measurement: the experiment has not been run on the board.
+# Edit by hand; run tools/gen_diagrams.py afterwards.
+
+- id: lab-m08-three-paths
+  alt: "One Linux program pinned to a cpu signals hart 4 three ways and waits for the answer. RPMsg: the program writes to the rpmsg device, the message goes through the shared rings and the Mi-V inter-hart interrupt wakes the supervisor task, which answers through the rings. Flag: the program writes req in a 4 KiB page of the non-cached DDR window at 0xC9E00000 and hart 4, polling inside one RPMsg call, writes ack. Interrupt: the program writes irq_req in the same page and then writes CTRL.ONESHOT of latency channel 1 in the fabric, which raises F2M 5, PLIC source 123, taken by hart 4 in machine mode; the handler writes irq_ack."
+  width: 900
+  height: 470
+  step: 1.2
+  nodes:
+    prog:  {x: 10,  y: 190, w: 170, h: 90, kind: sw,     title: "m08_rtt", sub: "pinned to one cpu\nCLOCK_MONOTONIC"}
+    dev:   {x: 250, y: 30,  w: 170, h: 70, kind: sw,     title: "/dev/rpmsgN", sub: "write, poll, read"}
+    rings: {x: 470, y: 30,  w: 170, h: 70, kind: mem,    title: "Shared rings", sub: "0x91D0_0000"}
+    ihc:   {x: 690, y: 30,  w: 200, h: 70, kind: mss,    title: "Mi-V IHC interrupt", sub: "mailbox doorbell"}
+    page:  {x: 400, y: 200, w: 250, h: 70, kind: mem,    title: "Page in the non-cached window", sub: "0xC9E0_0000, four words used"}
+    poll:  {x: 690, y: 200, w: 200, h: 70, kind: hart,   title: "Hart 4 polls", sub: "inside one RPMsg call"}
+    reg:   {x: 250, y: 370, w: 170, h: 70, kind: fabric, title: "Latency channel 1", sub: "CTRL.ONESHOT"}
+    plic:  {x: 470, y: 370, w: 170, h: 70, kind: mss,    title: "F2M 5 to the PLIC", sub: "source 123, hart 4"}
+    isr:   {x: 690, y: 370, w: 200, h: 70, kind: hart,   title: "Hart 4 handler", sub: "writes irq_ack, then ACK"}
+  edges:
+    - {from: prog.top@0.7,    to: dev.left}
+    - {from: dev.right,       to: rings.left}
+    - {from: rings.right,     to: ihc.left}
+    - {from: prog.right,      to: page.left, label: "req / irq_req"}
+    - {from: page.right,      to: poll.left}
+    - {from: prog.bottom@0.7, to: reg.left}
+    - {from: reg.right,       to: plic.left}
+    - {from: plic.right,      to: isr.left}
+  steps: [prog, e0, dev, e1, rings, e2, ihc, e3, page, e4, poll, e5, reg, e6, plic, e7, isr]
+  notes:
+    - {x: 250, y: 16,  text: "1  RPMsg: message through the rings and the mailbox", bold: true}
+    - {x: 400, y: 186, text: "2  Flag: both sides read and write the same word", bold: true}
+    - {x: 250, y: 356, text: "3  Interrupt: one register write raises a fabric interrupt", bold: true}
+    - {x: 10,  y: 450, text: "The answer of every method is a word in the page or a message back; the program stops its clock when it sees it."}
+
+- id: lab-m08-no-sbi-ipi
+  alt: "Why a software interrupt by SBI inter-processor interrupt cannot reach hart 4 from Linux. A user program cannot make an SBI call at all, only the kernel can. The kernel has no cpu for hart 4, because the device tree disables cpu4. And OpenSBI, which the boot monitor registers one domain per payload, sends an inter-processor interrupt only to harts that are in the sender's domain; the Linux domain's hart mask is 0xe, harts 1 to 3, and hart 4 runs outside OpenSBI. The nearest mechanisms that exist: the mailbox doorbell, reachable only through the kernel's driver and therefore through RPMsg, and a fabric interrupt raised by a register write, reachable from user space."
+  width: 900
+  height: 410
+  step: 1.4
+  nodes:
+    user:  {x: 10,  y: 40,  w: 190, h: 80, kind: sw,   title: "User program", sub: "an ecall here is a\nsystem call, not SBI"}
+    kern:  {x: 255, y: 40,  w: 190, h: 80, kind: sw,   title: "Linux kernel", sub: "cpu4 is disabled in the\ndevice tree: no cpu 4"}
+    sbi:   {x: 500, y: 40,  w: 190, h: 80, kind: mss,  title: "OpenSBI, Linux domain", sub: "possible harts 0xe\n(harts 1, 2, 3)"}
+    h4:    {x: 745, y: 40,  w: 145, h: 80, kind: bad,  title: "Hart 4", sub: "outside OpenSBI,\nno IPI arrives"}
+    ihc:   {x: 255, y: 160, w: 190, h: 80, kind: mss,  title: "Mailbox doorbell", sub: "SBI vendor call in\nthe kernel mailbox driver"}
+    fab:   {x: 500, y: 270, w: 190, h: 80, kind: fabric, title: "Fabric interrupt", sub: "register write from\nuser space, source 123"}
+  edges:
+    - {from: user.right, to: kern.left, kind: bad}
+    - {from: kern.right, to: sbi.left, kind: bad}
+    - {from: sbi.right,  to: h4.left, kind: bad}
+    - {from: kern.bottom, to: ihc.top}
+    - {from: user.bottom@0.8, to: fab.left}
+    - {from: fab.right@0.5, to: h4.bottom@0.4}
+  steps: [user, e0, kern, e1, sbi, e2, h4, e3, ihc, e4, fab, e5]
+  notes:
+    - {x: 10,  y: 24,  text: "SBI send_ipi to hart 4: three places where it stops", bold: true}
+    - {x: 10,  y: 385, text: "Red arrows do not exist on this board. The doorbell is what RPMsg already uses; the fabric interrupt is the one used here."}
+
+- id: lab-m08-answer-code
+  type: terminal
+  title: 'pfdaq_m08.h: the two answering routines of hart 4'
+  alt: The two routines of hart 4 that answer. The polling loop m08_poll reads req and, when it has changed, writes the same value to ack, and looks at the clock only every 256 passes. The interrupt hook m08_irq_answer copies irq_req to irq_ack and counts the interrupt, before the handler acknowledges the fabric interrupt.
+  width: 900
+  height: 540
+  step: 3.6
+  lines:
+  - '    while (!s->stop) {'
+  - '        uint32_t r = s->req;'
+  - '        if (r != last) {'
+  - '            s->ack = r;'
+  - '            last = r;'
+  - '            answers++;'
+  - '        }'
+  - '        if (((++spin) & 0xFFu) == 0 && (uint32_t)(now_ms() - t0) >= max_ms) {'
+  - '            *timed_out = 1;'
+  - '            break;'
+  - '        }'
+  - '    }'
+  - ''
+  - 'static inline void m08_irq_answer(volatile struct m08_shm *s)'
+  - '{'
+  - '    s->irq_ack = s->irq_req;'
+  - '    s->irq_count = s->irq_count + 1u;'
+  - '}'
+  callouts:
+  - lines: [1, 3]
+    title: Notice the change
+    text: One load of req per pass. Linux wrote it with a store, so the answer cannot start before the store has reached DDR.
+  - lines: [4, 5]
+    title: Answer
+    text: One store to ack. The clock is not read on this path, so it adds nothing to the time being measured.
+  - lines: [7, 10]
+    title: Never forever
+    text: Every 256 passes the loop looks at the clock, so a Linux that never sets stop cannot hold hart 4 for more than 10 s.
+  - lines: [13, 17]
+    title: The interrupt method
+    text: Called from the handler before it writes ACK. Linux wrote irq_req before it raised the interrupt, so the copy is the answer.
