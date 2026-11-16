@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 760" width="900" height="760" role="img" aria-labelledby="t d">
+<title id="t">coverage.txt from make -C hw sim-assert, only the bins with count 0</title><desc id="d">The 28 coverage bins that none of the 21 runs of the stream testbench reached, out of 89. They include payload sizes above 500 words and the maximum 65535, runs of a single frame, real-time runs with RATE below 20 or with a single destination, more than one dropped slot before a frame, five of the nine fault by payload-mode combinations, an abort before the first beat or while the sink is stalling, and an abort received while the source waits for a real-time slot or fills the FIR pipeline.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 22.40s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 22.40s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}15.18%{opacity:1}18.18%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="760" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="654" fill="#0d1117"/>
+<rect x="0" y="0" width="900" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="450" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">coverage.txt from make -C hw sim-assert, only the bins with count 0</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">grep "NOT HIT" coverage.txt</tspan></text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  17 payload words per frame      501 to 65534                                          0  NOT HIT</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  18 payload words per frame      65535 (maximum)                                       0  NOT HIT</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  19 frames per run               1                                                     0  NOT HIT</text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  22 frames per run               65 or more                                            0  NOT HIT</text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  25 4-byte last beat (TKEEP 0F)  real-time                                             0  NOT HIT</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  31 kind x payload mode          TLAST per frame, FIR                                  0  NOT HIT</text>
+<text x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  39 real-time destinations       1 destination (TDEST_COUNT 1)                         0  NOT HIT</text>
+<text x="24" y="218" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  43 real-time RATE (clocks)      2 (minimum)                                           0  NOT HIT</text>
+<text x="24" y="238" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  44 real-time RATE (clocks)      3 to 19                                               0  NOT HIT</text>
+<text x="24" y="258" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  49 slots dropped before a frame 2 or 3 dropped                                        0  NOT HIT</text>
+<text x="24" y="278" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  50 slots dropped before a frame 4 or more dropped                                     0  NOT HIT</text>
+<text x="24" y="298" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  53 real-time drop reason        probe: abort pending                                  0  NOT HIT</text>
+<text x="24" y="318" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  56 GAP_CYCLES (TLAST per frame) 8 to 399                                              0  NOT HIT</text>
+<text x="24" y="338" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  59 fault x payload mode         corrupt CRC, PRBS                                     0  NOT HIT</text>
+<text x="24" y="358" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  60 fault x payload mode         corrupt CRC, FIR                                      0  NOT HIT</text>
+<text x="24" y="378" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  62 fault x payload mode         skip sequence number, PRBS                            0  NOT HIT</text>
+<text x="24" y="398" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  63 fault x payload mode         skip sequence number, FIR                             0  NOT HIT</text>
+<text x="24" y="418" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  66 fault x payload mode         flip payload bit, FIR                                 0  NOT HIT</text>
+<text x="24" y="438" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  67 CTRL.ABORT in run kind       burst, no packet open                                 0  NOT HIT</text>
+<text x="24" y="458" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  70 CTRL.ABORT in run kind       TLAST per frame, packet open                          0  NOT HIT</text>
+<text x="24" y="478" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  71 CTRL.ABORT in run kind       real-time, no packet open                             0  NOT HIT</text>
+<text x="24" y="498" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  73 CTRL.ABORT when              TVALID high and TREADY low (stalled)                  0  NOT HIT</text>
+<text x="24" y="518" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  74 CTRL.ABORT when              no beat of the run sent yet                           0  NOT HIT</text>
+<text x="24" y="538" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  75 abort received in state      probe: PREFILL (FIR filling)                          0  NOT HIT</text>
+<text x="24" y="558" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  76 abort received in state      probe: RTWAIT (real-time, waiting)                    0  NOT HIT</text>
+<text x="24" y="578" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  79 abort received in state      probe: FILL (zero fill)                               0  NOT HIT</text>
+<text x="24" y="598" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  80 abort received in state      probe: IDLE (ignored)                                 0  NOT HIT</text>
+<text x="24" y="618" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">COV  82 FORCE_ABORT when             TVALID low                                            0  NOT HIT</text>
+<rect x="0" y="654" width="900" height="106" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="63" width="884" height="83" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="65" r="11" fill="#ffd166"/><text x="8" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="654" width="900" height="106" fill="#12171d"/>
+<circle cx="24" cy="680" r="13" fill="#ffd166"/><text x="24" y="685" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="678" font-size="15" font-weight="bold" fill="#e6ecf1">Sizes</text>
+<text x="48" y="698" font-size="13" fill="#9aa8b5">Payload stops at 500 words (legal up to 65535). Runs have 3 to 50 frames, never 1 and never more than 64.</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="8" y="143" width="884" height="43" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="145" r="11" fill="#ffd166"/><text x="8" y="149" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="654" width="900" height="106" fill="#12171d"/>
+<circle cx="24" cy="680" r="13" fill="#ffd166"/><text x="24" y="685" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="678" font-size="15" font-weight="bold" fill="#e6ecf1">Odd length and FIR</text>
+<text x="48" y="698" font-size="13" fill="#9aa8b5">No real-time frame has an odd length; no per-frame-TLAST run uses the FIR payload.</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="8" y="183" width="884" height="143" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="185" r="11" fill="#ffd166"/><text x="8" y="189" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="654" width="900" height="106" fill="#12171d"/>
+<circle cx="24" cy="680" r="13" fill="#ffd166"/><text x="24" y="685" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="678" font-size="15" font-weight="bold" fill="#e6ecf1">Real-time shapes</text>
+<text x="48" y="698" font-size="13" fill="#9aa8b5">RATE is 20 at the lowest (legal: 2), never one destination; never 2 or more slots dropped between two frames.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="8" y="323" width="884" height="103" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="325" r="11" fill="#ffd166"/><text x="8" y="329" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="654" width="900" height="106" fill="#12171d"/>
+<circle cx="24" cy="680" r="13" fill="#ffd166"/><text x="24" y="685" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="678" font-size="15" font-weight="bold" fill="#e6ecf1">Faults by mode</text>
+<text x="48" y="698" font-size="13" fill="#9aa8b5">5 of the 9 fault and payload-mode pairs never occur: for example a CRC fault is only injected in counter mode.</text>
+</g>
+<g class="co" style="animation-delay:13.60s"><rect x="8" y="423" width="884" height="103" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="425" r="11" fill="#ffd166"/><text x="8" y="429" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="co cap" style="animation-delay:13.60s">
+<rect x="0" y="654" width="900" height="106" fill="#12171d"/>
+<circle cx="24" cy="680" r="13" fill="#ffd166"/><text x="24" y="685" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
+<text x="48" y="678" font-size="15" font-weight="bold" fill="#e6ecf1">Abort timing</text>
+<text x="48" y="698" font-size="13" fill="#9aa8b5">No abort before the first beat of a run, none while the sink stalls the source, none in a per-frame run mid-packet.</text>
+</g>
+<g class="co" style="animation-delay:17.00s"><rect x="8" y="523" width="884" height="103" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="525" r="11" fill="#ffd166"/><text x="8" y="529" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">6</text></g>
+<g class="co cap" style="animation-delay:17.00s">
+<rect x="0" y="654" width="900" height="106" fill="#12171d"/>
+<circle cx="24" cy="680" r="13" fill="#ffd166"/><text x="24" y="685" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">6</text>
+<text x="48" y="678" font-size="15" font-weight="bold" fill="#e6ecf1">Abort and FORCE_ABORT</text>
+<text x="48" y="698" font-size="13" fill="#9aa8b5">No abort arrives while the source pre-fills the FIR or waits for a slot; the one FORCE_ABORT came with TVALID high.</text>
+</g>
+</svg>

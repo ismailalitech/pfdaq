@@ -1,0 +1,42 @@
+# Replay in a second, empty project (batch, no GUI): libero SCRIPT:replay.tcl
+# replay.tcl is the GUI-exported session script (libero-ip-session.tcl) with three changes:
+#   1. open_project replaced by the new_project command of the empty starting project
+#   2. the two file paths in import_files / create_hdl_core pointed at the second project
+#   3. one line added, 'build_design_hierarchy', before the last set_root
+#
+# First run without change 3 stopped at the synthesis step:
+Error while executing command set_top_level: ERR0014: Unable to find top level demo_top in library work
+Error:  The command 'update_and_run_tool' failed.
+#
+# Run with change 3 ended with:
+The demo project was closed.
+The Execute Script command succeeded.
+#
+# Resource usage of the replayed synthesis against the GUI run (same numbers):
+[demo/demo]
+CFG1           1 use
+CFG2           10 uses
+CFG3           6 uses
+CFG4           8 uses
+ARI1            49 uses - used for arithmetic functions
+SLE            50 uses
+I/O ports: 37
+Total LUTs:    74
+Mapper successful!
+[replay/proj2]
+CFG1           1 use
+CFG2           10 uses
+CFG3           6 uses
+CFG4           8 uses
+ARI1            49 uses - used for arithmetic functions
+SLE            50 uses
+I/O ports: 37
+Total LUTs:    74
+Mapper successful!
+#
+# The hand-cleaned script, experiments/libero-ip/create_ip_demo.tcl, run in a third empty directory:
+The Execute Script command succeeded.
+SLE            50 uses
+I/O ports: 37
+Total LUTs:    74
+Mapper successful!

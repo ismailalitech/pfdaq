@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 400" width="940" height="400" role="img" aria-labelledby="t d">
+<title id="t">cached_dma on the board: the same 16 KiB burst, three ways (fields marked ... left out)</title><desc id="d">Three recorded runs with the processor holding modified cache lines of the buffer. With the DMA writing through the cached window the processor reads 4,064 of 4,064 words new. With the DMA writing through the non-cached window the processor reads 4,033 old words and DDR ends up with only 31 new words. With the same non-cached window and a read of 8 MiB before and after, all 4,064 words are new.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 23.60s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 23.60s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}15.25%{opacity:1}18.25%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="940" height="400" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="940" height="294" fill="#0d1117"/>
+<rect x="0" y="0" width="940" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="470" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">cached_dma on the board: the same 16 KiB burst, three ways (fields marked ... left out)</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">cached_dma -S dirty -f 16 -D c</tspan></text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"state": "dirty", "dma_window": "cached", "maintenance": "none", "frames": 16, ..., "counted_words": 4064,</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "c1_cached_view": {"new": 4064, "old": 0, ...}, "nc1_ddr_view": {"new": 348, "old": 16, "pre": 3700, ...},</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "nc2_ddr_after_8MiB_read": {"new": 4064, "old": 0, "pre": 0, "other": 0}}</text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">cached_dma -S dirty -f 16 -D nc</tspan></text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"state": "dirty", "dma_window": "non-cached", "maintenance": "none", "frames": 16, ..., "counted_words": 4064,</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "c1_cached_view": {"new": 31, "old": 4033, ...}, "nc1_ddr_view": {"new": 3731, "old": 333, ...},</text>
+<text x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "nc2_ddr_after_8MiB_read": {"new": 31, "old": 4033, "pre": 0, "other": 0}}</text>
+<text x="24" y="218" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">cached_dma -S dirty -f 16 -D nc -M evict</tspan></text>
+<text x="24" y="238" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"state": "dirty", "dma_window": "non-cached", "maintenance": "evict", "frames": 16, ..., "counted_words": 4064,</text>
+<text x="24" y="258" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "c1_cached_view": {"new": 4064, "old": 0, ...}, "nc2_ddr_after_8MiB_read": {"new": 4064, "old": 0, ...}}</text>
+<rect x="0" y="294" width="940" height="106" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="43" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="45" r="11" fill="#ffd166"/><text x="8" y="49" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="294" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="320" r="13" fill="#ffd166"/><text x="24" y="325" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="318" font-size="15" font-weight="bold" fill="#e6ecf1">Dirty lines, cached window</text>
+<text x="48" y="338" font-size="13" fill="#9aa8b5">The program wrote OLD into the buffer through the cache; the DMA then writes the same addresses.</text>
+</g>
+<g class="co" style="animation-delay:3.60s"><rect x="8" y="83" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="85" r="11" fill="#ffd166"/><text x="8" y="89" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.60s">
+<rect x="0" y="294" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="320" r="13" fill="#ffd166"/><text x="24" y="325" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="318" font-size="15" font-weight="bold" fill="#e6ecf1">No stale word</text>
+<text x="48" y="338" font-size="13" fill="#9aa8b5">The cached read returns 4,064 new words. DDR itself holds only 348 of them yet: the rest is still in the cache.</text>
+</g>
+<g class="co" style="animation-delay:7.20s"><rect x="8" y="103" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="105" r="11" fill="#ffd166"/><text x="8" y="109" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:7.20s">
+<rect x="0" y="294" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="320" r="13" fill="#ffd166"/><text x="24" y="325" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="318" font-size="15" font-weight="bold" fill="#e6ecf1">Written back</text>
+<text x="48" y="338" font-size="13" fill="#9aa8b5">After the program reads 8 MiB elsewhere, DDR holds all 4,064 new words.</text>
+</g>
+<g class="co" style="animation-delay:10.80s"><rect x="8" y="123" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="125" r="11" fill="#ffd166"/><text x="8" y="129" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.80s">
+<rect x="0" y="294" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="320" r="13" fill="#ffd166"/><text x="24" y="325" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="318" font-size="15" font-weight="bold" fill="#e6ecf1">Same lines, non-cached window</text>
+<text x="48" y="338" font-size="13" fill="#9aa8b5">Same preparation, but the DMA is pointed at the non-cached alias of the same DDR bytes.</text>
+</g>
+<g class="co" style="animation-delay:14.40s"><rect x="8" y="163" width="924" height="43" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="165" r="11" fill="#ffd166"/><text x="8" y="169" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="co cap" style="animation-delay:14.40s">
+<rect x="0" y="294" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="320" r="13" fill="#ffd166"/><text x="24" y="325" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
+<text x="48" y="318" font-size="15" font-weight="bold" fill="#e6ecf1">Stale, then destroyed</text>
+<text x="48" y="338" font-size="13" fill="#9aa8b5">The cached read returns 4,033 old words; after the cache lines are written back DDR holds only 31 new ones.</text>
+</g>
+<g class="co" style="animation-delay:18.00s"><rect x="8" y="203" width="924" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="205" r="11" fill="#ffd166"/><text x="8" y="209" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">6</text></g>
+<g class="co cap" style="animation-delay:18.00s">
+<rect x="0" y="294" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="320" r="13" fill="#ffd166"/><text x="24" y="325" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">6</text>
+<text x="48" y="318" font-size="15" font-weight="bold" fill="#e6ecf1">Maintenance by eviction</text>
+<text x="48" y="338" font-size="13" fill="#9aa8b5">Reading 8 MiB before and after the DMA flushes then drops the lines: all 4,064 words are new.</text>
+</g>
+</svg>

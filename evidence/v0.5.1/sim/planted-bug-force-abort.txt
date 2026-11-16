@@ -1,0 +1,31 @@
+CHECK FAIL rule 17 FORCE_STOP at 234740 ns, scenario 99, info 0x00000000
+CHECK FAIL rule 17 FORCE_STOP at 234748 ns, scenario 99, info 0x00000000
+CHECK FAIL rule 17 FORCE_STOP at 234756 ns, scenario 99, info 0x00000000
+CHECK FAIL rule 17 FORCE_STOP at 234764 ns, scenario 99, info 0x00000000
+CHECK FAIL rule 5 VALID_GAP at 234948 ns, scenario 19, info 0x00000002
+CHECK FAIL rule 5 VALID_GAP at 234956 ns, scenario 19, info 0x00000002
+CHECK FAIL rule 5 VALID_GAP at 234964 ns, scenario 19, info 0x00000002
+CHECK FAIL rule 5 VALID_GAP at 234972 ns, scenario 19, info 0x00000002
+CHECK FAIL rule 7 SEQ at 235988 ns, scenario 19, info 0x000000d3
+CHECK rule summary: violations per rule over the whole run
+CHECK rule  1 VALID_DROP   0
+CHECK rule  2 DATA_STABLE  0
+CHECK rule  3 SIDE_STABLE  0
+CHECK rule  4 KEEP         0
+CHECK rule  5 VALID_GAP    126
+CHECK rule  6 MAGIC        0
+CHECK rule  7 SEQ          1
+CHECK rule  8 TIMESTAMP    0
+CHECK rule  9 TLAST_EARLY  0
+CHECK rule 10 TLAST_LATE   0
+CHECK rule 11 TLAST_LONG   0
+CHECK rule 12 TDEST        0
+CHECK rule 13 FILL_ZERO    0
+CHECK rule 14 RUN_PACKETS  0
+CHECK rule 15 RUN_FRAMES   0
+CHECK rule 16 PKT_OPEN     0
+CHECK rule 17 FORCE_STOP   26
+CHECK rule 18 UNDERRUN     0
+CHECK total violations 153
+ASSERT RESULT: FAIL (153 violations)
+trace checker (check_trace.py): RESULT: FAIL

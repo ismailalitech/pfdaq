@@ -266,3 +266,429 @@ results:
     command: "Constraint Manager, tab Timing"
     conditions: Screenshot of Libero SoC 2026.1 on the development PC, taken from a copy of the project built from the restructured layout (design version 7). The dialog was closed with Cancel; nothing was built, saved or programmed.
 
+  - id: i08-cached-dma-matrix
+    title: "Raw output of the cached-DMA experiment: one JSON line per run, 199 lines, ten runs per main condition"
+    file: board/i08-cached-dma-matrix.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "sh experiments/I08-dma-cached-memory/run_all.sh 10 on the board, as root, after pfdaq_cap -L 0 (cached_dma built statically with a RISC-V Linux GCC)"
+    conditions: "Proven pfdaq-v051 image, FreeRTOS on hart 4, board idle, nothing else using the stream source or the DMA controller. Test area at offset 0x40_0000 of udmabuf-ddr-c0 and udmabuf-ddr-nc0 (the same DDR bytes). Ten runs per condition; five for the maintenance variants and the throughput comparison; three for the read speed."
+  - id: i08-cached-dma-summary
+    title: "Per-condition minimum, mean and maximum of the cached-DMA runs"
+    file: board/i08-cached-dma-summary.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "python3 summary of board/i08-cached-dma-matrix.txt (computed on the development PC, no new board run)"
+    conditions: "Words are counted per classification (new, old, pre, other); 'other' was zero in every run and is left out of the lines."
+  - id: i08-cached-dma-figure-runs
+    title: "Five single runs of cached_dma used for the figures and the page"
+    file: board/i08-cached-dma-figure-runs.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "cached_dma -S dirty -f 16 -D c; -D nc; -D nc -M evict; -S control -f 16; -S partial -D c, run in this order on the board"
+    conditions: "Same board state as the matrix; the sequence number of the stream source continues from the earlier runs."
+  - id: i08-board-state
+    title: "Kernel, instruction set, L2 cache and u-dma-buf attributes of the board when the cached-DMA runs were made"
+    file: board/i08-board-state.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "uname -r; grep isa /proc/cpuinfo; dmesg | grep CCACHE; the u-dma-buf attributes of the two devices; four options of /proc/config.gz"
+    conditions: "Proven pfdaq-v051 image, read after the runs."
+  - id: sim-assert
+    title: "Stream source simulation with 18 protocol checks: no violation in 21 runs, the existing trace checker also passes"
+    file: sim/assert-results.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: make -C hw sim-assert
+    conditions: "Icarus Verilog 12.0, iverilog -g2012. The unchanged stream testbench runs inside tb_pfdaq_assert; its trace is byte-identical to the one of make -C hw sim-stream. Four runs gave byte-identical results, coverage and trace (md5sum)."
+  - id: sim-assert-coverage
+    title: "Functional coverage of the stream source: 61 of 89 bins hit, 28 never reached"
+    file: sim/coverage.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: make -C hw sim-assert
+    conditions: "Same run as sim-assert. The 89 bins were written down before the first run and not changed afterwards to improve the table. Bins marked probe read signals inside the design."
+  - id: sim-assert-recount
+    title: "Beats, packets and frame headers of the same run recounted from the trace with a Python script"
+    file: sim/assert-recount.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: python3 experiments/lab-assertions/recount_trace.py build/sim/sim/trace.txt
+    conditions: "Trace of make -C hw sim-assert. The totals equal those of the Verilog coverage counters."
+  - id: sim-planted-bugs
+    title: "Eleven deliberate bugs, one at a time in a scratch copy of the RTL: what each detector reported"
+    file: sim/planted-bugs.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: python3 experiments/lab-assertions/planted_bugs.py /tmp/planted-bugs
+    conditions: "Icarus Verilog 12.0. Each bug is one edit of hw/rtl/pfdaq_stream_src.v made in a copy; the repository is not modified. Every one of the 18 rules fires in at least one of the eleven runs."
+  - id: sim-planted-bug-w-ready
+    title: "Planted bug: w_ready = ~out_valid. The checks report VALID_GAP 15,487 times"
+    file: sim/planted-bug-w-ready.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "python3 experiments/lab-assertions/planted_bugs.py /tmp/planted-bugs a_wready"
+    conditions: "Scratch copy of the RTL with wire w_ready = ~out_valid | TREADY changed to ~out_valid, run with make -C hw sim-assert ASSERT_RTL=<copy>."
+  - id: sim-planted-bug-emit
+    title: "Planted bug: the generator ignores w_ready. TDATA changes under a stalled sink and rule 2 fires"
+    file: sim/planted-bug-emit.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "python3 experiments/lab-assertions/planted_bugs.py /tmp/planted-bugs b_emit"
+    conditions: "Scratch copy of the RTL with w_ready removed from the definition of emit, run with make -C hw sim-assert ASSERT_RTL=<copy>."
+  - id: sim-planted-bug-force-abort
+    title: "Planted bug: FORCE_ABORT leaves the output register full. Rule 17 fires at the cause, 208 ns before the old monitor"
+    file: sim/planted-bug-force-abort.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "python3 experiments/lab-assertions/planted_bugs.py /tmp/planted-bugs c_force"
+    conditions: "Scratch copy of the RTL with out_valid <= 1'b0 removed from the FORCE_ABORT branch, run with make -C hw sim-assert ASSERT_RTL=<copy>."
+  - id: sim-assert-extra-runs
+    title: "Coverage after five added runs in a scratch copy of the stream testbench: 70 of 89 bins, checks still pass"
+    file: sim/coverage-extra-runs.txt
+    class: sim
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: python3 experiments/lab-assertions/extra_runs.py /tmp/extra-runs
+    conditions: "Icarus Verilog 12.0. The five runs are added to a copy of hw/tb/tb_pfdaq_stream_src.v; the testbench in the repository is not changed. The file lists the verdicts and the bins still at 0."
+  - id: p08-parallel-matrix
+    title: "Raw output of the multi-threaded capture experiment: one JSON line per run, eight runs per main condition"
+    file: board/p08-parallel-matrix.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "sh experiments/P08-parallel-verify/run_all.sh 8 on the board, as root, after pfdaq_cap -L 0 (pfdaq_cap_mt built statically with a RISC-V Linux GCC; pfdaq_cap is the image's unchanged tool)"
+    conditions: "Proven pfdaq-v051 image, FreeRTOS on hart 4, board idle, nothing else using the stream source or the DMA. 32 bursts of 1 MiB per run. Eight runs per condition; one run per fault-injection row. Labels: base = pfdaq_cap without -r, base_r = with -r, mt/<payload>/j<N> = N worker threads."
+  - id: p08-parallel-summary
+    title: "Per-condition minimum, mean and maximum of the multi-threaded capture runs"
+    file: board/p08-parallel-summary.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "python3 summary of board/p08-parallel-matrix.txt (computed on the development PC, no new board run), with the speed-up of each mt condition against the matching base condition"
+    conditions: "Mean, minimum and maximum of the runs of each label."
+
+  - id: libero-ip-import-dialog
+    title: "The import dialog: choosing the Verilog file of the new core"
+    file: build/libero-ip-01.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: File > Import > HDL Source Files, file name typed, library work"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-hierarchy
+    title: "The Design Hierarchy after Build Hierarchy: the module pfdaq_demo_regs is listed"
+    file: build/libero-ip-02.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Build Hierarchy button in the Design Hierarchy tab"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-create-core-menu
+    title: "Right-click menu of the module in the Design Hierarchy, with Create Core from HDL"
+    file: build/libero-ip-03.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: right click on pfdaq_demo_regs in the Design Hierarchy"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-ports-parameters
+    title: "Create Core from HDL, first page: the ports and the parameter read from the Verilog"
+    file: build/libero-ip-04.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Create Core from HDL..., answer Yes to the question about parameters and bus interfaces"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-bus-definition-list
+    title: "Select Bus Interface Definition: the list of bus types the tool offers"
+    file: build/libero-ip-05.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Add Bus Interface... in the Edit Core Definition dialog, row APB slave selected"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-bif-apb-unmapped
+    title: "The APB slave interface after the tool matched seven of eight signals by name, PSELx still empty"
+    file: build/libero-ip-06.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Add Bus Interface, APB AMBA2 slave"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-bif-dropdown
+    title: "The drop-down for the bus signal PSELx lists the core ports that are still free"
+    file: build/libero-ip-07.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: click in the Core Signal cell of the PSELx row"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-bif-axis-stream
+    title: "The AXI4-Stream initiator interface: TVALID, TREADY, TDATA and TLAST matched by name, the optional signals left empty"
+    file: build/libero-ip-08.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Add Bus Interface, AXI4Stream AMBA4 master"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-core-created-log
+    title: "The Libero log line that confirms the core was created from the HDL module"
+    file: build/libero-ip-09.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Edit Core Definition dialogs closed with OK"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-catalog-search
+    title: "The Catalog searched for CoreAPB3: the vendor core is listed with its version, the new core is not in the Catalog"
+    file: build/libero-ip-10.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Catalog tab, search field, CoreAPB3"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-instantiate-menu
+    title: "The right-click menu of a core in the Design Hierarchy offers Instantiate in the open SmartDesign, and Edit Core Definition"
+    file: build/libero-ip-11.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: right click on the core pfdaq_demo_master in the Design Hierarchy"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-smartdesign-canvas
+    title: "The finished SmartDesign canvas: master, CoreAPB3 and the register core wired by bus interfaces"
+    file: build/libero-ip-12.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: SmartDesign demo_top after Zoom To Fit"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-drc-failed-dialog
+    title: "The dialog that follows a failed design rules check"
+    file: build/libero-ip-13.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: SmartDesign > Design Rules Check with two clock and reset pins left unconnected"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-synth-io-error
+    title: "Synthesis error: 113 I/O modules exceed the 80 allowed by the device"
+    file: build/libero-ip-14.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Synthesize with all bus pins promoted to top-level ports"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-synth-completed
+    title: "The Libero log after a successful synthesis of demo_top"
+    file: build/libero-ip-15.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: double-click Synthesize in the Design Flow"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-export-script-dialog
+    title: "Project > Export Script File with Include commands from current session only ticked"
+    file: build/libero-ip-16.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Project > Export Script File"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project for MPFS095T, nothing built for the board and nothing programmed.
+  - id: libero-ip-session-tcl
+    title: "The Tcl commands the Libero GUI exported for the whole by-hand flow"
+    file: build/libero-ip-session.tcl
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "Project > Export Script File with Include commands from current session only ticked, after the steps of module F07"
+    conditions: Scratch project for MPFS095T, Libero SoC 2026.1, nothing built for the board.
+  - id: libero-ip-synthesis
+    title: "Synthesis of the scratch design: 74 LUTs and 50 registers, and the first attempt that failed on the pin count"
+    file: build/libero-ip-synthesis.txt
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "Synthesize in the Libero GUI, from the Synplify log"
+    conditions: Scratch project for MPFS095T, Libero SoC 2026.1, synthesis only; nothing placed, routed or built for the board.
+  - id: libero-ip-replay
+    title: "The exported script replayed in an empty project in batch mode: same synthesis result"
+    file: build/libero-ip-replay.txt
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "libero SCRIPT:replay.tcl, and libero SCRIPT:experiments/libero-ip/create_ip_demo.tcl, each in an empty directory"
+    conditions: Scratch projects for MPFS095T, Libero SoC 2026.1, synthesis only; nothing built for the board.
+  - id: libero-ip-sim
+    title: "Simulation of the two blocks: register access, and a burst of 8 stream words started by the master"
+    file: sim/libero-ip-sim.txt
+    class: sim
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "iverilog and vvp on experiments/libero-ip/tb_pfdaq_demo_regs.v and tb_pfdaq_demo_top.v"
+    conditions: Icarus Verilog on the development PC; the blocks are the scratch design of module F07, not the project fabric.
+
+  - id: libero-ip-catalog-gear-menu
+    title: "The Catalog gear menu: Add Core to Vault, Reload Catalog, Options"
+    file: build/libero-ip-17.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: gear icon in the Catalog panel"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-vault-location
+    title: "Project > Vault/Repositories Settings, Vault location page, a scratch folder typed in"
+    file: build/libero-ip-18.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Project > Vault/Repositories Settings > Vault location, scratch folder, OK"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-catalog-empty-vault
+    title: "The Catalog with an empty scratch vault: only the built-in Macro Library"
+    file: build/libero-ip-19.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Catalog tab after the vault location was changed"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-add-core-dialog
+    title: "The Add Core to Vault dialog, filtering for .ccz and .cpz files"
+    file: build/libero-ip-20.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Catalog gear menu > Add Core to Vault, file name typed"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-import-succeeded
+    title: "The message after Add Core to Vault: Successfully imported file(s)"
+    file: build/libero-ip-21.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Add Core to Vault, Open"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-catalog-user-defined
+    title: "The new core in the Catalog, under User Defined, version 1.0.0"
+    file: build/libero-ip-22.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Catalog tab, User Defined group expanded"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-core-configurator
+    title: "The configurator Libero opens for the core taken from the Catalog, with its parameter DEFAULT_LEN"
+    file: build/libero-ip-23.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: double-click the core in the Catalog, name accepted"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-canvas-from-catalog
+    title: "The SmartDesign canvas with the register core placed from the Catalog"
+    file: build/libero-ip-24.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: SmartDesign demo_top after Zoom To Fit"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-hierarchy-ip-core
+    title: "The Design Hierarchy lists the Catalog core as an IP core next to CoreAPB3_C0"
+    file: build/libero-ip-25.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: Design Hierarchy, demo_top expanded"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-synth-completed-catalog
+    title: "The Libero log after synthesis of the design built from the Catalog core"
+    file: build/libero-ip-26.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: double-click Synthesize in the Design Flow"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-catalog-core-menu
+    title: "Right-click menu of a Catalog core: Configure core, Remove from vault, Show details, Open documentation"
+    file: build/libero-ip-27.png
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "GUI step: right click on a core in the Catalog; no item was chosen"
+    conditions: Screenshot of Libero SoC 2026.1 on the development PC, scratch project and scratch vault, nothing built for the board and nothing programmed.
+  - id: libero-ip-catalog-session-tcl
+    title: "The Tcl commands the Libero GUI exported for the Catalog route, including import_core and create_and_configure_core with the new core"
+    file: build/libero-ip-catalog-session.tcl
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "Project > Export Script File with Include commands from current session only ticked"
+    conditions: Scratch project and scratch vault for MPFS095T, Libero SoC 2026.1, nothing built for the board.
+  - id: libero-ip-catalog-run
+    title: "The package, the scratch vault it produced, and the same flow in batch from an empty vault: 73 LUTs, 50 registers"
+    file: build/libero-ip-catalog-run.txt
+    class: build
+    fabric: "n/a"
+    date: 2026-11-15
+    command: "make_cpz.py, Add Core to Vault in the GUI, then libero SCRIPT:create_ip_catalog_demo.tcl in an empty directory"
+    conditions: Scratch project and scratch vault for MPFS095T, Libero SoC 2026.1, synthesis only; the shared vault was not touched and the vault setting was put back afterwards.
+  - id: p07-latency-quiet
+    title: "Interrupt latency of Linux user space under runtime settings, board otherwise idle: raw lines, 12 conditions of 5 runs"
+    file: board/p07-latency-quiet.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-15
+    command: "sh experiments/P07-deterministic-linux/p07_run.sh user 5 on the board, as root (pfdaq_lat -c 0 -p 500 -n 100000 per run)"
+    conditions: "Proven pfdaq-v051 image. Nobody logged in to the board while it ran (about 55 minutes). Settings are runtime only and were restored at the end. Lines starting with # record each setting change and the per-CPU interrupt counts before and after each run."
+  - id: p07-latency-noisy
+    title: "The same measurement for five conditions while another machine logged in to the board every 10 seconds"
+    file: board/p07-latency-noisy.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "sh experiments/P07-deterministic-linux/p07_run.sh noisy 5 on the board; at the same time `ssh root@<board> true` from the development PC every 10 s"
+    conditions: "Proven pfdaq-v051 image; five runs per condition; settings restored at the end."
+  - id: p07-latency-summary
+    title: "Per-condition minimum, mean and maximum of the latency runs, quiet and noisy series"
+    file: board/p07-latency-summary.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "summary of the two raw files, computed on the development PC (no new board run)"
+    conditions: "Samples at or above 0.98 ms are counted from the histograms in the raw lines."
+  - id: m10-station-recording
+    title: "The four-core monitoring station on the board: one recorded run of 68 seconds, three panes with one time line (roll call, normal operation, two trips and resets, summary)"
+    file: board/m10-station-recording.jsonl
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "experiments/amp-station/run_demo.sh, with the demo payload (build/amp-demo/payload.bin) installed on the payload partition"
+    conditions: "Demo variant of the hart 4 firmware, demo payload on the SD card's payload partition (backed up first), station programs pinned to Linux cpu 0, 1 and 2, simulated faults only; nobody else used the board. One run."
+  - id: m10-station-telemetry
+    title: "One row per 500 ms window of the same run: frames, bad frames, drops, peak, mean, round trip to hart 4, hart 4 state"
+    file: board/m10-station-telemetry.csv
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "written by the telemetry process (station tel) during run_demo.sh"
+    conditions: "Same run as m10-station-recording; the round trip is the time from sending the window features to the acknowledgement of hart 4."
+  - id: m10-suite-after-restore
+    title: "The board suite after the proven payload was written back: 27 of 27 functional tests"
+    file: board/m10-suite-after-restore.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "deploy_payload.sh restore, reboot, then sh /root/pfdaq_final_suite.sh on the board"
+    conditions: "Proven payload (sha256 e9b780bd...ed4504) read back from the partition and compared before the reboot; supervisor attached."

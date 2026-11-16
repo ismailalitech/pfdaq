@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 470" width="940" height="470" role="img" aria-labelledby="t d">
+<title id="t">Two routes from a Verilog file to a checked design. The first four boxes are common: import the file, see the module in the Design Hierarchy, Create Core from HDL, add the bus interfaces. A core can be placed straight from the Design Hierarchy, or packaged as a .cpz file, added to a vault and placed from the Catalog. The path then goes through SmartDesign, Generate and Synthesize.</title><desc id="d">Two routes from a Verilog file to a checked design. The first four boxes are common: import the file, see the module in the Design Hierarchy, Create Core from HDL, add the bus interfaces. A core can be placed straight from the Design Hierarchy, or packaged as a .cpz file, added to a vault and placed from the Catalog. The path then goes through SmartDesign, Generate and Synthesize.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 59.00s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 59.00s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}5.08%{opacity:1}8.08%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="940" height="470" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M200,63 L260,63" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.00s" d="M200,63 L260,63" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e1">
+<path d="M440,63 L500,63" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:9.00s" d="M440,63 L500,63" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e2">
+<path d="M680,63 L740,63" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:15.00s" d="M680,63 L740,63" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e3">
+<path d="M830,96 L830,160" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:21.00s" d="M830,96 L830,160" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e4">
+<path d="M740,193 L680,193" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:27.00s" d="M740,193 L680,193" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e5">
+<path d="M500,193 L440,193" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:33.00s" d="M500,193 L440,193" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e6">
+<path d="M350,226 L350,290" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:39.00s" d="M350,226 L350,290" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e7">
+<path d="M440,323 L500,323" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:45.00s" d="M440,323 L500,323" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e8">
+<path d="M680,323 L740,323" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:51.00s" d="M680,323 L740,323" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="imp">
+<rect x="20" y="30" width="180" height="66" rx="9" fill="#2a3140" stroke="#c9d3dd" stroke-width="1.5"/>
+<text x="110" y="50.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Verilog file</text>
+<text x="110" y="67.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">File &gt; Import &gt;</text>
+<text x="110" y="84.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">HDL Source Files</text>
+<rect class="hl" style="animation-delay:0.00s" x="19" y="29" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="hier">
+<rect x="260" y="30" width="180" height="66" rx="9" fill="#1e2530" stroke="#6b7b8c" stroke-width="1.5"/>
+<text x="350" y="50.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Design Hierarchy</text>
+<text x="350" y="67.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">Build Hierarchy lists</text>
+<text x="350" y="84.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">the module</text>
+<rect class="hl" style="animation-delay:6.00s" x="259" y="29" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="core">
+<rect x="500" y="30" width="180" height="66" rx="9" fill="#232c44" stroke="#8da6d4" stroke-width="1.5"/>
+<text x="590" y="50.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Create Core</text>
+<text x="590" y="67.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">ports and parameters</text>
+<text x="590" y="84.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">read from the header</text>
+<rect class="hl" style="animation-delay:12.00s" x="499" y="29" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="bif">
+<rect x="740" y="30" width="180" height="66" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="830" y="50.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Bus interfaces</text>
+<text x="830" y="67.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">APB slave, AXI4-Stream</text>
+<text x="830" y="84.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">matched by port name</text>
+<rect class="hl" style="animation-delay:18.00s" x="739" y="29" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="pkg">
+<rect x="740" y="160" width="180" height="66" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="830" y="180.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Package</text>
+<text x="830" y="197.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">make_cpz.py writes</text>
+<text x="830" y="214.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">the .cpz file</text>
+<rect class="hl" style="animation-delay:24.00s" x="739" y="159" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="vault">
+<rect x="500" y="160" width="180" height="66" rx="9" fill="#1e2530" stroke="#6b7b8c" stroke-width="1.5"/>
+<text x="590" y="180.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Add Core to Vault</text>
+<text x="590" y="197.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">scratch vault folder,</text>
+<text x="590" y="214.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">import_core</text>
+<rect class="hl" style="animation-delay:30.00s" x="499" y="159" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="cat">
+<rect x="260" y="160" width="180" height="66" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="350" y="180.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Catalog</text>
+<text x="350" y="197.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">User Defined group,</text>
+<text x="350" y="214.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">double-click to place</text>
+<rect class="hl" style="animation-delay:36.00s" x="259" y="159" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="sd">
+<rect x="260" y="290" width="180" height="66" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="350" y="319" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">SmartDesign</text>
+<text x="350" y="336" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">wire bus to bus</text>
+<rect class="hl" style="animation-delay:42.00s" x="259" y="289" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="gen">
+<rect x="500" y="290" width="180" height="66" rx="9" fill="#1e2530" stroke="#6b7b8c" stroke-width="1.5"/>
+<text x="590" y="310.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Generate</text>
+<text x="590" y="327.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">design rules check,</text>
+<text x="590" y="344.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">then the component</text>
+<rect class="hl" style="animation-delay:48.00s" x="499" y="289" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="syn">
+<rect x="740" y="290" width="180" height="66" rx="9" fill="#17382f" stroke="#4fd1a5" stroke-width="1.5"/>
+<text x="830" y="310.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Synthesize</text>
+<text x="830" y="327.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">log ends with</text>
+<text x="830" y="344.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">Synthesis completed.</text>
+<rect class="hl" style="animation-delay:54.00s" x="739" y="289" width="182" height="68" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="20" y="396" text-anchor="start" font-size="12" fill="#9aa8b5">Short route: right-click the core in the Design Hierarchy and choose Instantiate. No package, no Catalog.</text>
+<text x="20" y="422" text-anchor="start" font-size="12" fill="#9aa8b5">Catalog route: the core is found like a vendor core, and the same Verilog serves every project that uses the vault.</text>
+<text x="20" y="448" text-anchor="start" font-size="12" fill="#9aa8b5">Every step has a Tcl command; Project &gt; Export Script File writes them all (module F07, step 14).</text>
+</svg>

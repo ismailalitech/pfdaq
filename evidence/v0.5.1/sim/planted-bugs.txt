@@ -1,0 +1,77 @@
+bug a_wready: w_ready is refilled only after the register was seen empty (the H02 experiment)
+  new checks     : ASSERT RESULT: FAIL (15487 violations)
+  rules that fired: 5 VALID_GAP x15487
+  first report   : CHECK FAIL rule 5 VALID_GAP at 2332 ns, scenario 1, info 0x00000002
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 15487
+  check_trace.py : RESULT: FAIL (first report: trace: VALID_GAP 2332000)
+
+bug b_emit: the generator ignores w_ready and overwrites a beat the sink has not taken
+  new checks     : ASSERT RESULT: FAIL (1432 violations)
+  rules that fired: 2 DATA_STABLE x1096, 3 SIDE_STABLE x31, 6 MAGIC x106, 7 SEQ x113, 8 TIMESTAMP x34, 9 TLAST_EARLY x45, 14 RUN_PACKETS x1, 15 RUN_FRAMES x6
+  first report   : CHECK FAIL rule 2 DATA_STABLE at 4404 ns, scenario 2, info 0x00050001
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 1096
+  check_trace.py : RESULT: FAIL (first report: trace: PROTOCOL_ERROR 4404000)
+
+bug c_force: FORCE_ABORT no longer clears the output register
+  new checks     : ASSERT RESULT: FAIL (153 violations)
+  rules that fired: 5 VALID_GAP x126, 7 SEQ x1, 17 FORCE_STOP x26
+  first report   : CHECK FAIL rule 17 FORCE_STOP at 234740 ns, scenario 99, info 0x00000000
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 130
+  check_trace.py : RESULT: FAIL (first report: trace: VALID_GAP 234948000)
+
+bug d_tdest: the real-time destination counter wraps one destination too early
+  new checks     : ASSERT RESULT: FAIL (438 violations)
+  rules that fired: 12 TDEST x438
+  first report   : CHECK FAIL rule 12 TDEST at 129068 ns, scenario 13, info 0x00000000
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 0
+  check_trace.py : RESULT: FAIL (first report: scenario 13: frame 3 TDEST 0, expected 3)
+
+bug e_burst_tdest: a burst starts on destination 1 instead of 0
+  new checks     : ASSERT RESULT: FAIL (14918 violations)
+  rules that fired: 12 TDEST x14918
+  first report   : CHECK FAIL rule 12 TDEST at 2324 ns, scenario 1, info 0x00000001
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 0
+  check_trace.py : RESULT: FAIL (first report: scenario 1: frame 0 TDEST 1, expected 0)
+
+bug f_underrun: the FIR underrun flag is set when the pre-fill ends
+  new checks     : ASSERT RESULT: FAIL (1470 violations)
+  rules that fired: 18 UNDERRUN x1470
+  first report   : CHECK FAIL rule 18 UNDERRUN at 112996 ns, scenario 11, info 0x00000000
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 0
+  check_trace.py : RESULT: FAIL (first report: scenario 11: FIR underrun flag set)
+
+bug g_keep: the 4-byte last beat carries TKEEP 07 instead of 0F
+  new checks     : ASSERT RESULT: FAIL (78 violations)
+  rules that fired: 4 KEEP x78
+  first report   : CHECK FAIL rule 4 KEEP at 4644 ns, scenario 2, info 0x00000707
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 78
+  check_trace.py : RESULT: FAIL (first report: trace: KEEP_ERROR 4644000)
+
+bug h_valid_drop: TVALID drops on a stalled beat once in 16 stall clocks
+  new checks     : ASSERT RESULT: FAIL (437 violations)
+  rules that fired: 1 VALID_DROP x109, 5 VALID_GAP x102, 6 MAGIC x84, 7 SEQ x92, 8 TIMESTAMP x21, 9 TLAST_EARLY x29
+  first report   : CHECK FAIL rule 1 VALID_DROP at 4524 ns, scenario 2, info 0x00000000
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 211
+  check_trace.py : RESULT: FAIL (first report: trace: PROTOCOL_ERROR 4524000)
+
+bug i_long_frame: every frame carries one payload word more than the header says
+  new checks     : ASSERT RESULT: FAIL (531 violations)
+  rules that fired: 6 MAGIC x185, 7 SEQ x123, 8 TIMESTAMP x47, 10 TLAST_LATE x89, 11 TLAST_LONG x78, 15 RUN_FRAMES x9
+  first report   : CHECK FAIL rule 6 MAGIC at 2372 ns, scenario 1, info 0xbd634a9b
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 0
+  check_trace.py : RESULT: FAIL (first report: scenario 1: 65 words is not a whole number of 12-word frames)
+
+bug j_fill_nonzero: the zero fill of an aborted burst is not zero
+  new checks     : ASSERT RESULT: FAIL (546 violations)
+  rules that fired: 6 MAGIC x65, 7 SEQ x65, 8 TIMESTAMP x65, 13 FILL_ZERO x351
+  first report   : CHECK FAIL rule 6 MAGIC at 191364 ns, scenario 16, info 0x00000001
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 0
+  check_trace.py : RESULT: FAIL (first report: scenario 16: fill words after frame 13 are not all zero)
+
+bug k_fill_last: the zero fill of an aborted burst never raises TLAST on an even remainder
+  new checks     : ASSERT RESULT: FAIL (666 violations)
+  rules that fired: 5 VALID_GAP x660, 10 TLAST_LATE x3, 16 PKT_OPEN x3
+  first report   : CHECK FAIL rule 10 TLAST_LATE at 208188 ns, scenario 16, info 0x00001450
+  testbench monitor lines in the trace (PROTOCOL_ERROR, VALID_GAP, KEEP_ERROR): 683
+  check_trace.py : RESULT: FAIL (first report: trace: VALID_GAP 208196000)
+

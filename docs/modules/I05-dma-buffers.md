@@ -174,7 +174,7 @@ The addresses fit the layout: `0xC800_0000 + 0x1F0_0000 = 0xC9F0_0000` and `0x88
 
 It shows that **two processors**, Linux on a cached mapping and hart 4 through its cached window, saw each other's writes in that region with no cache maintenance on either side, in every iteration. The cached run was faster, 20.10 ms against 31.15 ms.
 
-It does **not** show anything about a **DMA controller** writing into a cached buffer. No DMA took part. Whether a cached buffer is safe for the fabric DMA, and what it takes to make it so, was not tested.
+It does **not** show anything about a **DMA controller** writing into a cached buffer. No DMA took part. Whether a cached buffer is safe for the fabric DMA, and what it takes to make it so, is the subject of module [I08](I08-dma-cached-memory.md).
 
 ## Do the same in your project
 
@@ -232,6 +232,6 @@ What not to change:
 | **In the system** | [Non-cached window](../system/README.md#ddr-noncached) · [Cached shared region](../system/README.md#ddr-cached-shared) · [CoreAXI4DMAController](../system/README.md#dma) · [u-dma-buf](../system/README.md#udmabuf) · [pfdaq_cap](../system/README.md#pfdaq-cap) |
 | **Source** | [`yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c`](../../yocto/meta-pfdaq/recipes-pfdaq/pfdaq-tools/files/pfdaq_cap.c): `run_shm`, `arm`, `ddr_phys`, `BUF_OFF`, `DESC_OFF`, `RT_DESC_STRIDE`<br>[`yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts`](../../yocto/meta-pfdaq/recipes-kernel/linux/files/mpfs-disco-kit-amp.dts) |
 | **Evidence** | [Raw output of the FreeRTOS suite, one JSON object per test](../../evidence/v0.5.1/board/suite-freertos.jsonl) (board, fabric v0.5.1, 2026-11-15)<br>[Board suite with FreeRTOS on hart 4, 27 of 27 functional tests](../../evidence/v0.5.1/board/suite-freertos.md) (board, fabric v0.5.1, 2026-11-15)<br>[Boot monitor console from power-up to all four application cores running](../../evidence/v0.5.1/board/boot-hss.txt) (board, fabric v0.5.1, 2026-11-15)<br>[Reserved memory, UIO devices, online CPUs and PLIC sources on the running board](../../evidence/v0.5.1/board/device-tree-checks.txt) (board, fabric v0.5.1, 2026-11-15) |
-| **Related** | [I04 DMA stream descriptors: the rules this core really follows](I04-dma-stream-descriptors.md)<br>[I06 Capturing and verifying a stream](I06-capture-and-verify.md)<br>[I07 Real-time capture with four descriptors and credits](I07-real-time-capture.md)<br>I08 DMA into cached memory: when you need cache maintenance *(planned)*<br>[F02 The memory map and the three faces of DDR](F02-memory-map-ddr.md)<br>[K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md) |
+| **Related** | [I04 DMA stream descriptors: the rules this core really follows](I04-dma-stream-descriptors.md)<br>[I06 Capturing and verifying a stream](I06-capture-and-verify.md)<br>[I07 Real-time capture with four descriptors and credits](I07-real-time-capture.md)<br>[I08 DMA into cached memory: when you need cache maintenance](I08-dma-cached-memory.md)<br>[F02 The memory map and the three faces of DDR](F02-memory-map-ddr.md)<br>[K10 Odd frame lengths lose 2 KB chunks](../case-studies/K10-odd-frame-lengths.md) |
 | **Status** | validated |
 <!-- nav:end -->

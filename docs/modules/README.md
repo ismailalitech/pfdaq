@@ -16,6 +16,7 @@ Every module is one page with the same structure: what it teaches, what you need
 | [F04 Clocks and resets: one PLL, two bus clocks](F04-clocks-and-resets.md)<br>Where the 50 MHz and 125 MHz clocks come from and which logic lives in which domain. | 2 | read | validated |
 | [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>Building and programming the fabric from scripts, with no GUI step. | 1 | read | validated |
 | F06 GPIO from both sides: MSS GPIO and fabric CoreGPIO *(planned)*<br>The same LED driven from the processor's GPIO block and from a GPIO core in the fabric, plus switch inputs and a button interrupt. | 2 | shared baseline | planned |
+| [F07 Create your own IP in Libero: from a Verilog file to a core in the Catalog](F07-create-your-own-ip-in-libero.md)<br>Turn a Verilog file into a core with an APB slave and an AXI4-Stream interface that Libero recognises, wire it in a SmartDesign and synthesize it, then package it so it appears in the Catalog like a vendor core. By hand in the GUI and then by script. | 3 | Libero on a PC | validated |
 
 ## Boot and Linux
 
@@ -41,6 +42,7 @@ Every module is one page with the same structure: what it teaches, what you need
 | [M07 Deferred interrupt handling, and a port that switches tasks inside the handler](M07-deferred-interrupt-handling.md)<br>Moving work from an interrupt handler to a task, and the detail of this FreeRTOS port that breaks the usual pattern. | 4 | shared baseline | validated |
 | M08 Three ways to signal another hart *(planned)*<br>RPMsg, a flag in shared memory and a software interrupt, compared by round-trip time. | 4 | shared baseline | planned |
 | M09 Fencing the real-time hart with physical memory protection *(planned)*<br>Locking the supervisor into its own memory, then proving the lock with a deliberate violation. | 5 | full system | planned |
+| [M10 A four-core monitoring station: acquire, analyse, report, protect](M10-four-core-monitoring-station.md)<br>Four cores with four different jobs, exchanging frames through shared memory and messages through RPMsg, with a protection trip on the real-time hart that stops the data source. | 4 | full system | validated |
 
 ## FPGA design
 
@@ -57,7 +59,7 @@ Every module is one page with the same structure: what it teaches, what you need
 | [H09 Integrating custom RTL into a vendor design by script](H09-rtl-into-vendor-design.md)<br>Wrapping RTL as a core with bus interfaces and wiring it into the reference design without touching the GUI. | 3 | read | validated |
 | [H10 Timing closure, and the build that lost its pins](H10-timing-closure.md)<br>Reading multi-corner timing results, and a bitstream that met timing but could not boot the board. | 4 | read | validated |
 | [H11 Verification with an independent model](H11-independent-model.md)<br>A testbench that only records, and a separate program that decides whether the recording is right. | 3 | simulation | validated |
-| H12 Assertions and coverage for the stream source *(planned)*<br>Which behaviours the scenarios really exercise, and protocol rules written as checks. | 4 | simulation | planned |
+| [H12 Assertions and coverage for the stream source](H12-assertions-and-coverage.md)<br>Which behaviours the scenarios really exercise, and protocol rules written as checks. | 4 | simulation | validated |
 
 ## Linux to FPGA integration
 
@@ -70,7 +72,7 @@ Every module is one page with the same structure: what it teaches, what you need
 | [I05 Buffers the DMA can write: non-cached windows and u-dma-buf](I05-dma-buffers.md)<br>Where DMA buffers live, how user space maps them, and why cache behaviour decides the choice. | 3 | shared baseline | validated |
 | [I06 Capturing and verifying a stream](I06-capture-and-verify.md)<br>Checking every frame against a software model of the hardware, for three payload types. | 3 | shared baseline | validated |
 | [I07 Real-time capture with four descriptors and credits](I07-real-time-capture.md)<br>Keeping four transfers armed and paying the fabric one credit for each buffer handed back. | 4 | shared baseline | validated |
-| I08 DMA into cached memory: when you need cache maintenance *(planned)*<br>What goes wrong when hardware writes memory the processor has cached, measured. | 4 | shared baseline | planned |
+| [I08 DMA into cached memory: when you need cache maintenance](I08-dma-cached-memory.md)<br>What a processor sees when hardware writes memory it has cached, measured through the cached and the non-cached window of the same DDR. | 4 | shared baseline | validated |
 | I09 Fabric DMA against the MSS DMA *(planned)*<br>Two DMA engines on one chip, compared on the same transfer. | 4 | shared baseline | planned |
 
 ## Performance and reliability
@@ -83,8 +85,8 @@ Every module is one page with the same structure: what it teaches, what you need
 | [P04 Deadline supervision, alarm and recovery](P04-deadline-supervision.md)<br>Stalling Linux, killing the consumer, and watching the supervisor notice and recover. | 3 | shared baseline | validated |
 | [P05 Abort without wedging the DMA](P05-abort.md)<br>Stopping a transfer the DMA still expects to finish. | 4 | shared baseline | validated |
 | [P06 Soak and reboot testing](P06-soak-and-reboot.md)<br>What a ten-minute soak and thirty reboots do and do not prove. | 3 | shared baseline | validated |
-| P07 Making Linux more deterministic *(planned)*<br>Interrupt affinity, CPU isolation and priorities against the stalls in the latency measurements. | 5 | shared baseline | planned |
-| P08 Raising verified throughput with more cores *(planned)*<br>Removing the single-core bottleneck in verification, with before and after. | 5 | shared baseline | planned |
+| [P07 Making Linux more deterministic](P07-deterministic-linux.md)<br>Interrupt affinity, CPU placement and priorities against the Linux latency stalls of P02, measured quiet and under login traffic, with a negative result for isolation. | 5 | shared baseline | validated |
+| [P08 Raising verified throughput with more cores](P08-parallel-verify.md)<br>Spreading the copy and the verification of a capture over three Linux cores, with the same checks and the same fault counts, and what limits the result. | 5 | shared baseline | validated |
 
 ## Case studies
 
@@ -124,4 +126,4 @@ Every module is one page with the same structure: what it teaches, what you need
 |---|---|---|---|
 | [C01 Direct memory access](../concepts/C01-dma.md)<br>Why hardware writes memory by itself, what a descriptor is, and what it costs. | 1 | read | validated |
 
-68 modules, 60 written.
+70 modules, 66 written.

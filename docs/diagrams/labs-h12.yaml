@@ -1,0 +1,94 @@
+# Figures of the lab H12 (assertions and coverage for the stream source). The waveform is a window of two runs of
+# `make -C hw sim-assert` (the real design and a scratch copy with a planted bug), taken with
+# experiments/lab-assertions/assert_dump.v and vcd_to_wave.py. The terminal figure is the real coverage table.
+
+- id: lab-h12-where-checks-sit
+  alt: "How the checks are attached. The existing stream testbench is instantiated unchanged inside a new top level, tb_pfdaq_assert. It drives the stream source over APB and sets TREADY. The checker connects to the stream ports only, and a snoop module copies the APB register writes so the checker knows the run configuration. The coverage module takes events from the checker and a few probes from inside the design. At the end of the run the checker prints a violation count per rule and the coverage module prints its table."
+  width: 900
+  height: 440
+  step: 3
+  nodes:
+    tb:    {x: 20,  y: 30,  w: 230, h: 76, kind: hart,   title: "tb_pfdaq_stream_src", sub: "unchanged: APB writes,\nrandom TREADY, trace"}
+    dut:   {x: 340, y: 30,  w: 230, h: 76, kind: fabric, title: "pfdaq_stream_src", sub: "the design under test"}
+    snoop: {x: 20,  y: 170, w: 230, h: 76, kind: sw,     title: "pfdaq_apb_snoop", sub: "copies the register writes\nof each run"}
+    chk:   {x: 340, y: 170, w: 230, h: 76, kind: good,   title: "pfdaq_stream_checks", sub: "18 rules on the ports"}
+    cov:   {x: 650, y: 170, w: 230, h: 76, kind: good,   title: "pfdaq_stream_cover", sub: "89 counters (bins)"}
+    rep:   {x: 340, y: 306, w: 230, h: 66, kind: start,  title: "End of run", sub: "CHECK lines, COV table,\nASSERT RESULT"}
+  edges:
+    - {from: tb.right, to: dut.left, label: "APB, TREADY"}
+    - {from: tb.bottom, to: snoop.top, label: "APB bus"}
+    - {from: dut.bottom, to: chk.top, label: "stream ports"}
+    - {from: snoop.right, to: chk.left, label: "run setup"}
+    - {from: chk.right, to: cov.left, label: "events"}
+    - {from: dut.right, to: cov.top, label: "state probes", dashed: true}
+    - {from: chk.bottom, to: rep.top}
+    - {from: cov.bottom, to: rep.right}
+  steps: [tb, e0, dut, e2, chk, e1, snoop, e3, e4, cov, e5, e6, e7, rep]
+  notes:
+    - {x: 20, y: 412, text: "tb_pfdaq_assert.v is the new top level; the stream testbench sits inside it, unchanged."}
+
+- id: lab-h12-stall-rule
+  type: wave
+  alt: "Waveform of 72 ns of scenario 2 of the stream simulation. The sink takes one beat at 4388 ns and then holds TREADY low. In the unmodified design the source keeps TVALID high and TDATA at 00000218 for the whole window. In a scratch copy where the generator ignores w_ready, TDATA changes to 00050001 at 4396 ns and again every clock, and the checker reports rule 2, DATA_STABLE, from 4404 ns on, every clock."
+  width: 900
+  height: 410
+  length: 72
+  ticks: [[0, "4380 ns"], [16, "4396 ns"], [32, "4412 ns"], [48, "4428 ns"], [64, "4444 ns"]]
+  step: 3.4
+  signals:
+    - {name: "ACLK", kind: plain, values: [[0, 1], [4, 0], [8, 1], [12, 0], [16, 1], [20, 0], [24, 1], [28, 0], [32, 1], [36, 0], [40, 1], [44, 0], [48, 1], [52, 0], [56, 1], [60, 0], [64, 1], [68, 0]]}
+    - {name: "TREADY", kind: hart, values: [[0, 1], [8, 0]]}
+    - {name: "TVALID", kind: fabric, values: [[0, 1]]}
+    - {name: "TDATA, as built", bus: true, kind: fabric, values: [[0, "a55a000d"], [8, "00000218"]]}
+    - {name: "TDATA, planted bug", bus: true, kind: bad, values: [[0, "a55a000d"], [8, "00000218"], [16, "00050001"], [24, "00050003"], [32, "00050005"], [40, "00050007"], [48, "00050009"], [56, "0005000b"], [64, "b5ccfe66"]]}
+    - {name: "rule reported", bus: true, kind: bad, values: [[0, "-"], [24, "2 DATA_STABLE"]]}
+  callouts:
+    - {t0: 0, t1: 8, title: "One beat goes", text: "TVALID and TREADY are both high at the edge that ends this cycle (4388 ns): the beat transfers."}
+    - {t0: 8, t1: 72, title: "Stalled", text: "TREADY stays low. As built, TVALID stays high and TDATA holds 00000218. The stall lasts 17 clocks in all."}
+    - {t0: 16, t1: 24, title: "The bug", text: "The generator ignores w_ready: TDATA changes to 00050001 at 4396 ns while the sink has not taken the beat."}
+    - {t0: 24, t1: 72, title: "The rule fires", text: "The checker compares each clock with the last: rule 2 from 4404 ns. The testbench monitor reports the same time."}
+
+- id: lab-h12-coverage-holes
+  type: terminal
+  title: "coverage.txt from make -C hw sim-assert, only the bins with count 0"
+  alt: "The 28 coverage bins that none of the 21 runs of the stream testbench reached, out of 89. They include payload sizes above 500 words and the maximum 65535, runs of a single frame, real-time runs with RATE below 20 or with a single destination, more than one dropped slot before a frame, five of the nine fault by payload-mode combinations, an abort before the first beat or while the sink is stalling, and an abort received while the source waits for a real-time slot or fills the FIR pipeline."
+  width: 900
+  height: 760
+  step: 3.4
+  lines:
+    - "$ grep \"NOT HIT\" coverage.txt"
+    - "COV  17 payload words per frame      501 to 65534                                          0  NOT HIT"
+    - "COV  18 payload words per frame      65535 (maximum)                                       0  NOT HIT"
+    - "COV  19 frames per run               1                                                     0  NOT HIT"
+    - "COV  22 frames per run               65 or more                                            0  NOT HIT"
+    - "COV  25 4-byte last beat (TKEEP 0F)  real-time                                             0  NOT HIT"
+    - "COV  31 kind x payload mode          TLAST per frame, FIR                                  0  NOT HIT"
+    - "COV  39 real-time destinations       1 destination (TDEST_COUNT 1)                         0  NOT HIT"
+    - "COV  43 real-time RATE (clocks)      2 (minimum)                                           0  NOT HIT"
+    - "COV  44 real-time RATE (clocks)      3 to 19                                               0  NOT HIT"
+    - "COV  49 slots dropped before a frame 2 or 3 dropped                                        0  NOT HIT"
+    - "COV  50 slots dropped before a frame 4 or more dropped                                     0  NOT HIT"
+    - "COV  53 real-time drop reason        probe: abort pending                                  0  NOT HIT"
+    - "COV  56 GAP_CYCLES (TLAST per frame) 8 to 399                                              0  NOT HIT"
+    - "COV  59 fault x payload mode         corrupt CRC, PRBS                                     0  NOT HIT"
+    - "COV  60 fault x payload mode         corrupt CRC, FIR                                      0  NOT HIT"
+    - "COV  62 fault x payload mode         skip sequence number, PRBS                            0  NOT HIT"
+    - "COV  63 fault x payload mode         skip sequence number, FIR                             0  NOT HIT"
+    - "COV  66 fault x payload mode         flip payload bit, FIR                                 0  NOT HIT"
+    - "COV  67 CTRL.ABORT in run kind       burst, no packet open                                 0  NOT HIT"
+    - "COV  70 CTRL.ABORT in run kind       TLAST per frame, packet open                          0  NOT HIT"
+    - "COV  71 CTRL.ABORT in run kind       real-time, no packet open                             0  NOT HIT"
+    - "COV  73 CTRL.ABORT when              TVALID high and TREADY low (stalled)                  0  NOT HIT"
+    - "COV  74 CTRL.ABORT when              no beat of the run sent yet                           0  NOT HIT"
+    - "COV  75 abort received in state      probe: PREFILL (FIR filling)                          0  NOT HIT"
+    - "COV  76 abort received in state      probe: RTWAIT (real-time, waiting)                    0  NOT HIT"
+    - "COV  79 abort received in state      probe: FILL (zero fill)                               0  NOT HIT"
+    - "COV  80 abort received in state      probe: IDLE (ignored)                                 0  NOT HIT"
+    - "COV  82 FORCE_ABORT when             TVALID low                                            0  NOT HIT"
+  callouts:
+    - {lines: [1, 4],   title: "Sizes", text: "Payload stops at 500 words (legal up to 65535). Runs have 3 to 50 frames, never 1 and never more than 64."}
+    - {lines: [5, 6],   title: "Odd length and FIR", text: "No real-time frame has an odd length; no per-frame-TLAST run uses the FIR payload."}
+    - {lines: [7, 13],  title: "Real-time shapes", text: "RATE is 20 at the lowest (legal: 2), never one destination; never 2 or more slots dropped between two frames."}
+    - {lines: [14, 18], title: "Faults by mode", text: "5 of the 9 fault and payload-mode pairs never occur: for example a CRC fault is only injected in counter mode."}
+    - {lines: [19, 23], title: "Abort timing", text: "No abort before the first beat of a run, none while the sink stalls the source, none in a per-frame run mid-packet."}
+    - {lines: [24, 28], title: "Abort and FORCE_ABORT", text: "No abort arrives while the source pre-fills the FIR or waits for a slot; the one FORCE_ABORT came with TVALID high."}

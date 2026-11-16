@@ -1,0 +1,173 @@
+== read_speed runs 3
+  cached_first_MBps        min 185.1 mean 185.63 max 185.9
+  cached_second_MBps       min 254.4 mean 255.13 max 256.1
+  noncached_first_MBps     min 22.7 mean 22.83 max 22.9
+  noncached_second_MBps    min 22.9 mean 22.90 max 22.9
+== dma_c/cold/f16 runs 10
+  counted words 4064 | dma_ok in all runs: True
+  c1_cached_view             new: min 4064 mean 4064 max 4064
+  nc1_ddr_view               new: min 205 mean 319 max 427  old: min 3637 mean 3744 max 3859
+  c2_after_8MiB_read         new: min 4064 mean 4064 max 4064
+  nc2_ddr_after_8MiB_read    new: min 4064 mean 4064 max 4064
+== dma_c/cold/f1024 runs 10
+  counted words 260096 | dma_ok in all runs: True
+  c1_cached_view             new: min 260096 mean 260096 max 260096
+  nc1_ddr_view               new: min 170180 mean 174544 max 180214  old: min 79882 mean 85551 max 89916
+  c2_after_8MiB_read         new: min 260096 mean 260096 max 260096
+  nc2_ddr_after_8MiB_read    new: min 260096 mean 260096 max 260096
+== dma_c/clean/f16 runs 10
+  counted words 4064 | dma_ok in all runs: True
+  c1_cached_view             new: min 4064 mean 4064 max 4064
+  nc1_ddr_view               new: min 268 mean 400 max 555  old: min 3509 mean 3663 max 3796
+  c2_after_8MiB_read         new: min 4064 mean 4064 max 4064
+  nc2_ddr_after_8MiB_read    new: min 4064 mean 4064 max 4064
+== dma_c/clean/f1024 runs 10
+  counted words 260096 | dma_ok in all runs: True
+  c1_cached_view             new: min 260096 mean 260096 max 260096
+  nc1_ddr_view               new: min 130756 mean 134627 max 139989  old: min 120107 mean 125468 max 129340
+  c2_after_8MiB_read         new: min 260096 mean 260096 max 260096
+  nc2_ddr_after_8MiB_read    new: min 260096 mean 260096 max 260096
+== dma_c/dirty/f16 runs 10
+  counted words 4064 | dma_ok in all runs: True
+  c1_cached_view             new: min 4064 mean 4064 max 4064
+  nc1_ddr_view               new: min 238 mean 358 max 508  old: min 0 mean 21 max 48  pre: min 3540 mean 3683 max 3795
+  c2_after_8MiB_read         new: min 4064 mean 4064 max 4064
+  nc2_ddr_after_8MiB_read    new: min 4064 mean 4064 max 4064
+== dma_c/dirty/f1024 runs 10
+  counted words 260096 | dma_ok in all runs: True
+  c1_cached_view             new: min 260096 mean 260096 max 260096
+  nc1_ddr_view               new: min 127830 mean 132939 max 139450  old: min 63009 mean 66612 max 68959  pre: min 57637 mean 60543 max 63744
+  c2_after_8MiB_read         new: min 260096 mean 260096 max 260096
+  nc2_ddr_after_8MiB_read    new: min 260096 mean 260096 max 260096
+== dma_nc/clean/f16 runs 10
+  counted words 4064 | dma_ok in all runs: True
+  c1_cached_view             new: min 252 mean 346 max 476  old: min 3588 mean 3717 max 3812
+  nc1_ddr_view               new: min 4064 mean 4064 max 4064
+  c2_after_8MiB_read         new: min 4064 mean 4064 max 4064
+  nc2_ddr_after_8MiB_read    new: min 4064 mean 4064 max 4064
+== dma_nc/clean/f1024 runs 10
+  counted words 260096 | dma_ok in all runs: True
+  c1_cached_view             new: min 149495 mean 151442 max 155146  old: min 104950 mean 108653 max 110601
+  nc1_ddr_view               new: min 260096 mean 260096 max 260096
+  c2_after_8MiB_read         new: min 260096 mean 260096 max 260096
+  nc2_ddr_after_8MiB_read    new: min 260096 mean 260096 max 260096
+== dma_nc/dirty/f16 runs 10
+  counted words 4064 | dma_ok in all runs: True
+  c1_cached_view             new: min 0 mean 22 max 47  old: min 4017 mean 4041 max 4064
+  nc1_ddr_view               new: min 3525 mean 3690 max 3813  old: min 251 mean 373 max 539
+  c2_after_8MiB_read         new: min 0 mean 22 max 47  old: min 4017 mean 4041 max 4064
+  nc2_ddr_after_8MiB_read    new: min 0 mean 22 max 47  old: min 4017 mean 4041 max 4064
+== dma_nc/dirty/f1024 runs 10
+  counted words 260096 | dma_ok in all runs: True
+  c1_cached_view             new: min 95647 mean 97249 max 99986  old: min 160110 mean 162846 max 164449
+  nc1_ddr_view               new: min 177419 mean 180189 max 183332  old: min 76764 mean 79906 max 82677
+  c2_after_8MiB_read         new: min 95647 mean 97249 max 99986  old: min 160110 mean 162846 max 164449
+  nc2_ddr_after_8MiB_read    new: min 95647 mean 97249 max 99986  old: min 160110 mean 162846 max 164449
+== partial/c runs 10
+  cached_view.burst_words_new min 6 mean 6 max 6
+  cached_view.burst_words_old min 0 mean 0 max 0
+  cached_view.burst_words_other min 0 mean 0 max 0
+  cached_view.neighbours_old min 250 mean 250 max 250
+  cached_view.neighbours_pre min 0 mean 0 max 0
+  cached_view.neighbours_other min 0 mean 0 max 0
+  ddr_view_after_8MiB_read.burst_words_new min 6 mean 6 max 6
+  ddr_view_after_8MiB_read.burst_words_old min 0 mean 0 max 0
+  ddr_view_after_8MiB_read.burst_words_other min 0 mean 0 max 0
+  ddr_view_after_8MiB_read.neighbours_old min 250 mean 250 max 250
+  ddr_view_after_8MiB_read.neighbours_pre min 0 mean 0 max 0
+  ddr_view_after_8MiB_read.neighbours_other min 0 mean 0 max 0
+== partial/nc runs 10
+  cached_view.burst_words_new min 0 mean 0 max 0
+  cached_view.burst_words_old min 6 mean 6 max 6
+  cached_view.burst_words_other min 0 mean 0 max 0
+  cached_view.neighbours_old min 250 mean 250 max 250
+  cached_view.neighbours_pre min 0 mean 0 max 0
+  cached_view.neighbours_other min 0 mean 0 max 0
+  ddr_view_after_8MiB_read.burst_words_new min 0 mean 0 max 0
+  ddr_view_after_8MiB_read.burst_words_old min 6 mean 6 max 6
+  ddr_view_after_8MiB_read.burst_words_other min 0 mean 0 max 0
+  ddr_view_after_8MiB_read.neighbours_old min 250 mean 250 max 250
+  ddr_view_after_8MiB_read.neighbours_pre min 0 mean 0 max 0
+  ddr_view_after_8MiB_read.neighbours_other min 0 mean 0 max 0
+== control/f16 runs 10
+  cached_view.stale_PRE min 4048 mean 4084 max 4096
+  cached_view.fresh_OLD min 0 mean 11 max 48
+  cached_view.other min 0 mean 0 max 0
+  ddr_view.OLD min 4096 mean 4096 max 4096
+  ddr_view.other min 0 mean 0 max 0
+  cached_view_after_8MiB_read.OLD min 4096 mean 4096 max 4096
+== control/f1024 runs 10
+  cached_view.stale_PRE min 109056 mean 112976 max 119104
+  cached_view.fresh_OLD min 143040 mean 149168 max 153088
+  cached_view.other min 0 mean 0 max 0
+  ddr_view.OLD min 262144 mean 262144 max 262144
+  ddr_view.other min 0 mean 0 max 0
+  cached_view_after_8MiB_read.OLD min 262144 mean 262144 max 262144
+== maint_sync/nc/clean/f16 runs 5
+  counted words 4064 | dma_ok in all runs: True
+  c1_cached_view             new: min 286 mean 426 max 506  old: min 3558 mean 3637 max 3778
+  nc1_ddr_view               new: min 4064 mean 4064 max 4064
+  c_after_sync_for_cpu       new: min 748 mean 878 max 999  old: min 3065 mean 3186 max 3316
+  c2_after_8MiB_read         new: min 4064 mean 4064 max 4064
+  nc2_ddr_after_8MiB_read    new: min 4064 mean 4064 max 4064
+  sync_for_cpu us min 82 mean 102 max 181
+== maint_sync/nc/clean/f1024 runs 5
+  counted words 260096 | dma_ok in all runs: True
+  c1_cached_view             new: min 151796 mean 153457 max 155452  old: min 104644 mean 106639 max 108300
+  nc1_ddr_view               new: min 260096 mean 260096 max 260096
+  c_after_sync_for_cpu       new: min 202094 mean 203957 max 206630  old: min 53466 mean 56138 max 58002
+  c2_after_8MiB_read         new: min 260096 mean 260096 max 260096
+  nc2_ddr_after_8MiB_read    new: min 260096 mean 260096 max 260096
+  sync_for_cpu us min 83 mean 83 max 85
+== maint_sync/nc/dirty/f16 runs 5
+  counted words 4064 | dma_ok in all runs: True
+  c1_cached_view             new: min 0 mean 28 max 48  old: min 4016 mean 4035 max 4064
+  nc1_ddr_view               new: min 3636 mean 3733 max 3858  old: min 206 mean 330 max 428
+  c_after_sync_for_cpu       new: min 0 mean 28 max 48  old: min 4016 mean 4035 max 4064
+  c2_after_8MiB_read         new: min 0 mean 28 max 48  old: min 4016 mean 4035 max 4064
+  nc2_ddr_after_8MiB_read    new: min 0 mean 28 max 48  old: min 4016 mean 4035 max 4064
+  sync_for_cpu us min 83 mean 83 max 84
+== maint_sync/nc/dirty/f1024 runs 5
+  counted words 260096 | dma_ok in all runs: True
+  c1_cached_view             new: min 97371 mean 98383 max 100533  old: min 159563 mean 161713 max 162725
+  nc1_ddr_view               new: min 178060 mean 180893 max 183079  old: min 77017 mean 79203 max 82036
+  c_after_sync_for_cpu       new: min 97371 mean 98383 max 100533  old: min 159563 mean 161713 max 162725
+  c2_after_8MiB_read         new: min 97371 mean 98383 max 100533  old: min 159563 mean 161713 max 162725
+  nc2_ddr_after_8MiB_read    new: min 97371 mean 98383 max 100533  old: min 159563 mean 161713 max 162725
+  sync_for_cpu us min 82 mean 84 max 87
+== maint_evict/nc/clean/f16 runs 5
+  counted words 4064 | dma_ok in all runs: True
+  c1_cached_view             new: min 4064 mean 4064 max 4064
+  nc1_ddr_view               new: min 4064 mean 4064 max 4064
+  c2_after_8MiB_read         new: min 4064 mean 4064 max 4064
+  nc2_ddr_after_8MiB_read    new: min 4064 mean 4064 max 4064
+== maint_evict/nc/clean/f1024 runs 5
+  counted words 260096 | dma_ok in all runs: True
+  c1_cached_view             new: min 260096 mean 260096 max 260096
+  nc1_ddr_view               new: min 260096 mean 260096 max 260096
+  c2_after_8MiB_read         new: min 260096 mean 260096 max 260096
+  nc2_ddr_after_8MiB_read    new: min 260096 mean 260096 max 260096
+== maint_evict/nc/dirty/f16 runs 5
+  counted words 4064 | dma_ok in all runs: True
+  c1_cached_view             new: min 4064 mean 4064 max 4064
+  nc1_ddr_view               new: min 4064 mean 4064 max 4064
+  c2_after_8MiB_read         new: min 4064 mean 4064 max 4064
+  nc2_ddr_after_8MiB_read    new: min 4064 mean 4064 max 4064
+== maint_evict/nc/dirty/f1024 runs 5
+  counted words 260096 | dma_ok in all runs: True
+  c1_cached_view             new: min 260096 mean 260096 max 260096
+  nc1_ddr_view               new: min 260096 mean 260096 max 260096
+  c2_after_8MiB_read         new: min 260096 mean 260096 max 260096
+  nc2_ddr_after_8MiB_read    new: min 260096 mean 260096 max 260096
+== bench/c runs 5
+  mb_per_s_end_to_end      min 54.140 mean 54.180 max 54.280
+  dma_wait_ms_per_burst    min 1.843 mean 1.869 max 1.887
+  copy_ms_per_burst        min 0.000 mean 0.000 max 0.000
+  verify_ms_per_burst      min 17.470 mean 17.480 max 17.490
+  bad_frames sum 0 dma_fail sum 0
+== bench/nc runs 5
+  mb_per_s_end_to_end      min 31.060 mean 31.354 max 31.550
+  dma_wait_ms_per_burst    min 1.250 mean 1.262 max 1.279
+  copy_ms_per_burst        min 14.200 mean 14.328 max 14.510
+  verify_ms_per_burst      min 17.750 mean 17.850 max 17.970
+  bad_frames sum 0 dma_fail sum 0

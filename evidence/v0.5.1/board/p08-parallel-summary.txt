@@ -1,0 +1,151 @@
+== base/counter runs 8 | pass in all: True
+  end_to_end MB/s min 30.79 mean 31.07 max 31.26  elapsed_s min 1.073 mean 1.080 max 1.090
+  copy MB/s min 70.2 mean 71.1 max 71.7  verify MB/s min 55.1 mean 55.4 max 55.7
+  error counters summed over runs 0
+== base_r/counter runs 8 | pass in all: True
+  end_to_end MB/s min 29.01 mean 29.32 max 29.73  elapsed_s min 1.128 mean 1.145 max 1.157
+  copy MB/s min 69.2 mean 70.1 max 71.4  verify MB/s min 54.9 mean 55.2 max 55.6
+  error counters summed over runs 0
+== mt/counter/j1 runs 8 | pass in all: True
+  end_to_end MB/s min 30.77 mean 30.90 max 31.02  elapsed_s min 1.082 mean 1.086 max 1.090
+  copy MB/s min 72.2 mean 72.6 max 72.9  verify MB/s min 53.9 mean 54.0 max 54.2
+  cpu_s min 1.082 mean 1.088 max 1.092  dma_blocked_on_buffers_s min 0.923 mean 0.927 max 0.930
+  error counters summed over runs 0
+== mt/counter/j2 runs 8 | pass in all: True
+  end_to_end MB/s min 52.60 mean 52.84 max 53.09  elapsed_s min 0.632 mean 0.635 max 0.638
+  copy MB/s min 57.7 mean 58.2 max 58.5  verify MB/s min 49.0 mean 49.2 max 49.3
+  cpu_s min 1.257 mean 1.260 max 1.266  dma_blocked_on_buffers_s min 0.493 mean 0.496 max 0.498
+  error counters summed over runs 0
+== mt/counter/j3 runs 8 | pass in all: True
+  end_to_end MB/s min 70.35 mean 70.64 max 70.93  elapsed_s min 0.473 mean 0.475 max 0.477
+  copy MB/s min 50.2 mean 51.0 max 52.0  verify MB/s min 46.8 mean 47.3 max 47.7
+  cpu_s min 1.329 mean 1.356 max 1.371  dma_blocked_on_buffers_s min 0.330 mean 0.333 max 0.337
+  error counters summed over runs 0
+== base/prbs runs 8 | pass in all: True
+  end_to_end MB/s min 29.69 mean 29.91 max 30.14  elapsed_s min 1.113 mean 1.122 max 1.130
+  copy MB/s min 71.4 mean 72.1 max 72.8  verify MB/s min 51.0 mean 51.3 max 51.6
+  error counters summed over runs 0
+== base_r/prbs runs 8 | pass in all: True
+  end_to_end MB/s min 27.88 mean 28.11 max 28.21  elapsed_s min 1.190 mean 1.194 max 1.204
+  copy MB/s min 69.5 mean 70.3 max 71.3  verify MB/s min 50.4 mean 50.8 max 51.2
+  error counters summed over runs 0
+== mt/prbs/j1 runs 8 | pass in all: True
+  end_to_end MB/s min 28.04 mean 28.38 max 28.81  elapsed_s min 1.165 mean 1.182 max 1.197
+  copy MB/s min 71.6 mean 72.7 max 74.2  verify MB/s min 46.2 mean 46.7 max 47.3
+  cpu_s min 1.165 mean 1.183 max 1.196  dma_blocked_on_buffers_s min 0.996 mean 1.011 max 1.024
+  error counters summed over runs 0
+== mt/prbs/j2 runs 8 | pass in all: True
+  end_to_end MB/s min 48.91 mean 49.02 max 49.19  elapsed_s min 0.682 mean 0.684 max 0.686
+  copy MB/s min 58.4 mean 58.6 max 58.8  verify MB/s min 43.0 mean 43.1 max 43.1
+  cpu_s min 1.350 mean 1.354 max 1.359  dma_blocked_on_buffers_s min 0.534 mean 0.536 max 0.537
+  error counters summed over runs 0
+== mt/prbs/j3 runs 8 | pass in all: True
+  end_to_end MB/s min 65.82 mean 66.12 max 66.69  elapsed_s min 0.503 mean 0.507 max 0.510
+  copy MB/s min 50.4 mean 51.2 max 52.5  verify MB/s min 41.3 mean 41.7 max 41.9
+  cpu_s min 1.421 mean 1.449 max 1.463  dma_blocked_on_buffers_s min 0.351 mean 0.356 max 0.363
+  error counters summed over runs 0
+== base/fir runs 8 | pass in all: True
+  end_to_end MB/s min 8.95 mean 8.97 max 9.00  elapsed_s min 3.729 mean 3.741 max 3.749
+  copy MB/s min 70.6 mean 71.3 max 72.3  verify MB/s min 10.3 mean 10.3 max 10.3
+  error counters summed over runs 0
+== base_r/fir runs 8 | pass in all: True
+  end_to_end MB/s min 8.79 mean 8.80 max 8.81  elapsed_s min 3.809 mean 3.813 max 3.816
+  copy MB/s min 69.5 mean 70.0 max 70.4  verify MB/s min 10.2 mean 10.3 max 10.3
+  error counters summed over runs 0
+== mt/fir/j1 runs 8 | pass in all: True
+  end_to_end MB/s min 8.64 mean 8.65 max 8.66  elapsed_s min 3.876 mean 3.880 max 3.885
+  copy MB/s min 71.4 mean 72.0 max 72.6  verify MB/s min 9.8 mean 9.8 max 9.8
+  cpu_s min 3.878 mean 3.882 max 3.888  dma_blocked_on_buffers_s min 3.369 mean 3.371 max 3.376
+  error counters summed over runs 0
+== mt/fir/j2 runs 8 | pass in all: True
+  end_to_end MB/s min 16.55 mean 16.56 max 16.57  elapsed_s min 2.025 mean 2.026 max 2.027
+  copy MB/s min 58.5 mean 58.9 max 59.5  verify MB/s min 9.7 mean 9.7 max 9.7
+  cpu_s min 4.033 mean 4.040 max 4.042  dma_blocked_on_buffers_s min 1.626 mean 1.627 max 1.628
+  error counters summed over runs 0
+== mt/fir/j3 runs 8 | pass in all: True
+  end_to_end MB/s min 23.43 mean 23.49 max 23.54  elapsed_s min 1.425 mean 1.428 max 1.432
+  copy MB/s min 50.1 mean 51.5 max 54.5  verify MB/s min 9.6 mean 9.6 max 9.6
+  cpu_s min 4.061 mean 4.126 max 4.153  dma_blocked_on_buffers_s min 1.023 mean 1.025 max 1.031
+  error counters summed over runs 0
+== mt_pinned/counter/j2 runs 8 | pass in all: True
+  end_to_end MB/s min 52.78 mean 52.89 max 53.01  elapsed_s min 0.633 mean 0.634 max 0.636
+  copy MB/s min 57.9 mean 58.2 max 58.7  verify MB/s min 49.3 mean 49.4 max 49.4
+  cpu_s min 1.256 mean 1.260 max 1.264  dma_blocked_on_buffers_s min 0.494 mean 0.495 max 0.496
+  error counters summed over runs 0
+== mt_pinned/counter/j3 runs 8 | pass in all: True
+  end_to_end MB/s min 64.88 mean 69.84 max 71.16  elapsed_s min 0.472 mean 0.481 max 0.517
+  copy MB/s min 46.6 mean 50.1 max 51.2  verify MB/s min 43.2 mean 46.9 max 47.6
+  cpu_s min 1.354 mean 1.360 max 1.364  dma_blocked_on_buffers_s min 0.327 mean 0.338 max 0.386
+  error counters summed over runs 0
+== mt_ring/counter/j3/b3 runs 8 | pass in all: True
+  end_to_end MB/s min 69.29 mean 70.49 max 71.12  elapsed_s min 0.472 mean 0.476 max 0.484
+  copy MB/s min 50.2 mean 51.1 max 52.1  verify MB/s min 45.7 mean 47.1 max 47.5
+  cpu_s min 1.329 mean 1.354 max 1.368  dma_blocked_on_buffers_s min 0.364 mean 0.371 max 0.382
+  error counters summed over runs 0
+== mt_ring/counter/j3/b4 runs 8 | pass in all: True
+  end_to_end MB/s min 68.18 mean 70.05 max 70.90  elapsed_s min 0.473 mean 0.479 max 0.492
+  copy MB/s min 49.7 mean 50.9 max 52.0  verify MB/s min 45.7 mean 46.9 max 47.5
+  cpu_s min 1.328 mean 1.355 max 1.378  dma_blocked_on_buffers_s min 0.353 mean 0.361 max 0.370
+  error counters summed over runs 0
+== mt_ring/counter/j3/b5 runs 8 | pass in all: True
+  end_to_end MB/s min 70.35 mean 70.48 max 70.81  elapsed_s min 0.474 mean 0.476 max 0.477
+  copy MB/s min 50.0 mean 51.3 max 52.5  verify MB/s min 46.8 mean 47.2 max 47.6
+  cpu_s min 1.331 mean 1.349 max 1.375  dma_blocked_on_buffers_s min 0.330 mean 0.334 max 0.341
+  error counters summed over runs 0
+== mt_ring/counter/j3/b8 runs 8 | pass in all: True
+  end_to_end MB/s min 70.03 mean 70.45 max 70.87  elapsed_s min 0.473 mean 0.476 max 0.479
+  copy MB/s min 50.2 mean 50.9 max 52.0  verify MB/s min 46.9 mean 47.4 max 47.6
+  cpu_s min 1.329 mean 1.354 max 1.369  dma_blocked_on_buffers_s min 0.290 mean 0.294 max 0.301
+  error counters summed over runs 0
+== mt_ring/counter/j3/b14 runs 8 | pass in all: True
+  end_to_end MB/s min 69.92 mean 70.41 max 70.86  elapsed_s min 0.474 mean 0.477 max 0.480
+  copy MB/s min 49.0 mean 50.0 max 51.6  verify MB/s min 47.2 mean 47.7 max 48.0
+  cpu_s min 1.339 mean 1.368 max 1.382  dma_blocked_on_buffers_s min 0.206 mean 0.209 max 0.212
+  error counters summed over runs 0
+== fault_crc/counter/j3 runs 1 | pass in all: True
+  bad_seq 0 bad_payload 0 bad_crc 4 injected 4 bad_magic 0
+== fault_seq/counter/j3 runs 1 | pass in all: True
+  bad_seq 5 bad_payload 0 bad_crc 0 injected 5 bad_magic 0
+== fault_payload/counter/j3 runs 1 | pass in all: True
+  bad_seq 0 bad_payload 2 bad_crc 2 injected 2 bad_magic 0
+== fault_crc/counter/orig runs 1 | pass in all: True
+  bad_seq 0 bad_payload 0 bad_crc 4 injected 4 bad_magic 0
+== fault_seq/counter/orig runs 1 | pass in all: True
+  bad_seq 5 bad_payload 0 bad_crc 0 injected 5 bad_magic 0
+== fault_payload/counter/orig runs 1 | pass in all: True
+  bad_seq 0 bad_payload 2 bad_crc 2 injected 2 bad_magic 0
+== fault_crc/prbs/j3 runs 1 | pass in all: True
+  bad_seq 0 bad_payload 0 bad_crc 4 injected 4 bad_magic 0
+== fault_seq/prbs/j3 runs 1 | pass in all: True
+  bad_seq 5 bad_payload 0 bad_crc 0 injected 5 bad_magic 0
+== fault_payload/prbs/j3 runs 1 | pass in all: True
+  bad_seq 0 bad_payload 2 bad_crc 2 injected 2 bad_magic 0
+== fault_crc/prbs/orig runs 1 | pass in all: True
+  bad_seq 0 bad_payload 0 bad_crc 4 injected 4 bad_magic 0
+== fault_seq/prbs/orig runs 1 | pass in all: True
+  bad_seq 5 bad_payload 0 bad_crc 0 injected 5 bad_magic 0
+== fault_payload/prbs/orig runs 1 | pass in all: True
+  bad_seq 0 bad_payload 2 bad_crc 2 injected 2 bad_magic 0
+== fault_crc/fir/j3 runs 1 | pass in all: True
+  bad_seq 0 bad_payload 0 bad_crc 4 injected 4 bad_magic 0
+== fault_seq/fir/j3 runs 1 | pass in all: True
+  bad_seq 5 bad_payload 0 bad_crc 0 injected 5 bad_magic 0
+== fault_payload/fir/j3 runs 1 | pass in all: True
+  bad_seq 0 bad_payload 2 bad_crc 2 injected 2 bad_magic 0
+== fault_crc/fir/orig runs 1 | pass in all: True
+  bad_seq 0 bad_payload 0 bad_crc 4 injected 4 bad_magic 0
+== fault_seq/fir/orig runs 1 | pass in all: True
+  bad_seq 5 bad_payload 0 bad_crc 0 injected 5 bad_magic 0
+== fault_payload/fir/orig runs 1 | pass in all: True
+  bad_seq 0 bad_payload 2 bad_crc 2 injected 2 bad_magic 0
+speedup vs base mt/counter/j1 0.99
+speedup vs base mt/counter/j2 1.70
+speedup vs base mt/counter/j3 2.27
+speedup vs base mt/prbs/j1 0.95
+speedup vs base mt/prbs/j2 1.64
+speedup vs base mt/prbs/j3 2.21
+speedup vs base mt/fir/j1 0.96
+speedup vs base mt/fir/j2 1.85
+speedup vs base mt/fir/j3 2.62
+speedup vs base mt_pinned/counter/j2 1.70
+speedup vs base mt_pinned/counter/j3 2.25

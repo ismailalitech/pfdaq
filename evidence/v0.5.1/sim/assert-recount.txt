@@ -1,0 +1,2 @@
+accepted beats 15631, packets 81, frame headers 186
+packets per TDEST: 0: 56, 1: 13, 2: 8, 3: 4

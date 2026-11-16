@@ -1,0 +1,47 @@
+# Synthesis of demo_top (pfdaq_demo_master -> CoreAPB3_C0 -> pfdaq_demo_regs) by Libero SoC 2026.1, run from the GUI.
+# Taken from the 'Resource Usage Report' of the Synplify log, and the last line the Libero log printed.
+Resource Usage Report for demo_top 
+
+Mapping to part: mpfs095tfcvg784-1
+Cell usage:
+CLKINT          1 use
+CFG1           1 use
+CFG2           10 uses
+CFG3           6 uses
+CFG4           8 uses
+
+Carry cells:
+ARI1            49 uses - used for arithmetic functions
+
+
+Sequential Cells: 
+SLE            50 uses
+
+DSP Blocks:    0 of 292 (0%)
+
+I/O ports: 37
+I/O primitives: 37
+INBUF          3 uses
+OUTBUF         34 uses
+
+
+Global Clock Buffers: 1
+
+Total LUTs:    74
+
+Extra resources required for RAM and MACC_PA interface logic during P&R:
+
+RAM64X12 Interface Logic : SLEs = 0; LUTs = 0;
+RAM1K20  Interface Logic : SLEs = 0; LUTs = 0;
+MACC_PA     Interface Logic : SLEs = 0; LUTs = 0;
+MACC_PA_BC_ROM     Interface Logic : SLEs = 0; LUTs = 0;
+
+Total number of SLEs after P&R:  50 + 0 + 0 + 0 = 50;
+Total number of LUTs after P&R:  74 + 0 + 0 + 0 = 74;
+
+Mapper successful!
+Synthesis completed.
+
+# The first attempt, with the buses promoted to top-level ports, stopped in the compile step with:
+Error:  Number of I/O modules (113) exceeds the limit (80) of the selected device.
+Error:  The command 'compile' failed.

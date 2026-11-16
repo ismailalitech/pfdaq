@@ -32,6 +32,7 @@ Modules are grouped in five levels. Nothing forces an order: every module lists 
 
 ## Level 3: subsystem integration
 
+- [F07 Create your own IP in Libero: from a Verilog file to a core in the Catalog](modules/F07-create-your-own-ip-in-libero.md). Needs: F05, H09.
 - [B03 A Yocto layer for a board the vendor does not support in AMP](modules/B03-yocto-layer.md). Needs: B01.
 - [M02 RPMsg in practice: announce, bind, ping](modules/M02-rpmsg-in-practice.md). Needs: M01.
 - [M03 A real-time supervisor: deadlines and independent checks](modules/M03-real-time-supervisor.md). Needs: M02.
@@ -68,11 +69,12 @@ Modules are grouped in five levels. Nothing forces an order: every module lists 
 - [M06 remoteproc: attach, stop, and why restart fails here](modules/M06-remoteproc-attach-stop.md). Needs: M01.
 - [M07 Deferred interrupt handling, and a port that switches tasks inside the handler](modules/M07-deferred-interrupt-handling.md). Needs: M03.
 - M08 Three ways to signal another hart *(planned)*. Needs: M05.
+- [M10 A four-core monitoring station: acquire, analyse, report, protect](modules/M10-four-core-monitoring-station.md). Needs: M02, M05.
 - [H10 Timing closure, and the build that lost its pins](modules/H10-timing-closure.md). Needs: H03, H09.
-- H12 Assertions and coverage for the stream source *(planned)*. Needs: H11.
+- [H12 Assertions and coverage for the stream source](modules/H12-assertions-and-coverage.md). Needs: H11.
 - [I03 A small kernel driver for a fabric interrupt](modules/I03-kernel-driver-fabric-interrupt.md). Needs: I02.
 - [I07 Real-time capture with four descriptors and credits](modules/I07-real-time-capture.md). Needs: I06, H06.
-- I08 DMA into cached memory: when you need cache maintenance *(planned)*. Needs: I05.
+- [I08 DMA into cached memory: when you need cache maintenance](modules/I08-dma-cached-memory.md). Needs: I05.
 - I09 Fabric DMA against the MSS DMA *(planned)*. Needs: I04.
 - [P01 Where 940 MB/s becomes 30: throughput layer by layer](modules/P01-throughput-layers.md). Needs: I06.
 - [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](modules/P02-interrupt-latency.md). Needs: H07, I02.
@@ -84,8 +86,8 @@ Modules are grouped in five levels. Nothing forces an order: every module lists 
 ## Level 5: advanced engineering
 
 - M09 Fencing the real-time hart with physical memory protection *(planned)*. Needs: M01.
-- P07 Making Linux more deterministic *(planned)*. Needs: P02.
-- P08 Raising verified throughput with more cores *(planned)*. Needs: P01.
+- [P07 Making Linux more deterministic](modules/P07-deterministic-linux.md). Needs: P02.
+- [P08 Raising verified throughput with more cores](modules/P08-parallel-verify.md). Needs: P01.
 
 ## Prerequisite graph
 
@@ -100,6 +102,7 @@ flowchart LR
     F04["F04 Clocks and resets: one PLL, two bus clocks"]
     F05["F05 The tool flow in batch: Libero, the IP vault and FlashPro Express"]
     F06["F06 GPIO from both sides: MSS GPIO and fabric CoreGPIO"]
+    F07["F07 Create your own IP in Libero: from a Verilog file to a core in the Catalog"]
   end
   subgraph B["Boot and Linux"]
     B01["B01 From power-on to login, stage by stage"]
@@ -119,6 +122,7 @@ flowchart LR
     M07["M07 Deferred interrupt handling, and a port that switches tasks inside the handler"]
     M08["M08 Three ways to signal another hart"]
     M09["M09 Fencing the real-time hart with physical memory protection"]
+    M10["M10 A four-core monitoring station: acquire, analyse, report, protect"]
   end
   subgraph H["FPGA design"]
     H01["H01 An APB register block that software can trust"]
@@ -172,6 +176,8 @@ flowchart LR
   F01 --> F04
   F01 --> F06
   F03 --> F06
+  F05 --> F07
+  H09 --> F07
   F01 --> B01
   B01 --> B02
   B01 --> B03
@@ -188,6 +194,8 @@ flowchart LR
   M03 --> M07
   M05 --> M08
   M01 --> M09
+  M02 --> M10
+  M05 --> M10
   H01 --> H03
   H02 --> H04
   H02 --> H05
