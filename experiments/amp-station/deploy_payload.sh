@@ -1,7 +1,7 @@
 #!/bin/bash
 # Put the demo boot payload (U-Boot on harts 1-3, the demo firmware on hart 4) on the running board
-# and put the proven payload back afterwards. Runs on the PC. NOT RUN YET: it is for board day, under
-# supervision, when nothing else is using the board (a reboot ends every other experiment).
+# and put the proven payload back afterwards. Runs on the PC. It is for board day, under supervision,
+# when nothing else is using the board (a reboot ends every other experiment).
 #
 #   deploy_payload.sh status                  read-only: what the board's payload partition holds
 #   deploy_payload.sh backup                  MANDATORY first step: read the payload partition into a file on the PC

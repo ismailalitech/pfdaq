@@ -373,7 +373,7 @@
 
 - id: lab-m10-recording
   type: replay
-  alt: "A recorded 68-second run of the station on the board, in three terminal panes: the Linux dashboard on CPU 2, the acquisition and analysis logs of CPUs 0 and 1, and the hart 4 console. It shows the roll call, normal operation at about 1000 frames per second, a trip on bad frames and a reset, a trip on a missed deadline after the analysis process is frozen and a reset, and the closing summary."
+  alt: "A recorded 64-second run of the station on the board, in three terminal panes: the Linux dashboard on CPU 2, the acquisition and analysis logs of CPUs 0 and 1, and the hart 4 console. It shows the roll call, normal operation at about 1000 frames per second, a trip on bad frames and a reset, a trip on a missed deadline after the analysis process is frozen and a reset, and the closing summary."
   width: 900
   rows: 8
   max_gap: 1.5
@@ -383,15 +383,16 @@
     - {title: "Linux CPUs 0 and 1: acquisition and analysis logs (ssh)", rows: 6}
     - {title: "hart 4 console (UART)", rows: 7}
   callouts:
-    - {t: 1.9,  title: "Core 1 speaks", text: "Linux CPU 0 sends HELLO; hart 4 prints it on its UART and answers with its own tick count.", panes: [0, 2]}
-    - {t: 6.0,  title: "All three Linux cores heard", text: "CPU 2 is the third; hart 4 reports that it has heard harts 1, 2 and 3.", panes: [2]}
-    - {t: 8.5,  title: "Core 4 speaks", text: "Hart 4 sends one message of its own to Linux, and the listener on Linux prints it.", panes: [0, 2]}
-    - {t: 12.9, title: "The station starts", text: "Acquisition on CPU 0, analysis on CPU 1, telemetry on CPU 2; hart 4 arms with its limits.", panes: [1, 2]}
-    - {t: 17.5, title: "Normal operation", text: "About 1000 frames per second, no bad frames; hart 4 prints a window line every tenth window.", panes: [0, 2]}
-    - {t: 28.8, title: "Fault A: corrupt frames", text: "The operator asks for CRC faults; the fabric corrupts one frame in every injection run.", panes: [0]}
-    - {t: 35.2, title: "Trip on bad frames", text: "Hart 4 sees 3 bad frames in a window, aborts the source and shows SAFE on all three consoles.", panes: [0, 1, 2]}
-    - {t: 41.3, title: "Operator reset", text: "The reset travels CPU 2, CPU 1 and RPMsg to hart 4; the station is armed and running again.", panes: [0, 1, 2]}
-    - {t: 51.8, title: "Fault B: the analysis process hangs", text: "After kill -STOP on CPU 1, no message reaches hart 4 for 500 ms: ALARM, then a trip on DEADLINE.", panes: [2]}
-    - {t: 57.5, title: "The frozen process wakes up", text: "After kill -CONT, CPU 1 receives the trip notice that hart 4 sent while it was frozen.", panes: [0, 1]}
-    - {t: 60.4, title: "Second reset", text: "The station resumes and runs normally to the end.", panes: [0, 1, 2]}
-    - {t: 67.8, title: "Summary", text: "37,493 frames verified, 3 bad, 2 trips, 0 sequence mismatches; hart 4's own counts agree.", panes: [0, 2]}
+    - {t: 1.2,  title: "Core 1 speaks", text: "Linux CPU 0 sends HELLO; hart 4 prints it on its UART and answers with its own tick count.", panes: [0, 2]}
+    - {t: 5.3,  title: "All three Linux cores heard", text: "CPU 2 is the third; hart 4 reports that it has heard harts 1, 2 and 3.", panes: [2]}
+    - {t: 7.7,  title: "Core 4 speaks", text: "Hart 4 sends one message of its own to Linux, and the listener on Linux prints it.", panes: [0, 2]}
+    - {t: 12.2, title: "The station starts", text: "Acquisition on CPU 0, analysis on CPU 1, telemetry on CPU 2; hart 4 arms with its limits.", panes: [1, 2]}
+    - {t: 17.0, title: "Normal operation", text: "About 1000 frames per second, no bad frames; hart 4 prints a window line every tenth window.", panes: [0, 2]}
+    - {t: 28.3, title: "Fault A: corrupt frames", text: "The operator asks for CRC faults; the fabric corrupts one frame in every injection run.", panes: [0]}
+    - {t: 30.1, title: "A run ends without a stall", text: "The 5000-slot run ended on 4999 UIO events; the last frame was taken from its descriptor and the injection runs start at once.", panes: [1]}
+    - {t: 30.5, title: "Trip on bad frames", text: "Hart 4 sees 5 bad frames in a window, aborts the source and shows SAFE on all three consoles.", panes: [0, 1, 2]}
+    - {t: 36.6, title: "Operator reset", text: "The reset travels CPU 2, CPU 1 and RPMsg to hart 4; the station is armed and running again.", panes: [0, 1, 2]}
+    - {t: 47.2, title: "Fault B: the analysis process hangs", text: "After kill -STOP on CPU 1, no message reaches hart 4 for 500 ms: ALARM, then a trip on DEADLINE.", panes: [2]}
+    - {t: 53.0, title: "The frozen process wakes up", text: "After kill -CONT, CPU 1 receives the trip notice that hart 4 sent while it was frozen.", panes: [0, 1]}
+    - {t: 56.1, title: "Second reset", text: "The station resumes and runs normally to the end.", panes: [0, 1, 2]}
+    - {t: 63.5, title: "Summary", text: "37,589 frames verified, 5 bad, 2 trips, 0 sequence mismatches; hart 4's own counts agree.", panes: [0, 2]}

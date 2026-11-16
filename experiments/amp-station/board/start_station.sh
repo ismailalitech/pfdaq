@@ -21,7 +21,9 @@ if [ -f "$DIR/ctl" ] && ls "$DIR"/*.pid >/dev/null 2>&1; then
     echo "start_station: $DIR has pid files: run stop_station.sh first" >&2; exit 1
 fi
 rm -rf "$DIR"; mkdir -p "$DIR" || exit 1
-"$BIN" init --dir "$DIR" || exit 1
+# the fabric's sequence counter is not reset between starts: init reads it so the analysis reports the right number to hart 4
+SYNC=; [ "$FABRIC" = hw ] && SYNC=--sync-seq
+"$BIN" init --dir "$DIR" $SYNC || exit 1
 
 pin() {  # pin <cpu> <name> <role> [options]: taskset when available, the process also pins itself
     cpu=$1; name=$2; role=$3; shift 3

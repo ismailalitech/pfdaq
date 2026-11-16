@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 440" width="940" height="440" role="img" aria-labelledby="t d">
+<title id="t">gpio_both_sides on the board, excerpts of the recorded run</title><desc id="d">Recorded output of the program. Line 17 of MSS GPIO2 is held by the kernel for led1 and a request for it fails with device busy. DIP5 to DIP8 read 0 0 0 0. CoreGPIO's configuration registers read 0, its GPIO_OUT register keeps 7 bits (writing 0xffffffff reads back 0x7f, and bit 7 reads back as 0), and its GPIO_IN reads 0. The four combinations of the kernel side and the fabric side for LED1 each read back what was written to that side, independently.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 25.80s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 25.80s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}13.18%{opacity:1}16.18%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="940" height="440" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="940" height="354" fill="#0d1117"/>
+<rect x="0" y="0" width="940" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="470" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">gpio_both_sides on the board, excerpts of the recorded run</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">mss    line 17  out  kernel  consumer "led1"</text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">mss    line 25  in   free    consumer ""</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">mss  DIP5..DIP8 read 0 0 0 0 (read 1)</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">mss  request of line 17 (led1, held by leds-gpio): Device or resource busy</text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">core CFG0..CFG7 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000</text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">core IRQ 00000000  GPIO_IN 00000000  GPIO_OUT 00000000</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">core GPIO_OUT after writing 0xffffffff: 0000007f</text>
+<text x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">core GPIO_OUT after writing bit 6:      00000040</text>
+<text x="24" y="218" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">core GPIO_OUT after writing bit 7:      00000000</text>
+<text x="24" y="238" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">both  mss=0 core=0: led1 brightness 0, debugfs gpio-17 out lo | CoreGPIO OUT bit0 0, IN 00000000</text>
+<text x="24" y="258" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">both  mss=0 core=1: led1 brightness 0, debugfs gpio-17 out lo | CoreGPIO OUT bit0 1, IN 00000000</text>
+<text x="24" y="278" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">both  mss=1 core=0: led1 brightness 1, debugfs gpio-17 out hi | CoreGPIO OUT bit0 0, IN 00000000</text>
+<text x="24" y="298" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">both  mss=1 core=1: led1 brightness 1, debugfs gpio-17 out hi | CoreGPIO OUT bit0 1, IN 00000000</text>
+<text x="24" y="318" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">both  restored: led1 brightness 0, GPIO_OUT 00000000</text>
+<rect x="0" y="354" width="940" height="86" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="43" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="45" r="11" fill="#ffd166"/><text x="8" y="49" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="354" width="940" height="86" fill="#12171d"/>
+<circle cx="24" cy="380" r="13" fill="#ffd166"/><text x="24" y="385" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="378" font-size="15" font-weight="bold" fill="#e6ecf1">The kernel owns the LED lines</text>
+<text x="48" y="398" font-size="13" fill="#9aa8b5">Lines 17 to 23 of gpiochip1 are held by the leds-gpio driver (consumer led1 to led7).</text>
+</g>
+<g class="co" style="animation-delay:3.40s"><rect x="8" y="63" width="924" height="43" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="65" r="11" fill="#ffd166"/><text x="8" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.40s">
+<rect x="0" y="354" width="940" height="86" fill="#12171d"/>
+<circle cx="24" cy="380" r="13" fill="#ffd166"/><text x="24" y="385" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="378" font-size="15" font-weight="bold" fill="#e6ecf1">DIP5 to DIP8 are free inputs</text>
+<text x="48" y="398" font-size="13" fill="#9aa8b5">The four lines can be requested and read; they read 0 0 0 0 here (the switch positions were not checked by eye).</text>
+</g>
+<g class="co" style="animation-delay:6.80s"><rect x="8" y="103" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="105" r="11" fill="#ffd166"/><text x="8" y="109" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:6.80s">
+<rect x="0" y="354" width="940" height="86" fill="#12171d"/>
+<circle cx="24" cy="380" r="13" fill="#ffd166"/><text x="24" y="385" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="378" font-size="15" font-weight="bold" fill="#e6ecf1">A held line cannot be requested</text>
+<text x="48" y="398" font-size="13" fill="#9aa8b5">Only the LED class can drive line 17; to drive it from a program, use brightness.</text>
+</g>
+<g class="co" style="animation-delay:10.20s"><rect x="8" y="123" width="924" height="43" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="125" r="11" fill="#ffd166"/><text x="8" y="129" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.20s">
+<rect x="0" y="354" width="940" height="86" fill="#12171d"/>
+<circle cx="24" cy="380" r="13" fill="#ffd166"/><text x="24" y="385" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="378" font-size="15" font-weight="bold" fill="#e6ecf1">CoreGPIO has no configuration</text>
+<text x="48" y="398" font-size="13" fill="#9aa8b5">The configuration registers read 0 (the core is built with fixed configuration) and GPIO_IN reads 0.</text>
+</g>
+<g class="co" style="animation-delay:13.60s"><rect x="8" y="163" width="924" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="165" r="11" fill="#ffd166"/><text x="8" y="169" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="co cap" style="animation-delay:13.60s">
+<rect x="0" y="354" width="940" height="86" fill="#12171d"/>
+<circle cx="24" cy="380" r="13" fill="#ffd166"/><text x="24" y="385" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
+<text x="48" y="378" font-size="15" font-weight="bold" fill="#e6ecf1">Seven output bits</text>
+<text x="48" y="398" font-size="13" fill="#9aa8b5">Writing all ones reads back 0x7f; bit 7 does not exist. Each bit drives the OR gate of one LED.</text>
+</g>
+<g class="co" style="animation-delay:17.00s"><rect x="8" y="223" width="924" height="83" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="225" r="11" fill="#ffd166"/><text x="8" y="229" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">6</text></g>
+<g class="co cap" style="animation-delay:17.00s">
+<rect x="0" y="354" width="940" height="86" fill="#12171d"/>
+<circle cx="24" cy="380" r="13" fill="#ffd166"/><text x="24" y="385" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">6</text>
+<text x="48" y="378" font-size="15" font-weight="bold" fill="#e6ecf1">Two independent sources</text>
+<text x="48" y="398" font-size="13" fill="#9aa8b5">Each side reads back what was written to it, whatever the other side holds: the OR happens after both.</text>
+</g>
+<g class="co" style="animation-delay:20.40s"><rect x="8" y="303" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="305" r="11" fill="#ffd166"/><text x="8" y="309" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">7</text></g>
+<g class="co cap" style="animation-delay:20.40s">
+<rect x="0" y="354" width="940" height="86" fill="#12171d"/>
+<circle cx="24" cy="380" r="13" fill="#ffd166"/><text x="24" y="385" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">7</text>
+<text x="48" y="378" font-size="15" font-weight="bold" fill="#e6ecf1">Put back</text>
+<text x="48" y="398" font-size="13" fill="#9aa8b5">led1 brightness and GPIO_OUT are returned to 0.</text>
+</g>
+</svg>

@@ -156,6 +156,31 @@ static inline void hw_snapshot(struct fabric_hw *h)
 	usleep(200);                    /* a few fabric cycles are enough; be generous */
 }
 
+/* One line with everything that says where a stalled run is stuck: the fabric counters, the DMA status,
+   the UIO event count against what was consumed, and the four descriptors with the frame each buffer holds. */
+static inline void hw_diag(struct fabric_hw *h, const char *why)
+{
+	uint32_t status, sent, seq, drops, cred, dstat;
+	unsigned evs;
+
+	hw_snapshot(h);
+	status = h->src[SRC_STATUS / 4];
+	sent = h->src[SRC_SNAP_FRAMES / 4] - h->frames0;
+	seq = h->src[SRC_SNAP_SEQ / 4];
+	drops = h->src[SRC_DROPS / 4];
+	cred = h->src[SRC_CREDIT / 4];
+	dstat = h->dma[0x10 / 4];
+	evs = hw_uio_events("dma-controller@60010000") - h->ev_base;
+	fprintf(stderr, "DIAG %s: processed %u of %u, fabric sent %u, status %#x, next_seq %u, drops %u, credits %u, "
+		"dma stat %#x, uio events %u (read %u)", why, h->processed, h->slots, sent, status, seq, drops, cred, dstat, evs, h->ev);
+	for (int k = 0; k < HW_NDEST; k++) {
+		const volatile uint32_t *d = (const volatile uint32_t *)(h->ddr + DESC_OFF + k * RT_DESC_STRIDE);
+		const volatile uint32_t *b = (const volatile uint32_t *)(h->ddr + BUF_OFF + k * h->slot_sz);
+		fprintf(stderr, ", d%d cfg %#x buf seq %u", k, d[0], b[1]);
+	}
+	fprintf(stderr, "\n");
+}
+
 /* the order of writes is the one of I07: byte count and destination, fence, valid word, fence, address */
 static inline void hw_arm_rt(struct fabric_hw *h, int k, uint32_t buf_off, uint32_t nbytes)
 {
@@ -194,22 +219,34 @@ static inline int hw_start_run(struct fabric *f, const struct run_cfg *c)
 	return 0;
 }
 
+/* True when the DMA has written the frame for slot (processed % 4) and cleared the Destination Data Ready bit
+   (bit 2) of its descriptor: 0xD while armed, 0x9 when the frame is in memory (module I04). */
+static inline int hw_slot_done(const struct fabric_hw *h)
+{
+	const volatile uint32_t *d = (const volatile uint32_t *)(h->ddr + DESC_OFF + (h->processed % HW_NDEST) * RT_DESC_STRIDE);
+	return !(d[0] & 4u);
+}
+
+/*
+ * Frames are taken in order, one per call. The truth about "frame n is in memory" is the descriptor of its
+ * slot, not the UIO event count. The first version of this loop counted events (as run_realtime() in
+ * pfdaq_cap does), and on the board an event sometimes goes missing (never seen on an idle board; seen under
+ * network load, cause not isolated): the loop was then one frame behind for the rest of the run, so the last
+ * frame of a run was never taken and the run ended on the 2 s no-progress limit (module M10). The UIO device
+ * is now only the way to sleep until the next frame; whether a frame is there is read from its descriptor.
+ */
 static inline int hw_next(struct fabric *f, uint32_t *dst, uint32_t *seq, int timeout_ms)
 {
 	struct fabric_hw *h = (struct fabric_hw *)f;
 	struct pollfd p = { .fd = h->dma_fd, .events = POLLIN };
 	uint32_t cnt;
 
-	if (h->processed >= h->ev) {
-		/* wait for the DMA interrupt (UIO event); on a 5 ms timeout read the count from sysfs so a
-		   missed wake-up cannot stall the loop, as run_realtime() does */
-		int to = timeout_ms < 5 ? timeout_ms : 5;
+	if (!hw_slot_done(h)) {
+		int to = timeout_ms < 2 ? timeout_ms : 2;       /* a merged event is noticed within one slot interval */
 		if (poll(&p, 1, to) > 0 && read(h->dma_fd, &cnt, 4) == 4)
 			h->ev = cnt - h->ev_base;
-		else
-			h->ev = hw_uio_events("dma-controller@60010000") - h->ev_base;
 	}
-	if (h->processed < h->ev) {
+	if (hw_slot_done(h)) {
 		int k = h->processed % HW_NDEST;
 		const uint32_t *buf = (const uint32_t *)(h->ddr + BUF_OFF + k * h->slot_sz);
 		*seq = buf[1];
@@ -226,11 +263,17 @@ static inline int hw_next(struct fabric *f, uint32_t *dst, uint32_t *seq, int ti
 		hw_snapshot(h);
 		if (h->src[SRC_SNAP_FRAMES / 4] - h->frames0 == h->processed) {
 			h->ended_abort = (status >> 2) & 1;
+			h->ev = hw_uio_events("dma-controller@60010000") - h->ev_base;
+			if (h->ev != h->processed || getenv("STATION_DEBUG"))
+				fprintf(stderr, "run end: %u frames taken from the descriptors, %u UIO events%s\n", h->processed, h->ev,
+					h->ev < h->processed ? " (fewer events than completed frames)" : "");
 			return 2;
 		}
 	}
-	if (mono_ns() - h->last_progress_ns > 2000ull * 1000000ull)
+	if (mono_ns() - h->last_progress_ns > 2000ull * 1000000ull) {
+		hw_diag(h, "no progress for 2 s");
 		return -1;                                              /* no progress for 2 s: same limit as pfdaq_cap */
+	}
 	return 0;
 }
 

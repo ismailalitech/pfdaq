@@ -669,26 +669,98 @@ results:
     command: "summary of the two raw files, computed on the development PC (no new board run)"
     conditions: "Samples at or above 0.98 ms are counted from the histograms in the raw lines."
   - id: m10-station-recording
-    title: "The four-core monitoring station on the board: one recorded run of 68 seconds, three panes with one time line (roll call, normal operation, two trips and resets, summary)"
+    title: "The four-core monitoring station on the board, second recorded run of 64 seconds, three panes with one time line (roll call, normal operation, two trips and resets, summary)"
     file: board/m10-station-recording.jsonl
     class: board
     fabric: "0.5.1"
     date: 2026-11-16
-    command: "experiments/amp-station/run_demo.sh, with the demo payload (build/amp-demo/payload.bin) installed on the payload partition"
-    conditions: "Demo variant of the hart 4 firmware, demo payload on the SD card's payload partition (backed up first), station programs pinned to Linux cpu 0, 1 and 2, simulated faults only; nobody else used the board. One run."
+    command: "experiments/amp-station/run_demo.sh, with the demo payload (build/amp-demo/payload.bin) installed on the payload partition, after a reboot"
+    conditions: "Demo variant of the hart 4 firmware, demo payload on the SD card payload partition (backed up first), station programs pinned to Linux cpu 0, 1 and 2 with the descriptor-reading loop, simulated faults only; nobody else used the board."
   - id: m10-station-telemetry
-    title: "One row per 500 ms window of the same run: frames, bad frames, drops, peak, mean, round trip to hart 4, hart 4 state"
+    title: "One row per 500 ms window of the second run: frames, bad frames, drops, peak, mean, round trip to hart 4, hart 4 state"
     file: board/m10-station-telemetry.csv
     class: board
     fabric: "0.5.1"
     date: 2026-11-16
     command: "written by the telemetry process (station tel) during run_demo.sh"
     conditions: "Same run as m10-station-recording; the round trip is the time from sending the window features to the acknowledgement of hart 4."
+  - id: m10-station-first-recording
+    title: "The first recorded run of the station (68 seconds), with the loop that counted DMA interrupt events: two of four 5,000-slot runs stopped at 4,999 frames and waited 2 s"
+    file: board/m10-station-first-recording.jsonl
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "experiments/amp-station/run_demo.sh, demo payload installed, first version of the acquisition loop"
+    conditions: "Same set-up as the second run; the telemetry of this run is m10-station-first-telemetry."
+  - id: m10-station-first-telemetry
+    title: "One row per 500 ms window of the first run (the windows with 0 frames are the end-of-run stalls and the stopped source)"
+    file: board/m10-station-first-telemetry.csv
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "written by the telemetry process (station tel) during run_demo.sh"
+    conditions: "Same run as m10-station-first-recording."
+  - id: m10-stall-cap-reference
+    title: "pfdaq_cap real-time mode, 5,000 slots of 1,000 us, 4 descriptors, FIR payload, 30 runs one after the other on an idle board: all 30 passed, none timed out"
+    file: board/m10-stall-cap-reference.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "sh /root/run_cap_repeat.sh 30 on the board (pfdaq_cap -m fir -w 252 -T 125000 -n 5000 -d 4), proven payload and image"
+    conditions: "No other load; the same slot, payload and descriptors as the station."
+  - id: m10-stall-cap-netload
+    title: "The same pfdaq_cap run repeated 20 times while the PC streamed data to the board over ssh: 15 of 20 runs timed out, 1 to 38 frames short"
+    file: board/m10-stall-cap-netload.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "sh /root/run_cap_repeat.sh 20 on the board while head -c 4G /dev/zero | ssh <board> cat > /dev/null ran on the PC"
+    conditions: "Proven payload and image; the network interrupts and the DMA interrupt are both served by cpu 0."
+  - id: m10-stall-old-loop
+    title: "Stalls of the first loop with the register note: the lines printed by acquisition in five conditions (idle, whole station idle session, demo observers, network load 120 s and 300 s)"
+    file: board/m10-stall-old-loop.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "station acq / start_station.sh with /root/station.diag (loop of the first run plus the register note), logs selected with grep"
+    conditions: "Demo payload installed. Each section names its source log in the project working copy under logs/m5/stall/."
+  - id: m10-stall-fixed-loop
+    title: "The loop that reads descriptors under the same loads: the run end lines (frames taken, UIO events counted) of acquisition alone idle and loaded, the whole station loaded, and the second recorded run"
+    file: board/m10-stall-fixed-loop.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "station acq with /root/station.fix (STATION_DEBUG=1 prints every run end), logs selected with grep"
+    conditions: "Demo payload installed. Network load is a stream from the PC to the board over ssh; the whole station runs with the three ssh observers and the roll call."
+  - id: m10-stall-irq-affinity
+    title: "Interrupt counts of the DMA, network and mailbox interrupts (all on cpu 0) and the 300 s run with the DMA interrupt moved to cpu 1"
+    file: board/m10-stall-irq-affinity.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "echo 1 > /proc/irq/81/smp_affinity_list, then the loaded acquisition run, then echo 0-2 > /proc/irq/81/smp_affinity_list"
+    conditions: "Demo payload installed; the setting is not persistent and was restored."
   - id: m10-suite-after-restore
-    title: "The board suite after the proven payload was written back: 27 of 27 functional tests"
+    title: "The board suite after the proven payload was written back (after the second run): 27 of 27 functional tests"
     file: board/m10-suite-after-restore.txt
     class: board
     fabric: "0.5.1"
     date: 2026-11-16
     command: "deploy_payload.sh restore, reboot, then sh /root/pfdaq_final_suite.sh on the board"
     conditions: "Proven payload (sha256 e9b780bd...ed4504) read back from the partition and compared before the reboot; supervisor attached."
+  - id: f06-gpio-run
+    title: "GPIO from both sides on the board: GPIO chips and line owners, the LED class, the interrupt sources with a handler, and gpio_both_sides read-only and twice with writes"
+    file: board/f06-gpio-run.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "sh /root/run_f06.sh on the board (experiments/F06-gpio-both-sides), proven payload and image"
+    conditions: "Proven pfdaq-v051 image, supervisor stopped by an earlier suite run (not used); nobody watched the LEDs. The program writes led1 brightness and CoreGPIO GPIO_OUT and puts both back; DIP5 to DIP8 position not checked."
+  - id: f06-design-wiring
+    title: "The connections and CoreGPIO parameters of the reference design that F06 relies on (LED OR gates, DIP pins, GPIO_IN tied to ground)"
+    file: build/f06-design-wiring.txt
+    class: build
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "grep of the Microchip reference design v2026.04 SmartDesign scripts that the project's fabric is built from (MPFS_DISCOVERY_KIT.tcl, FIC_3_PERIPHERALS.tcl, GPIO.tcl)"
+    conditions: "Read from the scripts, not measured on the board; connection lines only, copied unchanged."

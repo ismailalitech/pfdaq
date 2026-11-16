@@ -1,14 +1,5 @@
 # Modules that are scoped but not yet written. When a module's page exists, its entry is removed
 # from this file: the page's front matter then carries the metadata. Checked by tools/check_content.py.
-- id: F06
-  title: 'GPIO from both sides: MSS GPIO and fabric CoreGPIO'
-  track: fundamentals
-  level: 2
-  needs:
-  - F01
-  - F03
-  repro: base
-  summary: The same LED driven from the processor's GPIO block and from a GPIO core in the fabric, plus switch inputs and a button interrupt.
 - id: M08
   title: Three ways to signal another hart
   track: multicore

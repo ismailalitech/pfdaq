@@ -17,7 +17,7 @@ Modules are grouped in five levels. Nothing forces an order: every module lists 
 
 - [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](modules/F03-fabric-interrupts.md). Needs: F01.
 - [F04 Clocks and resets: one PLL, two bus clocks](modules/F04-clocks-and-resets.md). Needs: F01.
-- F06 GPIO from both sides: MSS GPIO and fabric CoreGPIO *(planned)*. Needs: F01, F03.
+- [F06 GPIO from both sides: MSS GPIO and fabric CoreGPIO](modules/F06-gpio-both-sides.md). Needs: F01, F03.
 - [B02 The HSS payload: starting two operating systems](modules/B02-hss-payload.md). Needs: B01.
 - [B04 Device tree for co-design: reserved memory, UIO nodes, a disabled CPU](modules/B04-device-tree-codesign.md). Needs: F02.
 - [B05 Updating a running board over SSH](modules/B05-update-running-board.md). Needs: B02.

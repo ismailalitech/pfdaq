@@ -44,6 +44,7 @@ struct cfg {
 	uint32_t lim_bad, lim_drops, lim_peak, lim_mean;   /* per-window limits on hart 4 */
 	uint32_t xfer_ms;           /* wait for an acknowledgement */
 	uint32_t cpu_hart_offset;   /* Linux cpu N is hart N + 1 */
+	int sync_seq;               /* init: read the fabric's NEXT_SEQ into the shared control block (hardware source) */
 };
 
 static struct cfg cfg = {
@@ -147,6 +148,15 @@ static int role_init(void)
 	    map_ring(&b, "ringB", 1, RING_B_SLOT, RING_B_SLOTS) || map_ring(&c, "ringC", 1, RING_C_SLOT, RING_C_SLOTS)) {
 		perror("init");
 		return 1;
+	}
+	if (cfg.sync_seq) {
+		/* The analysis arms hart 4 before acquisition starts, and hart 4 compares the sequence number Linux reports
+		   with the fabric's NEXT_SEQ. The fabric counter keeps its value from run to run (only a reset zeroes it),
+		   so Linux has to be told where it stands before the first message. */
+		struct fabric *fab = fabric_hw_open();
+		if (!fab) { perror("init: fabric"); return 1; }
+		ctl->acq_next_seq = fab->next_seq(fab);
+		printf("fabric NEXT_SEQ %u taken as the starting sequence number\n", ctl->acq_next_seq);
 	}
 	printf("shared memory in %s: ring A %u x %u B, ring B %u x %u B, ring C %u x %u B\n", cfg.dir,
 	       RING_A_SLOTS, RING_A_SLOT, RING_B_SLOTS, RING_B_SLOT, RING_C_SLOTS, RING_C_SLOT);
@@ -723,7 +733,8 @@ int main(int argc, char **argv)
 		const char *a = argv[i];
 		const char *v = i + 1 < argc ? argv[i + 1] : NULL;
 #define OPT(name) (!strcmp(a, name) && v && (i++, 1))
-		if (OPT("--dir")) cfg.dir = v;
+		if (!strcmp(a, "--sync-seq")) cfg.sync_seq = 1;
+		else if (OPT("--dir")) cfg.dir = v;
 		else if (OPT("--link")) cfg.link = v;
 		else if (OPT("--fabric")) cfg.fabric = v;
 		else if (OPT("--fabsim")) cfg.fabsim = v;

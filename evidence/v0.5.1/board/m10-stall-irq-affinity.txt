@@ -1,0 +1,85 @@
+### interrupt counts before (DMA interrupt allowed on cpu 0-2, then set to cpu 1 for the run)
+ 76:      24403          0          0 SiFive PLIC  64 Edge      end0
+ 77:         67          0          0 SiFive PLIC  65 Edge      end0
+ 78:         87          0          0 SiFive PLIC  66 Edge      end0
+ 79:       7953          0          0 SiFive PLIC  67 Edge      end0
+ 81:     119569          0          0 SiFive PLIC 120 Edge      dma-controller@60010000
+ 89:       1788          0          0 SiFive PLIC 180 Edge      miv-ihc-irq
+ 90:          0          0          0 SiFive PLIC 179 Edge      miv-ihc-irq
+ 91:          0          0          0 SiFive PLIC 178 Edge      miv-ihc-irq
+### after the run with the DMA interrupt on cpu 1 (affinity read back, then restored to 0-2)
+1
+ 76:      96077          0          0 SiFive PLIC  64 Edge      end0
+ 77:         78          0          0 SiFive PLIC  65 Edge      end0
+ 78:      21489          0          0 SiFive PLIC  66 Edge      end0
+ 79:       8022          0          0 SiFive PLIC  67 Edge      end0
+ 81:     119569     299579          0 SiFive PLIC 120 Edge      dma-controller@60010000
+ 89:       1788          0          0 SiFive PLIC 180 Edge      miv-ihc-irq
+ 90:          0          0          0 SiFive PLIC 179 Edge      miv-ihc-irq
+ 91:          0          0          0 SiFive PLIC 178 Edge      miv-ihc-irq
+0-2
+### fixed loop, network load, 300 s, DMA interrupt on cpu 1
+### source: logs/m5/stall/i-fixed-netload-irq-on-cpu1-300s.txt
+frames 0 bad 0 gaps 0 trips 0 overruns 299323 fabric_drops 120 runs 60 aborts 0
+run end: 4999 frames taken from the descriptors, 4985 UIO events (fewer events than completed frames)
+run end: 4998 frames taken from the descriptors, 4998 UIO events
+run end: 4996 frames taken from the descriptors, 4996 UIO events
+run end: 4999 frames taken from the descriptors, 4999 UIO events
+run end: 4998 frames taken from the descriptors, 4997 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 4997 frames taken from the descriptors, 4997 UIO events
+run end: 4997 frames taken from the descriptors, 4996 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 4989 frames taken from the descriptors, 4989 UIO events
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 4996 frames taken from the descriptors, 4996 UIO events
+run end: 4997 frames taken from the descriptors, 4996 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 4993 frames taken from the descriptors, 4992 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 4998 frames taken from the descriptors, 4998 UIO events
+run end: 4996 frames taken from the descriptors, 4994 UIO events (fewer events than completed frames)
+run end: 4999 frames taken from the descriptors, 4999 UIO events
+run end: 4998 frames taken from the descriptors, 4997 UIO events (fewer events than completed frames)
+run end: 4999 frames taken from the descriptors, 4998 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 4999 frames taken from the descriptors, 4999 UIO events
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 4998 frames taken from the descriptors, 4995 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 4997 frames taken from the descriptors, 4996 UIO events (fewer events than completed frames)
+run end: 4998 frames taken from the descriptors, 4998 UIO events
+run end: 4996 frames taken from the descriptors, 4996 UIO events
+run end: 4993 frames taken from the descriptors, 4993 UIO events
+run end: 4998 frames taken from the descriptors, 4998 UIO events
+run end: 4999 frames taken from the descriptors, 4999 UIO events
+run end: 4995 frames taken from the descriptors, 4995 UIO events
+run end: 4998 frames taken from the descriptors, 4998 UIO events
+run end: 4998 frames taken from the descriptors, 4998 UIO events
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 4994 frames taken from the descriptors, 4994 UIO events
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 4998 frames taken from the descriptors, 4997 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 4999 frames taken from the descriptors, 4999 UIO events
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 4997 frames taken from the descriptors, 4997 UIO events
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 4994 frames taken from the descriptors, 4994 UIO events
+run end: 4998 frames taken from the descriptors, 4998 UIO events
+run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)
+run end: 4996 frames taken from the descriptors, 4996 UIO events
+run end: 4998 frames taken from the descriptors, 4997 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 4999 frames taken from the descriptors, 4998 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 4998 UIO events (fewer events than completed frames)
+run end: 5000 frames taken from the descriptors, 5000 UIO events
+run end: 4999 frames taken from the descriptors, 4999 UIO events
+run end: 4996 frames taken from the descriptors, 4996 UIO events
+run end: 4693 frames taken from the descriptors, 4693 UIO events
+[ 300.018 cpu0 acq] stopped: 299579 frames in 60 runs, ring overruns 299323, fabric drops 120
+

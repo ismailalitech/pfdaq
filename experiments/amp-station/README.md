@@ -2,7 +2,7 @@
 
 All four cores of the board do different jobs and talk to each other: Linux cpu 0 acquires frames from the fabric, cpu 1 analyses them and owns the RPMsg link, cpu 2 shows a dashboard and takes operator commands, and the FreeRTOS supervisor on hart 4 holds the limits, watches the heartbeat and stops the source when something is wrong. The page that explains it step by step is [M10](../../docs/modules/M10-four-core-monitoring-station.md).
 
-**Status: experimental.** Everything below was built and tested on the PC (host tests, a RISC-V user-mode emulator, offline checks of the payload). The run on the board has not been made yet; nothing here claims a board result.
+**Status: validated on the board, recorded runs.** Built and tested on the PC (host tests, a RISC-V user-mode emulator, offline checks of the payload), then run on the board with the demo payload; the runs, and the end-of-run stall that was found and fixed in `station_fabric.h`, are described in module M10.
 
 ## What is in this folder
 
@@ -13,7 +13,7 @@ All four cores of the board do different jobs and talk to each other: Linux cpu 
 | `../../firmware/u54_4-supervisor/pfdaq_supervisor.c` | three small blocks under `#ifdef PFDAQ_AMP_DEMO`; without the switch the file builds to the proven image |
 | `build_firmware.sh` | builds the demo ELF and `payload.bin` into `build/amp-demo/` and checks them offline |
 | `verify_payload.py` | the offline comparison of a payload with the proven one |
-| `deploy_payload.sh` | backup, install and restore of the payload partition (for board day, not run yet) |
+| `deploy_payload.sh` | backup, install and restore of the payload partition (used on board day; backup first, read-back after each write) |
 | `run_demo.sh` | the board-day script: runs the whole scenario and records three panes |
 | `board/start_station.sh`, `board/stop_station.sh` | start and stop the three processes on the board |
 | `capture/` | timestamping of streams, UART capture, and the merge into the replay recording |
