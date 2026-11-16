@@ -1,0 +1,97 @@
+COV functional coverage of the stream source
+COV bin group                        what is counted                                   count
+COV   0 backpressure (TREADY low)    beat accepted after 0 clocks of waiting           14406
+COV   1 backpressure (TREADY low)    beat accepted after 1 clock of waiting              972
+COV   2 backpressure (TREADY low)    beat accepted after 2 clocks of waiting             160
+COV   3 backpressure (TREADY low)    beat accepted after 3 to 7 clocks of waiting         83
+COV   4 backpressure (TREADY low)    beat accepted after 8+ clocks of waiting             10
+COV   5 stalled beat is              the first beat of a packet                           21
+COV   6 stalled beat is              a middle beat of a packet                          1182
+COV   7 stalled beat is              the TLAST beat                                       22
+COV   8 spacing                      frame starts inside a packet, no gap                105
+COV   9 spacing                      packet starts 0 clocks after the previous             5
+COV  10 spacing                      packet starts 1 to 7 clocks after the previous       21
+COV  11 spacing                      packet starts 8 to 99 clocks after the previous      24
+COV  12 spacing                      packet starts 100+ clocks after the previous         11
+COV  13 payload words per frame      1 (minimum)                                           1
+COV  14 payload words per frame      2 to 8                                                6
+COV  15 payload words per frame      9 to 64                                              10
+COV  16 payload words per frame      65 to 500                                             4
+COV  17 payload words per frame      501 to 65534                                          0  NOT HIT
+COV  18 payload words per frame      65535 (maximum)                                       0  NOT HIT
+COV  19 frames per run               1                                                     0  NOT HIT
+COV  20 frames per run               2 to 8                                               10
+COV  21 frames per run               9 to 64                                              11
+COV  22 frames per run               65 or more                                            0  NOT HIT
+COV  23 4-byte last beat (TKEEP 0F)  burst, one packet per run                             3
+COV  24 4-byte last beat (TKEEP 0F)  burst, TLAST per frame                               20
+COV  25 4-byte last beat (TKEEP 0F)  real-time                                             0  NOT HIT
+COV  26 kind x payload mode          burst, counter                                        9
+COV  27 kind x payload mode          burst, PRBS                                           1
+COV  28 kind x payload mode          burst, FIR                                            3
+COV  29 kind x payload mode          TLAST per frame, counter                              3
+COV  30 kind x payload mode          TLAST per frame, PRBS                                 1
+COV  31 kind x payload mode          TLAST per frame, FIR                                  0  NOT HIT
+COV  32 kind x payload mode          real-time, counter                                    2
+COV  33 kind x payload mode          real-time, PRBS                                       1
+COV  34 kind x payload mode          real-time, FIR                                        1
+COV  35 TDEST of accepted packets    TDEST 0                                              56
+COV  36 TDEST of accepted packets    TDEST 1                                              13
+COV  37 TDEST of accepted packets    TDEST 2                                               8
+COV  38 TDEST of accepted packets    TDEST 3                                               4
+COV  39 real-time destinations       1 destination (TDEST_COUNT 1)                         0  NOT HIT
+COV  40 real-time destinations       2 destinations                                        1
+COV  41 real-time destinations       3 destinations                                        1
+COV  42 real-time destinations       4 destinations                                        2
+COV  43 real-time RATE (clocks)      2 (minimum)                                           0  NOT HIT
+COV  44 real-time RATE (clocks)      3 to 19                                               0  NOT HIT
+COV  45 real-time RATE (clocks)      20 to 99                                              2
+COV  46 real-time RATE (clocks)      100 or more                                           2
+COV  47 slots dropped before a frame 0 dropped                                            26
+COV  48 slots dropped before a frame 1 dropped                                             9
+COV  49 slots dropped before a frame 2 or 3 dropped                                        0  NOT HIT
+COV  50 slots dropped before a frame 4 or more dropped                                     0  NOT HIT
+COV  51 real-time drop reason        probe: no credit                                     18
+COV  52 real-time drop reason        probe: source busy sending a frame                   10
+COV  53 real-time drop reason        probe: abort pending                                  0  NOT HIT
+COV  54 GAP_CYCLES (TLAST per frame) 0                                                     1
+COV  55 GAP_CYCLES (TLAST per frame) 1 to 7                                                2
+COV  56 GAP_CYCLES (TLAST per frame) 8 to 399                                              0  NOT HIT
+COV  57 GAP_CYCLES (TLAST per frame) 400 or more                                           1
+COV  58 fault x payload mode         corrupt CRC, counter                                  1
+COV  59 fault x payload mode         corrupt CRC, PRBS                                     0  NOT HIT
+COV  60 fault x payload mode         corrupt CRC, FIR                                      0  NOT HIT
+COV  61 fault x payload mode         skip sequence number, counter                         2
+COV  62 fault x payload mode         skip sequence number, PRBS                            0  NOT HIT
+COV  63 fault x payload mode         skip sequence number, FIR                             0  NOT HIT
+COV  64 fault x payload mode         flip payload bit, counter                             1
+COV  65 fault x payload mode         flip payload bit, PRBS                                1
+COV  66 fault x payload mode         flip payload bit, FIR                                 0  NOT HIT
+COV  67 CTRL.ABORT in run kind       burst, no packet open                                 0  NOT HIT
+COV  68 CTRL.ABORT in run kind       burst, packet open                                    3
+COV  69 CTRL.ABORT in run kind       TLAST per frame, no packet open                       1
+COV  70 CTRL.ABORT in run kind       TLAST per frame, packet open                          0  NOT HIT
+COV  71 CTRL.ABORT in run kind       real-time, no packet open                             0  NOT HIT
+COV  72 CTRL.ABORT in run kind       real-time, packet open                                1
+COV  73 CTRL.ABORT when              TVALID high and TREADY low (stalled)                  0  NOT HIT
+COV  74 CTRL.ABORT when              no beat of the run sent yet                           0  NOT HIT
+COV  75 abort received in state      probe: PREFILL (FIR filling)                          0  NOT HIT
+COV  76 abort received in state      probe: RTWAIT (real-time, waiting)                    0  NOT HIT
+COV  77 abort received in state      probe: RUN                                            4
+COV  78 abort received in state      probe: GAP                                            1
+COV  79 abort received in state      probe: FILL (zero fill)                               0  NOT HIT
+COV  80 abort received in state      probe: IDLE (ignored)                                 0  NOT HIT
+COV  81 FORCE_ABORT when             TVALID high                                           1
+COV  82 FORCE_ABORT when             TVALID low                                            0  NOT HIT
+COV  83 state entered                probe: PREFILL                                        4
+COV  84 state entered                probe: RTWAIT                                        40
+COV  85 state entered                probe: RUN                                           79
+COV  86 state entered                probe: GAP                                           24
+COV  87 state entered                probe: FILL                                           3
+COV  88 frame start                  in the high word of a beat                           16
+COV bins hit 61 of 89
+COV runs started 21, packets 81, frame headers 186, accepted beats 15631
+COV longest wait of one beat 17 clocks, longest streak of beats on consecutive clocks 756
+COV payload words per frame: smallest 1, largest 500
+COV frames per run: smallest 3, largest 50
+COV real-time RATE: smallest 20, largest 200

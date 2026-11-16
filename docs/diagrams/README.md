@@ -1,7 +1,7 @@
 # Animated diagrams
 
-Every figure that plays (boxes and arrows lighting up in turn, waveforms with callouts, a console with callouts, a
-screenshot with callouts) is described in YAML in this folder and turned into an SVG by `tools/gen_diagrams.py`.
+Every figure that plays (boxes and arrows lighting up in turn, waveforms with callouts, a console with callouts, a recorded
+session played back, a screenshot with callouts) is described in YAML in this folder and turned into an SVG by `tools/gen_diagrams.py`.
 Any `*.yaml` file here is read; each diagram has a unique `id`; the SVG has the same name. Run
 `python3 tools/gen_diagrams.py` after editing, and `python3 tools/check_content.py` before you finish.
 In a page (the site makes the picture click-to-enlarge):
@@ -51,6 +51,45 @@ about 6.4 pixels per character at the small size, 7.8 for the bold title. Edge k
 ```
 Lines are limited to about 110 characters. Use only text that a real run printed (copy it from a record in `evidence/`
 or from a run you made now); shorten with `...` only when you say so in the caption.
+
+## `type: replay`: a recorded terminal session, played back at its recorded times
+Two or three stacked terminal panes whose lines appear at the times a real run printed them, with numbered callouts.
+```yaml
+- id: example-replay
+  type: replay
+  alt: "..."
+  width: 900
+  rows: 8                         # visible lines per pane (default 8); a pane can set its own `rows`
+  max_gap: 1.5                    # seconds; any longer pause in the recording is shortened to this (default 1.5)
+  recording: recordings/example.jsonl     # relative to docs/diagrams
+  panes:                          # 2 or 3, pane 0 on top
+    - {title: "Linux CPU2: operator dashboard (ssh)", rows: 6}
+    - {title: "Linux CPU0 and CPU1: acquisition and analysis logs (ssh)"}
+    - {title: "hart 4 console (UART)"}
+  callouts:                       # in order of t; t is in recorded seconds
+    - {t: 12.0, title: "Normal operation", text: "one sentence, at most about 110 characters", panes: [0]}
+```
+The recording is one JSON object per line, written by the capture script, sorted by `t`:
+```json
+{"t": 12.04, "pane": 0, "text": "t=12 frames=12288 bad=0 drops=0 rate=31 MB/s hart4=ARMED"}
+```
+`t` is seconds since the start of the run (one clock for all panes), `pane` is the index in `panes`, `text` is one
+line without colour codes or tabs. A line starting `$ ` or `# ` is drawn as a command, as in `terminal`.
+What the generator does:
+- **Time compression.** The gap between two lines, across all panes, is cut to `max_gap` when it is longer. The
+  figure says so ("gaps over 1.5 s are shortened") and shows a clock with the recorded time (mm:ss) next to the
+  playback; the clock runs fast through a shortened gap. Playback restarts after 3 s (`hold`).
+- **Scrolling.** A pane shows its last `rows` lines; a new line pushes the oldest one out at the top.
+- **Callouts.** Callout `t` is a recorded time. At that moment (compressed) the numbered caption appears below, and
+  it stays until the next callout. With `panes: [..]` the pane is outlined with the number in its title bar, and the
+  last line it had printed at `t` is highlighted and scrolls with the text.
+- **Checks (the generator stops with a message).** Wrong pane count, a pane index that does not exist, `t` not sorted,
+  a callout outside the recording or out of order, control characters in a line, a line longer than about 109
+  characters at width 900 (`clip: true` cuts it with an ellipsis instead), a height smaller than needed (leave
+  `height` out to get the exact one), more than 600 lines in one recording (each line has its own animation; about 200
+  kB of SVG at 400 lines).
+- With reduced motion the figure shows the final state of the panes and no callouts, so keep the meaning in `alt`.
+Keep recordings that a real run wrote under `docs/diagrams/recordings/`; do not edit lines by hand.
 
 ## `type: wave`: waveforms, with numbered callouts
 ```yaml

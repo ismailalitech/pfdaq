@@ -27,6 +27,7 @@ REPRO = {
     'base': 'Runs on the shared baseline: fabric v0.5.1 and the pfdaq image',
     'dedicated-fabric': 'Needs its own fabric build',
     'full-system': 'Needs the complete integrated system',
+    'tool': 'Libero SoC on a PC, in a scratch project; no board',
     'doc': 'Explanation with recorded evidence; nothing to run',
     'none': 'No board or tools needed',
 }

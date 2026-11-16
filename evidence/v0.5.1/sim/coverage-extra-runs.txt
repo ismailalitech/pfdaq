@@ -1,0 +1,23 @@
+['CHECK total violations 0', 'ASSERT RESULT: PASS']
+['trace checker (check_trace.py): RESULT: PASS']
+COV  17 payload words per frame      501 to 65534                                          0  NOT HIT
+COV  18 payload words per frame      65535 (maximum)                                       0  NOT HIT
+COV  22 frames per run               65 or more                                            0  NOT HIT
+COV  43 real-time RATE (clocks)      2 (minimum)                                           0  NOT HIT
+COV  49 slots dropped before a frame 2 or 3 dropped                                        0  NOT HIT
+COV  53 real-time drop reason        probe: abort pending                                  0  NOT HIT
+COV  56 GAP_CYCLES (TLAST per frame) 8 to 399                                              0  NOT HIT
+COV  59 fault x payload mode         corrupt CRC, PRBS                                     0  NOT HIT
+COV  60 fault x payload mode         corrupt CRC, FIR                                      0  NOT HIT
+COV  62 fault x payload mode         skip sequence number, PRBS                            0  NOT HIT
+COV  63 fault x payload mode         skip sequence number, FIR                             0  NOT HIT
+COV  66 fault x payload mode         flip payload bit, FIR                                 0  NOT HIT
+COV  67 CTRL.ABORT in run kind       burst, no packet open                                 0  NOT HIT
+COV  70 CTRL.ABORT in run kind       TLAST per frame, packet open                          0  NOT HIT
+COV  73 CTRL.ABORT when              TVALID high and TREADY low (stalled)                  0  NOT HIT
+COV  75 abort received in state      probe: PREFILL (FIR filling)                          0  NOT HIT
+COV  79 abort received in state      probe: FILL (zero fill)                               0  NOT HIT
+COV  80 abort received in state      probe: IDLE (ignored)                                 0  NOT HIT
+COV  82 FORCE_ABORT when             TVALID low                                            0  NOT HIT
+COV bins hit 70 of 89
+COV runs started 26, packets 97, frame headers 202, accepted beats 15827

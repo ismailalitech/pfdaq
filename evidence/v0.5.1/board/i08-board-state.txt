@@ -1,0 +1,11 @@
+6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d-dirty
+isa		: rv64imafdc_zicntr_zicsr_zifencei_zihpm_zaamo_zalrsc_zca_zcd
+[    0.058268] CCACHE: 4 banks, 16 ways, sets/bank=512, bytes/block=64
+[    0.058315] CCACHE: Index of the largest way enabled: 11
+udmabuf-ddr-c0 phys_addr=0x0000000088000000 size=33554432 sync_mode=3 dma_coherent=1
+udmabuf-ddr-nc0 phys_addr=0x00000000c8000000 size=33554432 sync_mode=3 dma_coherent=1
+CONFIG_RISCV_DMA_NONCOHERENT=y
+CONFIG_RISCV_NONSTANDARD_CACHE_OPS=y
+CONFIG_MPFS_DMA_NONCOHERENT=y
+CONFIG_SIFIVE_CCACHE=y
+0

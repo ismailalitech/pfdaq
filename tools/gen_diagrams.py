@@ -48,10 +48,12 @@ class Diagram:
         self.d = d
         self.id = d['id']
         self.w = d.get('width', 780)
-        self.h = d['height']
+        self.h = d.get('height', 0) if d.get('type') == 'replay' else d['height']
         self.out = []
         self.names = []     # animation targets in order
         self.step = d.get('step', STEP)
+        self.css_extra = ''     # extra CSS (replay figures)
+        self.defs_extra = ''    # extra <defs> content (replay figures)
 
     # ---------- geometry
     def port(self, ref):
@@ -231,8 +233,8 @@ class Diagram:
         self.timeline_dur = dur
 
     # ---------- shared: numbered captions that follow the callouts
-    def caption(self, i, title, text, cap_y, delay, bg_y, bg_h):
-        self.add('<g class="co cap" style="animation-delay:%.2fs">' % delay)
+    def caption(self, i, title, text, cap_y, delay, bg_y, bg_h, attr=None):
+        self.add('<g %s>' % (attr or 'class="co cap" style="animation-delay:%.2fs"' % delay))
         self.add('<rect x="0" y="%g" width="%g" height="%g" fill="%s"/>' % (bg_y, self.w, bg_h, BG))
         self.add('<circle cx="24" cy="%g" r="13" fill="%s"/><text x="24" y="%g" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">%d</text>' % (cap_y, ACCENT, cap_y + 5, i + 1))
         self.add('<text x="48" y="%g" font-size="15" font-weight="bold" fill="%s">%s</text>' % (cap_y - 2, FG, esc(title)))
@@ -353,12 +355,217 @@ class Diagram:
             self.add('<text x="48" y="%g" font-size="13" fill="%s">%s</text>' % (cap_y + 18, MUTED, esc(c['text'])))
             self.add('</g>')
 
+    # ---------- a recorded terminal session, played back at its recorded times
+    def replay(self):
+        import json, bisect
+        d = self.d
+        MAXEV = 600
+        rec = d.get('recording')
+        if not rec:
+            raise SystemExit('%s: replay needs recording: <file.jsonl>, relative to docs/diagrams' % self.id)
+        rec_path = os.path.join(DIR, rec)
+        if not os.path.isfile(rec_path):
+            raise SystemExit('%s: recording %s not found (path is relative to docs/diagrams)' % (self.id, rec))
+        panes = d.get('panes') or []
+        if len(panes) not in (2, 3):
+            raise SystemExit('%s: replay needs 2 or 3 panes, found %d' % (self.id, len(panes)))
+        gap = float(d.get('max_gap', 1.5))
+        hold = float(d.get('hold', 3.0))
+        lead = 0.5                      # seconds of empty panes before the first line
+        cw, lh, mx = 7.8, 18, 10
+        limit = int((self.w - 2 * mx - 28) / cw)
+
+        # ---- read and check the recording
+        ev = []
+        for n, raw in enumerate(open(rec_path, encoding='utf-8'), 1):
+            if not raw.strip():
+                continue
+            try:
+                o = json.loads(raw)
+                t, pn, tx = float(o['t']), int(o['pane']), str(o['text'])
+            except (ValueError, KeyError, TypeError) as e:
+                raise SystemExit('%s: %s line %d is not {"t", "pane", "text"}: %s' % (self.id, rec, n, e))
+            if t < 0 or (ev and t < ev[-1][0]):
+                raise SystemExit('%s: %s line %d: t=%g is negative or earlier than the line before (the file must be sorted by t)' % (self.id, rec, n, t))
+            if not 0 <= pn < len(panes):
+                raise SystemExit('%s: %s line %d: pane %d does not exist (the figure has %d panes)' % (self.id, rec, n, pn, len(panes)))
+            tx = tx.rstrip('\r\n')
+            if re.search(r'[\x00-\x1f\x7f]', tx):
+                raise SystemExit('%s: %s line %d has control characters (strip colour codes and tabs in the capture script)' % (self.id, rec, n))
+            if len(tx) > limit:
+                if not d.get('clip'):
+                    raise SystemExit('%s: %s line %d is %d characters, the limit is %d (clip: true cuts it): %r' % (self.id, rec, n, len(tx), limit, tx[:40]))
+                tx = tx[:limit - 1] + '…'
+            ev.append((t, pn, tx))
+        if not ev:
+            raise SystemExit('%s: %s has no lines' % (self.id, rec))
+        if len(ev) > MAXEV:
+            raise SystemExit('%s: %d lines, the limit is %d (every line carries its own animation)' % (self.id, len(ev), MAXEV))
+        ts = [e[0] for e in ev]
+
+        # ---- time compression: playback time of every line
+        tc = [lead]
+        for i in range(1, len(ev)):
+            tc.append(tc[-1] + min(ts[i] - ts[i - 1], gap))
+        D = tc[-1] + hold                       # length of one playback cycle
+        pct = lambda x: min(100.0, max(0.0, x / D * 100))
+
+        def tcmap(t):                           # playback time of a recorded time
+            if t < ts[0]:
+                return max(0.0, lead - (ts[0] - t))
+            k = bisect.bisect_right(ts, t) - 1
+            return tc[k] + min(t - ts[k], gap)
+
+        def real(x):                            # recorded time shown at playback time x
+            if x < lead:
+                return max(0.0, ts[0] - (lead - x))
+            if x >= tc[-1]:
+                return ts[-1]
+            k = bisect.bisect_right(tc, x) - 1
+            span = tc[k + 1] - tc[k]
+            return ts[k] if span <= 0 else ts[k] + (x - tc[k]) / span * (ts[k + 1] - ts[k])
+        mmss = lambda t: '%02d:%02d' % (int(t) // 60, int(t) % 60)
+
+        # ---- callouts: playback windows, each lasts until the next one
+        callouts = d.get('callouts') or []
+        win = []
+        for i, c in enumerate(callouts):
+            if not (0 <= c['t'] <= ts[-1]):
+                raise SystemExit('%s: callout %d at t=%g is outside the recording (0 to %g)' % (self.id, i + 1, c['t'], ts[-1]))
+            if i and c['t'] < callouts[i - 1]['t']:
+                raise SystemExit('%s: callouts must be in order of t (callout %d)' % (self.id, i + 1))
+            for k in c.get('panes') or []:
+                if not 0 <= k < len(panes):
+                    raise SystemExit('%s: callout %d names pane %d, which does not exist' % (self.id, i + 1, k))
+        for i, c in enumerate(callouts):
+            a = tcmap(c['t'])
+            b = tcmap(callouts[i + 1]['t']) if i + 1 < len(callouts) else D
+            win.append((a, max(b, a + 0.3)))
+
+        kfs, names, E = [], {}, 0.01
+
+        def window(a, b):                       # name of an opacity animation that is 1 between a and b
+            key = (round(a, 3), round(b, 3))
+            if key not in names:
+                names[key] = '%s_w%d' % (self.id, len(names))
+                pa, pb = pct(a), pct(b)
+                body = '0%%,%.3f%%{opacity:0}%.3f%%,%.3f%%{opacity:1}' % (pa, min(pa + E, pb), pb)
+                if pb < 100 - E:
+                    body += '%.3f%%,100%%{opacity:0}' % (pb + E)
+                kfs.append('@keyframes %s{%s}' % (names[key], body))
+            return names[key]
+
+        # ---- layout
+        top = 30
+        rows = [int(p.get('rows', d.get('rows', 8))) for p in panes]
+        geo, y = [], top
+        for r in rows:
+            geo.append((y, 26 + r * lh + 12))
+            y += 26 + r * lh + 12 + 8
+        ph = y
+        need = ph + 74
+        if self.h and self.h < need:
+            raise SystemExit('%s: height %g is too small, need at least %g' % (self.id, self.h, need))
+        if not self.h:
+            self.h = need
+        cap_y = ph + 28
+        self.steps = []
+        mono = 'font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13"'
+
+        # ---- top strip: compression note and the recorded-time clock
+        self.add('<text x="%g" y="20" font-size="12" fill="%s">gaps over %g s are shortened</text>' % (mx + 4, MUTED, gap))
+        xr = self.w - mx - 4
+        self.add('<text x="%g" y="20" text-anchor="end" font-size="12" fill="%s">of %s</text>' % (xr, MUTED, mmss(ts[-1])))
+        xc = xr - 7.0 * len('of %s' % mmss(ts[-1])) - 6
+        self.add('<text x="%g" y="20" text-anchor="end" font-size="12" fill="%s">recorded</text>' % (xc - 42, MUTED))
+        runs, x = [], 0.0
+        while x <= D:
+            s_ = mmss(real(x))
+            if runs and runs[-1][0] == s_:
+                runs[-1][2] = x + 0.25
+            else:
+                runs.append([s_, x, x + 0.25])
+            x += 0.25
+        for s_, a, b in runs:
+            self.add('<text class="rw" style="animation-name:%s" x="%g" y="20" font-size="12" font-weight="bold" fill="%s" text-anchor="end">%s</text>' % (
+                window(a, min(b, D)), xc, FG, s_))
+        self.add('<text class="rs" x="%g" y="20" font-size="12" font-weight="bold" fill="%s" text-anchor="end">%s</text>' % (xc, FG, mmss(ts[-1])))
+
+        # ---- panes
+        per = [[i for i, e in enumerate(ev) if e[1] == k] for k in range(len(panes))]
+        scroll = []
+        nl = 0
+        for k, p in enumerate(panes):
+            y0, hh = geo[k]
+            N = rows[k]
+            title = p.get('title', 'pane %d' % (k + 1))
+            if text_w(title, 12) > self.w - 2 * mx - 70 - 90:
+                raise SystemExit('%s: pane title too long: %r' % (self.id, title))
+            clip = '%s-clip%d' % (self.id, k)
+            self.defs_extra += '<clipPath id="%s"><rect x="%g" y="%g" width="%g" height="%g"/></clipPath>' % (clip, mx, y0 + 31, self.w - 2 * mx, hh - 31)
+            self.add('<rect x="%g" y="%g" width="%g" height="%g" rx="8" fill="#0d1117"/>' % (mx, y0, self.w - 2 * mx, hh))
+            self.add('<path d="M%g %g a8 8 0 0 1 8 -8 h%g a8 8 0 0 1 8 8 v18 h-%g z" fill="#1b222c"/>' % (mx, y0 + 8, self.w - 2 * mx - 16, self.w - 2 * mx))
+            for j, c in enumerate(('#ef6f6c', '#e6c04f', '#5fbf84')):
+                self.add('<circle cx="%d" cy="%g" r="5" fill="%s"/>' % (mx + 16 + 16 * j, y0 + 13, c))
+            self.add('<text x="%g" y="%g" font-size="12" fill="%s">%s</text>' % (mx + 70, y0 + 17, MUTED, esc(title)))
+            idxs = per[k]
+            stops = {}
+            for r_, i in enumerate(idxs):
+                if r_ >= N:
+                    stops[round(pct(tc[i]), 4)] = -(r_ - N + 1) * lh
+            final = -(len(idxs) - N) * lh if len(idxs) > N else 0
+            sk = '%s_s%d' % (self.id, k)
+            if stops:
+                scroll.append('@keyframes %s{0%%{transform:translateY(0)}%s}' % (sk, ''.join(
+                    '%.4f%%{transform:translateY(%dpx)}' % (q, v) for q, v in sorted(stops.items()))))
+            self.add('<g clip-path="url(#%s)"><g class="rg"%s transform="translate(0 %d)">' % (
+                clip, ' style="animation-name:%s"' % sk if stops else '', final))
+            for r_, i in enumerate(idxs):
+                tx = ev[i][2]
+                yy = y0 + 26 + 18 + r_ * lh - 2
+                kn = '%s_l%d' % (self.id, nl)
+                nl += 1
+                left = 100 - pct(tc[i])
+                kfs.append('@keyframes %s{0%%,%.3f%%{opacity:1}%.3f%%,100%%{opacity:0}}' % (kn, left, min(100, left + E)))
+                if tx.startswith('$ ') or tx.startswith('# '):
+                    inner, fill = '<tspan fill="#5fbf84">%s</tspan><tspan fill="%s">%s</tspan>' % (esc(tx[:2]), FG, esc(tx[2:])), ''
+                else:
+                    inner, fill = esc(tx), ' fill="#b9c4cf"'
+                self.add('<text class="rl" style="animation-name:%s;animation-delay:%.3fs" x="%g" y="%g" %s%s xml:space="preserve">%s</text>' % (
+                    kn, tc[i], mx + 14, yy, mono, fill, inner))
+            for ci, c in enumerate(callouts):          # the highlighted line moves with the scrolling text
+                if k in (c.get('panes') or []):
+                    seen = [i for i in idxs if ts[i] <= c['t']]
+                    if seen:
+                        r_ = len(seen) - 1
+                        self.add('<rect class="rw" style="animation-name:%s" x="%g" y="%g" width="%g" height="%g" rx="3" fill="%s" fill-opacity="0.15" stroke="%s" stroke-width="2"/>' % (
+                            window(*win[ci]), mx + 6, y0 + 26 + 4 + r_ * lh, self.w - 2 * mx - 12, lh, ACCENT, ACCENT))
+            self.add('</g></g>')
+            for ci, c in enumerate(callouts):          # pane outline and numbered badge in the title bar
+                if k in (c.get('panes') or []):
+                    self.add('<g class="rw" style="animation-name:%s"><rect x="%g" y="%g" width="%g" height="%g" rx="8" fill="none" stroke="%s" stroke-width="2.5"/>'
+                             '<circle cx="%g" cy="%g" r="10" fill="%s"/><text x="%g" y="%g" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">%d</text></g>' % (
+                                 window(*win[ci]), mx, y0, self.w - 2 * mx, hh, ACCENT, self.w - mx - 20, y0 + 13, ACCENT, self.w - mx - 20, y0 + 17, ci + 1))
+        self.add('<rect x="0" y="%g" width="%g" height="%g" fill="%s"/>' % (ph, self.w, self.h - ph, BG))
+        for ci, c in enumerate(callouts):
+            self.caption(ci, c['title'], c['text'], cap_y, 0, ph, self.h - ph,
+                         attr='class="rw" style="animation-name:%s"' % window(*win[ci]))
+        self.replay_dur = D
+        self.css_extra = (
+            '.rw,.rl{opacity:0}.rw,.rl,.rg{animation-duration:%.3fs;animation-timing-function:linear;animation-iteration-count:infinite}'
+            '.rg{animation-timing-function:step-end}.rs{display:none}'
+            '@media (prefers-reduced-motion:reduce){.rw,.rl,.rg{animation:none}.rl{opacity:1}.rw{display:none}.rs{display:inline}}\n%s\n%s' % (
+                D, '\n'.join(kfs), '\n'.join(scroll)))
+
     # ---------- document
     def render(self):
         d = self.d
         if d.get('type') == 'timeline':
             self.timeline()
             cycle = self.timeline_dur
+        elif d.get('type') == 'replay':
+            self.replay()
+            cycle = self.replay_dur
         elif d.get('type') in ('annotated', 'terminal', 'wave'):
             getattr(self, d['type'])()
             cycle = max(len(self.steps) * self.step + HOLD, 1)
@@ -382,6 +589,8 @@ text{font-family:%s}
             '<marker id="ar-%s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="%s"/></marker>' % (k, c)
             for k, c in [('plain', '#7d8c9b')] + [(k, v[1]) for k, v in KINDS.items() if k != 'plain'] + [('hl', ACCENT)])
         head = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %g %g" width="%g" height="%g" role="img" aria-labelledby="t d">' % (self.w, self.h, self.w, self.h)
+        css += self.css_extra
+        marks += self.defs_extra
         return '%s\n<title id="t">%s</title><desc id="d">%s</desc>\n<style>%s</style>\n<defs>%s</defs>\n<rect width="%g" height="%g" rx="12" fill="%s"/>\n%s\n</svg>\n' % (
             head, esc(d.get('title', title)), esc(title), css, marks, self.w, self.h, BG, body)
 

@@ -1,0 +1,199 @@
+# Figures for the labs written from runs on the board in November 2026 (modules I08, P08, P07, F06).
+# Every number in a terminal figure was printed by a recorded run (logs and evidence name them).
+
+# ---------------------------------------------------------------- I08
+- id: lab-i08-two-windows
+  alt: "Two ways for the fabric DMA to write the same DDR bytes. Through the cached window at 0x8800_0000 the data lands in the caches that the processor also reads, so a cached read sees it; it reaches DDR later by write-back. Through the non-cached window at 0xC800_0000 the data goes straight to DDR, and a processor that holds those lines in its cache is not told, so a cached read returns the old copy."
+  width: 900
+  height: 400
+  nodes:
+    dma: {x: 10,  y: 160, w: 140, h: 76, kind: fabric, title: "Fabric DMA", sub: "one burst of\n16 frames, 16 KiB"}
+    cw:  {x: 190, y: 40,  w: 190, h: 70, kind: mem,    title: "Cached window", sub: "0x8800_0000 + 0x40_0000"}
+    ncw: {x: 190, y: 290, w: 190, h: 70, kind: mem,    title: "Non-cached window", sub: "0xC800_0000 + 0x40_0000"}
+    l2:  {x: 500, y: 40,  w: 170, h: 70, kind: mss,    title: "L1 and L2 caches", sub: "the processor's copies"}
+    cpu: {x: 760, y: 40,  w: 130, h: 70, kind: hart,   title: "Linux program", sub: "cached read"}
+    ddr: {x: 500, y: 290, w: 170, h: 70, kind: mem,    title: "DDR", sub: "the same bytes"}
+  edges:
+    - {id: e0, from: dma.right@0.3, to: cw.left,   label: "dest 0x88..."}
+    - {id: e1, from: cw.right,      to: l2.left,   label: "into the cache"}
+    - {id: e2, from: l2.right,      to: cpu.left,  label: "new data"}
+    - {id: e3, from: l2.bottom,     to: ddr.top,   dashed: true, label: "written back later"}
+    - {id: e4, from: dma.right@0.7, to: ncw.left,  label: "dest 0xC8..."}
+    - {id: e5, from: ncw.right,     to: ddr.left,  label: "straight to DDR"}
+    - {id: e6, from: ddr.right,     to: cpu.bottom, kind: bad, label: "old copy"}
+  steps: [dma, e0, cw, e1, l2, e2, cpu, e3, e4, ncw, e5, ddr, e6]
+  notes:
+    - {x: 20, y: 385, text: "Measured: cached window 0 stale words in 60 runs; non-cached window over cached lines 3,717 of 4,064 words stale (mean of 10)."}
+
+- id: lab-i08-dirty-runs
+  type: terminal
+  title: "cached_dma on the board: the same 16 KiB burst, three ways (fields marked ... left out)"
+  alt: "Three recorded runs with the processor holding modified cache lines of the buffer. With the DMA writing through the cached window the processor reads 4,064 of 4,064 words new. With the DMA writing through the non-cached window the processor reads 4,033 old words and DDR ends up with only 31 new words. With the same non-cached window and a read of 8 MiB before and after, all 4,064 words are new."
+  width: 940
+  height: 400
+  step: 3.6
+  lines:
+    - "$ cached_dma -S dirty -f 16 -D c"
+    - '{"state": "dirty", "dma_window": "cached", "maintenance": "none", "frames": 16, ..., "counted_words": 4064,'
+    - ' "c1_cached_view": {"new": 4064, "old": 0, ...}, "nc1_ddr_view": {"new": 348, "old": 16, "pre": 3700, ...},'
+    - ' "nc2_ddr_after_8MiB_read": {"new": 4064, "old": 0, "pre": 0, "other": 0}}'
+    - "$ cached_dma -S dirty -f 16 -D nc"
+    - '{"state": "dirty", "dma_window": "non-cached", "maintenance": "none", "frames": 16, ..., "counted_words": 4064,'
+    - ' "c1_cached_view": {"new": 31, "old": 4033, ...}, "nc1_ddr_view": {"new": 3731, "old": 333, ...},'
+    - ' "nc2_ddr_after_8MiB_read": {"new": 31, "old": 4033, "pre": 0, "other": 0}}'
+    - "$ cached_dma -S dirty -f 16 -D nc -M evict"
+    - '{"state": "dirty", "dma_window": "non-cached", "maintenance": "evict", "frames": 16, ..., "counted_words": 4064,'
+    - ' "c1_cached_view": {"new": 4064, "old": 0, ...}, "nc2_ddr_after_8MiB_read": {"new": 4064, "old": 0, ...}}'
+  callouts:
+    - {lines: [0, 0], title: "Dirty lines, cached window", text: "The program wrote OLD into the buffer through the cache; the DMA then writes the same addresses."}
+    - {lines: [2, 2], title: "No stale word", text: "The cached read returns 4,064 new words. DDR itself holds only 348 of them yet: the rest is still in the cache."}
+    - {lines: [3, 3], title: "Written back", text: "After the program reads 8 MiB elsewhere, DDR holds all 4,064 new words."}
+    - {lines: [4, 4], title: "Same lines, non-cached window", text: "Same preparation, but the DMA is pointed at the non-cached alias of the same DDR bytes."}
+    - {lines: [6, 7], title: "Stale, then destroyed", text: "The cached read returns 4,033 old words; after the cache lines are written back DDR holds only 31 new ones."}
+    - {lines: [8, 10], title: "Maintenance by eviction", text: "Reading 8 MiB before and after the DMA flushes then drops the lines: all 4,064 words are new."}
+
+- id: lab-i08-time-per-mib
+  type: timeline
+  alt: "Time to receive and verify one 1 MiB burst, serial, to scale: with the DMA writing the cached window, 1.87 ms of DMA and 17.48 ms verifying in place; with the non-cached window, 1.26 ms of DMA, 14.33 ms copying the burst out and 17.85 ms verifying the copy."
+  width: 900
+  height: 290
+  label_width: 160
+  scale: 19
+  length: 36
+  top: 40
+  lane_h: 54
+  play: 9
+  ticks: [[0, "0 ms"], [5, "5"], [10, "10"], [15, "15"], [20, "20"], [25, "25"], [30, "30"], [35, "35 ms"]]
+  lanes:
+    - name: "Cached window"
+      segments:
+        - {t0: 0,     t1: 1.869,  kind: fabric, label: ""}
+        - {t0: 1.869, t1: 19.349, kind: hart,   label: "verify in place 17.48 ms"}
+    - name: "Non-cached window"
+      segments:
+        - {t0: 0,     t1: 1.262,  kind: fabric, label: ""}
+        - {t0: 1.262, t1: 15.59,  kind: sw,     label: "copy out 14.33 ms"}
+        - {t0: 15.59, t1: 33.44,  kind: hart,   label: "verify the copy 17.85 ms"}
+  notes:
+    - {x: 20, y: 240, text: "Per MiB, means of 5 runs of 32 bursts. Fabric (green): DMA wait, 1.87 ms cached window, 1.26 ms non-cached."}
+    - {x: 20, y: 262, text: "Counter payload, one burst at a time, no supervisor. 54.18 MB/s against 31.35 MB/s."}
+
+# ---------------------------------------------------------------- P08
+- id: lab-p08-pipeline
+  alt: "The multi-threaded capture loop. The main thread arms a burst in a free buffer of a ring in the non-cached region and starts the stream source; the DMA writes the burst into the buffer. A finished burst goes to one of the worker threads, which copies it out of the non-cached buffer, hands the buffer back to the ring, and verifies its private copy. With three workers all three Linux cores are busy."
+  width: 900
+  height: 340
+  nodes:
+    main: {x: 10,  y: 30,  w: 230, h: 80, kind: hart,   title: "Main thread", sub: "arm, START, wait for the\nDMA interrupt, hand over"}
+    dma:  {x: 10,  y: 220, w: 230, h: 70, kind: fabric, title: "Stream source and DMA", sub: "one 1 MiB burst at a time"}
+    ring: {x: 330, y: 110, w: 220, h: 100, kind: mem,   title: "Buffer ring", sub: "workers + 2 buffers\nin the non-cached region"}
+    w1:   {x: 650, y: 20,  w: 240, h: 62, kind: sw,     title: "Worker 1", sub: "copy out, free the buffer, verify"}
+    w2:   {x: 650, y: 110, w: 240, h: 62, kind: sw,     title: "Worker 2", sub: "copy out, free the buffer, verify"}
+    w3:   {x: 650, y: 200, w: 240, h: 62, kind: sw,     title: "Worker 3", sub: "copy out, free the buffer, verify"}
+  edges:
+    - {id: e0, from: main.bottom, to: dma.top, label: "arm, START"}
+    - {id: e1, from: dma.right,   to: ring.bottom, label: "writes a burst"}
+    - {id: e2, from: main.right,  to: ring.top, label: "finished burst"}
+    - {id: e3, from: ring.right@0.2, to: w1.left, label: ""}
+    - {id: e4, from: ring.right@0.5, to: w2.left, label: "copy out"}
+    - {id: e5, from: ring.right@0.8, to: w3.left, label: ""}
+    - {id: e6, from: w3.bottom, to: ring.bottom, bulge: 40, dashed: true, kind: hart, label: "buffer free again"}
+  steps: [main, e0, dma, e1, ring, e2, e3, e4, e5, w1, w2, w3, e6]
+  notes:
+    - {x: 20, y: 322, text: "The workers verify in parallel; with three of them all three Linux cores are busy, and hart 4 stays with the supervisor."}
+
+- id: lab-p08-before-after
+  type: terminal
+  title: "pfdaq_cap and pfdaq_cap_mt on the board, 32 bursts of 1 MiB (fields marked ... left out)"
+  alt: "Two recorded runs with the counter payload. The original tool reaches 31.26 MB/s, and the mean time from START to the DMA interrupt is 32.5 ms because the DMA waits for verification. The three-worker version reaches 70.93 MB/s, the mean start-to-interrupt time is 1.35 ms, and the CPU time of 1.34 s in 0.47 s of run time shows that all three cores are busy."
+  width: 940
+  height: 380
+  step: 3.6
+  lines:
+    - "$ pfdaq_cap -m counter -w 252 -f 1024 -n 32"
+    - '{"pass": true, "bursts": 32, "bytes": 33554432, "elapsed_s": 1.073291, "mb_per_s_end_to_end": 31.26, ...,'
+    - ' "start_to_irq_s": {"min": 0.001240, "mean": 0.032511, "max": 0.038077}, "copy_mb_per_s": 71.7, ...}'
+    - "$ pfdaq_cap_mt -m counter -w 252 -f 1024 -n 32 -j 3"
+    - '{"pass": true, "workers": 3, "buffers": 5, ..., "elapsed_s": 0.473060, "mb_per_s_end_to_end": 70.93,'
+    - ' "start_to_irq_s": {"min": 0.001205, "mean": 0.001353, "max": 0.004182}, "dma_blocked_on_buffers_s": 0.3347,'
+    - ' "copy_mb_per_s": 51.8, "verify_mb_per_s": 47.1, "cpu_s": 1.3438, "bursts_per_worker": [11, 11, 10], ...}'
+  callouts:
+    - {lines: [0, 0], title: "Before: one thread", text: "The unchanged tool, without supervision: copy and verify run one after the other on one core."}
+    - {lines: [1, 1], title: "31.26 MB/s", text: "33,554,432 bytes in 1.073 s."}
+    - {lines: [2, 2], title: "The DMA waits for software", text: "Mean START to interrupt is 32.5 ms, against 1.2 ms at the shortest: the next burst starts late."}
+    - {lines: [3, 3], title: "After: three workers", text: "Same checks, same buffers; the main thread only drives the DMA."}
+    - {lines: [4, 4], title: "70.93 MB/s", text: "The same 33,554,432 bytes in 0.473 s; the run still passed."}
+    - {lines: [5, 5], title: "The DMA no longer waits long", text: "Mean START to interrupt 1.35 ms; the main thread waited 0.33 s in all for a free buffer."}
+    - {lines: [6, 6], title: "Each core is slower, three of them win", text: "Copy 51.8 and verify 47.1 MB/s per worker, down from 71.7 and 55.7; 1.34 s of CPU in 0.47 s."}
+
+- id: lab-p08-elapsed
+  type: timeline
+  alt: "Elapsed time for 32 MiB, to scale, mean of 8 runs. Counter payload: original 1.080 s, one worker 1.086 s, two workers 0.635 s, three workers 0.475 s. FIR payload: original 3.741 s, one worker 3.880 s, two workers 2.026 s, three workers 1.428 s."
+  width: 900
+  height: 560
+  label_width: 160
+  scale: 175
+  length: 4.2
+  top: 40
+  lane_h: 40
+  play: 9
+  ticks: [[0, "0 s"], [1, "1 s"], [2, "2 s"], [3, "3 s"], [4, "4 s"]]
+  lanes:
+    - name: "Counter, original"
+      segments: [{t0: 0, t1: 1.080, kind: sw, label: "1.080 s"}]
+    - name: "Counter, 1 worker"
+      segments: [{t0: 0, t1: 1.086, kind: sw, label: "1.086 s"}]
+    - name: "Counter, 2 workers"
+      segments: [{t0: 0, t1: 0.635, kind: hart, label: "0.635 s"}]
+    - name: "Counter, 3 workers"
+      segments: [{t0: 0, t1: 0.475, kind: hart, label: "0.475 s"}]
+    - name: "FIR, original"
+      segments: [{t0: 0, t1: 3.741, kind: sw, label: "3.741 s"}]
+    - name: "FIR, 1 worker"
+      segments: [{t0: 0, t1: 3.880, kind: sw, label: "3.880 s"}]
+    - name: "FIR, 2 workers"
+      segments: [{t0: 0, t1: 2.026, kind: hart, label: "2.026 s"}]
+    - name: "FIR, 3 workers"
+      segments: [{t0: 0, t1: 1.428, kind: hart, label: "1.428 s"}]
+  notes:
+    - {x: 20, y: 500, text: "To scale, means of 8 runs of 32 bursts of 1 MiB (33,554,432 bytes). Purple: one thread; blue: several."}
+    - {x: 20, y: 522, text: "Original: pfdaq_cap without -r. Workers: pfdaq_cap_mt -j N."}
+
+# ---------------------------------------------------------------- P07
+- id: lab-p07-settings
+  alt: "The path of the fabric interrupt to the measuring program and the runtime setting that acts on each step. The fabric line reaches the PLIC (source 119); smp_affinity chooses the Linux CPU that takes it; a kernel thread at SCHED_FIFO 50 serves it and wakes the program; the program, started with taskset and SCHED_FIFO 80 and locked memory, reads the event and writes ACK."
+  width: 900
+  height: 250
+  nodes:
+    plic: {x: 10,  y: 40, w: 150, h: 70, kind: mss,    title: "PLIC", sub: "source 119\n(fabric F2M[1])"}
+    cpu:  {x: 215, y: 40, w: 160, h: 70, kind: hart,   title: "One Linux CPU", sub: "chosen by\nsmp_affinity"}
+    thr:  {x: 430, y: 40, w: 190, h: 70, kind: sw,     title: "irq/80 kernel thread", sub: "SCHED_FIFO 50\nchrt can change it"}
+    app:  {x: 675, y: 40, w: 215, h: 70, kind: good,   title: "pfdaq_lat", sub: "taskset, -R 80:\nSCHED_FIFO 80, mlockall"}
+    ack:  {x: 675, y: 160, w: 215, h: 60, kind: fabric, title: "ACK write", sub: "stops the fabric timer"}
+  edges:
+    - {id: e0, from: plic.right, to: cpu.left, label: "interrupt"}
+    - {id: e1, from: cpu.right, to: thr.left, label: "wakes"}
+    - {id: e2, from: thr.right, to: app.left, label: "wakes"}
+    - {id: e3, from: app.bottom, to: ack.top}
+  steps: [plic, e0, cpu, e1, thr, e2, app, e3, ack]
+  notes:
+    - {x: 20, y: 160, text: "Settings used: smp_affinity of the interrupt, taskset for the program and for other tasks,"}
+    - {x: 20, y: 178, text: "SCHED_FIFO and mlockall for the program, chrt for the kernel thread. No boot argument."}
+
+- id: lab-p07-irq-counts
+  type: terminal
+  title: "p07_run.sh, recorded lines: which CPU takes the interrupt (columns are CPU0/CPU1/CPU2)"
+  alt: "Three recorded excerpts of the harness. By default the fabric interrupt count grows on CPU0 only (200,000 interrupts in one run). After writing mask 2 to the interrupt's smp_affinity it grows on CPU1 only, and after mask 4 on CPU2 only."
+  width: 940
+  height: 300
+  step: 3.6
+  lines:
+    - "# irq-counts u1_default_idle run 1 before(cpu0/1/2) 5999253/1003997/4992945 after 6199252/1003997/4992945"
+    - "# irq 80 affinity 2, effective 2"
+    - "# irq-counts u5_fifo80_cpu1_irq_cpu1 run 1 before(cpu0/1/2) 9999243/1003997/4992945 after 9999243/1203997/4992945"
+    - "# irq 80 affinity 4, effective 4"
+    - "# irq-counts u6_fifo80_cpu2_irq_cpu2 run 1 before(cpu0/1/2) 9999243/2003997/4992945 after 9999243/2003997/5192945"
+  callouts:
+    - {lines: [0, 0], title: "Default: CPU0", text: "200,000 interrupts for 100,000 events (the double wake-up of I02), all on CPU0."}
+    - {lines: [1, 2], title: "Mask 2: CPU1", text: "After writing 2 to smp_affinity the effective affinity is CPU1 and the counts grow there."}
+    - {lines: [3, 4], title: "Mask 4: CPU2", text: "The same with mask 4: only CPU2 counts."}

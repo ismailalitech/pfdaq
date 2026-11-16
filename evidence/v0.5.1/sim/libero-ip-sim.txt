@@ -1,0 +1,7 @@
+# Icarus Verilog, run from experiments/libero-ip/
+# iverilog -g2005 -o tb.vvp tb_pfdaq_demo_regs.v pfdaq_demo_regs.v && vvp tb.vvp
+PASS: 6 words, TLAST on the sixth, registers read back
+tb_pfdaq_demo_regs.v:58: $finish called at 656000 (1ps)
+# iverilog -g2005 -o tb.vvp tb_pfdaq_demo_top.v pfdaq_demo_master.v pfdaq_demo_regs.v && vvp tb.vvp
+PASS: the master started a burst of 8 words, TLAST on the eighth
+tb_pfdaq_demo_top.v:27: $finish called at 2023000 (1ps)

@@ -24,7 +24,7 @@ STATUS_LABEL = {
     'experimental': 'experimental', 'planned': 'planned', 'held': 'held until tested on the board',
 }
 REPRO_SHORT = {'sim': 'simulation', 'base': 'shared baseline', 'dedicated-fabric': 'own fabric build',
-               'full-system': 'full system', 'doc': 'read', 'none': 'read'}
+               'full-system': 'full system', 'tool': 'Libero on a PC', 'doc': 'read', 'none': 'read'}
 
 
 def link(meta, frm):

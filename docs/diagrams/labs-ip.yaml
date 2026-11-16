@@ -1,0 +1,99 @@
+# Animated figures of module F07 (create your own IP in Libero). Ids start with lab-f07-.
+
+- id: lab-f07-flow
+  alt: "Two routes from a Verilog file to a checked design. The first four boxes are common: import the file, see the module in the Design Hierarchy, Create Core from HDL, add the bus interfaces. A core can be placed straight from the Design Hierarchy, or packaged as a .cpz file, added to a vault and placed from the Catalog. The path then goes through SmartDesign, Generate and Synthesize."
+  width: 940
+  height: 470
+  step: 3
+  nodes:
+    imp:   {x: 20,  y: 30,  w: 180, h: 66, kind: start,  title: "Verilog file", sub: "File > Import >\nHDL Source Files"}
+    hier:  {x: 260, y: 30,  w: 180, h: 66, kind: plain,  title: "Design Hierarchy", sub: "Build Hierarchy lists\nthe module"}
+    core:  {x: 500, y: 30,  w: 180, h: 66, kind: mss,    title: "Create Core", sub: "ports and parameters\nread from the header"}
+    bif:   {x: 740, y: 30,  w: 180, h: 66, kind: hart,   title: "Bus interfaces", sub: "APB slave, AXI4-Stream\nmatched by port name"}
+    pkg:   {x: 740, y: 160, w: 180, h: 66, kind: sw,     title: "Package", sub: "make_cpz.py writes\nthe .cpz file"}
+    vault: {x: 500, y: 160, w: 180, h: 66, kind: plain,  title: "Add Core to Vault", sub: "scratch vault folder,\nimport_core"}
+    cat:   {x: 260, y: 160, w: 180, h: 66, kind: fabric, title: "Catalog", sub: "User Defined group,\ndouble-click to place"}
+    sd:    {x: 260, y: 290, w: 180, h: 66, kind: fabric, title: "SmartDesign", sub: "wire bus to bus"}
+    gen:   {x: 500, y: 290, w: 180, h: 66, kind: plain,  title: "Generate", sub: "design rules check,\nthen the component"}
+    syn:   {x: 740, y: 290, w: 180, h: 66, kind: good,   title: "Synthesize", sub: "log ends with\nSynthesis completed."}
+  edges:
+    - {from: imp.right,   to: hier.left}
+    - {from: hier.right,  to: core.left}
+    - {from: core.right,  to: bif.left}
+    - {from: bif.bottom,  to: pkg.top}
+    - {from: pkg.left,    to: vault.right}
+    - {from: vault.left,  to: cat.right}
+    - {from: cat.bottom,  to: sd.top}
+    - {from: sd.right,    to: gen.left}
+    - {from: gen.right,   to: syn.left}
+  steps: [imp, e0, hier, e1, core, e2, bif, e3, pkg, e4, vault, e5, cat, e6, sd, e7, gen, e8, syn]
+  notes:
+    - {x: 20, y: 396, text: "Short route: right-click the core in the Design Hierarchy and choose Instantiate. No package, no Catalog."}
+    - {x: 20, y: 422, text: "Catalog route: the core is found like a vendor core, and the same Verilog serves every project that uses the vault."}
+    - {x: 20, y: 448, text: "Every step has a Tcl command; Project > Export Script File writes them all (module F07, step 14)."}
+
+- id: lab-f07-ports-params
+  type: annotated
+  alt: "The first page of Create Core from HDL in Libero, with numbered callouts that light up in turn: the fourteen ports the tool read from the Verilog module header, the one parameter DEFAULT_LEN, and the button that opens the bus interface page."
+  image: evidence/v0.5.1/build/libero-ip-04.png
+  width: 900
+  height: 697
+  step: 3.4
+  callouts:
+    - {box: [20, 88, 298, 284],  title: "Ports read from the file", text: "PCLK to TLAST: the tool parsed the module header, so no list is typed by hand."}
+    - {box: [322, 88, 298, 284], title: "The parameter", text: "DEFAULT_LEN becomes a parameter of the core; the red cross removes one you do not want."}
+    - {box: [382, 402, 118, 24], title: "Next: bus interfaces", text: "This button opens the page where the ports are grouped into APB and AXI4-Stream."}
+
+- id: lab-f07-bif-apb
+  type: annotated
+  alt: "The bus interface page after adding an APB slave, with numbered callouts: the list of interfaces on the core, seven of eight bus signals matched by name, the one signal PSELx that stays empty because the module calls it PSEL, and the Map by Name button."
+  image: evidence/v0.5.1/build/libero-ip-06.png
+  width: 900
+  height: 832
+  step: 3.4
+  callouts:
+    - {box: [17, 105, 246, 415],  title: "The interfaces of this core", text: "One so far. It is called BIF_1 until you rename it, here to APB_TARGET."}
+    - {box: [313, 241, 328, 202], title: "Matched by name", text: "PADDR, PENABLE, PWRITE, PRDATA, PWDATA, PREADY and PSLVERR found a port of the same name."}
+    - {box: [313, 267, 328, 25],  title: "PSELx: nothing matched", text: "The standard says PSELx, the module has PSEL. Pick PSEL from the drop-down in this cell."}
+    - {box: [283, 177, 66, 24],   title: "Map by Name", text: "Repeats the name match, for example after you add a port to the Verilog and re-extract."}
+
+- id: lab-f07-bif-axis
+  type: annotated
+  alt: "The bus interface page after adding an AXI4-Stream initiator, with numbered callouts: the interface type and its name, TVALID, TREADY and TDATA matched by name, the optional TSTRB and TKEEP left empty, TLAST matched, and TID, TDEST and TUSER left empty."
+  image: evidence/v0.5.1/build/libero-ip-08.png
+  width: 900
+  height: 832
+  step: 3.2
+  callouts:
+    - {box: [275, 108, 382, 28], title: "AXI4Stream, master role", text: "Master is the initiator: the core sends the data, TVALID and TDATA are its outputs."}
+    - {box: [313, 241, 328, 77], title: "Matched by name", text: "TVALID, TREADY and TDATA; TREADY is the one input, it comes back from the receiver."}
+    - {box: [313, 318, 328, 50], title: "Optional, left empty", text: "TSTRB and TKEEP: this stream has no byte qualifiers, so nothing is mapped."}
+    - {box: [313, 368, 328, 25], title: "TLAST matched", text: "The last word of a burst; a receiver such as a DMA uses it to end a frame."}
+    - {box: [313, 393, 328, 75], title: "Optional, left empty", text: "TID, TDEST and TUSER are not used by this core."}
+
+- id: lab-f07-canvas
+  type: annotated
+  alt: "The finished SmartDesign canvas in Libero, with numbered callouts: the APB master core, the CoreAPB3 block that joins it to the register core, the register core itself, the single bus line between CoreAPB3 and the register core, the clock and reset ports that feed both cores, and the AXI4-Stream port that leaves the design."
+  image: evidence/v0.5.1/build/libero-ip-12.png
+  width: 1100
+  height: 322
+  step: 3.2
+  callouts:
+    - {box: [318, 168, 350, 240],  title: "pfdaq_demo_master", text: "The stand-in for the processor: its one bus interface is an APB initiator."}
+    - {box: [800, 168, 355, 185],  title: "CoreAPB3", text: "The vendor's APB fabric from the Catalog: master on the left, one slave slot on the right."}
+    - {box: [1245, 10, 400, 265],  title: "pfdaq_demo_regs", text: "The core made in this module: APB_TARGET in, AXIS_INITIATOR out, PCLK and PRESETN as plain pins."}
+    - {box: [1150, 175, 125, 110], title: "One line, eight signals", text: "A bus interface is wired with a single connection, not nine."}
+    - {box: [0, 100, 265, 75],     title: "Clock and reset", text: "PCLK and PRESETN are top-level ports wired to both cores."}
+    - {box: [1630, 125, 310, 60],  title: "The stream leaves", text: "AXIS_INITIATOR is promoted to a port of the design, ready for a receiver."}
+
+- id: lab-f07-canvas-catalog
+  type: annotated
+  alt: "The SmartDesign canvas of the Catalog route, with numbered callouts that light up in turn: the register core placed from the Catalog, CoreAPB3 which also came from the scratch vault, and the master core, which is still an HDL core placed from the Design Hierarchy."
+  image: evidence/v0.5.1/build/libero-ip-24.png
+  width: 1100
+  height: 385
+  step: 3.4
+  callouts:
+    - {box: [940, 135, 345, 205], title: "Placed from the Catalog", text: "pfdaq_demo_regs_C0 is a configured copy of the vault core; APB_TARGET and AXIS_INITIATOR are bus pins, as for the HDL core."}
+    - {box: [600, 260, 275, 150], title: "CoreAPB3 from the same vault", text: "The scratch vault started empty, so the vendor core was added to it with the same command."}
+    - {box: [185, 35, 325, 185],  title: "Still an HDL core", text: "The master is plain Verilog of this project, placed from the Design Hierarchy."}

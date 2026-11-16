@@ -1,0 +1,51 @@
+CHECK FAIL rule 2 DATA_STABLE at 4404 ns, scenario 2, info 0x00050001
+CHECK FAIL rule 2 DATA_STABLE at 4412 ns, scenario 2, info 0x00050003
+CHECK FAIL rule 2 DATA_STABLE at 4420 ns, scenario 2, info 0x00050005
+CHECK FAIL rule 2 DATA_STABLE at 4428 ns, scenario 2, info 0x00050007
+CHECK FAIL rule 3 SIDE_STABLE at 4452 ns, scenario 2, info 0x00000f0f
+CHECK FAIL rule 3 SIDE_STABLE at 4516 ns, scenario 2, info 0x0000ffff
+CHECK FAIL rule 3 SIDE_STABLE at 4580 ns, scenario 2, info 0x00000f0f
+CHECK FAIL rule 9 TLAST_EARLY at 4580 ns, scenario 2, info 0x00000009
+CHECK FAIL rule 7 SEQ at 4644 ns, scenario 2, info 0x00000007
+CHECK FAIL rule 8 TIMESTAMP at 4652 ns, scenario 2, info 0x00000238
+CHECK FAIL rule 3 SIDE_STABLE at 4708 ns, scenario 2, info 0x00000f0f
+CHECK FAIL rule 9 TLAST_EARLY at 4708 ns, scenario 2, info 0x00000009
+CHECK FAIL rule 9 TLAST_EARLY at 4860 ns, scenario 2, info 0x00000007
+CHECK FAIL rule 8 TIMESTAMP at 4908 ns, scenario 2, info 0x00000258
+CHECK FAIL rule 9 TLAST_EARLY at 4964 ns, scenario 2, info 0x00000009
+CHECK FAIL rule 6 MAGIC at 5044 ns, scenario 2, info 0x000a0001
+CHECK FAIL rule 7 SEQ at 5044 ns, scenario 2, info 0x000a0002
+CHECK FAIL rule 6 MAGIC at 5196 ns, scenario 2, info 0x000b0007
+CHECK FAIL rule 7 SEQ at 5196 ns, scenario 2, info 0x000b0008
+CHECK FAIL rule 6 MAGIC at 5348 ns, scenario 2, info 0xc8810af5
+CHECK FAIL rule 7 SEQ at 5412 ns, scenario 2, info 0x0000000d
+CHECK FAIL rule 8 TIMESTAMP at 5436 ns, scenario 2, info 0x000d0003
+CHECK FAIL rule 6 MAGIC at 5612 ns, scenario 2, info 0x629bcd5c
+CHECK FAIL rule 8 TIMESTAMP at 6220 ns, scenario 2, info 0x00130007
+CHECK FAIL rule 14 RUN_PACKETS at 8692 ns, scenario 3, info 0x00000013
+CHECK FAIL rule 15 RUN_FRAMES at 10812 ns, scenario 4, info 0x00000005
+CHECK FAIL rule 15 RUN_FRAMES at 12932 ns, scenario 5, info 0x00000005
+CHECK FAIL rule 15 RUN_FRAMES at 99276 ns, scenario 8, info 0x00000026
+CHECK FAIL rule 15 RUN_FRAMES at 101452 ns, scenario 10, info 0x00000005
+CHECK rule summary: violations per rule over the whole run
+CHECK rule  1 VALID_DROP   0
+CHECK rule  2 DATA_STABLE  1096
+CHECK rule  3 SIDE_STABLE  31
+CHECK rule  4 KEEP         0
+CHECK rule  5 VALID_GAP    0
+CHECK rule  6 MAGIC        106
+CHECK rule  7 SEQ          113
+CHECK rule  8 TIMESTAMP    34
+CHECK rule  9 TLAST_EARLY  45
+CHECK rule 10 TLAST_LATE   0
+CHECK rule 11 TLAST_LONG   0
+CHECK rule 12 TDEST        0
+CHECK rule 13 FILL_ZERO    0
+CHECK rule 14 RUN_PACKETS  1
+CHECK rule 15 RUN_FRAMES   6
+CHECK rule 16 PKT_OPEN     0
+CHECK rule 17 FORCE_STOP   0
+CHECK rule 18 UNDERRUN     0
+CHECK total violations 1432
+ASSERT RESULT: FAIL (1432 violations)
+trace checker (check_trace.py): RESULT: FAIL

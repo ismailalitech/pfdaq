@@ -25,22 +25,6 @@
   - M01
   repro: full-system
   summary: Locking the supervisor into its own memory, then proving the lock with a deliberate violation.
-- id: H12
-  title: Assertions and coverage for the stream source
-  track: fpga
-  level: 4
-  needs:
-  - H11
-  repro: sim
-  summary: Which behaviours the scenarios really exercise, and protocol rules written as checks.
-- id: I08
-  title: 'DMA into cached memory: when you need cache maintenance'
-  track: integration
-  level: 4
-  needs:
-  - I05
-  repro: base
-  summary: What goes wrong when hardware writes memory the processor has cached, measured.
 - id: I09
   title: Fabric DMA against the MSS DMA
   track: integration
@@ -49,19 +33,3 @@
   - I04
   repro: base
   summary: Two DMA engines on one chip, compared on the same transfer.
-- id: P07
-  title: Making Linux more deterministic
-  track: performance
-  level: 5
-  needs:
-  - P02
-  repro: base
-  summary: Interrupt affinity, CPU isolation and priorities against the stalls in the latency measurements.
-- id: P08
-  title: Raising verified throughput with more cores
-  track: performance
-  level: 5
-  needs:
-  - P01
-  repro: base
-  summary: Removing the single-core bottleneck in verification, with before and after.

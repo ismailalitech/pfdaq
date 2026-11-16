@@ -1,0 +1,142 @@
+{"t": 0.2, "pane": 0, "text": "$ taskset -c 0 /root/station hello --cpu 0 --seq 1"}
+{"t": 1.878, "pane": 0, "text": "[55.527 cpu 0] sending HELLO #1: hart 1 (Linux cpu 0), text \"core 1 here\""}
+{"t": 1.884, "pane": 0, "text": "[55.536 cpu 0] hart 4 answered: \"hart 4 FreeRTOS\", its tick 73133 ms, 1 of 3 Linux cpus heard so far"}
+{"t": 1.892, "pane": 2, "text": "[roll-call] hart 4 (FreeRTOS) got HELLO #1 from hart 1 (Linux cpu 0): core 1 here"}
+{"t": 2.896, "pane": 0, "text": "$ taskset -c 1 /root/station hello --cpu 1 --seq 1"}
+{"t": 3.877, "pane": 0, "text": "[57.532 cpu 1] sending HELLO #1: hart 2 (Linux cpu 1), text \"core 2 here\""}
+{"t": 3.887, "pane": 0, "text": "[57.541 cpu 1] hart 4 answered: \"hart 4 FreeRTOS\", its tick 75138 ms, 2 of 3 Linux cpus heard so far"}
+{"t": 3.891, "pane": 2, "text": "[roll-call] hart 4 (FreeRTOS) got HELLO #1 from hart 2 (Linux cpu 1): core 2 here"}
+{"t": 4.899, "pane": 0, "text": "$ taskset -c 2 /root/station hello --cpu 2 --seq 1"}
+{"t": 5.98, "pane": 0, "text": "[59.634 cpu 2] sending HELLO #1: hart 3 (Linux cpu 2), text \"core 3 here\""}
+{"t": 5.988, "pane": 2, "text": "[roll-call] hart 4 (FreeRTOS) got HELLO #1 from hart 3 (Linux cpu 2): core 3 here"}
+{"t": 5.992, "pane": 0, "text": "[59.647 cpu 2] hart 4 answered: \"hart 4 FreeRTOS\", its tick 77239 ms, 3 of 3 Linux cpus heard so far"}
+{"t": 6.004, "pane": 2, "text": "[roll-call] heard all three Linux harts (1, 2, 3)"}
+{"t": 7.005, "pane": 0, "text": "$ /root/station listen"}
+{"t": 7.929, "pane": 0, "text": "[61.584] asking hart 4 to speak (LISTEN)"}
+{"t": 7.93, "pane": 0, "text": "[61.585] hart 4 acknowledged LISTEN, 3 of 3 Linux cpus heard; waiting up to 5 s for its own message"}
+{"t": 8.453, "pane": 2, "text": "[roll-call] core 4 speaks: sending one message of its own to Linux"}
+{"t": 8.493, "pane": 0, "text": "[62.092] core 4 speaks: \"core 4 speaks\" (hart 4 tick 79689 ms)"}
+{"t": 9.507, "pane": 0, "text": "$ /root/start_station.sh"}
+{"t": 10.43, "pane": 0, "text": "shared memory in /dev/shm/station: ring A 256 x 1040 B, ring B 64 x 112 B, ring C 16 x 16 B"}
+{"t": 10.468, "pane": 2, "text": "[station] ARMED: deadline 500 ms, max lag 320 frames, fabric seq 0, t=81708 ms"}
+{"t": 10.468, "pane": 2, "text": "[station] limits per window: bad <= 2, drops <= 4, peak <= 900000000, mean <= 320000000"}
+{"t": 11.689, "pane": 0, "text": "station running: acq 323 on cpu 0, ana 318 on cpu 1, tel 317 on cpu 2; logs in /dev/shm/station"}
+{"t": 12.867, "pane": 1, "text": "[   0.170 cpu0 acq] pinned to cpu 0 (running on cpu 0), source: hw"}
+{"t": 12.867, "pane": 1, "text": "[   0.171 cpu0 acq] config: slot 1000 us (125000 cycles), 5000 slots per run, 100 slots per injection run"}
+{"t": 12.867, "pane": 1, "text": "[   0.171 cpu0 acq] config: window 500 ms, heartbeat 100 ms, deadline 500 ms, max lag 320 frames"}
+{"t": 12.867, "pane": 1, "text": "[   0.171 cpu0 acq] config: limits per window: bad <= 2, drops <= 4, peak <= 900000000, mean <= 320000000"}
+{"t": 12.867, "pane": 1, "text": "[   0.172 cpu0 acq] run 1 started: 5000 slots"}
+{"t": 12.867, "pane": 1, "text": "[   0.019 cpu1 ana] pinned to cpu 1 (running on cpu 1); owns the link to hart 4"}
+{"t": 12.867, "pane": 1, "text": "[   0.019 cpu1 ana] config: slot 1000 us (125000 cycles), 5000 slots per run, 100 slots per injection run"}
+{"t": 12.867, "pane": 1, "text": "[   0.019 cpu1 ana] config: window 500 ms, heartbeat 100 ms, deadline 500 ms, max lag 320 frames"}
+{"t": 12.867, "pane": 1, "text": "[   0.019 cpu1 ana] config: limits per window: bad <= 2, drops <= 4, peak <= 900000000, mean <= 320000000"}
+{"t": 12.867, "pane": 1, "text": "[   0.026 cpu1 ana] hart 4 armed: state ARMED, uptime 81708 ms"}
+{"t": 12.895, "pane": 0, "text": "[   0.014 cpu2 tel] pinned to cpu 2 (running on cpu 2); commands are read from /dev/shm/station/cmd"}
+{"t": 12.895, "pane": 0, "text": "[   0.014 cpu2 tel] commands: reset | limits <max_bad> <max_drops> | inject crc | inject off | status | quit"}
+{"t": 12.895, "pane": 0, "text": "[  0.0] event: hart 4 armed"}
+{"t": 12.895, "pane": 0, "text": "[  1.0] frames 864 bad 0 drop 0 843/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 12.895, "pane": 0, "text": "[  2.0] frames 1867 bad 0 drop 0 999/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 13.478, "pane": 0, "text": "[  3.0] frames 2873 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 14.5, "pane": 0, "text": "[  4.1] frames 3878 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 15.509, "pane": 2, "text": "[station] t=86745 ms window 10: frames 502, bad 0, drops 0, peak 547781479, mean 278201440"}
+{"t": 15.524, "pane": 0, "text": "[  5.1] frames 4882 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 16.547, "pane": 0, "text": "[  6.0] frames 4999 bad 0 drop 0 121/s ovr 0 pk 547M avg 277M src RUN h4 ARMED trips 0"}
+{"t": 17.468, "pane": 0, "text": "[  7.0] frames 4999 bad 0 drop 0 0/s ovr 0 pk 0M avg 0M src RUN h4 ARMED trips 0"}
+{"t": 17.608, "pane": 1, "text": "[   7.178 cpu0 acq] run 1: no progress for 2 s, aborting the source"}
+{"t": 18.57, "pane": 0, "text": "[  8.0] frames 5767 bad 0 drop 1 761/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 19.553, "pane": 0, "text": "[  9.1] frames 6773 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 20.49, "pane": 0, "text": "[ 10.1] frames 7779 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 20.564, "pane": 2, "text": "[station] t=91799 ms window 20: frames 503, bad 0, drops 0, peak 547781479, mean 278154420"}
+{"t": 21.642, "pane": 0, "text": "[ 11.0] frames 8742 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 22.46, "pane": 0, "text": "[ 12.0] frames 9748 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 23.607, "pane": 0, "text": "[ 13.0] frames 10745 bad 0 drop 1 992/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 24.591, "pane": 0, "text": "[ 14.0] frames 11749 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 25.573, "pane": 0, "text": "[ 15.0] frames 12753 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 25.588, "pane": 2, "text": "[station] t=96830 ms window 30: frames 502, bad 0, drops 0, peak 547781479, mean 278179235"}
+{"t": 26.556, "pane": 0, "text": "[ 16.1] frames 13764 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 27.486, "pane": 0, "text": "[ 17.1] frames 14768 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 27.928, "pane": 0, "text": "$ echo inject crc > /dev/shm/station/cmd"}
+{"t": 28.521, "pane": 0, "text": "[ 18.1] frames 15764 bad 0 drop 1 992/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 28.845, "pane": 0, "text": "[ 18.4] operator> inject crc"}
+{"t": 28.845, "pane": 0, "text": "[ 18.4] fault injection on: the next runs carry a CRC fault every 100 slots"}
+{"t": 29.504, "pane": 0, "text": "[ 19.0] frames 16718 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 30.474, "pane": 0, "text": "[ 20.0] frames 17722 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 30.613, "pane": 2, "text": "[station] t=101857 ms window 40: frames 502, bad 0, drops 0, peak 547781479, mean 278260257"}
+{"t": 31.471, "pane": 0, "text": "[ 21.0] frames 18733 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 32.463, "pane": 0, "text": "[ 22.0] frames 19737 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0"}
+{"t": 33.478, "pane": 0, "text": "[ 23.0] frames 19998 bad 0 drop 1 257/s ovr 0 pk 547M avg 277M src RUN h4 ARMED trips 0"}
+{"t": 34.49, "pane": 0, "text": "[ 24.1] frames 19998 bad 0 drop 1 0/s ovr 0 pk 0M avg 0M src RUN h4 ARMED trips 0"}
+{"t": 34.79, "pane": 1, "text": "[  24.300 cpu0 acq] run 4: no progress for 2 s, aborting the source"}
+{"t": 34.83, "pane": 1, "text": "[  24.401 cpu0 acq] run 5 started: 100 slots, CRC fault at frame 10 of every run"}
+{"t": 34.842, "pane": 1, "text": "[  24.412 cpu1 ana] bad frame: seq 20010 (magic a55a00fc, crc mismatch)"}
+{"t": 34.978, "pane": 1, "text": "[  24.519 cpu1 ana] bad frame: seq 20110 (magic a55a00fc, crc mismatch)"}
+{"t": 35.056, "pane": 1, "text": "[  24.626 cpu1 ana] bad frame: seq 20210 (magic a55a00fc, crc mismatch)"}
+{"t": 35.172, "pane": 2, "text": "[station] t=106412 ms window 49: frames 300, bad 3, drops 1, peak 795986176, mean 278034714"}
+{"t": 35.172, "pane": 2, "text": "[station] TRIP #1: BAD_FRAMES at t=106412 ms, source aborted, state SAFE"}
+{"t": 35.284, "pane": 0, "text": "[ 24.7] *** TRIP reported by hart 4: reason BAD_FRAMES, trip #1, hart 4 tick 106412 ms ***"}
+{"t": 35.284, "pane": 1, "text": "[  24.738 cpu0 acq] run 8 ended by ABORT (hart 4 trip), waiting for reset; frames 20307 overruns 0"}
+{"t": 35.284, "pane": 1, "text": "[  24.738 cpu1 ana] TRIP notice from hart 4: BAD_FRAMES, trip #1, tick 106412 ms; ring A flushed"}
+{"t": 35.469, "pane": 0, "text": "[ 25.0] frames 20298 bad 3 drop 2 307/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1"}
+{"t": 36.49, "pane": 0, "text": "[ 26.1] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1"}
+{"t": 38.515, "pane": 0, "text": "[ 27.1] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1"}
+{"t": 38.659, "pane": 0, "text": "[ 28.0] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1"}
+{"t": 39.468, "pane": 0, "text": "[ 29.0] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1"}
+{"t": 40.37, "pane": 0, "text": "$ echo reset > /dev/shm/station/cmd"}
+{"t": 40.48, "pane": 0, "text": "[ 30.1] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1"}
+{"t": 41.241, "pane": 0, "text": "[ 30.8] operator> reset"}
+{"t": 41.258, "pane": 0, "text": "[ 30.8] reset accepted by hart 4 (trips so far 1), station resumes"}
+{"t": 41.258, "pane": 1, "text": "[  30.828 cpu1 ana] RESET: hart 4 ARMED again (trips so far 1), ring A flushed, source released"}
+{"t": 41.265, "pane": 1, "text": "[  30.836 cpu0 acq] reset accepted (epoch 1): restarting the source"}
+{"t": 41.267, "pane": 1, "text": "[  30.837 cpu0 acq] run 9 started: 5000 slots"}
+{"t": 41.268, "pane": 2, "text": "[station] RESET from operator: trip #1 (BAD_FRAMES) cleared, ARMED again, t=112506 ms"}
+{"t": 41.459, "pane": 0, "text": "[ 31.0] frames 20489 bad 3 drop 2 195/s ovr 0 pk 0M avg 0M src RUN h4 ARMED trips 1"}
+{"t": 42.452, "pane": 0, "text": "[ 32.0] frames 21483 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 43.457, "pane": 0, "text": "[ 33.0] frames 22487 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 44.46, "pane": 0, "text": "[ 34.0] frames 23491 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 45.466, "pane": 0, "text": "[ 35.0] frames 24497 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 45.78, "pane": 2, "text": "[station] t=117025 ms window 70: frames 503, bad 0, drops 0, peak 547781479, mean 278206925"}
+{"t": 46.479, "pane": 0, "text": "[ 36.0] frames 25501 bad 3 drop 2 993/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 47.482, "pane": 0, "text": "[ 37.1] frames 26505 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 48.531, "pane": 0, "text": "[ 38.1] frames 27509 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 49.513, "pane": 0, "text": "[ 39.1] frames 28513 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 50.339, "pane": 1, "text": "$ kill -STOP 318     # the analysis process (cpu 1) freezes"}
+{"t": 50.495, "pane": 0, "text": "[ 40.1] frames 29517 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 50.804, "pane": 2, "text": "[station] t=122052 ms window 80: frames 502, bad 0, drops 0, peak 547781479, mean 278168512"}
+{"t": 51.455, "pane": 0, "text": "[ 41.0] frames 30371 bad 3 drop 2 889/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 1"}
+{"t": 51.829, "pane": 2, "text": "[station] ALARM: no message within 500 ms (miss #1, t=123071 ms)"}
+{"t": 51.829, "pane": 2, "text": "[station] TRIP #2: DEADLINE at t=123071 ms, source aborted, state SAFE"}
+{"t": 51.85, "pane": 1, "text": "[  41.396 cpu0 acq] run 11 ended by ABORT (hart 4 trip), waiting for reset; frames 30842 overruns 206"}
+{"t": 52.586, "pane": 0, "text": "[ 42.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 1.2s"}
+{"t": 53.57, "pane": 0, "text": "[ 43.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 2.2s"}
+{"t": 54.552, "pane": 0, "text": "[ 44.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 3.2s"}
+{"t": 55.535, "pane": 0, "text": "[ 45.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 4.2s"}
+{"t": 56.466, "pane": 0, "text": "[ 46.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 5.2s"}
+{"t": 56.601, "pane": 1, "text": "$ kill -CONT 318     # the analysis process continues"}
+{"t": 57.472, "pane": 0, "text": "[ 47.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 6.2s"}
+{"t": 57.485, "pane": 1, "text": "[  47.055 cpu1 ana] TRIP notice from hart 4: DEADLINE, trip #2, tick 123071 ms; ring A flushed"}
+{"t": 57.486, "pane": 0, "text": "[ 47.1] *** TRIP reported by hart 4: reason DEADLINE, trip #2, hart 4 tick 123071 ms ***"}
+{"t": 58.486, "pane": 0, "text": "[ 48.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 0M avg 0M src STOP h4 SAFE trips 2"}
+{"t": 59.457, "pane": 0, "text": "[ 49.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 0M avg 0M src STOP h4 SAFE trips 2"}
+{"t": 59.496, "pane": 0, "text": "$ echo reset > /dev/shm/station/cmd"}
+{"t": 60.385, "pane": 0, "text": "[ 50.0] operator> reset"}
+{"t": 60.404, "pane": 2, "text": "[station] RESET from operator: trip #2 (DEADLINE) cleared, ARMED again, t=131653 ms"}
+{"t": 60.404, "pane": 1, "text": "[  49.975 cpu1 ana] RESET: hart 4 ARMED again (trips so far 2), ring A flushed, source released"}
+{"t": 60.405, "pane": 0, "text": "[ 50.0] reset accepted by hart 4 (trips so far 2), station resumes"}
+{"t": 60.413, "pane": 1, "text": "[  49.983 cpu0 acq] reset accepted (epoch 2): restarting the source"}
+{"t": 60.455, "pane": 0, "text": "[ 50.0] frames 30411 bad 3 drop 2 40/s ovr 206 pk 0M avg 0M src RUN h4 ARMED trips 2"}
+{"t": 61.478, "pane": 0, "text": "[ 51.0] frames 31435 bad 3 drop 2 1001/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2"}
+{"t": 61.54, "pane": 2, "text": "[station] t=132786 ms window 90: frames 503, bad 0, drops 0, peak 547781479, mean 278259022"}
+{"t": 62.489, "pane": 0, "text": "[ 52.1] frames 32446 bad 3 drop 2 1000/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2"}
+{"t": 63.459, "pane": 0, "text": "[ 53.0] frames 33401 bad 3 drop 2 999/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2"}
+{"t": 64.452, "pane": 0, "text": "[ 54.0] frames 34407 bad 3 drop 2 1000/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2"}
+{"t": 65.456, "pane": 0, "text": "[ 55.0] frames 35404 bad 3 drop 2 993/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2"}
+{"t": 66.459, "pane": 0, "text": "[ 56.0] frames 36408 bad 3 drop 2 1000/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2"}
+{"t": 66.499, "pane": 0, "text": "$ /root/stop_station.sh"}
+{"t": 66.58, "pane": 2, "text": "[station] t=137817 ms window 100: frames 502, bad 0, drops 0, peak 547781479, mean 278179434"}
+{"t": 67.471, "pane": 0, "text": "[ 57.0] frames 37420 bad 3 drop 2 1000/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2"}
+{"t": 67.55, "pane": 1, "text": "[  57.121 cpu0 acq] stopped: 37964 frames in 13 runs, ring overruns 206, fabric drops 0"}
+{"t": 67.684, "pane": 2, "text": "[station] DISARM from ARMED: 505 status, 102 windows, 1 deadline misses, 0 seq mismatches, 2 trips"}
+{"t": 67.755, "pane": 1, "text": "[  57.246 cpu1 ana] stopped: 37493 frames verified, 3 bad, 2 gaps, 102 windows, 0 failed transfers"}
+{"t": 67.813, "pane": 0, "text": "[ 57.4] summary: frames 37493, bad 3, drops 2, windows 102, trips 2"}
+{"t": 67.813, "pane": 0, "text": "[ 57.4] summary: ring overruns 206, fabric drops 0, source runs 13, aborts 2"}
+{"t": 68.07, "pane": 0, "text": "frames 37493 bad 3 gaps 2 trips 2 overruns 206 fabric_drops 0 runs 13 aborts 2"}

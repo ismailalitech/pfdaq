@@ -1,0 +1,22 @@
+CHECK rule summary: violations per rule over the whole run
+CHECK rule  1 VALID_DROP   0
+CHECK rule  2 DATA_STABLE  0
+CHECK rule  3 SIDE_STABLE  0
+CHECK rule  4 KEEP         0
+CHECK rule  5 VALID_GAP    0
+CHECK rule  6 MAGIC        0
+CHECK rule  7 SEQ          0
+CHECK rule  8 TIMESTAMP    0
+CHECK rule  9 TLAST_EARLY  0
+CHECK rule 10 TLAST_LATE   0
+CHECK rule 11 TLAST_LONG   0
+CHECK rule 12 TDEST        0
+CHECK rule 13 FILL_ZERO    0
+CHECK rule 14 RUN_PACKETS  0
+CHECK rule 15 RUN_FRAMES   0
+CHECK rule 16 PKT_OPEN     0
+CHECK rule 17 FORCE_STOP   0
+CHECK rule 18 UNDERRUN     0
+CHECK total violations 0
+ASSERT RESULT: PASS
+trace checker (check_trace.py): RESULT: PASS

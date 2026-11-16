@@ -27,6 +27,23 @@ sim-latency:
 	$(PYTHON) tb/check_latency.py $(OUT)/sim/lat_trace.txt | tee $(OUT)/result_latency.txt
 	@tail -1 $(OUT)/result_latency.txt | grep -q PASS
 
+# Protocol checks and functional coverage on the stream source, watching the unchanged stream testbench.
+# ASSERT_RTL and ASSERT_TB can point at scratch copies of the RTL (to plant a bug and see the checks fire)
+# and of the stream testbench (to add runs and see the coverage change).
+# Needs Icarus Verilog 12 (final blocks, -g2012). The existing check_trace.py also judges the same trace.
+ASSERT_RTL ?= rtl/pfdaq_stream_src.v
+ASSERT_TB ?= tb/tb_pfdaq_stream_src.v
+.PHONY: sim-assert
+sim-assert:
+	@mkdir -p $(OUT)
+	$(IVERILOG) -g2012 -s tb_pfdaq_assert -o $(OUT)/tb_assert.vvp $(ASSERT_RTL) $(ASSERT_TB) tb/pfdaq_stream_checks.v tb/pfdaq_stream_cover.v tb/tb_pfdaq_assert.v
+	cd $(OUT) && mkdir -p sim && $(VVP) -n tb_assert.vvp > assert_log.txt
+	grep -E '^(CHECK|ASSERT)' $(OUT)/assert_log.txt | tee $(OUT)/assert_results.txt
+	grep '^COV' $(OUT)/assert_log.txt > $(OUT)/coverage.txt
+	@tail -7 $(OUT)/coverage.txt
+	@$(PYTHON) tb/check_trace.py $(OUT)/sim/trace.txt | grep -m1 '^RESULT' | sed 's/^/trace checker (check_trace.py): /' | tee $(OUT)/assert_trace_verdict.txt
+	@tail -1 $(OUT)/assert_results.txt | grep -q PASS
+
 fabric:
 	libero/build.sh $(DESIGN_VERSION)
 

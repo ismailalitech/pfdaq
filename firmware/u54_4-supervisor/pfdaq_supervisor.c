@@ -36,6 +36,15 @@
 
 #ifdef PFDAQ_SUPERVISOR
 
+#ifdef PFDAQ_AMP_DEMO
+/* demo variant (experiments/amp-station): station protocol and protection logic, see the header */
+#include <stdarg.h>
+#include "pfdaq_station.h"
+#define PFDAQ_RX_MAX    sizeof(struct st_msg)       /* the demo receives 64-byte messages as well */
+#else
+#define PFDAQ_RX_MAX    sizeof(struct pfdaq_msg)
+#endif
+
 #define PFDAQ_SUP_CHANNEL   "pfdaq-supervisor"
 #define PFDAQ_SUP_EPT_ADDR  (0u)
 
@@ -183,7 +192,7 @@ static uint32_t memchk(uint32_t addr, uint32_t words, uint32_t seed)
 }
 
 /* receive with timeout; bare-metal rpmsg queues ignore the timeout, so poll their size */
-static int32_t sup_recv(rpmsg_comm_stack_t *rp, uint32_t *remote, struct pfdaq_msg *msg, uint32_t *len, uint32_t timeout)
+static int32_t sup_recv(rpmsg_comm_stack_t *rp, uint32_t *remote, void *msg, uint32_t *len, uint32_t timeout)
 {
 #ifdef PFDAQ_BM
     uint32_t t0 = now_ms();
@@ -192,11 +201,37 @@ static int32_t sup_recv(rpmsg_comm_stack_t *rp, uint32_t *remote, struct pfdaq_m
         if ((timeout != RL_BLOCK) && (now_ms() - t0 >= timeout))
             return RL_ERR_NO_BUFF;
     }
-    return rpmsg_queue_recv(rp->my_rpmsg, rp->ctrl_q, remote, (char *)msg, sizeof(*msg), len, RL_BLOCK);
+    return rpmsg_queue_recv(rp->my_rpmsg, rp->ctrl_q, remote, (char *)msg, PFDAQ_RX_MAX, len, RL_BLOCK);
 #else
-    return rpmsg_queue_recv(rp->my_rpmsg, rp->ctrl_q, remote, (char *)msg, sizeof(*msg), len, timeout);
+    return rpmsg_queue_recv(rp->my_rpmsg, rp->ctrl_q, remote, (char *)msg, PFDAQ_RX_MAX, len, timeout);
 #endif
 }
+
+#ifdef PFDAQ_AMP_DEMO
+/* The three things the station logic needs from the board (see struct st_io). */
+static rpmsg_comm_stack_t *st_rp;
+int ee_vsprintf(char *buf, const char *fmt, va_list args);     /* the example's printf, defined in ee_vsprintf.c */
+
+static void st_print(const char *fmt, ...)
+{
+    char line[160];
+    va_list ap;
+    va_start(ap, fmt);
+    (void)ee_vsprintf(line, fmt, ap);     /* the example's own printf; line is longer than any message below */
+    va_end(ap);
+    printf_to(UART_APP, "%s\r\n", line);
+}
+
+/* CTRL.ABORT (bit 4): finish the frame in progress, then stop; in real-time mode every frame is its own packet */
+static void st_abort_source(void) { SRC_REG(SRC_CTRL) = 0x10u; }
+
+static void st_send(uint32_t remote, const void *buf, uint32_t len)
+{
+    (void)rpmsg_lite_send(st_rp->my_rpmsg, st_rp->ctrl_ept, remote, (char *)buf, len, RL_BLOCK);
+}
+
+static void st_delay(uint32_t ms) { delay_ms(ms); }
+#endif
 
 void pfdaq_supervisor(rpmsg_comm_stack_handle_t handle)
 {
@@ -208,6 +243,13 @@ void pfdaq_supervisor(rpmsg_comm_stack_handle_t handle)
     uint32_t status_rx = 0, deadline_miss = 0, seq_mismatch = 0;
     uint32_t fabric_frames = 0, fabric_seq = 0, mem_bad = 0, mem_words = 0;
     int32_t ret;
+#ifdef PFDAQ_AMP_DEMO
+    static struct st_ctx stn;
+    struct st_msg stm;
+    const struct st_io stio = { st_print, st_abort_source, st_send, st_delay };
+    st_rp = rp;
+    st_init(&stn, &stio);
+#endif
 
     /* FIC3 carries the fabric APB bus; make sure this context has it enabled */
     (void)mss_config_clk_rst(MSS_PERIPH_FIC3, (uint8_t)MPFS_HAL_FIRST_HART, PERIPHERAL_ON);
@@ -235,14 +277,32 @@ void pfdaq_supervisor(rpmsg_comm_stack_handle_t handle)
     rp->ctrl_ept = rpmsg_lite_create_ept(rp->my_rpmsg, PFDAQ_SUP_EPT_ADDR, rpmsg_queue_rx_cb, rp->ctrl_q);
     rpmsg_ns_announce(rp->my_rpmsg, rp->ctrl_ept, PFDAQ_SUP_CHANNEL, RL_NS_CREATE);
     printf_to(UART_APP, "[pfdaq-sup] channel \"%s\" announced, state IDLE\r\n", PFDAQ_SUP_CHANNEL);
+#ifdef PFDAQ_AMP_DEMO
+    printf_to(UART_APP, "[station] AMP demo variant: roll call and station protocol (64-byte messages) enabled\r\n");
+#endif
 
     for (;;)
     {
         uint32_t timeout = (state == PFDAQ_S_ARMED) ? deadline_ms : RL_BLOCK;
 
+#ifdef PFDAQ_AMP_DEMO
+        timeout = st_timeout(&stn, timeout);
+        ret = sup_recv(rp, &remote_addr, &stm, &len, timeout);
+        if (ret == RL_SUCCESS && len >= sizeof(msg))
+            memcpy(&msg, &stm, sizeof(msg));        /* first seven words: the production layout */
+#else
         ret = sup_recv(rp, &remote_addr, &msg, &len, timeout);
+#endif
         if (ret != RL_SUCCESS)
         {
+#ifdef PFDAQ_AMP_DEMO
+            if (stn.state == ST_S_ARMED)
+            {
+                fabric_snapshot(&fabric_frames, &fabric_seq);
+                st_on_timeout(&stn, fabric_seq, fabric_frames, now_ms());
+                continue;
+            }
+#endif
             /* no message within the deadline while armed */
             if (state == PFDAQ_S_ARMED)
             {
@@ -253,6 +313,15 @@ void pfdaq_supervisor(rpmsg_comm_stack_handle_t handle)
             }
             continue;
         }
+#ifdef PFDAQ_AMP_DEMO
+        if ((len == sizeof(stm)) && (stm.magic == ST_MSG_MAGIC))
+        {
+            /* 64-byte station message: the protection logic of pfdaq_station.h answers it */
+            fabric_snapshot(&fabric_frames, &fabric_seq);
+            st_handle(&stn, &stm, remote_addr, fabric_seq, fabric_frames, now_ms());
+            continue;
+        }
+#endif
         if ((len != sizeof(msg)) || (msg.magic != PFDAQ_MSG_MAGIC))
         {
             printf_to(UART_APP, "[pfdaq-sup] ignored message, len %u\r\n", (unsigned int)len);

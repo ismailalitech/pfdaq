@@ -1,0 +1,397 @@
+# Figures of module M10 (four-core monitoring station).
+# Written by experiments/amp-station/tests/make_figures.py: the code figures take their lines from the sources.
+# Do not edit by hand; run `python3 experiments/amp-station/tests/make_figures.py` and then tools/gen_diagrams.py.
+
+- id: lab-m10-architecture
+  alt: "The four-core station. The fabric stream source and DMA deliver one frame per millisecond to the acquisition process on Linux cpu 0 (hart 1), which copies each frame into ring A in shared memory. The analysis process on cpu 1 (hart 2) verifies every frame and sends a heartbeat every 100 ms and the window features every 500 ms over RPMsg to the FreeRTOS supervisor on hart 4. If a limit, the deadline or the sequence check is violated, hart 4 writes the abort to the stream source and sends a notice back. The analysis process passes windows and events through ring B to the telemetry process on cpu 2 (hart 3), which prints the dashboard and takes operator commands, which travel back through ring C to the analysis process."
+  width: 900
+  height: 470
+  step: 1.3
+  nodes:
+    src:   {x: 10,  y: 40,  w: 160, h: 70, kind: fabric, title: "Fabric source", sub: "stream + DMA, 1 kHz"}
+    acq:   {x: 185, y: 40,  w: 160, h: 70, kind: hart,   title: "CPU0 acquisition", sub: "hart 1, capture"}
+    ringA: {x: 360, y: 40,  w: 160, h: 70, kind: mem,    title: "Ring A", sub: "256 frames"}
+    ana:   {x: 535, y: 40,  w: 160, h: 70, kind: hart,   title: "CPU1 analysis", sub: "hart 2, owns RPMsg"}
+    ringB: {x: 710, y: 40,  w: 160, h: 70, kind: mem,    title: "Ring B", sub: "windows, events"}
+    abort: {x: 10,  y: 190, w: 160, h: 70, kind: fabric, title: "CTRL.ABORT", sub: "stops the source"}
+    h4:    {x: 185, y: 190, w: 160, h: 70, kind: hart,   title: "Hart 4 FreeRTOS", sub: "limits, deadline, trip"}
+    link:  {x: 360, y: 190, w: 160, h: 70, kind: sw,     title: "RPMsg link", sub: "64-byte messages"}
+    ringC: {x: 535, y: 190, w: 160, h: 70, kind: mem,    title: "Ring C", sub: "operator commands"}
+    tel:   {x: 710, y: 190, w: 160, h: 70, kind: hart,   title: "CPU2 telemetry", sub: "hart 3, dashboard"}
+    uart:  {x: 185, y: 330, w: 160, h: 70, kind: sw,     title: "UART console", sub: "hart 4 prints"}
+    op:    {x: 710, y: 330, w: 160, h: 70, kind: start,  title: "Operator", sub: "echo reset > cmd"}
+  edges:
+    - {from: src.right,  to: acq.left}
+    - {from: acq.right,  to: ringA.left}
+    - {from: ringA.right, to: ana.left}
+    - {from: ana.bottom@0.25, to: link.top@0.75, label: "status, features"}
+    - {from: link.left,  to: h4.right}
+    - {from: h4.left,    to: abort.right}
+    - {from: abort.top,  to: src.bottom}
+    - {from: ana.right,  to: ringB.left}
+    - {from: ringB.bottom, to: tel.top}
+    - {from: tel.left,   to: ringC.right}
+    - {from: ringC.top,  to: ana.bottom@0.75}
+    - {from: h4.bottom,  to: uart.top}
+    - {from: op.top,     to: tel.bottom}
+  steps: [src, e0, acq, e1, ringA, e2, ana, e3, link, e4, h4, e5, abort, e6, e7, ringB, e8, tel, op, e12, e9, ringC, e10, e11, uart]
+  notes:
+    - {x: 10,  y: 26,  text: "Data path", bold: true}
+    - {x: 10,  y: 176, text: "Protection path", bold: true}
+    - {x: 535, y: 26,  text: "Report path", bold: true}
+    - {x: 10,  y: 430, text: "Every box is a core or a memory: the three Linux cpus are separate processes; hart 4 is the safety supervisor."}
+
+- id: lab-m10-message-path
+  alt: "One message from a Linux cpu to hart 4 and back. The station hello program, pinned to a cpu, writes a 64-byte HELLO to the rpmsg character device; the message travels through the shared rings and the Mi-V inter-hart interrupt to hart 4; the supervisor task decodes it with st_handle and prints one line on its UART; it then sends a 64-byte acknowledgement with its own tick count, which the program reads and prints with a CLOCK_MONOTONIC time stamp."
+  width: 900
+  height: 340
+  step: 1.4
+  nodes:
+    cli:  {x: 15,  y: 50,  w: 190, h: 74, kind: sw,   title: "station hello", sub: "pinned to cpu N\nsched_getcpu()"}
+    chr:  {x: 240, y: 50,  w: 190, h: 74, kind: sw,   title: "/dev/rpmsgN", sub: "write 64 bytes\nHELLO #seq, text"}
+    ring: {x: 465, y: 50,  w: 190, h: 74, kind: mem,  title: "Shared rings", sub: "0x91D0_0000, 0x91D0_8000"}
+    ihc:  {x: 690, y: 50,  w: 190, h: 74, kind: mss,  title: "IHC interrupt", sub: "wakes hart 4"}
+    task: {x: 690, y: 200, w: 190, h: 74, kind: hart, title: "Supervisor task", sub: "st_handle(HELLO)"}
+    uart: {x: 465, y: 200, w: 190, h: 74, kind: sw,   title: "UART print", sub: "[roll-call] hart 4 got\nHELLO #1 from hart 2"}
+    ack:  {x: 240, y: 200, w: 190, h: 74, kind: hart, title: "Acknowledgement", sub: "64 bytes, its own tick\nand a text"}
+    back: {x: 15,  y: 200, w: 190, h: 74, kind: sw,   title: "station hello prints", sub: "reply and hart 4 tick\nCLOCK_MONOTONIC time"}
+  edges:
+    - {from: cli.right,  to: chr.left}
+    - {from: chr.right,  to: ring.left}
+    - {from: ring.right, to: ihc.left}
+    - {from: ihc.bottom, to: task.top}
+    - {from: task.left,  to: uart.right}
+    - {from: uart.left,  to: ack.right}
+    - {from: ack.left,   to: back.right}
+  steps: [cli, e0, chr, e1, ring, e2, ihc, e3, task, e4, uart, e5, ack, e6, back]
+  notes:
+    - {x: 15,  y: 36,  text: "Linux side", bold: true}
+    - {x: 690, y: 186, text: "Hart 4 side", bold: true}
+
+- id: lab-m10-message-layout
+  type: terminal
+  title: 'pfdaq_station.h: the two 64-byte messages'
+  alt: The two messages between the analysis process and hart 4, as declared in pfdaq_station.h. A request has the seven words of the production message (magic, type, burst, next_seq, errors, deadline_ms, max_lag) and nine more words x[0] to x[8]. An acknowledgement has nine words as in the production reply, then the event counter, the last trip reason, the trip count and 16 characters of text. FEATURES and SET_LIMITS use the x words.
+  width: 900
+  height: 432
+  step: 3.6
+  lines:
+  - struct st_msg {
+  - '    uint32_t magic, type, burst, next_seq, errors, deadline_ms, max_lag;'
+  - '    uint32_t x[9];'
+  - '};'
+  - struct st_ack {
+  - '    uint32_t magic, type, state, status_rx, deadline_miss, seq_mismatch;'
+  - '    uint32_t fabric_seq, fabric_frames, uptime_ms;'
+  - '    uint32_t events, last_reason, trips;'
+  - '    char text[16];'
+  - '};'
+  - _Static_assert(sizeof(struct st_msg) == 64, "st_msg is 16 words");
+  - ' *       FEATURES    x[0] window id, x[1] frames, x[2] bad frames, x[3] drops, x[4] peak,'
+  - ' *                   x[5] mean, x[6] window length in ms'
+  - ' *       SET_LIMITS  x[0] max bad frames, x[1] max drops, x[2] max peak, x[3] max mean'
+  callouts:
+  - lines:
+    - 0
+    - 3
+    title: Request, 16 words
+    text: The first seven words are the production message, so ARM, STATUS and DISARM keep their meaning.
+  - lines:
+    - 2
+    title: Nine free words
+    text: The new messages (FEATURES, SET_LIMITS, HELLO) put their fields here, by type.
+  - lines:
+    - 4
+    - 8
+    title: Answer, 16 words
+    text: Nine words as in the production reply, then events, last trip reason, trip count, and a text.
+  - lines:
+    - 7
+    title: In every answer
+    text: The event counter and the last trip reason come back in every acknowledgement.
+  - lines:
+    - 10
+    title: Checked at build time
+    text: A wrong size stops the build on hart 4 and in the Linux program.
+  - lines:
+    - 11
+    - 13
+    title: Window and limits
+    text: 'One window: id, frames, bad, drops, peak, mean. The limits are per window, set by Linux.'
+- id: lab-m10-trip
+  type: terminal
+  title: 'pfdaq_station.h and pfdaq_supervisor.c: the trip decision on hart 4'
+  alt: The decision on hart 4 in six steps. st_features compares the four window values with the limits and builds a reason mask; if the mask is not empty it calls st_trip. st_trip does nothing when the state is already SAFE; otherwise it stops the source through abort_source, sets the state to SAFE, counts the trip, stores the reason, and sends one unsolicited notice to the Linux endpoint. On the board abort_source writes 0x10 (CTRL.ABORT) to the stream source's control register.
+  width: 900
+  height: 552
+  step: 3.8
+  lines:
+  - '    c->windows++;'
+  - '    if (c->state != ST_S_ARMED)'
+  - '        return;'
+  - '    if (m->x[2] > c->lim.max_bad)   why |= ST_R_BAD_FRAMES;'
+  - '    if (m->x[3] > c->lim.max_drops) why |= ST_R_DROPS;'
+  - '    if (m->x[4] > c->lim.max_peak)  why |= ST_R_PEAK;'
+  - '    if (m->x[5] > c->lim.max_mean)  why |= ST_R_MEAN;'
+  - '    if (why)'
+  - '        st_trip(c, why, fseq, fframes, now);'
+  - '    if (c->state == ST_S_SAFE)'
+  - '        return;'
+  - '    c->io.abort_source();'
+  - '    c->state = ST_S_SAFE;'
+  - '    c->trips++;'
+  - '    c->last_reason = reasons;'
+  - '    st_reason_str(reasons, r, sizeof(r));'
+  - '    c->io.print("[station] TRIP #%u: %s at t=%u ms, source aborted, state SAFE",'
+  - '    st_fill_ack(c, ST_T_TRIP_NOTICE, fabric_seq, fabric_frames, now_ms, "TRIP", &a);'
+  - '    c->io.send(c->last_remote, &a, sizeof(a));'
+  - static void st_abort_source(void) { SRC_REG(SRC_CTRL) = 0x10u; }
+  callouts:
+  - lines:
+    - 0
+    - 2
+    title: Only while armed
+    text: 'A window that arrives in SAFE is counted and ignored: one trip per fault, not one per window.'
+  - lines:
+    - 3
+    - 6
+    title: Four limits, one mask
+    text: Bad frames, drops, peak and mean of the window against the limits Linux set; each violation adds a bit.
+  - lines:
+    - 7
+    - 8
+    title: Any bit trips
+    text: Any violated limit is enough. The same st_trip is called for a missed deadline and a sequence mismatch.
+  - lines:
+    - 9
+    - 2
+    title: Once
+    text: 'A second trip while SAFE does nothing: the first reason stays recorded.'
+  - lines:
+    - 11
+    title: Stop the source
+    text: The first action is to stop the data, before printing or telling anyone.
+  - lines:
+    - 14
+    title: Remember why
+    text: Trip count and reason go into every later acknowledgement.
+  - lines:
+    - 17
+    - 18
+    title: Tell Linux
+    text: 'One unsolicited message to the endpoint that spoke last: the analysis process.'
+  - lines:
+    - 19
+    title: On the board
+    text: 'Writing 0x10 to CTRL is the graceful ABORT of module P05: the frame in progress is finished, then it stops.'
+- id: lab-m10-ring-producer
+  type: terminal
+  title: 'station_common.h: the producer side of the ring'
+  alt: The producer side of the lock-free ring in shared memory. ring_reserve reads its own head counter, checks against the consumer's tail with an acquire load whether a slot is free and returns the slot or NULL. ring_commit publishes the slot with a sequentially consistent store of head and wakes the consumer with a futex only if the consumer announced that it sleeps.
+  width: 900
+  height: 412
+  step: 3.6
+  lines:
+  - static inline void *ring_reserve(struct ring *r)
+  - '{'
+  - '    uint32_t head = r->h->head;     /* only the producer writes head */'
+  - '    if (head - __atomic_load_n(&r->h->tail, __ATOMIC_ACQUIRE) >= r->h->nslots)'
+  - '        return NULL;'
+  - '    return r->slots + (size_t)(head % r->h->nslots) * r->h->slot_size;'
+  - '}'
+  - static inline void ring_commit(struct ring *r)
+  - '{'
+  - '    __atomic_store_n(&r->h->head, r->h->head + 1, __ATOMIC_SEQ_CST);'
+  - '    if (__atomic_load_n(&r->h->waiting, __ATOMIC_SEQ_CST))'
+  - '        syscall(SYS_futex, &r->h->head, FUTEX_WAKE, 1, NULL, NULL, 0);'
+  - '}'
+  callouts:
+  - lines:
+    - 0
+    - 2
+    title: One writer per counter
+    text: Only the producer writes head, so it can read its own counter without a barrier.
+  - lines:
+    - 3
+    - 4
+    title: Full means NULL
+    text: 'The producer never waits: a full ring returns NULL and the frame is counted as dropped.'
+  - lines:
+    - 5
+    title: Free-running counters
+    text: The slot is the counter modulo the number of slots, so no wrap-around case is needed.
+  - lines:
+    - 9
+    title: Publish
+    text: The store makes the slot visible. Every write to the slot comes before it.
+  - lines:
+    - 10
+    - 11
+    title: Wake only if asleep
+    text: 'The system call is made only when the consumer said it sleeps: normally none per frame.'
+- id: lab-m10-ring-consumer
+  type: terminal
+  title: 'station_common.h: the consumer side of the ring'
+  alt: The consumer side. ring_peek loads head with acquire and returns the oldest unread slot or NULL. ring_release advances tail with a release store. ring_wait announces that it sleeps, checks again, and sleeps on a futex at head with a timeout; the order of announce and check is what stops a wake-up from being lost.
+  width: 900
+  height: 672
+  step: 3.8
+  lines:
+  - static inline const void *ring_peek(struct ring *r)
+  - '{'
+  - '    uint32_t tail = r->h->tail;     /* only the consumer writes tail */'
+  - '    if (__atomic_load_n(&r->h->head, __ATOMIC_ACQUIRE) == tail)'
+  - '        return NULL;'
+  - '    return r->slots + (size_t)(tail % r->h->nslots) * r->h->slot_size;'
+  - '}'
+  - static inline void ring_release(struct ring *r)
+  - '{'
+  - '    __atomic_store_n(&r->h->tail, r->h->tail + 1, __ATOMIC_RELEASE);'
+  - '}'
+  - static inline int ring_wait(struct ring *r, int timeout_ms)
+  - '{'
+  - '    uint32_t head;'
+  - '    struct timespec to = { timeout_ms / 1000, (long)(timeout_ms % 1000) * 1000000L };'
+  - '    __atomic_store_n(&r->h->waiting, 1, __ATOMIC_SEQ_CST);'
+  - '    head = __atomic_load_n(&r->h->head, __ATOMIC_SEQ_CST);'
+  - '    if (head == r->h->tail) {'
+  - '        syscall(SYS_futex, &r->h->head, FUTEX_WAIT, head, &to, NULL, 0);'
+  - '        head = __atomic_load_n(&r->h->head, __ATOMIC_ACQUIRE);'
+  - '    }'
+  - '    __atomic_store_n(&r->h->waiting, 0, __ATOMIC_SEQ_CST);'
+  - '    return head != r->h->tail;'
+  - '}'
+  - /* ------------------------------------------------------------------------------------------ */
+  - /* control block (shared memory); every field has exactly one writing process                   */
+  callouts:
+  - lines:
+    - 0
+    - 3
+    title: Acquire
+    text: 'The acquire load pairs with the producer''s store: everything it wrote into the slot is visible.'
+  - lines:
+    - 7
+    - 9
+    title: Give the slot back
+    text: Advancing tail frees the slot for the producer; the release keeps our reads of the slot before it.
+  - lines:
+    - 15
+    title: Announce, then look
+    text: Sleeping starts by saying so, then the ring is checked again.
+  - lines:
+    - 17
+    - 18
+    title: Sleep with a limit
+    text: If still empty it sleeps on the futex with a timeout, so the caller can run its timers.
+- id: lab-m10-acq-loop
+  type: terminal
+  title: 'station.c and station_fabric.h: the acquisition loop on cpu 0'
+  alt: The acquisition loop. Each pass reserves a slot of ring A, then asks the source for the next frame, which is copied straight into the slot. On a frame it counts it, stores the next expected sequence number, stamps and publishes the slot; if the ring was full it counts an overrun instead. A finished run leaves the loop. The source function copies the frame out of the DMA buffer first, re-arms the descriptor second and returns one credit third.
+  width: 900
+  height: 512
+  step: 3.8
+  lines:
+  - '            struct frame_slot *slot = ring_reserve(&ra);'
+  - '            uint32_t seq;'
+  - '            r = fab->next(fab, slot ? slot->w : NULL, &seq, 20);'
+  - '            if (r == 1) {'
+  - '                ctl->acq_frames++;'
+  - '                __atomic_store_n(&ctl->acq_next_seq, seq + 1, __ATOMIC_RELEASE);'
+  - '                if (slot) {'
+  - '                    slot->t_ns = mono_ns();'
+  - '                    slot->run_id = run_id;'
+  - '                    slot->flags = first ? 1u : 0u;'
+  - '                    ring_commit(&ra);'
+  - '                } else {'
+  - '                    ctl->acq_ring_overruns++;       /* ring A full: dropped here, a gap for analysis */'
+  - '                }'
+  - '                first = 0;'
+  - '            memcpy(dst, buf, h->fbytes);            /* copy first ... */'
+  - '        hw_arm_rt(h, k, BUF_OFF + k * h->slot_sz, h->fbytes);   /* ... then re-arm ... */'
+  - '        h->src[SRC_CREDIT / 4] = 1;                              /* ... then return the credit */'
+  callouts:
+  - lines:
+    - 0
+    - 1
+    title: Reserve first
+    text: A slot is reserved before the frame is read, so the copy goes straight into the ring.
+  - lines:
+    - 2
+    title: One frame
+    text: The source copies the frame into the slot, or discards it when the ring is full (NULL).
+  - lines:
+    - 7
+    - 10
+    title: Stamp and publish
+    text: Time, run number and a first-in-run flag, then the slot becomes visible to analysis.
+  - lines:
+    - 12
+    title: Full ring
+    text: 'Acquisition never waits for analysis: the frame is dropped here and counted, and analysis sees a gap.'
+  - lines:
+    - 15
+    - 17
+    title: Copy, re-arm, credit
+    text: 'The order of module I07: copy the frame out, re-arm the descriptor, only then return the credit.'
+- id: lab-m10-supervisor-hook
+  type: terminal
+  title: 'pfdaq_supervisor.c: how the demo variant plugs into the supervisor loop'
+  alt: Three places in the production supervisor loop, compiled only with PFDAQ_AMP_DEMO. The receive timeout becomes the station's deadline while it is armed; when the receive times out in the armed state the station's timeout handler runs (ALARM, then trip); and a message of 64 bytes with the station magic goes to st_handle, which answers it. Messages of the production size take the old path unchanged.
+  width: 900
+  height: 412
+  step: 3.8
+  lines:
+  - '        timeout = st_timeout(&stn, timeout);'
+  - '        ret = sup_recv(rp, &remote_addr, &stm, &len, timeout);'
+  - '        if (ret == RL_SUCCESS && len >= sizeof(msg))'
+  - '            memcpy(&msg, &stm, sizeof(msg));        /* first seven words: the production layout */'
+  - '            if (stn.state == ST_S_ARMED)'
+  - '            {'
+  - '                fabric_snapshot(&fabric_frames, &fabric_seq);'
+  - '                st_on_timeout(&stn, fabric_seq, fabric_frames, now_ms());'
+  - '                continue;'
+  - '            /* 64-byte station message: the protection logic of pfdaq_station.h answers it */'
+  - '            fabric_snapshot(&fabric_frames, &fabric_seq);'
+  - '            st_handle(&stn, &stm, remote_addr, fabric_seq, fabric_frames, now_ms());'
+  - '            continue;'
+  callouts:
+  - lines:
+    - 0
+    - 3
+    title: Deadline as timeout
+    text: 'While armed, the receive call waits at most the deadline: the same mechanism as module P04.'
+  - lines:
+    - 4
+    - 8
+    title: Silence means alarm
+    text: 'A timeout in ARMED runs st_on_timeout: the ALARM line, then the trip.'
+  - lines:
+    - 9
+    - 8
+    title: One new branch
+    text: A 64-byte message goes to st_handle and never reaches the old code; 28-byte messages are untouched.
+
+- id: lab-m10-recording
+  type: replay
+  alt: "A recorded 68-second run of the station on the board, in three terminal panes: the Linux dashboard on CPU 2, the acquisition and analysis logs of CPUs 0 and 1, and the hart 4 console. It shows the roll call, normal operation at about 1000 frames per second, a trip on bad frames and a reset, a trip on a missed deadline after the analysis process is frozen and a reset, and the closing summary."
+  width: 900
+  rows: 8
+  max_gap: 1.5
+  recording: recordings/m10-station.jsonl
+  panes:
+    - {title: "Linux CPU 2: operator dashboard and commands (ssh)", rows: 7}
+    - {title: "Linux CPUs 0 and 1: acquisition and analysis logs (ssh)", rows: 6}
+    - {title: "hart 4 console (UART)", rows: 7}
+  callouts:
+    - {t: 1.9,  title: "Core 1 speaks", text: "Linux CPU 0 sends HELLO; hart 4 prints it on its UART and answers with its own tick count.", panes: [0, 2]}
+    - {t: 6.0,  title: "All three Linux cores heard", text: "CPU 2 is the third; hart 4 reports that it has heard harts 1, 2 and 3.", panes: [2]}
+    - {t: 8.5,  title: "Core 4 speaks", text: "Hart 4 sends one message of its own to Linux, and the listener on Linux prints it.", panes: [0, 2]}
+    - {t: 12.9, title: "The station starts", text: "Acquisition on CPU 0, analysis on CPU 1, telemetry on CPU 2; hart 4 arms with its limits.", panes: [1, 2]}
+    - {t: 17.5, title: "Normal operation", text: "About 1000 frames per second, no bad frames; hart 4 prints a window line every tenth window.", panes: [0, 2]}
+    - {t: 28.8, title: "Fault A: corrupt frames", text: "The operator asks for CRC faults; the fabric corrupts one frame in every injection run.", panes: [0]}
+    - {t: 35.2, title: "Trip on bad frames", text: "Hart 4 sees 3 bad frames in a window, aborts the source and shows SAFE on all three consoles.", panes: [0, 1, 2]}
+    - {t: 41.3, title: "Operator reset", text: "The reset travels CPU 2, CPU 1 and RPMsg to hart 4; the station is armed and running again.", panes: [0, 1, 2]}
+    - {t: 51.8, title: "Fault B: the analysis process hangs", text: "After kill -STOP on CPU 1, no message reaches hart 4 for 500 ms: ALARM, then a trip on DEADLINE.", panes: [2]}
+    - {t: 57.5, title: "The frozen process wakes up", text: "After kill -CONT, CPU 1 receives the trip notice that hart 4 sent while it was frozen.", panes: [0, 1]}
+    - {t: 60.4, title: "Second reset", text: "The station resumes and runs normally to the end.", panes: [0, 1, 2]}
+    - {t: 67.8, title: "Summary", text: "37,493 frames verified, 3 bad, 2 trips, 0 sequence mismatches; hart 4's own counts agree.", panes: [0, 2]}

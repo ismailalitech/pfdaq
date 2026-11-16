@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 672" width="900" height="672" role="img" aria-labelledby="t d">
+<title id="t">station_common.h: the consumer side of the ring</title><desc id="d">The consumer side. ring_peek loads head with acquire and returns the oldest unread slot or NULL. ring_release advances tail with a release store. ring_wait announces that it sleeps, checks again, and sleeps on a futex at head with a timeout; the order of announce and check is what stops a wake-up from being lost.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 17.20s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 17.20s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}22.09%{opacity:1}25.09%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="672" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="900" height="594" fill="#0d1117"/>
+<rect x="0" y="0" width="900" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="450" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">station_common.h: the consumer side of the ring</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">static inline const void *ring_peek(struct ring *r)</text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    uint32_t tail = r-&gt;h-&gt;tail;     /* only the consumer writes tail */</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    if (__atomic_load_n(&amp;r-&gt;h-&gt;head, __ATOMIC_ACQUIRE) == tail)</text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">        return NULL;</text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    return r-&gt;slots + (size_t)(tail % r-&gt;h-&gt;nslots) * r-&gt;h-&gt;slot_size;</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">}</text>
+<text x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">static inline void ring_release(struct ring *r)</text>
+<text x="24" y="218" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{</text>
+<text x="24" y="238" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    __atomic_store_n(&amp;r-&gt;h-&gt;tail, r-&gt;h-&gt;tail + 1, __ATOMIC_RELEASE);</text>
+<text x="24" y="258" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">}</text>
+<text x="24" y="278" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">static inline int ring_wait(struct ring *r, int timeout_ms)</text>
+<text x="24" y="298" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{</text>
+<text x="24" y="318" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    uint32_t head;</text>
+<text x="24" y="338" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    struct timespec to = { timeout_ms / 1000, (long)(timeout_ms % 1000) * 1000000L };</text>
+<text x="24" y="358" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    __atomic_store_n(&amp;r-&gt;h-&gt;waiting, 1, __ATOMIC_SEQ_CST);</text>
+<text x="24" y="378" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    head = __atomic_load_n(&amp;r-&gt;h-&gt;head, __ATOMIC_SEQ_CST);</text>
+<text x="24" y="398" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    if (head == r-&gt;h-&gt;tail) {</text>
+<text x="24" y="418" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">        syscall(SYS_futex, &amp;r-&gt;h-&gt;head, FUTEX_WAIT, head, &amp;to, NULL, 0);</text>
+<text x="24" y="438" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">        head = __atomic_load_n(&amp;r-&gt;h-&gt;head, __ATOMIC_ACQUIRE);</text>
+<text x="24" y="458" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    }</text>
+<text x="24" y="478" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    __atomic_store_n(&amp;r-&gt;h-&gt;waiting, 0, __ATOMIC_SEQ_CST);</text>
+<text x="24" y="498" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">    return head != r-&gt;h-&gt;tail;</text>
+<text x="24" y="518" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">}</text>
+<text x="24" y="538" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">/* ------------------------------------------------------------------------------------------ */</text>
+<text x="24" y="558" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">/* control block (shared memory); every field has exactly one writing process                   */</text>
+<rect x="0" y="594" width="900" height="78" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="43" width="884" height="83" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="45" r="11" fill="#ffd166"/><text x="8" y="49" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="594" width="900" height="78" fill="#12171d"/>
+<circle cx="24" cy="620" r="13" fill="#ffd166"/><text x="24" y="625" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="618" font-size="15" font-weight="bold" fill="#e6ecf1">Acquire</text>
+<text x="48" y="638" font-size="13" fill="#9aa8b5">The acquire load pairs with the producer's store: everything it wrote into the slot is visible.</text>
+</g>
+<g class="co" style="animation-delay:3.80s"><rect x="8" y="183" width="884" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="185" r="11" fill="#ffd166"/><text x="8" y="189" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.80s">
+<rect x="0" y="594" width="900" height="78" fill="#12171d"/>
+<circle cx="24" cy="620" r="13" fill="#ffd166"/><text x="24" y="625" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="618" font-size="15" font-weight="bold" fill="#e6ecf1">Give the slot back</text>
+<text x="48" y="638" font-size="13" fill="#9aa8b5">Advancing tail frees the slot for the producer; the release keeps our reads of the slot before it.</text>
+</g>
+<g class="co" style="animation-delay:7.60s"><rect x="8" y="343" width="884" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="345" r="11" fill="#ffd166"/><text x="8" y="349" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:7.60s">
+<rect x="0" y="594" width="900" height="78" fill="#12171d"/>
+<circle cx="24" cy="620" r="13" fill="#ffd166"/><text x="24" y="625" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="618" font-size="15" font-weight="bold" fill="#e6ecf1">Announce, then look</text>
+<text x="48" y="638" font-size="13" fill="#9aa8b5">Sleeping starts by saying so, then the ring is checked again.</text>
+</g>
+<g class="co" style="animation-delay:11.40s"><rect x="8" y="383" width="884" height="43" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="385" r="11" fill="#ffd166"/><text x="8" y="389" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:11.40s">
+<rect x="0" y="594" width="900" height="78" fill="#12171d"/>
+<circle cx="24" cy="620" r="13" fill="#ffd166"/><text x="24" y="625" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="618" font-size="15" font-weight="bold" fill="#e6ecf1">Sleep with a limit</text>
+<text x="48" y="638" font-size="13" fill="#9aa8b5">If still empty it sleeps on the futex with a timeout, so the caller can run its timers.</text>
+</g>
+</svg>

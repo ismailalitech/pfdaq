@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 380" width="940" height="380" role="img" aria-labelledby="t d">
+<title id="t">pfdaq_cap and pfdaq_cap_mt on the board, 32 bursts of 1 MiB (fields marked ... left out)</title><desc id="d">Two recorded runs with the counter payload. The original tool reaches 31.26 MB/s, and the mean time from START to the DMA interrupt is 32.5 ms because the DMA waits for verification. The three-worker version reaches 70.93 MB/s, the mean start-to-interrupt time is 1.35 ms, and the CPU time of 1.34 s in 0.47 s of run time shows that all three cores are busy.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 27.20s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 27.20s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}13.24%{opacity:1}16.24%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="940" height="380" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="940" height="214" fill="#0d1117"/>
+<rect x="0" y="0" width="940" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="470" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">pfdaq_cap and pfdaq_cap_mt on the board, 32 bursts of 1 MiB (fields marked ... left out)</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">pfdaq_cap -m counter -w 252 -f 1024 -n 32</tspan></text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"pass": true, "bursts": 32, "bytes": 33554432, "elapsed_s": 1.073291, "mb_per_s_end_to_end": 31.26, ...,</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "start_to_irq_s": {"min": 0.001240, "mean": 0.032511, "max": 0.038077}, "copy_mb_per_s": 71.7, ...}</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">pfdaq_cap_mt -m counter -w 252 -f 1024 -n 32 -j 3</tspan></text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"pass": true, "workers": 3, "buffers": 5, ..., "elapsed_s": 0.473060, "mb_per_s_end_to_end": 70.93,</text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "start_to_irq_s": {"min": 0.001205, "mean": 0.001353, "max": 0.004182}, "dma_blocked_on_buffers_s": 0.3347,</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "copy_mb_per_s": 51.8, "verify_mb_per_s": 47.1, "cpu_s": 1.3438, "bursts_per_worker": [11, 11, 10], ...}</text>
+<rect x="0" y="214" width="940" height="166" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="43" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="45" r="11" fill="#ffd166"/><text x="8" y="49" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="214" width="940" height="166" fill="#12171d"/>
+<circle cx="24" cy="240" r="13" fill="#ffd166"/><text x="24" y="245" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="238" font-size="15" font-weight="bold" fill="#e6ecf1">Before: one thread</text>
+<text x="48" y="258" font-size="13" fill="#9aa8b5">The unchanged tool, without supervision: copy and verify run one after the other on one core.</text>
+</g>
+<g class="co" style="animation-delay:3.60s"><rect x="8" y="63" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="65" r="11" fill="#ffd166"/><text x="8" y="69" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.60s">
+<rect x="0" y="214" width="940" height="166" fill="#12171d"/>
+<circle cx="24" cy="240" r="13" fill="#ffd166"/><text x="24" y="245" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="238" font-size="15" font-weight="bold" fill="#e6ecf1">31.26 MB/s</text>
+<text x="48" y="258" font-size="13" fill="#9aa8b5">33,554,432 bytes in 1.073 s.</text>
+</g>
+<g class="co" style="animation-delay:7.20s"><rect x="8" y="83" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="85" r="11" fill="#ffd166"/><text x="8" y="89" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:7.20s">
+<rect x="0" y="214" width="940" height="166" fill="#12171d"/>
+<circle cx="24" cy="240" r="13" fill="#ffd166"/><text x="24" y="245" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="238" font-size="15" font-weight="bold" fill="#e6ecf1">The DMA waits for software</text>
+<text x="48" y="258" font-size="13" fill="#9aa8b5">Mean START to interrupt is 32.5 ms, against 1.2 ms at the shortest: the next burst starts late.</text>
+</g>
+<g class="co" style="animation-delay:10.80s"><rect x="8" y="103" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="105" r="11" fill="#ffd166"/><text x="8" y="109" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.80s">
+<rect x="0" y="214" width="940" height="166" fill="#12171d"/>
+<circle cx="24" cy="240" r="13" fill="#ffd166"/><text x="24" y="245" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="238" font-size="15" font-weight="bold" fill="#e6ecf1">After: three workers</text>
+<text x="48" y="258" font-size="13" fill="#9aa8b5">Same checks, same buffers; the main thread only drives the DMA.</text>
+</g>
+<g class="co" style="animation-delay:14.40s"><rect x="8" y="123" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="125" r="11" fill="#ffd166"/><text x="8" y="129" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="co cap" style="animation-delay:14.40s">
+<rect x="0" y="214" width="940" height="166" fill="#12171d"/>
+<circle cx="24" cy="240" r="13" fill="#ffd166"/><text x="24" y="245" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
+<text x="48" y="238" font-size="15" font-weight="bold" fill="#e6ecf1">70.93 MB/s</text>
+<text x="48" y="258" font-size="13" fill="#9aa8b5">The same 33,554,432 bytes in 0.473 s; the run still passed.</text>
+</g>
+<g class="co" style="animation-delay:18.00s"><rect x="8" y="143" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="145" r="11" fill="#ffd166"/><text x="8" y="149" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">6</text></g>
+<g class="co cap" style="animation-delay:18.00s">
+<rect x="0" y="214" width="940" height="166" fill="#12171d"/>
+<circle cx="24" cy="240" r="13" fill="#ffd166"/><text x="24" y="245" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">6</text>
+<text x="48" y="238" font-size="15" font-weight="bold" fill="#e6ecf1">The DMA no longer waits long</text>
+<text x="48" y="258" font-size="13" fill="#9aa8b5">Mean START to interrupt 1.35 ms; the main thread waited 0.33 s in all for a free buffer.</text>
+</g>
+<g class="co" style="animation-delay:21.60s"><rect x="8" y="163" width="924" height="23" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="165" r="11" fill="#ffd166"/><text x="8" y="169" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">7</text></g>
+<g class="co cap" style="animation-delay:21.60s">
+<rect x="0" y="214" width="940" height="166" fill="#12171d"/>
+<circle cx="24" cy="240" r="13" fill="#ffd166"/><text x="24" y="245" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">7</text>
+<text x="48" y="238" font-size="15" font-weight="bold" fill="#e6ecf1">Each core is slower, three of them win</text>
+<text x="48" y="258" font-size="13" fill="#9aa8b5">Copy 51.8 and verify 47.1 MB/s per worker, down from 71.7 and 55.7; 1.34 s of CPU in 0.47 s.</text>
+</g>
+</svg>

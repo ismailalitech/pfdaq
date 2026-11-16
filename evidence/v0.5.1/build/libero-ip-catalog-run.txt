@@ -1,0 +1,71 @@
+# Catalog route, run in a scratch vault (not the shared one). Libero SoC 2026.1.
+# 1. The package: python3 make_cpz.py (experiments/libero-ip). Contents of pfdaq_demo_regs-1.0.0.cpz:
+    index_entry.xml 1780
+    core_xml.zip 1428
+    other_filesets.zip 1247
+# 2. The scratch vault after both packages were added (GUI: Catalog gear menu > Add Core to Vault) and the cores used (the fs folders are filled when a core is first used):
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p0f0/CoreAPB3.xml
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f0/rtl/vlog/core/coreapb3_iaddr_reg.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f0/rtl/vlog/core/coreapb3_muxptob3.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f0/rtl/vlog/core/coreapb3.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f2/coreparameters.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f2/rtl/vlog/amba_bfm/bfm_ahbtoapb.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f2/rtl/vlog/amba_bfm/bfm_apbslaveext.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f2/rtl/vlog/amba_bfm/bfm_apbslave.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f2/rtl/vlog/amba_bfm/bfm_apb.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f2/rtl/vlog/amba_bfm/bfm_main.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p1f2/rtl/vlog/test/user/testbench.v
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p2f3/mti/scripts/bfmtovec_compile.tcl
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p2f3/mti/scripts/bfmtovec.exe
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p2f3/mti/scripts/bfmtovec.lin
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p2f3/mti/scripts/coreapb3_usertb_master.bfm
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p2f3/mti/scripts/wave_user.do
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p3f0/docs/CoreAPB3_HB.pdf
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/fs/p3f0/docs/CoreAPB3_RN.pdf
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/p1/fs-vhdlSource-U
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/p1/TB_USER_VHDL_STIMULUS_FILESET-U
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/p2/fs-VerilogSource-O.zip
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/p2/fs-vhdlSource-O.zip
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/p2/TB_USER_VERILOG_STIMULUS_FILESET-O.zip
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/p2/TB_USER_VHDL_ANY_SIMULATION_FILESET.zip
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/p2/TB_USER_VHDL_STIMULUS_FILESET-O.zip
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/pkg/core_xml.zip
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/pkg/index_entry.xml
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/pkg/ip-content
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/pkg/ip-content.zip
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/pkg/other_filesets.zip
+   ./Components/Actel/DirectCore/CoreAPB3/4.2.100/pkg/preview_docs.zip
+   ./Components/pfdaq/Demo/pfdaq_demo_regs/1.0.0/fs/p0f0/pfdaq_demo_regs.xml
+   ./Components/pfdaq/Demo/pfdaq_demo_regs/1.0.0/fs/p1f0/rtl/vlog/core/pfdaq_demo_regs.v
+   ./Components/pfdaq/Demo/pfdaq_demo_regs/1.0.0/pkg/core_xml.zip
+   ./Components/pfdaq/Demo/pfdaq_demo_regs/1.0.0/pkg/index_entry.xml
+   ./Components/pfdaq/Demo/pfdaq_demo_regs/1.0.0/pkg/other_filesets.zip
+   ./index.xml
+# 3. Messages: 'Successfully imported file(s).' in the GUI; in batch:
+Import succeeded for CPZ file pfdaq_demo_regs-1.0.0.cpz.
+Import succeeded for CPZ file CoreAPB3-4.2.100.cpz.
+# 4. The same flow in batch from an empty vault and an empty project (create_ip_catalog_demo.tcl):
+Synthesis completed.
+The Execute Script command succeeded.
+CFG1           1 use
+CFG2           10 uses
+CFG3           5 uses
+CFG4           8 uses
+ARI1            49 uses - used for arithmetic functions
+SLE            50 uses
+I/O ports: 37
+Total LUTs:    73
+Mapper successful!
+# 5. The same design built in the GUI, from the Catalog entry (DEFAULT_LEN set to 16):
+CFG1           1 use
+CFG2           10 uses
+CFG3           5 uses
+CFG4           8 uses
+ARI1            49 uses - used for arithmetic functions
+SLE            50 uses
+I/O ports: 37
+Total LUTs:    73
+Mapper successful!
+# 6. The parameter reached the generated wrapper:
+17:"DEFAULT_LEN:16"   }
+104:        .DEFAULT_LEN ( 16 ) )
