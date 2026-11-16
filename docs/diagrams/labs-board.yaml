@@ -1,4 +1,4 @@
-# Figures for the labs written from runs on the board in November 2026 (modules I08, P08, P07, F06).
+# Figures for the labs written from runs on the board in November 2026 (modules I08, P08, P07, F06, and the stall figure of M10).
 # Every number in a terminal figure was printed by a recorded run (logs and evidence name them).
 
 # ---------------------------------------------------------------- I08
@@ -197,3 +197,113 @@
     - {lines: [0, 0], title: "Default: CPU0", text: "200,000 interrupts for 100,000 events (the double wake-up of I02), all on CPU0."}
     - {lines: [1, 2], title: "Mask 2: CPU1", text: "After writing 2 to smp_affinity the effective affinity is CPU1 and the counts grow there."}
     - {lines: [3, 4], title: "Mask 4: CPU2", text: "The same with mask 4: only CPU2 counts."}
+
+# ---------------------------------------------------------------- F06
+- id: lab-f06-led-paths
+  alt: "The two ways to drive LED1. The kernel's leds-gpio driver, reached through /sys/class/leds/led1, writes bit 17 of MSS GPIO2. A user program writes bit 0 of the GPIO_OUT register of CoreGPIO in the fabric, through the UIO page at 0x4000_0000. In the fabric an OR gate named OR2_LED1 combines the two signals and drives the LED1 pin, so either source lights the LED. Software can read back both registers; it cannot see the LED."
+  width: 900
+  height: 330
+  nodes:
+    drv:  {x: 10,  y: 30,  w: 220, h: 78, kind: sw,     title: "leds-gpio driver", sub: "/sys/class/leds/led1\nkernel holds line 17"}
+    prog: {x: 10,  y: 190, w: 220, h: 78, kind: hart,   title: "gpio_both_sides", sub: "UIO page 0x4000_0000\n32-bit stores"}
+    mss:  {x: 300, y: 30,  w: 200, h: 78, kind: mss,    title: "MSS GPIO2, bit 17", sub: "gpiochip1 line 17\n0x2012_2000"}
+    core: {x: 300, y: 190, w: 200, h: 78, kind: fabric, title: "CoreGPIO GPIO_OUT[0]", sub: "0x4000_0100 + 0xA0\n7 output bits"}
+    or2:  {x: 580, y: 110, w: 140, h: 78, kind: fabric, title: "OR2_LED1", sub: "a gate in the fabric"}
+    led:  {x: 780, y: 110, w: 110, h: 78, kind: good,   title: "LED1", sub: "the pin"}
+  edges:
+    - {id: e0, from: drv.right,  to: mss.left,  label: "writes 1"}
+    - {id: e1, from: mss.right,  to: or2.left@0.25, label: "M2F_17"}
+    - {id: e2, from: prog.right, to: core.left, label: "writes bit 0"}
+    - {id: e3, from: core.right, to: or2.left@0.75, label: "GPIO_OUT[0]"}
+    - {id: e4, from: or2.right,  to: led.left}
+  steps: [drv, e0, mss, e1, prog, e2, core, e3, or2, e4, led]
+  notes:
+    - {x: 20, y: 290, text: "The OR gate is in the reference design's script: OR2_LED1 has input A = GPIO_OUT[0], input B = MSS GPIO2 bit 17."}
+    - {x: 20, y: 308, text: "Software reads back each source's own register. Nothing lets it read the LED pin, so no run says that an LED lit."}
+
+- id: lab-f06-pins
+  alt: "Where the other board pins go. DIP5 to DIP8 are inputs, through an inverter, to MSS GPIO2 bits 25 to 28, so they can be read through the gpiochip device. DIP1 to DIP4 are not GPIO lines: they are interrupt inputs F2M[6] to F2M[9], PLIC sources 124 to 127, and no handler is registered for them on this image. LED8 is driven by line 9 of the first GPIO chip, with no fabric logic in between."
+  width: 900
+  height: 330
+  nodes:
+    d58:  {x: 10,  y: 20,  w: 170, h: 70, kind: fabric, title: "DIP5 to DIP8", sub: "switch pins, inverted"}
+    d14:  {x: 10,  y: 130, w: 170, h: 70, kind: fabric, title: "DIP1 to DIP4", sub: "switch pins, inverted"}
+    l8:   {x: 10,  y: 240, w: 170, h: 70, kind: good,   title: "LED8", sub: "pin GPIO_1_9_OUT"}
+    g2:   {x: 290, y: 20,  w: 200, h: 70, kind: mss,    title: "MSS GPIO2 bits 25 to 28", sub: "inputs F2M_25 to F2M_28"}
+    plic: {x: 290, y: 130, w: 200, h: 70, kind: mss,    title: "PLIC sources 124 to 127", sub: "fabric lines F2M[6] to [9]"}
+    g0:   {x: 290, y: 240, w: 200, h: 70, kind: mss,    title: "MSS GPIO1 bit 9", sub: "gpiochip0 line 9"}
+    rd:   {x: 610, y: 20,  w: 280, h: 70, kind: hart,   title: "gpiochip1 read", sub: "request lines 25 to 28 as inputs"}
+    none: {x: 610, y: 130, w: 280, h: 70, kind: bad,    title: "no handler", sub: "no entry in /proc/interrupts"}
+    drv:  {x: 610, y: 240, w: 280, h: 70, kind: sw,     title: "leds-gpio driver", sub: "/sys/class/leds/led8"}
+  edges:
+    - {id: e0, from: d58.right, to: g2.left}
+    - {id: e1, from: g2.right,  to: rd.left,   label: "read"}
+    - {id: e2, from: d14.right, to: plic.left}
+    - {id: e3, from: plic.right, to: none.left, kind: bad, label: "nobody listens"}
+    - {id: e4, from: drv.left,  to: g0.right,  label: "writes"}
+    - {id: e5, from: g0.left,   to: l8.right}
+  steps: [d58, e0, g2, e1, rd, d14, e2, plic, e3, none, drv, e4, g0, e5, l8]
+
+- id: lab-f06-run
+  type: terminal
+  title: "gpio_both_sides on the board, excerpts of the recorded run"
+  alt: "Recorded output of the program. Line 17 of MSS GPIO2 is held by the kernel for led1 and a request for it fails with device busy. DIP5 to DIP8 read 0 0 0 0. CoreGPIO's configuration registers read 0, its GPIO_OUT register keeps 7 bits (writing 0xffffffff reads back 0x7f, and bit 7 reads back as 0), and its GPIO_IN reads 0. The four combinations of the kernel side and the fabric side for LED1 each read back what was written to that side, independently."
+  width: 940
+  height: 440
+  step: 3.4
+  lines:
+    - "mss    line 17  out  kernel  consumer \"led1\""
+    - "mss    line 25  in   free    consumer \"\""
+    - "mss  DIP5..DIP8 read 0 0 0 0 (read 1)"
+    - "mss  request of line 17 (led1, held by leds-gpio): Device or resource busy"
+    - "core CFG0..CFG7 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000"
+    - "core IRQ 00000000  GPIO_IN 00000000  GPIO_OUT 00000000"
+    - "core GPIO_OUT after writing 0xffffffff: 0000007f"
+    - "core GPIO_OUT after writing bit 6:      00000040"
+    - "core GPIO_OUT after writing bit 7:      00000000"
+    - "both  mss=0 core=0: led1 brightness 0, debugfs gpio-17 out lo | CoreGPIO OUT bit0 0, IN 00000000"
+    - "both  mss=0 core=1: led1 brightness 0, debugfs gpio-17 out lo | CoreGPIO OUT bit0 1, IN 00000000"
+    - "both  mss=1 core=0: led1 brightness 1, debugfs gpio-17 out hi | CoreGPIO OUT bit0 0, IN 00000000"
+    - "both  mss=1 core=1: led1 brightness 1, debugfs gpio-17 out hi | CoreGPIO OUT bit0 1, IN 00000000"
+    - "both  restored: led1 brightness 0, GPIO_OUT 00000000"
+  callouts:
+    - {lines: [0, 0], title: "The kernel owns the LED lines", text: "Lines 17 to 23 of gpiochip1 are held by the leds-gpio driver (consumer led1 to led7)."}
+    - {lines: [1, 2], title: "DIP5 to DIP8 are free inputs", text: "The four lines can be requested and read; they read 0 0 0 0 here (the switch positions were not checked by eye)."}
+    - {lines: [3, 3], title: "A held line cannot be requested", text: "Only the LED class can drive line 17; to drive it from a program, use brightness."}
+    - {lines: [4, 5], title: "CoreGPIO has no configuration", text: "The configuration registers read 0 (the core is built with fixed configuration) and GPIO_IN reads 0."}
+    - {lines: [6, 8], title: "Seven output bits", text: "Writing all ones reads back 0x7f; bit 7 does not exist. Each bit drives the OR gate of one LED."}
+    - {lines: [9, 12], title: "Two independent sources", text: "Each side reads back what was written to it, whatever the other side holds: the OR happens after both."}
+    - {lines: [13, 13], title: "Put back", text: "led1 brightness and GPIO_OUT are returned to 0."}
+
+# ---------------------------------------------------------------- M10 (recorded output of the stall)
+- id: lab-m10-stall-diag
+  type: terminal
+  title: 'board console: the acquisition log at a stall of the first loop'
+  alt: "Recorded output of the first version of the acquisition loop on the board at an end-of-run stall: the register line printed by the diagnostic note and the line of the acquisition process two seconds later. The fabric had sent 5000 frames, the station had taken 4999, the UIO event count was 4999, the fabric held 3 credits, the descriptor of the last slot read 0x9 (frame written) and its buffer held the last frame of the run, sequence 511013."
+  width: 960
+  height: 300
+  step: 3.4
+  lines:
+  - "DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2,"
+  - "    next_seq 511014, drops 0, credits 3, dma stat 0x210, uio events 4999 (read 4999),"
+  - "    d0 cfg 0xd buf seq 511010, d1 cfg 0xd buf seq 511011, d2 cfg 0xd buf seq 511012, d3 cfg 0x9 buf seq 511013"
+  - "[   7.032 cpu0 acq] run 1: no progress for 2 s, aborting the source"
+  - "(the loop that reads descriptors, the same load, another run)"
+  - "run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)"
+  - "run end: 5000 frames taken from the descriptors, 5000 UIO events"
+  callouts:
+  - lines: [0, 0]
+    title: Everything arrived
+    text: "The fabric sent all 5000 frames and is done (status 0x2); 4999 were taken; it still holds 3 of its 4 credits."
+  - lines: [1, 1]
+    title: The count and the data disagree
+    text: "The UIO event count is 4999, equal to the frames taken: the loop waits for an event that will not come."
+  - lines: [2, 2]
+    title: The frame is in memory
+    text: "Descriptor 3 reads 0x9 (the DMA wrote the frame and cleared its ready bit) and its buffer holds sequence 511013, the last one of the run."
+  - lines: [3, 3]
+    title: Two seconds later
+    text: "The station's own no-progress limit ends the run; the frame is never taken."
+  - lines: [5, 5]
+    title: Same load, no stall
+    text: "The loop that reads descriptors took all 5000 frames although only 4999 events were counted, and the run ended at once."

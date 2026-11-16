@@ -1,245 +1,237 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 602" width="900" height="602" role="img" aria-labelledby="t d">
-<title id="t">A recorded 68-second run of the station on the board, in three terminal panes: the Linux dashboard on CPU 2, the acquisition and analysis logs of CPUs 0 and 1, and the hart 4 console. It shows the roll call, normal operation at about 1000 frames per second, a trip on bad frames and a reset, a trip on a missed deadline after the analysis process is frozen and a reset, and the closing summary.</title><desc id="d">A recorded 68-second run of the station on the board, in three terminal panes: the Linux dashboard on CPU 2, the acquisition and analysis logs of CPUs 0 and 1, and the hart 4 console. It shows the roll call, normal operation at about 1000 frames per second, a trip on bad frames and a reset, a trip on a missed deadline after the analysis process is frozen and a reset, and the closing summary.</desc>
+<title id="t">A recorded 64-second run of the station on the board, in three terminal panes: the Linux dashboard on CPU 2, the acquisition and analysis logs of CPUs 0 and 1, and the hart 4 console. It shows the roll call, normal operation at about 1000 frames per second, a trip on bad frames and a reset, a trip on a missed deadline after the analysis process is frozen and a reset, and the closing summary.</title><desc id="d">A recorded 64-second run of the station on the board, in three terminal panes: the Linux dashboard on CPU 2, the acquisition and analysis logs of CPUs 0 and 1, and the hart 4 console. It shows the roll call, normal operation at about 1000 frames per second, a trip on bad frames and a reset, a trip on a missed deadline after the analysis process is frozen and a reset, and the closing summary.</desc>
 <style>
 text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
-.hl,.co{opacity:0;animation:lit 70.67s linear infinite;animation-fill-mode:forwards}
-.flow{stroke-dasharray:9 6;animation:lit 70.67s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+.hl,.co{opacity:0;animation:lit 67.10s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 67.10s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
 @keyframes lit{0%{opacity:0}2%{opacity:1}0.00%{opacity:1}3.00%{opacity:0}100%{opacity:0}}
 @keyframes flow{to{stroke-dashoffset:-15}}
 .play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
 @media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
-.rw,.rl{opacity:0}.rw,.rl,.rg{animation-duration:70.667s;animation-timing-function:linear;animation-iteration-count:infinite}.rg{animation-timing-function:step-end}.rs{display:none}@media (prefers-reduced-motion:reduce){.rw,.rl,.rg{animation:none}.rl{opacity:1}.rw{display:none}.rs{display:inline}}
-@keyframes lab-m10-recording_w0{0%,0.000%{opacity:0}0.010%,1.769%{opacity:1}1.779%,100%{opacity:0}}
-@keyframes lab-m10-recording_w1{0%,1.769%{opacity:0}1.779%,3.184%{opacity:1}3.194%,100%{opacity:0}}
-@keyframes lab-m10-recording_w2{0%,3.184%{opacity:0}3.194%,4.599%{opacity:1}4.609%,100%{opacity:0}}
-@keyframes lab-m10-recording_w3{0%,4.599%{opacity:0}4.609%,6.014%{opacity:1}6.024%,100%{opacity:0}}
-@keyframes lab-m10-recording_w4{0%,6.014%{opacity:0}6.024%,7.429%{opacity:1}7.439%,100%{opacity:0}}
-@keyframes lab-m10-recording_w5{0%,7.429%{opacity:0}7.439%,8.844%{opacity:1}8.854%,100%{opacity:0}}
-@keyframes lab-m10-recording_w6{0%,8.844%{opacity:0}8.854%,10.259%{opacity:1}10.269%,100%{opacity:0}}
-@keyframes lab-m10-recording_w7{0%,10.259%{opacity:0}10.269%,11.674%{opacity:1}11.684%,100%{opacity:0}}
-@keyframes lab-m10-recording_w8{0%,11.674%{opacity:0}11.684%,13.090%{opacity:1}13.100%,100%{opacity:0}}
-@keyframes lab-m10-recording_w9{0%,13.090%{opacity:0}13.100%,14.505%{opacity:1}14.515%,100%{opacity:0}}
-@keyframes lab-m10-recording_w10{0%,14.505%{opacity:0}14.515%,15.920%{opacity:1}15.930%,100%{opacity:0}}
-@keyframes lab-m10-recording_w11{0%,15.920%{opacity:0}15.930%,17.335%{opacity:1}17.345%,100%{opacity:0}}
-@keyframes lab-m10-recording_w12{0%,17.335%{opacity:0}17.345%,18.750%{opacity:1}18.760%,100%{opacity:0}}
-@keyframes lab-m10-recording_w13{0%,18.750%{opacity:0}18.760%,20.165%{opacity:1}20.175%,100%{opacity:0}}
-@keyframes lab-m10-recording_w14{0%,20.165%{opacity:0}20.175%,21.580%{opacity:1}21.590%,100%{opacity:0}}
-@keyframes lab-m10-recording_w15{0%,21.580%{opacity:0}21.590%,22.995%{opacity:1}23.005%,100%{opacity:0}}
-@keyframes lab-m10-recording_w16{0%,22.995%{opacity:0}23.005%,24.410%{opacity:1}24.420%,100%{opacity:0}}
-@keyframes lab-m10-recording_w17{0%,24.410%{opacity:0}24.420%,25.825%{opacity:1}25.835%,100%{opacity:0}}
-@keyframes lab-m10-recording_w18{0%,25.825%{opacity:0}25.835%,27.240%{opacity:1}27.250%,100%{opacity:0}}
-@keyframes lab-m10-recording_w19{0%,27.240%{opacity:0}27.250%,28.656%{opacity:1}28.666%,100%{opacity:0}}
-@keyframes lab-m10-recording_w20{0%,28.656%{opacity:0}28.666%,30.071%{opacity:1}30.081%,100%{opacity:0}}
-@keyframes lab-m10-recording_w21{0%,30.071%{opacity:0}30.081%,31.486%{opacity:1}31.496%,100%{opacity:0}}
-@keyframes lab-m10-recording_w22{0%,31.486%{opacity:0}31.496%,32.901%{opacity:1}32.911%,100%{opacity:0}}
-@keyframes lab-m10-recording_w23{0%,32.901%{opacity:0}32.911%,34.316%{opacity:1}34.326%,100%{opacity:0}}
-@keyframes lab-m10-recording_w24{0%,34.316%{opacity:0}34.326%,35.731%{opacity:1}35.741%,100%{opacity:0}}
-@keyframes lab-m10-recording_w25{0%,35.731%{opacity:0}35.741%,37.146%{opacity:1}37.156%,100%{opacity:0}}
-@keyframes lab-m10-recording_w26{0%,37.146%{opacity:0}37.156%,38.561%{opacity:1}38.571%,100%{opacity:0}}
-@keyframes lab-m10-recording_w27{0%,38.561%{opacity:0}38.571%,39.976%{opacity:1}39.986%,100%{opacity:0}}
-@keyframes lab-m10-recording_w28{0%,39.976%{opacity:0}39.986%,41.391%{opacity:1}41.401%,100%{opacity:0}}
-@keyframes lab-m10-recording_w29{0%,41.391%{opacity:0}41.401%,42.806%{opacity:1}42.816%,100%{opacity:0}}
-@keyframes lab-m10-recording_w30{0%,42.806%{opacity:0}42.816%,44.221%{opacity:1}44.231%,100%{opacity:0}}
-@keyframes lab-m10-recording_w31{0%,44.221%{opacity:0}44.231%,45.637%{opacity:1}45.647%,100%{opacity:0}}
-@keyframes lab-m10-recording_w32{0%,45.637%{opacity:0}45.647%,47.052%{opacity:1}47.062%,100%{opacity:0}}
-@keyframes lab-m10-recording_w33{0%,47.052%{opacity:0}47.062%,48.467%{opacity:1}48.477%,100%{opacity:0}}
-@keyframes lab-m10-recording_w34{0%,48.467%{opacity:0}48.477%,49.882%{opacity:1}49.892%,100%{opacity:0}}
-@keyframes lab-m10-recording_w35{0%,49.882%{opacity:0}49.892%,51.297%{opacity:1}51.307%,100%{opacity:0}}
-@keyframes lab-m10-recording_w36{0%,51.297%{opacity:0}51.307%,52.358%{opacity:1}52.368%,100%{opacity:0}}
-@keyframes lab-m10-recording_w37{0%,52.358%{opacity:0}52.368%,53.420%{opacity:1}53.430%,100%{opacity:0}}
-@keyframes lab-m10-recording_w38{0%,53.420%{opacity:0}53.430%,54.835%{opacity:1}54.845%,100%{opacity:0}}
-@keyframes lab-m10-recording_w39{0%,54.835%{opacity:0}54.845%,56.250%{opacity:1}56.260%,100%{opacity:0}}
-@keyframes lab-m10-recording_w40{0%,56.250%{opacity:0}56.260%,57.665%{opacity:1}57.675%,100%{opacity:0}}
-@keyframes lab-m10-recording_w41{0%,57.665%{opacity:0}57.675%,59.080%{opacity:1}59.090%,100%{opacity:0}}
-@keyframes lab-m10-recording_w42{0%,59.080%{opacity:0}59.090%,60.495%{opacity:1}60.505%,100%{opacity:0}}
-@keyframes lab-m10-recording_w43{0%,60.495%{opacity:0}60.505%,61.910%{opacity:1}61.920%,100%{opacity:0}}
-@keyframes lab-m10-recording_w44{0%,61.910%{opacity:0}61.920%,63.325%{opacity:1}63.335%,100%{opacity:0}}
-@keyframes lab-m10-recording_w45{0%,63.325%{opacity:0}63.335%,64.740%{opacity:1}64.750%,100%{opacity:0}}
-@keyframes lab-m10-recording_w46{0%,64.740%{opacity:0}64.750%,66.155%{opacity:1}66.165%,100%{opacity:0}}
-@keyframes lab-m10-recording_w47{0%,66.155%{opacity:0}66.165%,67.570%{opacity:1}67.580%,100%{opacity:0}}
-@keyframes lab-m10-recording_w48{0%,67.570%{opacity:0}67.580%,68.986%{opacity:1}68.996%,100%{opacity:0}}
-@keyframes lab-m10-recording_w49{0%,68.986%{opacity:0}68.996%,70.401%{opacity:1}70.411%,100%{opacity:0}}
-@keyframes lab-m10-recording_w50{0%,70.401%{opacity:0}70.411%,71.816%{opacity:1}71.826%,100%{opacity:0}}
-@keyframes lab-m10-recording_w51{0%,71.816%{opacity:0}71.826%,73.231%{opacity:1}73.241%,100%{opacity:0}}
-@keyframes lab-m10-recording_w52{0%,73.231%{opacity:0}73.241%,74.646%{opacity:1}74.656%,100%{opacity:0}}
-@keyframes lab-m10-recording_w53{0%,74.646%{opacity:0}74.656%,76.061%{opacity:1}76.071%,100%{opacity:0}}
-@keyframes lab-m10-recording_w54{0%,76.061%{opacity:0}76.071%,77.476%{opacity:1}77.486%,100%{opacity:0}}
-@keyframes lab-m10-recording_w55{0%,77.476%{opacity:0}77.486%,78.891%{opacity:1}78.901%,100%{opacity:0}}
-@keyframes lab-m10-recording_w56{0%,78.891%{opacity:0}78.901%,80.306%{opacity:1}80.316%,100%{opacity:0}}
-@keyframes lab-m10-recording_w57{0%,80.306%{opacity:0}80.316%,81.721%{opacity:1}81.731%,100%{opacity:0}}
-@keyframes lab-m10-recording_w58{0%,81.721%{opacity:0}81.731%,83.136%{opacity:1}83.146%,100%{opacity:0}}
-@keyframes lab-m10-recording_w59{0%,83.136%{opacity:0}83.146%,84.551%{opacity:1}84.561%,100%{opacity:0}}
-@keyframes lab-m10-recording_w60{0%,84.551%{opacity:0}84.561%,85.967%{opacity:1}85.977%,100%{opacity:0}}
-@keyframes lab-m10-recording_w61{0%,85.967%{opacity:0}85.977%,87.382%{opacity:1}87.392%,100%{opacity:0}}
-@keyframes lab-m10-recording_w62{0%,87.382%{opacity:0}87.392%,88.797%{opacity:1}88.807%,100%{opacity:0}}
-@keyframes lab-m10-recording_w63{0%,88.797%{opacity:0}88.807%,90.212%{opacity:1}90.222%,100%{opacity:0}}
-@keyframes lab-m10-recording_w64{0%,90.212%{opacity:0}90.222%,91.627%{opacity:1}91.637%,100%{opacity:0}}
-@keyframes lab-m10-recording_w65{0%,91.627%{opacity:0}91.637%,93.042%{opacity:1}93.052%,100%{opacity:0}}
-@keyframes lab-m10-recording_w66{0%,93.042%{opacity:0}93.052%,94.457%{opacity:1}94.467%,100%{opacity:0}}
-@keyframes lab-m10-recording_w67{0%,94.457%{opacity:0}94.467%,95.872%{opacity:1}95.882%,100%{opacity:0}}
-@keyframes lab-m10-recording_w68{0%,95.872%{opacity:0}95.882%,100.000%{opacity:1}}
-@keyframes lab-m10-recording_l0{0%,99.292%{opacity:1}99.302%,100%{opacity:0}}
-@keyframes lab-m10-recording_l1{0%,97.170%{opacity:1}97.180%,100%{opacity:0}}
-@keyframes lab-m10-recording_l2{0%,97.161%{opacity:1}97.171%,100%{opacity:0}}
-@keyframes lab-m10-recording_l3{0%,95.729%{opacity:1}95.739%,100%{opacity:0}}
-@keyframes lab-m10-recording_l4{0%,94.341%{opacity:1}94.351%,100%{opacity:0}}
-@keyframes lab-m10-recording_l5{0%,94.327%{opacity:1}94.337%,100%{opacity:0}}
-@keyframes lab-m10-recording_l6{0%,92.895%{opacity:1}92.905%,100%{opacity:0}}
-@keyframes lab-m10-recording_l7{0%,91.365%{opacity:1}91.375%,100%{opacity:0}}
-@keyframes lab-m10-recording_l8{0%,91.348%{opacity:1}91.358%,100%{opacity:0}}
-@keyframes lab-m10-recording_l9{0%,89.915%{opacity:1}89.925%,100%{opacity:0}}
-@keyframes lab-m10-recording_l10{0%,88.607%{opacity:1}88.617%,100%{opacity:0}}
-@keyframes lab-m10-recording_l11{0%,88.606%{opacity:1}88.616%,100%{opacity:0}}
-@keyframes lab-m10-recording_l12{0%,87.809%{opacity:1}87.819%,100%{opacity:0}}
-@keyframes lab-m10-recording_l13{0%,86.374%{opacity:1}86.384%,100%{opacity:0}}
-@keyframes lab-m10-recording_l14{0%,85.068%{opacity:1}85.078%,100%{opacity:0}}
-@keyframes lab-m10-recording_l15{0%,83.286%{opacity:1}83.296%,100%{opacity:0}}
-@keyframes lab-m10-recording_l16{0%,81.580%{opacity:1}81.590%,100%{opacity:0}}
-@keyframes lab-m10-recording_l17{0%,81.580%{opacity:1}81.590%,100%{opacity:0}}
-@keyframes lab-m10-recording_l18{0%,81.580%{opacity:1}81.590%,100%{opacity:0}}
-@keyframes lab-m10-recording_l19{0%,81.580%{opacity:1}81.590%,100%{opacity:0}}
-@keyframes lab-m10-recording_l20{0%,81.580%{opacity:1}81.590%,100%{opacity:0}}
-@keyframes lab-m10-recording_l21{0%,80.755%{opacity:1}80.765%,100%{opacity:0}}
-@keyframes lab-m10-recording_l22{0%,79.309%{opacity:1}79.319%,100%{opacity:0}}
-@keyframes lab-m10-recording_l23{0%,77.860%{opacity:1}77.870%,100%{opacity:0}}
-@keyframes lab-m10-recording_l24{0%,76.412%{opacity:1}76.422%,100%{opacity:0}}
-@keyframes lab-m10-recording_l25{0%,75.109%{opacity:1}75.119%,100%{opacity:0}}
-@keyframes lab-m10-recording_l26{0%,73.549%{opacity:1}73.559%,100%{opacity:0}}
-@keyframes lab-m10-recording_l27{0%,72.158%{opacity:1}72.168%,100%{opacity:0}}
-@keyframes lab-m10-recording_l28{0%,70.832%{opacity:1}70.842%,100%{opacity:0}}
-@keyframes lab-m10-recording_l29{0%,69.202%{opacity:1}69.212%,100%{opacity:0}}
-@keyframes lab-m10-recording_l30{0%,68.044%{opacity:1}68.054%,100%{opacity:0}}
-@keyframes lab-m10-recording_l31{0%,66.421%{opacity:1}66.431%,100%{opacity:0}}
-@keyframes lab-m10-recording_l32{0%,65.029%{opacity:1}65.039%,100%{opacity:0}}
-@keyframes lab-m10-recording_l33{0%,63.639%{opacity:1}63.649%,100%{opacity:0}}
-@keyframes lab-m10-recording_l34{0%,62.248%{opacity:1}62.258%,100%{opacity:0}}
-@keyframes lab-m10-recording_l35{0%,60.932%{opacity:1}60.942%,100%{opacity:0}}
-@keyframes lab-m10-recording_l36{0%,60.307%{opacity:1}60.317%,100%{opacity:0}}
-@keyframes lab-m10-recording_l37{0%,59.468%{opacity:1}59.478%,100%{opacity:0}}
-@keyframes lab-m10-recording_l38{0%,59.009%{opacity:1}59.019%,100%{opacity:0}}
-@keyframes lab-m10-recording_l39{0%,59.009%{opacity:1}59.019%,100%{opacity:0}}
-@keyframes lab-m10-recording_l40{0%,58.077%{opacity:1}58.087%,100%{opacity:0}}
-@keyframes lab-m10-recording_l41{0%,56.704%{opacity:1}56.714%,100%{opacity:0}}
-@keyframes lab-m10-recording_l42{0%,55.293%{opacity:1}55.303%,100%{opacity:0}}
-@keyframes lab-m10-recording_l43{0%,53.889%{opacity:1}53.899%,100%{opacity:0}}
-@keyframes lab-m10-recording_l44{0%,52.453%{opacity:1}52.463%,100%{opacity:0}}
-@keyframes lab-m10-recording_l45{0%,51.021%{opacity:1}51.031%,100%{opacity:0}}
-@keyframes lab-m10-recording_l46{0%,49.897%{opacity:1}49.907%,100%{opacity:0}}
-@keyframes lab-m10-recording_l47{0%,49.636%{opacity:1}49.646%,100%{opacity:0}}
-@keyframes lab-m10-recording_l48{0%,48.191%{opacity:1}48.201%,100%{opacity:0}}
-@keyframes lab-m10-recording_l49{0%,46.068%{opacity:1}46.078%,100%{opacity:0}}
-@keyframes lab-m10-recording_l50{0%,45.864%{opacity:1}45.874%,100%{opacity:0}}
-@keyframes lab-m10-recording_l51{0%,44.720%{opacity:1}44.730%,100%{opacity:0}}
-@keyframes lab-m10-recording_l52{0%,43.443%{opacity:1}43.453%,100%{opacity:0}}
-@keyframes lab-m10-recording_l53{0%,43.288%{opacity:1}43.298%,100%{opacity:0}}
-@keyframes lab-m10-recording_l54{0%,42.211%{opacity:1}42.221%,100%{opacity:0}}
-@keyframes lab-m10-recording_l55{0%,42.187%{opacity:1}42.197%,100%{opacity:0}}
-@keyframes lab-m10-recording_l56{0%,41.902%{opacity:1}41.912%,100%{opacity:0}}
-@keyframes lab-m10-recording_l57{0%,40.497%{opacity:1}40.507%,100%{opacity:0}}
-@keyframes lab-m10-recording_l58{0%,39.075%{opacity:1}39.085%,100%{opacity:0}}
-@keyframes lab-m10-recording_l59{0%,37.655%{opacity:1}37.665%,100%{opacity:0}}
-@keyframes lab-m10-recording_l60{0%,36.232%{opacity:1}36.242%,100%{opacity:0}}
-@keyframes lab-m10-recording_l61{0%,34.798%{opacity:1}34.808%,100%{opacity:0}}
-@keyframes lab-m10-recording_l62{0%,33.379%{opacity:1}33.389%,100%{opacity:0}}
-@keyframes lab-m10-recording_l63{0%,31.895%{opacity:1}31.905%,100%{opacity:0}}
-@keyframes lab-m10-recording_l64{0%,30.505%{opacity:1}30.515%,100%{opacity:0}}
-@keyframes lab-m10-recording_l65{0%,29.115%{opacity:1}29.125%,100%{opacity:0}}
-@keyframes lab-m10-recording_l66{0%,27.757%{opacity:1}27.767%,100%{opacity:0}}
-@keyframes lab-m10-recording_l67{0%,26.156%{opacity:1}26.166%,100%{opacity:0}}
-@keyframes lab-m10-recording_l68{0%,24.764%{opacity:1}24.774%,100%{opacity:0}}
-@keyframes lab-m10-recording_l69{0%,23.374%{opacity:1}23.384%,100%{opacity:0}}
-@keyframes lab-m10-recording_l70{0%,21.983%{opacity:1}21.993%,100%{opacity:0}}
-@keyframes lab-m10-recording_l71{0%,20.666%{opacity:1}20.676%,100%{opacity:0}}
-@keyframes lab-m10-recording_l72{0%,19.242%{opacity:1}19.252%,100%{opacity:0}}
-@keyframes lab-m10-recording_l73{0%,19.223%{opacity:1}19.233%,100%{opacity:0}}
-@keyframes lab-m10-recording_l74{0%,17.807%{opacity:1}17.817%,100%{opacity:0}}
-@keyframes lab-m10-recording_l75{0%,16.433%{opacity:1}16.443%,100%{opacity:0}}
-@keyframes lab-m10-recording_l76{0%,16.378%{opacity:1}16.388%,100%{opacity:0}}
-@keyframes lab-m10-recording_l77{0%,15.120%{opacity:1}15.130%,100%{opacity:0}}
-@keyframes lab-m10-recording_l78{0%,15.092%{opacity:1}15.102%,100%{opacity:0}}
-@keyframes lab-m10-recording_l79{0%,15.021%{opacity:1}15.031%,100%{opacity:0}}
-@keyframes lab-m10-recording_l80{0%,13.574%{opacity:1}13.584%,100%{opacity:0}}
-@keyframes lab-m10-recording_l81{0%,12.143%{opacity:1}12.153%,100%{opacity:0}}
-@keyframes lab-m10-recording_l82{0%,10.770%{opacity:1}10.780%,100%{opacity:0}}
-@keyframes lab-m10-recording_l83{0%,9.365%{opacity:1}9.375%,100%{opacity:0}}
-@keyframes lab-m10-recording_l84{0%,7.944%{opacity:1}7.954%,100%{opacity:0}}
-@keyframes lab-m10-recording_l85{0%,6.525%{opacity:1}6.535%,100%{opacity:0}}
-@keyframes lab-m10-recording_l86{0%,6.468%{opacity:1}6.478%,100%{opacity:0}}
-@keyframes lab-m10-recording_l87{0%,5.093%{opacity:1}5.103%,100%{opacity:0}}
-@keyframes lab-m10-recording_l88{0%,4.609%{opacity:1}4.619%,100%{opacity:0}}
-@keyframes lab-m10-recording_l89{0%,4.609%{opacity:1}4.619%,100%{opacity:0}}
-@keyframes lab-m10-recording_l90{0%,4.245%{opacity:1}4.255%,100%{opacity:0}}
-@keyframes lab-m10-recording_w69{0%,2.861%{opacity:0}2.871%,8.663%{opacity:1}8.673%,100%{opacity:0}}
-@keyframes lab-m10-recording_w70{0%,12.201%{opacity:0}12.211%,18.427%{opacity:1}18.437%,100%{opacity:0}}
-@keyframes lab-m10-recording_w71{0%,24.937%{opacity:0}24.947%,40.927%{opacity:1}40.937%,100%{opacity:0}}
-@keyframes lab-m10-recording_w72{0%,40.927%{opacity:0}40.937%,49.984%{opacity:1}49.994%,100%{opacity:0}}
-@keyframes lab-m10-recording_w73{0%,49.984%{opacity:0}49.994%,57.873%{opacity:1}57.883%,100%{opacity:0}}
-@keyframes lab-m10-recording_w74{0%,57.873%{opacity:0}57.883%,72.731%{opacity:1}72.741%,100%{opacity:0}}
-@keyframes lab-m10-recording_w75{0%,80.797%{opacity:0}80.807%,84.901%{opacity:1}84.911%,100%{opacity:0}}
-@keyframes lab-m10-recording_w76{0%,84.901%{opacity:0}84.911%,95.373%{opacity:1}95.383%,100%{opacity:0}}
-@keyframes lab-m10-recording_w77{0%,95.373%{opacity:0}95.383%,100.000%{opacity:1}}
-@keyframes lab-m10-recording_l91{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l92{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l93{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l94{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l95{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l96{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l97{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l98{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l99{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l100{0%,81.619%{opacity:1}81.629%,100%{opacity:0}}
-@keyframes lab-m10-recording_l101{0%,74.910%{opacity:1}74.920%,100%{opacity:0}}
-@keyframes lab-m10-recording_l102{0%,50.596%{opacity:1}50.606%,100%{opacity:0}}
-@keyframes lab-m10-recording_l103{0%,50.540%{opacity:1}50.550%,100%{opacity:0}}
-@keyframes lab-m10-recording_l104{0%,50.523%{opacity:1}50.533%,100%{opacity:0}}
-@keyframes lab-m10-recording_l105{0%,50.330%{opacity:1}50.340%,100%{opacity:0}}
-@keyframes lab-m10-recording_l106{0%,50.220%{opacity:1}50.230%,100%{opacity:0}}
-@keyframes lab-m10-recording_l107{0%,49.897%{opacity:1}49.907%,100%{opacity:0}}
-@keyframes lab-m10-recording_l108{0%,49.897%{opacity:1}49.907%,100%{opacity:0}}
-@keyframes lab-m10-recording_l109{0%,42.187%{opacity:1}42.197%,100%{opacity:0}}
-@keyframes lab-m10-recording_l110{0%,42.177%{opacity:1}42.187%,100%{opacity:0}}
-@keyframes lab-m10-recording_l111{0%,42.174%{opacity:1}42.184%,100%{opacity:0}}
-@keyframes lab-m10-recording_l112{0%,29.336%{opacity:1}29.346%,100%{opacity:0}}
-@keyframes lab-m10-recording_l113{0%,27.198%{opacity:1}27.208%,100%{opacity:0}}
-@keyframes lab-m10-recording_l114{0%,20.475%{opacity:1}20.485%,100%{opacity:0}}
-@keyframes lab-m10-recording_l115{0%,19.224%{opacity:1}19.234%,100%{opacity:0}}
-@keyframes lab-m10-recording_l116{0%,15.093%{opacity:1}15.103%,100%{opacity:0}}
-@keyframes lab-m10-recording_l117{0%,15.081%{opacity:1}15.091%,100%{opacity:0}}
-@keyframes lab-m10-recording_l118{0%,4.981%{opacity:1}4.991%,100%{opacity:0}}
-@keyframes lab-m10-recording_l119{0%,4.691%{opacity:1}4.701%,100%{opacity:0}}
-@keyframes lab-m10-recording_w78{0%,18.427%{opacity:0}18.437%,24.937%{opacity:1}24.947%,100%{opacity:0}}
-@keyframes lab-m10-recording_l120{0%,97.150%{opacity:1}97.160%,100%{opacity:0}}
-@keyframes lab-m10-recording_l121{0%,94.321%{opacity:1}94.331%,100%{opacity:0}}
-@keyframes lab-m10-recording_l122{0%,91.354%{opacity:1}91.364%,100%{opacity:0}}
-@keyframes lab-m10-recording_l123{0%,91.331%{opacity:1}91.341%,100%{opacity:0}}
-@keyframes lab-m10-recording_l124{0%,87.866%{opacity:1}87.876%,100%{opacity:0}}
-@keyframes lab-m10-recording_l125{0%,85.014%{opacity:1}85.024%,100%{opacity:0}}
-@keyframes lab-m10-recording_l126{0%,85.014%{opacity:1}85.024%,100%{opacity:0}}
-@keyframes lab-m10-recording_l127{0%,77.881%{opacity:1}77.891%,100%{opacity:0}}
-@keyframes lab-m10-recording_l128{0%,70.727%{opacity:1}70.737%,100%{opacity:0}}
-@keyframes lab-m10-recording_l129{0%,63.618%{opacity:1}63.628%,100%{opacity:0}}
-@keyframes lab-m10-recording_l130{0%,56.507%{opacity:1}56.517%,100%{opacity:0}}
-@keyframes lab-m10-recording_l131{0%,50.056%{opacity:1}50.066%,100%{opacity:0}}
-@keyframes lab-m10-recording_l132{0%,50.056%{opacity:1}50.066%,100%{opacity:0}}
-@keyframes lab-m10-recording_l133{0%,42.172%{opacity:1}42.182%,100%{opacity:0}}
-@keyframes lab-m10-recording_l134{0%,35.788%{opacity:1}35.798%,100%{opacity:0}}
-@keyframes lab-m10-recording_l135{0%,28.678%{opacity:1}28.688%,100%{opacity:0}}
-@keyframes lab-m10-recording_l136{0%,27.228%{opacity:1}27.238%,100%{opacity:0}}
-@keyframes lab-m10-recording_l137{0%,27.228%{opacity:1}27.238%,100%{opacity:0}}
-@keyframes lab-m10-recording_l138{0%,15.093%{opacity:1}15.103%,100%{opacity:0}}
-@keyframes lab-m10-recording_l139{0%,13.486%{opacity:1}13.496%,100%{opacity:0}}
-@keyframes lab-m10-recording_l140{0%,6.354%{opacity:1}6.364%,100%{opacity:0}}
-@keyframes lab-m10-recording_l141{0%,4.791%{opacity:1}4.801%,100%{opacity:0}}
-@keyframes lab-m10-recording_w79{0%,8.663%{opacity:0}8.673%,12.201%{opacity:1}12.211%,100%{opacity:0}}
-@keyframes lab-m10-recording_w80{0%,72.731%{opacity:0}72.741%,80.797%{opacity:1}80.807%,100%{opacity:0}}
-@keyframes lab-m10-recording_s0{0%{transform:translateY(0)}8.6349%{transform:translateY(-18px)}8.6518%{transform:translateY(-36px)}10.0853%{transform:translateY(-54px)}11.3929%{transform:translateY(-72px)}11.3943%{transform:translateY(-90px)}12.1910%{transform:translateY(-108px)}13.6259%{transform:translateY(-126px)}14.9320%{transform:translateY(-144px)}16.7136%{transform:translateY(-162px)}18.4202%{transform:translateY(-252px)}19.2452%{transform:translateY(-270px)}20.6914%{transform:translateY(-288px)}22.1405%{transform:translateY(-306px)}23.5881%{transform:translateY(-324px)}24.8914%{transform:translateY(-342px)}26.4508%{transform:translateY(-360px)}27.8418%{transform:translateY(-378px)}29.1678%{transform:translateY(-396px)}30.7980%{transform:translateY(-414px)}31.9555%{transform:translateY(-432px)}33.5786%{transform:translateY(-450px)}34.9711%{transform:translateY(-468px)}36.3607%{transform:translateY(-486px)}37.7517%{transform:translateY(-504px)}39.0677%{transform:translateY(-522px)}39.6932%{transform:translateY(-540px)}40.5324%{transform:translateY(-558px)}40.9908%{transform:translateY(-594px)}41.9234%{transform:translateY(-612px)}43.2960%{transform:translateY(-630px)}44.7069%{transform:translateY(-648px)}46.1106%{transform:translateY(-666px)}47.5469%{transform:translateY(-684px)}48.9790%{transform:translateY(-702px)}50.1026%{transform:translateY(-720px)}50.3644%{transform:translateY(-738px)}51.8092%{transform:translateY(-756px)}53.9318%{transform:translateY(-774px)}54.1356%{transform:translateY(-792px)}55.2804%{transform:translateY(-810px)}56.5568%{transform:translateY(-828px)}56.7125%{transform:translateY(-846px)}57.7894%{transform:translateY(-864px)}57.8134%{transform:translateY(-882px)}58.0978%{transform:translateY(-900px)}59.5030%{transform:translateY(-918px)}60.9252%{transform:translateY(-936px)}62.3445%{transform:translateY(-954px)}63.7681%{transform:translateY(-972px)}65.2016%{transform:translateY(-990px)}66.6209%{transform:translateY(-1008px)}68.1053%{transform:translateY(-1026px)}69.4950%{transform:translateY(-1044px)}70.8846%{transform:translateY(-1062px)}72.2431%{transform:translateY(-1080px)}73.8435%{transform:translateY(-1098px)}75.2360%{transform:translateY(-1116px)}76.6256%{transform:translateY(-1134px)}78.0166%{transform:translateY(-1152px)}79.3341%{transform:translateY(-1170px)}80.7576%{transform:translateY(-1188px)}80.7774%{transform:translateY(-1206px)}82.1925%{transform:translateY(-1224px)}83.5666%{transform:translateY(-1242px)}83.6218%{transform:translateY(-1260px)}84.8798%{transform:translateY(-1278px)}84.9081%{transform:translateY(-1296px)}84.9788%{transform:translateY(-1314px)}86.4265%{transform:translateY(-1332px)}87.8571%{transform:translateY(-1350px)}89.2298%{transform:translateY(-1368px)}90.6349%{transform:translateY(-1386px)}92.0557%{transform:translateY(-1404px)}93.4750%{transform:translateY(-1422px)}93.5316%{transform:translateY(-1440px)}94.9071%{transform:translateY(-1458px)}95.3911%{transform:translateY(-1494px)}95.7547%{transform:translateY(-1512px)}}
-@keyframes lab-m10-recording_s1{0%{transform:translateY(0)}18.3806%{transform:translateY(-72px)}25.0895%{transform:translateY(-90px)}49.4035%{transform:translateY(-108px)}49.4601%{transform:translateY(-126px)}49.4771%{transform:translateY(-144px)}49.6696%{transform:translateY(-162px)}49.7800%{transform:translateY(-180px)}50.1026%{transform:translateY(-216px)}57.8134%{transform:translateY(-234px)}57.8233%{transform:translateY(-252px)}57.8261%{transform:translateY(-270px)}70.6638%{transform:translateY(-288px)}72.8020%{transform:translateY(-306px)}79.5251%{transform:translateY(-324px)}80.7760%{transform:translateY(-342px)}84.9067%{transform:translateY(-360px)}84.9194%{transform:translateY(-378px)}95.0189%{transform:translateY(-396px)}95.3090%{transform:translateY(-414px)}}
-@keyframes lab-m10-recording_s2{0%{transform:translateY(0)}22.1192%{transform:translateY(-18px)}29.2725%{transform:translateY(-36px)}36.3819%{transform:translateY(-54px)}43.4927%{transform:translateY(-72px)}49.9441%{transform:translateY(-108px)}57.8276%{transform:translateY(-126px)}64.2124%{transform:translateY(-144px)}71.3218%{transform:translateY(-162px)}72.7723%{transform:translateY(-198px)}84.9067%{transform:translateY(-216px)}86.5142%{transform:translateY(-234px)}93.6463%{transform:translateY(-252px)}95.2085%{transform:translateY(-270px)}}</style>
+.rw,.rl{opacity:0}.rw,.rl,.rg{animation-duration:67.097s;animation-timing-function:linear;animation-iteration-count:infinite}.rg{animation-timing-function:step-end}.rs{display:none}@media (prefers-reduced-motion:reduce){.rw,.rl,.rg{animation:none}.rl{opacity:1}.rw{display:none}.rs{display:inline}}
+@keyframes lab-m10-recording_w0{0%,0.000%{opacity:0}0.010%,2.236%{opacity:1}2.246%,100%{opacity:0}}
+@keyframes lab-m10-recording_w1{0%,2.236%{opacity:0}2.246%,3.726%{opacity:1}3.736%,100%{opacity:0}}
+@keyframes lab-m10-recording_w2{0%,3.726%{opacity:0}3.736%,5.216%{opacity:1}5.226%,100%{opacity:0}}
+@keyframes lab-m10-recording_w3{0%,5.216%{opacity:0}5.226%,6.707%{opacity:1}6.717%,100%{opacity:0}}
+@keyframes lab-m10-recording_w4{0%,6.707%{opacity:0}6.717%,8.197%{opacity:1}8.207%,100%{opacity:0}}
+@keyframes lab-m10-recording_w5{0%,8.197%{opacity:0}8.207%,9.687%{opacity:1}9.697%,100%{opacity:0}}
+@keyframes lab-m10-recording_w6{0%,9.687%{opacity:0}9.697%,11.178%{opacity:1}11.188%,100%{opacity:0}}
+@keyframes lab-m10-recording_w7{0%,11.178%{opacity:0}11.188%,12.668%{opacity:1}12.678%,100%{opacity:0}}
+@keyframes lab-m10-recording_w8{0%,12.668%{opacity:0}12.678%,14.159%{opacity:1}14.169%,100%{opacity:0}}
+@keyframes lab-m10-recording_w9{0%,14.159%{opacity:0}14.169%,15.649%{opacity:1}15.659%,100%{opacity:0}}
+@keyframes lab-m10-recording_w10{0%,15.649%{opacity:0}15.659%,17.139%{opacity:1}17.149%,100%{opacity:0}}
+@keyframes lab-m10-recording_w11{0%,17.139%{opacity:0}17.149%,18.630%{opacity:1}18.640%,100%{opacity:0}}
+@keyframes lab-m10-recording_w12{0%,18.630%{opacity:0}18.640%,20.120%{opacity:1}20.130%,100%{opacity:0}}
+@keyframes lab-m10-recording_w13{0%,20.120%{opacity:0}20.130%,21.611%{opacity:1}21.621%,100%{opacity:0}}
+@keyframes lab-m10-recording_w14{0%,21.611%{opacity:0}21.621%,23.101%{opacity:1}23.111%,100%{opacity:0}}
+@keyframes lab-m10-recording_w15{0%,23.101%{opacity:0}23.111%,24.591%{opacity:1}24.601%,100%{opacity:0}}
+@keyframes lab-m10-recording_w16{0%,24.591%{opacity:0}24.601%,26.082%{opacity:1}26.092%,100%{opacity:0}}
+@keyframes lab-m10-recording_w17{0%,26.082%{opacity:0}26.092%,27.572%{opacity:1}27.582%,100%{opacity:0}}
+@keyframes lab-m10-recording_w18{0%,27.572%{opacity:0}27.582%,29.062%{opacity:1}29.072%,100%{opacity:0}}
+@keyframes lab-m10-recording_w19{0%,29.062%{opacity:0}29.072%,30.553%{opacity:1}30.563%,100%{opacity:0}}
+@keyframes lab-m10-recording_w20{0%,30.553%{opacity:0}30.563%,32.043%{opacity:1}32.053%,100%{opacity:0}}
+@keyframes lab-m10-recording_w21{0%,32.043%{opacity:0}32.053%,33.534%{opacity:1}33.544%,100%{opacity:0}}
+@keyframes lab-m10-recording_w22{0%,33.534%{opacity:0}33.544%,35.024%{opacity:1}35.034%,100%{opacity:0}}
+@keyframes lab-m10-recording_w23{0%,35.024%{opacity:0}35.034%,36.514%{opacity:1}36.524%,100%{opacity:0}}
+@keyframes lab-m10-recording_w24{0%,36.514%{opacity:0}36.524%,38.005%{opacity:1}38.015%,100%{opacity:0}}
+@keyframes lab-m10-recording_w25{0%,38.005%{opacity:0}38.015%,39.495%{opacity:1}39.505%,100%{opacity:0}}
+@keyframes lab-m10-recording_w26{0%,39.495%{opacity:0}39.505%,40.985%{opacity:1}40.995%,100%{opacity:0}}
+@keyframes lab-m10-recording_w27{0%,40.985%{opacity:0}40.995%,42.476%{opacity:1}42.486%,100%{opacity:0}}
+@keyframes lab-m10-recording_w28{0%,42.476%{opacity:0}42.486%,43.966%{opacity:1}43.976%,100%{opacity:0}}
+@keyframes lab-m10-recording_w29{0%,43.966%{opacity:0}43.976%,45.457%{opacity:1}45.467%,100%{opacity:0}}
+@keyframes lab-m10-recording_w30{0%,45.457%{opacity:0}45.467%,46.947%{opacity:1}46.957%,100%{opacity:0}}
+@keyframes lab-m10-recording_w31{0%,46.947%{opacity:0}46.957%,48.437%{opacity:1}48.447%,100%{opacity:0}}
+@keyframes lab-m10-recording_w32{0%,48.437%{opacity:0}48.447%,49.928%{opacity:1}49.938%,100%{opacity:0}}
+@keyframes lab-m10-recording_w33{0%,49.928%{opacity:0}49.938%,51.418%{opacity:1}51.428%,100%{opacity:0}}
+@keyframes lab-m10-recording_w34{0%,51.418%{opacity:0}51.428%,52.908%{opacity:1}52.918%,100%{opacity:0}}
+@keyframes lab-m10-recording_w35{0%,52.908%{opacity:0}52.918%,54.399%{opacity:1}54.409%,100%{opacity:0}}
+@keyframes lab-m10-recording_w36{0%,54.399%{opacity:0}54.409%,55.889%{opacity:1}55.899%,100%{opacity:0}}
+@keyframes lab-m10-recording_w37{0%,55.889%{opacity:0}55.899%,57.380%{opacity:1}57.390%,100%{opacity:0}}
+@keyframes lab-m10-recording_w38{0%,57.380%{opacity:0}57.390%,58.870%{opacity:1}58.880%,100%{opacity:0}}
+@keyframes lab-m10-recording_w39{0%,58.870%{opacity:0}58.880%,60.360%{opacity:1}60.370%,100%{opacity:0}}
+@keyframes lab-m10-recording_w40{0%,60.360%{opacity:0}60.370%,61.851%{opacity:1}61.861%,100%{opacity:0}}
+@keyframes lab-m10-recording_w41{0%,61.851%{opacity:0}61.861%,63.341%{opacity:1}63.351%,100%{opacity:0}}
+@keyframes lab-m10-recording_w42{0%,63.341%{opacity:0}63.351%,64.832%{opacity:1}64.842%,100%{opacity:0}}
+@keyframes lab-m10-recording_w43{0%,64.832%{opacity:0}64.842%,66.322%{opacity:1}66.332%,100%{opacity:0}}
+@keyframes lab-m10-recording_w44{0%,66.322%{opacity:0}66.332%,67.812%{opacity:1}67.822%,100%{opacity:0}}
+@keyframes lab-m10-recording_w45{0%,67.812%{opacity:0}67.822%,69.303%{opacity:1}69.313%,100%{opacity:0}}
+@keyframes lab-m10-recording_w46{0%,69.303%{opacity:0}69.313%,70.793%{opacity:1}70.803%,100%{opacity:0}}
+@keyframes lab-m10-recording_w47{0%,70.793%{opacity:0}70.803%,72.283%{opacity:1}72.293%,100%{opacity:0}}
+@keyframes lab-m10-recording_w48{0%,72.283%{opacity:0}72.293%,73.774%{opacity:1}73.784%,100%{opacity:0}}
+@keyframes lab-m10-recording_w49{0%,73.774%{opacity:0}73.784%,75.264%{opacity:1}75.274%,100%{opacity:0}}
+@keyframes lab-m10-recording_w50{0%,75.264%{opacity:0}75.274%,76.755%{opacity:1}76.765%,100%{opacity:0}}
+@keyframes lab-m10-recording_w51{0%,76.755%{opacity:0}76.765%,78.245%{opacity:1}78.255%,100%{opacity:0}}
+@keyframes lab-m10-recording_w52{0%,78.245%{opacity:0}78.255%,79.735%{opacity:1}79.745%,100%{opacity:0}}
+@keyframes lab-m10-recording_w53{0%,79.735%{opacity:0}79.745%,81.226%{opacity:1}81.236%,100%{opacity:0}}
+@keyframes lab-m10-recording_w54{0%,81.226%{opacity:0}81.236%,82.716%{opacity:1}82.726%,100%{opacity:0}}
+@keyframes lab-m10-recording_w55{0%,82.716%{opacity:0}82.726%,84.206%{opacity:1}84.216%,100%{opacity:0}}
+@keyframes lab-m10-recording_w56{0%,84.206%{opacity:0}84.216%,85.697%{opacity:1}85.707%,100%{opacity:0}}
+@keyframes lab-m10-recording_w57{0%,85.697%{opacity:0}85.707%,87.187%{opacity:1}87.197%,100%{opacity:0}}
+@keyframes lab-m10-recording_w58{0%,87.187%{opacity:0}87.197%,88.678%{opacity:1}88.688%,100%{opacity:0}}
+@keyframes lab-m10-recording_w59{0%,88.678%{opacity:0}88.688%,90.168%{opacity:1}90.178%,100%{opacity:0}}
+@keyframes lab-m10-recording_w60{0%,90.168%{opacity:0}90.178%,91.658%{opacity:1}91.668%,100%{opacity:0}}
+@keyframes lab-m10-recording_w61{0%,91.658%{opacity:0}91.668%,93.149%{opacity:1}93.159%,100%{opacity:0}}
+@keyframes lab-m10-recording_w62{0%,93.149%{opacity:0}93.159%,94.639%{opacity:1}94.649%,100%{opacity:0}}
+@keyframes lab-m10-recording_w63{0%,94.639%{opacity:0}94.649%,100.000%{opacity:1}}
+@keyframes lab-m10-recording_l0{0%,99.255%{opacity:1}99.265%,100%{opacity:0}}
+@keyframes lab-m10-recording_l1{0%,97.788%{opacity:1}97.798%,100%{opacity:0}}
+@keyframes lab-m10-recording_l2{0%,97.776%{opacity:1}97.786%,100%{opacity:0}}
+@keyframes lab-m10-recording_l3{0%,96.268%{opacity:1}96.278%,100%{opacity:0}}
+@keyframes lab-m10-recording_l4{0%,94.678%{opacity:1}94.688%,100%{opacity:0}}
+@keyframes lab-m10-recording_l5{0%,94.666%{opacity:1}94.676%,100%{opacity:0}}
+@keyframes lab-m10-recording_l6{0%,93.158%{opacity:1}93.168%,100%{opacity:0}}
+@keyframes lab-m10-recording_l7{0%,91.743%{opacity:1}91.753%,100%{opacity:0}}
+@keyframes lab-m10-recording_l8{0%,91.725%{opacity:1}91.735%,100%{opacity:0}}
+@keyframes lab-m10-recording_l9{0%,90.216%{opacity:1}90.226%,100%{opacity:0}}
+@keyframes lab-m10-recording_l10{0%,88.828%{opacity:1}88.838%,100%{opacity:0}}
+@keyframes lab-m10-recording_l11{0%,88.828%{opacity:1}88.838%,100%{opacity:0}}
+@keyframes lab-m10-recording_l12{0%,88.038%{opacity:1}88.048%,100%{opacity:0}}
+@keyframes lab-m10-recording_l13{0%,86.525%{opacity:1}86.535%,100%{opacity:0}}
+@keyframes lab-m10-recording_l14{0%,84.899%{opacity:1}84.909%,100%{opacity:0}}
+@keyframes lab-m10-recording_l15{0%,84.899%{opacity:1}84.909%,100%{opacity:0}}
+@keyframes lab-m10-recording_l16{0%,83.041%{opacity:1}83.051%,100%{opacity:0}}
+@keyframes lab-m10-recording_l17{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l18{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l19{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l20{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l21{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l22{0%,80.358%{opacity:1}80.368%,100%{opacity:0}}
+@keyframes lab-m10-recording_l23{0%,78.796%{opacity:1}78.806%,100%{opacity:0}}
+@keyframes lab-m10-recording_l24{0%,77.270%{opacity:1}77.280%,100%{opacity:0}}
+@keyframes lab-m10-recording_l25{0%,75.898%{opacity:1}75.908%,100%{opacity:0}}
+@keyframes lab-m10-recording_l26{0%,74.218%{opacity:1}74.228%,100%{opacity:0}}
+@keyframes lab-m10-recording_l27{0%,72.692%{opacity:1}72.702%,100%{opacity:0}}
+@keyframes lab-m10-recording_l28{0%,71.319%{opacity:1}71.329%,100%{opacity:0}}
+@keyframes lab-m10-recording_l29{0%,69.671%{opacity:1}69.681%,100%{opacity:0}}
+@keyframes lab-m10-recording_l30{0%,68.113%{opacity:1}68.123%,100%{opacity:0}}
+@keyframes lab-m10-recording_l31{0%,66.750%{opacity:1}66.760%,100%{opacity:0}}
+@keyframes lab-m10-recording_l32{0%,65.276%{opacity:1}65.286%,100%{opacity:0}}
+@keyframes lab-m10-recording_l33{0%,63.878%{opacity:1}63.888%,100%{opacity:0}}
+@keyframes lab-m10-recording_l34{0%,62.162%{opacity:1}62.172%,100%{opacity:0}}
+@keyframes lab-m10-recording_l35{0%,60.882%{opacity:1}60.892%,100%{opacity:0}}
+@keyframes lab-m10-recording_l36{0%,59.417%{opacity:1}59.427%,100%{opacity:0}}
+@keyframes lab-m10-recording_l37{0%,58.992%{opacity:1}59.002%,100%{opacity:0}}
+@keyframes lab-m10-recording_l38{0%,57.949%{opacity:1}57.959%,100%{opacity:0}}
+@keyframes lab-m10-recording_l39{0%,57.430%{opacity:1}57.440%,100%{opacity:0}}
+@keyframes lab-m10-recording_l40{0%,57.430%{opacity:1}57.440%,100%{opacity:0}}
+@keyframes lab-m10-recording_l41{0%,56.485%{opacity:1}56.495%,100%{opacity:0}}
+@keyframes lab-m10-recording_l42{0%,55.020%{opacity:1}55.030%,100%{opacity:0}}
+@keyframes lab-m10-recording_l43{0%,53.922%{opacity:1}53.932%,100%{opacity:0}}
+@keyframes lab-m10-recording_l44{0%,53.370%{opacity:1}53.380%,100%{opacity:0}}
+@keyframes lab-m10-recording_l45{0%,52.075%{opacity:1}52.085%,100%{opacity:0}}
+@keyframes lab-m10-recording_l46{0%,50.442%{opacity:1}50.452%,100%{opacity:0}}
+@keyframes lab-m10-recording_l47{0%,48.977%{opacity:1}48.987%,100%{opacity:0}}
+@keyframes lab-m10-recording_l48{0%,47.512%{opacity:1}47.522%,100%{opacity:0}}
+@keyframes lab-m10-recording_l49{0%,46.385%{opacity:1}46.395%,100%{opacity:0}}
+@keyframes lab-m10-recording_l50{0%,46.047%{opacity:1}46.057%,100%{opacity:0}}
+@keyframes lab-m10-recording_l51{0%,45.048%{opacity:1}45.058%,100%{opacity:0}}
+@keyframes lab-m10-recording_l52{0%,45.032%{opacity:1}45.042%,100%{opacity:0}}
+@keyframes lab-m10-recording_l53{0%,44.398%{opacity:1}44.408%,100%{opacity:0}}
+@keyframes lab-m10-recording_l54{0%,43.106%{opacity:1}43.116%,100%{opacity:0}}
+@keyframes lab-m10-recording_l55{0%,41.610%{opacity:1}41.620%,100%{opacity:0}}
+@keyframes lab-m10-recording_l56{0%,40.112%{opacity:1}40.122%,100%{opacity:0}}
+@keyframes lab-m10-recording_l57{0%,38.602%{opacity:1}38.612%,100%{opacity:0}}
+@keyframes lab-m10-recording_l58{0%,37.113%{opacity:1}37.123%,100%{opacity:0}}
+@keyframes lab-m10-recording_l59{0%,35.608%{opacity:1}35.618%,100%{opacity:0}}
+@keyframes lab-m10-recording_l60{0%,34.142%{opacity:1}34.152%,100%{opacity:0}}
+@keyframes lab-m10-recording_l61{0%,32.535%{opacity:1}32.545%,100%{opacity:0}}
+@keyframes lab-m10-recording_l62{0%,31.028%{opacity:1}31.038%,100%{opacity:0}}
+@keyframes lab-m10-recording_l63{0%,29.563%{opacity:1}29.573%,100%{opacity:0}}
+@keyframes lab-m10-recording_l64{0%,28.098%{opacity:1}28.108%,100%{opacity:0}}
+@keyframes lab-m10-recording_l65{0%,26.635%{opacity:1}26.645%,100%{opacity:0}}
+@keyframes lab-m10-recording_l66{0%,25.170%{opacity:1}25.180%,100%{opacity:0}}
+@keyframes lab-m10-recording_l67{0%,23.713%{opacity:1}23.723%,100%{opacity:0}}
+@keyframes lab-m10-recording_l68{0%,22.220%{opacity:1}22.230%,100%{opacity:0}}
+@keyframes lab-m10-recording_l69{0%,20.721%{opacity:1}20.731%,100%{opacity:0}}
+@keyframes lab-m10-recording_l70{0%,20.509%{opacity:1}20.519%,100%{opacity:0}}
+@keyframes lab-m10-recording_l71{0%,19.229%{opacity:1}19.239%,100%{opacity:0}}
+@keyframes lab-m10-recording_l72{0%,17.750%{opacity:1}17.760%,100%{opacity:0}}
+@keyframes lab-m10-recording_l73{0%,17.512%{opacity:1}17.522%,100%{opacity:0}}
+@keyframes lab-m10-recording_l74{0%,16.278%{opacity:1}16.288%,100%{opacity:0}}
+@keyframes lab-m10-recording_l75{0%,15.896%{opacity:1}15.906%,100%{opacity:0}}
+@keyframes lab-m10-recording_l76{0%,15.881%{opacity:1}15.891%,100%{opacity:0}}
+@keyframes lab-m10-recording_l77{0%,14.774%{opacity:1}14.784%,100%{opacity:0}}
+@keyframes lab-m10-recording_l78{0%,13.266%{opacity:1}13.276%,100%{opacity:0}}
+@keyframes lab-m10-recording_l79{0%,11.783%{opacity:1}11.793%,100%{opacity:0}}
+@keyframes lab-m10-recording_l80{0%,10.118%{opacity:1}10.128%,100%{opacity:0}}
+@keyframes lab-m10-recording_l81{0%,8.626%{opacity:1}8.636%,100%{opacity:0}}
+@keyframes lab-m10-recording_l82{0%,7.066%{opacity:1}7.076%,100%{opacity:0}}
+@keyframes lab-m10-recording_l83{0%,6.823%{opacity:1}6.833%,100%{opacity:0}}
+@keyframes lab-m10-recording_l84{0%,5.756%{opacity:1}5.766%,100%{opacity:0}}
+@keyframes lab-m10-recording_l85{0%,4.915%{opacity:1}4.925%,100%{opacity:0}}
+@keyframes lab-m10-recording_l86{0%,4.915%{opacity:1}4.925%,100%{opacity:0}}
+@keyframes lab-m10-recording_l87{0%,4.471%{opacity:1}4.481%,100%{opacity:0}}
+@keyframes lab-m10-recording_w64{0%,2.236%{opacity:0}2.246%,8.346%{opacity:1}8.356%,100%{opacity:0}}
+@keyframes lab-m10-recording_w65{0%,11.923%{opacity:0}11.933%,18.630%{opacity:1}18.640%,100%{opacity:0}}
+@keyframes lab-m10-recording_w66{0%,25.784%{opacity:0}25.794%,42.625%{opacity:1}42.635%,100%{opacity:0}}
+@keyframes lab-m10-recording_w67{0%,42.625%{opacity:0}42.635%,45.308%{opacity:1}45.318%,100%{opacity:0}}
+@keyframes lab-m10-recording_w68{0%,45.904%{opacity:0}45.914%,54.995%{opacity:1}55.005%,100%{opacity:0}}
+@keyframes lab-m10-recording_w69{0%,54.995%{opacity:0}55.005%,70.793%{opacity:1}70.803%,100%{opacity:0}}
+@keyframes lab-m10-recording_w70{0%,79.437%{opacity:0}79.447%,84.057%{opacity:1}84.067%,100%{opacity:0}}
+@keyframes lab-m10-recording_w71{0%,84.057%{opacity:0}84.067%,95.086%{opacity:1}95.096%,100%{opacity:0}}
+@keyframes lab-m10-recording_w72{0%,95.086%{opacity:0}95.096%,100.000%{opacity:1}}
+@keyframes lab-m10-recording_l88{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l89{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l90{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l91{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l92{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l93{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l94{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l95{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l96{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l97{0%,81.382%{opacity:1}81.392%,100%{opacity:0}}
+@keyframes lab-m10-recording_l98{0%,54.652%{opacity:1}54.662%,100%{opacity:0}}
+@keyframes lab-m10-recording_l99{0%,54.652%{opacity:1}54.662%,100%{opacity:0}}
+@keyframes lab-m10-recording_l100{0%,54.652%{opacity:1}54.662%,100%{opacity:0}}
+@keyframes lab-m10-recording_l101{0%,54.640%{opacity:1}54.650%,100%{opacity:0}}
+@keyframes lab-m10-recording_l102{0%,54.472%{opacity:1}54.482%,100%{opacity:0}}
+@keyframes lab-m10-recording_l103{0%,53.922%{opacity:1}53.932%,100%{opacity:0}}
+@keyframes lab-m10-recording_l104{0%,53.922%{opacity:1}53.932%,100%{opacity:0}}
+@keyframes lab-m10-recording_l105{0%,45.036%{opacity:1}45.046%,100%{opacity:0}}
+@keyframes lab-m10-recording_l106{0%,45.006%{opacity:1}45.016%,100%{opacity:0}}
+@keyframes lab-m10-recording_l107{0%,45.005%{opacity:1}45.015%,100%{opacity:0}}
+@keyframes lab-m10-recording_l108{0%,31.466%{opacity:1}31.476%,100%{opacity:0}}
+@keyframes lab-m10-recording_l109{0%,30.089%{opacity:1}30.099%,100%{opacity:0}}
+@keyframes lab-m10-recording_l110{0%,29.200%{opacity:1}29.210%,100%{opacity:0}}
+@keyframes lab-m10-recording_l111{0%,22.071%{opacity:1}22.081%,100%{opacity:0}}
+@keyframes lab-m10-recording_l112{0%,20.509%{opacity:1}20.519%,100%{opacity:0}}
+@keyframes lab-m10-recording_l113{0%,15.881%{opacity:1}15.891%,100%{opacity:0}}
+@keyframes lab-m10-recording_l114{0%,15.880%{opacity:1}15.890%,100%{opacity:0}}
+@keyframes lab-m10-recording_l115{0%,5.271%{opacity:1}5.281%,100%{opacity:0}}
+@keyframes lab-m10-recording_l116{0%,5.024%{opacity:1}5.034%,100%{opacity:0}}
+@keyframes lab-m10-recording_w73{0%,18.630%{opacity:0}18.640%,25.784%{opacity:1}25.794%,100%{opacity:0}}
+@keyframes lab-m10-recording_w74{0%,45.308%{opacity:0}45.318%,45.904%{opacity:1}45.914%,100%{opacity:0}}
+@keyframes lab-m10-recording_l117{0%,97.761%{opacity:1}97.771%,100%{opacity:0}}
+@keyframes lab-m10-recording_l118{0%,94.661%{opacity:1}94.671%,100%{opacity:0}}
+@keyframes lab-m10-recording_l119{0%,91.728%{opacity:1}91.738%,100%{opacity:0}}
+@keyframes lab-m10-recording_l120{0%,91.705%{opacity:1}91.715%,100%{opacity:0}}
+@keyframes lab-m10-recording_l121{0%,88.055%{opacity:1}88.065%,100%{opacity:0}}
+@keyframes lab-m10-recording_l122{0%,84.861%{opacity:1}84.871%,100%{opacity:0}}
+@keyframes lab-m10-recording_l123{0%,84.837%{opacity:1}84.847%,100%{opacity:0}}
+@keyframes lab-m10-recording_l124{0%,77.348%{opacity:1}77.358%,100%{opacity:0}}
+@keyframes lab-m10-recording_l125{0%,69.860%{opacity:1}69.870%,100%{opacity:0}}
+@keyframes lab-m10-recording_l126{0%,62.349%{opacity:1}62.359%,100%{opacity:0}}
+@keyframes lab-m10-recording_l127{0%,54.862%{opacity:1}54.872%,100%{opacity:0}}
+@keyframes lab-m10-recording_l128{0%,54.099%{opacity:1}54.109%,100%{opacity:0}}
+@keyframes lab-m10-recording_l129{0%,54.099%{opacity:1}54.109%,100%{opacity:0}}
+@keyframes lab-m10-recording_l130{0%,45.038%{opacity:1}45.048%,100%{opacity:0}}
+@keyframes lab-m10-recording_l131{0%,39.790%{opacity:1}39.800%,100%{opacity:0}}
+@keyframes lab-m10-recording_l132{0%,32.304%{opacity:1}32.314%,100%{opacity:0}}
+@keyframes lab-m10-recording_l133{0%,29.252%{opacity:1}29.262%,100%{opacity:0}}
+@keyframes lab-m10-recording_l134{0%,29.252%{opacity:1}29.262%,100%{opacity:0}}
+@keyframes lab-m10-recording_l135{0%,15.873%{opacity:1}15.883%,100%{opacity:0}}
+@keyframes lab-m10-recording_l136{0%,8.456%{opacity:1}8.466%,100%{opacity:0}}
+@keyframes lab-m10-recording_l137{0%,5.069%{opacity:1}5.079%,100%{opacity:0}}
+@keyframes lab-m10-recording_w75{0%,8.346%{opacity:0}8.356%,11.923%{opacity:1}11.933%,100%{opacity:0}}
+@keyframes lab-m10-recording_w76{0%,70.793%{opacity:0}70.803%,79.437%{opacity:1}79.447%,100%{opacity:0}}
+@keyframes lab-m10-recording_s0{0%{transform:translateY(0)}8.2567%{transform:translateY(-18px)}8.2746%{transform:translateY(-36px)}9.7843%{transform:translateY(-54px)}11.1719%{transform:translateY(-90px)}11.9618%{transform:translateY(-108px)}13.4745%{transform:translateY(-126px)}15.1005%{transform:translateY(-162px)}16.9590%{transform:translateY(-180px)}18.6178%{transform:translateY(-270px)}19.6417%{transform:translateY(-288px)}21.2036%{transform:translateY(-306px)}22.7298%{transform:translateY(-324px)}24.1024%{transform:translateY(-342px)}25.7821%{transform:translateY(-360px)}27.3082%{transform:translateY(-378px)}28.6809%{transform:translateY(-396px)}30.3292%{transform:translateY(-414px)}31.8867%{transform:translateY(-432px)}33.2504%{transform:translateY(-450px)}34.7244%{transform:translateY(-468px)}36.1223%{transform:translateY(-486px)}37.8378%{transform:translateY(-504px)}39.1180%{transform:translateY(-522px)}40.5830%{transform:translateY(-540px)}41.0078%{transform:translateY(-558px)}42.0511%{transform:translateY(-576px)}42.5697%{transform:translateY(-612px)}43.5146%{transform:translateY(-630px)}44.9797%{transform:translateY(-648px)}46.0781%{transform:translateY(-666px)}46.6295%{transform:translateY(-684px)}47.9246%{transform:translateY(-702px)}49.5581%{transform:translateY(-720px)}51.0231%{transform:translateY(-738px)}52.4882%{transform:translateY(-756px)}53.6149%{transform:translateY(-774px)}53.9532%{transform:translateY(-792px)}54.9518%{transform:translateY(-810px)}54.9682%{transform:translateY(-828px)}55.6016%{transform:translateY(-846px)}56.8938%{transform:translateY(-864px)}58.3901%{transform:translateY(-882px)}59.8879%{transform:translateY(-900px)}61.3977%{transform:translateY(-918px)}62.8866%{transform:translateY(-936px)}64.3919%{transform:translateY(-954px)}65.8584%{transform:translateY(-972px)}67.4650%{transform:translateY(-990px)}68.9718%{transform:translateY(-1008px)}70.4368%{transform:translateY(-1026px)}71.9019%{transform:translateY(-1044px)}73.3654%{transform:translateY(-1062px)}74.8305%{transform:translateY(-1080px)}76.2866%{transform:translateY(-1098px)}77.7799%{transform:translateY(-1116px)}79.2793%{transform:translateY(-1134px)}79.4909%{transform:translateY(-1152px)}80.7711%{transform:translateY(-1170px)}82.2496%{transform:translateY(-1188px)}82.4880%{transform:translateY(-1206px)}83.7221%{transform:translateY(-1224px)}84.1036%{transform:translateY(-1242px)}84.1185%{transform:translateY(-1260px)}85.2259%{transform:translateY(-1278px)}86.7341%{transform:translateY(-1296px)}88.2171%{transform:translateY(-1314px)}89.8818%{transform:translateY(-1332px)}91.3737%{transform:translateY(-1350px)}92.9341%{transform:translateY(-1368px)}93.1770%{transform:translateY(-1386px)}94.2442%{transform:translateY(-1404px)}95.0847%{transform:translateY(-1440px)}95.5289%{transform:translateY(-1458px)}}
+@keyframes lab-m10-recording_s1{0%{transform:translateY(0)}18.6178%{transform:translateY(-72px)}45.3478%{transform:translateY(-126px)}45.3597%{transform:translateY(-144px)}45.5281%{transform:translateY(-162px)}46.0781%{transform:translateY(-198px)}54.9637%{transform:translateY(-216px)}54.9935%{transform:translateY(-234px)}54.9950%{transform:translateY(-252px)}68.5336%{transform:translateY(-270px)}69.9107%{transform:translateY(-288px)}70.8005%{transform:translateY(-306px)}77.9290%{transform:translateY(-324px)}79.4909%{transform:translateY(-342px)}84.1185%{transform:translateY(-360px)}84.1200%{transform:translateY(-378px)}94.7285%{transform:translateY(-396px)}94.9759%{transform:translateY(-414px)}}
+@keyframes lab-m10-recording_s2{0%{transform:translateY(0)}22.6523%{transform:translateY(-18px)}30.1399%{transform:translateY(-36px)}37.6515%{transform:translateY(-54px)}45.1376%{transform:translateY(-72px)}45.9007%{transform:translateY(-108px)}54.9622%{transform:translateY(-126px)}60.2098%{transform:translateY(-144px)}67.6960%{transform:translateY(-162px)}70.7483%{transform:translateY(-198px)}84.1275%{transform:translateY(-216px)}91.5436%{transform:translateY(-234px)}94.9312%{transform:translateY(-252px)}}</style>
 <defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker><clipPath id="lab-m10-recording-clip0"><rect x="10" y="61" width="880" height="133"/></clipPath><clipPath id="lab-m10-recording-clip1"><rect x="10" y="233" width="880" height="115"/></clipPath><clipPath id="lab-m10-recording-clip2"><rect x="10" y="387" width="880" height="133"/></clipPath></defs>
 <rect width="900" height="602" rx="12" fill="#12171d"/>
 <text x="14" y="20" font-size="12" fill="#9aa8b5">gaps over 1.5 s are shortened</text>
-<text x="886" y="20" text-anchor="end" font-size="12" fill="#9aa8b5">of 01:08</text>
+<text x="886" y="20" text-anchor="end" font-size="12" fill="#9aa8b5">of 01:03</text>
 <text x="782" y="20" text-anchor="end" font-size="12" fill="#9aa8b5">recorded</text>
 <text class="rw" style="animation-name:lab-m10-recording_w0" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">00:00</text>
 <text class="rw" style="animation-name:lab-m10-recording_w1" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">00:01</text>
@@ -305,129 +297,121 @@ text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif
 <text class="rw" style="animation-name:lab-m10-recording_w61" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:01</text>
 <text class="rw" style="animation-name:lab-m10-recording_w62" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:02</text>
 <text class="rw" style="animation-name:lab-m10-recording_w63" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:03</text>
-<text class="rw" style="animation-name:lab-m10-recording_w64" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:04</text>
-<text class="rw" style="animation-name:lab-m10-recording_w65" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:05</text>
-<text class="rw" style="animation-name:lab-m10-recording_w66" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:06</text>
-<text class="rw" style="animation-name:lab-m10-recording_w67" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:07</text>
-<text class="rw" style="animation-name:lab-m10-recording_w68" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:08</text>
-<text class="rs" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:08</text>
+<text class="rs" x="824" y="20" font-size="12" font-weight="bold" fill="#e6ecf1" text-anchor="end">01:03</text>
 <rect x="10" y="30" width="880" height="164" rx="8" fill="#0d1117"/>
 <path d="M10 38 a8 8 0 0 1 8 -8 h864 a8 8 0 0 1 8 8 v18 h-880 z" fill="#1b222c"/>
 <circle cx="26" cy="43" r="5" fill="#ef6f6c"/>
 <circle cx="42" cy="43" r="5" fill="#e6c04f"/>
 <circle cx="58" cy="43" r="5" fill="#5fbf84"/>
 <text x="80" y="47" font-size="12" fill="#9aa8b5">Linux CPU 2: operator dashboard and commands (ssh)</text>
-<g clip-path="url(#lab-m10-recording-clip0)"><g class="rg" style="animation-name:lab-m10-recording_s0" transform="translate(0 -1512)">
+<g clip-path="url(#lab-m10-recording-clip0)"><g class="rg" style="animation-name:lab-m10-recording_s0" transform="translate(0 -1458)">
 <text class="rl" style="animation-name:lab-m10-recording_l0;animation-delay:0.500s" x="24" y="72" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">taskset -c 0 /root/station hello --cpu 0 --seq 1</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l1;animation-delay:2.000s" x="24" y="90" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[55.527 cpu 0] sending HELLO #1: hart 1 (Linux cpu 0), text "core 1 here"</text>
-<text class="rl" style="animation-name:lab-m10-recording_l2;animation-delay:2.006s" x="24" y="108" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[55.536 cpu 0] hart 4 answered: "hart 4 FreeRTOS", its tick 73133 ms, 1 of 3 Linux cpus heard so far</text>
-<text class="rl" style="animation-name:lab-m10-recording_l3;animation-delay:3.018s" x="24" y="126" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">taskset -c 1 /root/station hello --cpu 1 --seq 1</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l4;animation-delay:3.999s" x="24" y="144" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[57.532 cpu 1] sending HELLO #1: hart 2 (Linux cpu 1), text "core 2 here"</text>
-<text class="rl" style="animation-name:lab-m10-recording_l5;animation-delay:4.009s" x="24" y="162" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[57.541 cpu 1] hart 4 answered: "hart 4 FreeRTOS", its tick 75138 ms, 2 of 3 Linux cpus heard so far</text>
-<text class="rl" style="animation-name:lab-m10-recording_l6;animation-delay:5.021s" x="24" y="180" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">taskset -c 2 /root/station hello --cpu 2 --seq 1</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l7;animation-delay:6.102s" x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[59.634 cpu 2] sending HELLO #1: hart 3 (Linux cpu 2), text "core 3 here"</text>
-<text class="rl" style="animation-name:lab-m10-recording_l8;animation-delay:6.114s" x="24" y="216" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[59.647 cpu 2] hart 4 answered: "hart 4 FreeRTOS", its tick 77239 ms, 3 of 3 Linux cpus heard so far</text>
-<text class="rl" style="animation-name:lab-m10-recording_l9;animation-delay:7.127s" x="24" y="234" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">/root/station listen</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l10;animation-delay:8.051s" x="24" y="252" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[61.584] asking hart 4 to speak (LISTEN)</text>
-<text class="rl" style="animation-name:lab-m10-recording_l11;animation-delay:8.052s" x="24" y="270" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[61.585] hart 4 acknowledged LISTEN, 3 of 3 Linux cpus heard; waiting up to 5 s for its own message</text>
-<text class="rl" style="animation-name:lab-m10-recording_l12;animation-delay:8.615s" x="24" y="288" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[62.092] core 4 speaks: "core 4 speaks" (hart 4 tick 79689 ms)</text>
-<text class="rl" style="animation-name:lab-m10-recording_l13;animation-delay:9.629s" x="24" y="306" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">/root/start_station.sh</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l14;animation-delay:10.552s" x="24" y="324" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">shared memory in /dev/shm/station: ring A 256 x 1040 B, ring B 64 x 112 B, ring C 16 x 16 B</text>
-<text class="rl" style="animation-name:lab-m10-recording_l15;animation-delay:11.811s" x="24" y="342" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">station running: acq 323 on cpu 0, ana 318 on cpu 1, tel 317 on cpu 2; logs in /dev/shm/station</text>
-<text class="rl" style="animation-name:lab-m10-recording_l16;animation-delay:13.017s" x="24" y="360" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.014 cpu2 tel] pinned to cpu 2 (running on cpu 2); commands are read from /dev/shm/station/cmd</text>
-<text class="rl" style="animation-name:lab-m10-recording_l17;animation-delay:13.017s" x="24" y="378" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.014 cpu2 tel] commands: reset | limits &lt;max_bad&gt; &lt;max_drops&gt; | inject crc | inject off | status | quit</text>
-<text class="rl" style="animation-name:lab-m10-recording_l18;animation-delay:13.017s" x="24" y="396" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  0.0] event: hart 4 armed</text>
-<text class="rl" style="animation-name:lab-m10-recording_l19;animation-delay:13.017s" x="24" y="414" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  1.0] frames 864 bad 0 drop 0 843/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l20;animation-delay:13.017s" x="24" y="432" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  2.0] frames 1867 bad 0 drop 0 999/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l21;animation-delay:13.600s" x="24" y="450" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  3.0] frames 2873 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l22;animation-delay:14.622s" x="24" y="468" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  4.1] frames 3878 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l23;animation-delay:15.646s" x="24" y="486" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  5.1] frames 4882 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l24;animation-delay:16.669s" x="24" y="504" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  6.0] frames 4999 bad 0 drop 0 121/s ovr 0 pk 547M avg 277M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l25;animation-delay:17.590s" x="24" y="522" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  7.0] frames 4999 bad 0 drop 0 0/s ovr 0 pk 0M avg 0M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l26;animation-delay:18.692s" x="24" y="540" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  8.0] frames 5767 bad 0 drop 1 761/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l27;animation-delay:19.675s" x="24" y="558" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  9.1] frames 6773 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l28;animation-delay:20.612s" x="24" y="576" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 10.1] frames 7779 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l29;animation-delay:21.764s" x="24" y="594" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 11.0] frames 8742 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l30;animation-delay:22.582s" x="24" y="612" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 12.0] frames 9748 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l31;animation-delay:23.729s" x="24" y="630" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 13.0] frames 10745 bad 0 drop 1 992/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l32;animation-delay:24.713s" x="24" y="648" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 14.0] frames 11749 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l33;animation-delay:25.695s" x="24" y="666" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 15.0] frames 12753 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l34;animation-delay:26.678s" x="24" y="684" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 16.1] frames 13764 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l35;animation-delay:27.608s" x="24" y="702" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 17.1] frames 14768 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l36;animation-delay:28.050s" x="24" y="720" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">echo inject crc &gt; /dev/shm/station/cmd</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l37;animation-delay:28.643s" x="24" y="738" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 18.1] frames 15764 bad 0 drop 1 992/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l38;animation-delay:28.967s" x="24" y="756" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 18.4] operator&gt; inject crc</text>
-<text class="rl" style="animation-name:lab-m10-recording_l39;animation-delay:28.967s" x="24" y="774" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 18.4] fault injection on: the next runs carry a CRC fault every 100 slots</text>
-<text class="rl" style="animation-name:lab-m10-recording_l40;animation-delay:29.626s" x="24" y="792" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 19.0] frames 16718 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l41;animation-delay:30.596s" x="24" y="810" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 20.0] frames 17722 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l42;animation-delay:31.593s" x="24" y="828" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 21.0] frames 18733 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l43;animation-delay:32.585s" x="24" y="846" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 22.0] frames 19737 bad 0 drop 1 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l44;animation-delay:33.600s" x="24" y="864" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 23.0] frames 19998 bad 0 drop 1 257/s ovr 0 pk 547M avg 277M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l45;animation-delay:34.612s" x="24" y="882" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 24.1] frames 19998 bad 0 drop 1 0/s ovr 0 pk 0M avg 0M src RUN h4 ARMED trips 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l46;animation-delay:35.406s" x="24" y="900" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 24.7] *** TRIP reported by hart 4: reason BAD_FRAMES, trip #1, hart 4 tick 106412 ms ***</text>
-<text class="rl" style="animation-name:lab-m10-recording_l47;animation-delay:35.591s" x="24" y="918" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 25.0] frames 20298 bad 3 drop 2 307/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l48;animation-delay:36.612s" x="24" y="936" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 26.1] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l49;animation-delay:38.112s" x="24" y="954" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 27.1] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l50;animation-delay:38.256s" x="24" y="972" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 28.0] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l51;animation-delay:39.065s" x="24" y="990" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 29.0] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l52;animation-delay:39.967s" x="24" y="1008" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">echo reset &gt; /dev/shm/station/cmd</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l53;animation-delay:40.077s" x="24" y="1026" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 30.1] frames 20298 bad 3 drop 2 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l54;animation-delay:40.838s" x="24" y="1044" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 30.8] operator&gt; reset</text>
-<text class="rl" style="animation-name:lab-m10-recording_l55;animation-delay:40.855s" x="24" y="1062" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 30.8] reset accepted by hart 4 (trips so far 1), station resumes</text>
-<text class="rl" style="animation-name:lab-m10-recording_l56;animation-delay:41.056s" x="24" y="1080" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 31.0] frames 20489 bad 3 drop 2 195/s ovr 0 pk 0M avg 0M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l57;animation-delay:42.049s" x="24" y="1098" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 32.0] frames 21483 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l58;animation-delay:43.054s" x="24" y="1116" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 33.0] frames 22487 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l59;animation-delay:44.057s" x="24" y="1134" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 34.0] frames 23491 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l60;animation-delay:45.063s" x="24" y="1152" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 35.0] frames 24497 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l61;animation-delay:46.076s" x="24" y="1170" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 36.0] frames 25501 bad 3 drop 2 993/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l62;animation-delay:47.079s" x="24" y="1188" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 37.1] frames 26505 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l63;animation-delay:48.128s" x="24" y="1206" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 38.1] frames 27509 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l64;animation-delay:49.110s" x="24" y="1224" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 39.1] frames 28513 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l65;animation-delay:50.092s" x="24" y="1242" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 40.1] frames 29517 bad 3 drop 2 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l66;animation-delay:51.052s" x="24" y="1260" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 41.0] frames 30371 bad 3 drop 2 889/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 1</text>
-<text class="rl" style="animation-name:lab-m10-recording_l67;animation-delay:52.183s" x="24" y="1278" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 42.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 1.2s</text>
-<text class="rl" style="animation-name:lab-m10-recording_l68;animation-delay:53.167s" x="24" y="1296" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 43.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 2.2s</text>
-<text class="rl" style="animation-name:lab-m10-recording_l69;animation-delay:54.149s" x="24" y="1314" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 44.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 3.2s</text>
-<text class="rl" style="animation-name:lab-m10-recording_l70;animation-delay:55.132s" x="24" y="1332" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 45.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 4.2s</text>
-<text class="rl" style="animation-name:lab-m10-recording_l71;animation-delay:56.063s" x="24" y="1350" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 46.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 5.2s</text>
-<text class="rl" style="animation-name:lab-m10-recording_l72;animation-delay:57.069s" x="24" y="1368" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 47.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 6.2s</text>
-<text class="rl" style="animation-name:lab-m10-recording_l73;animation-delay:57.083s" x="24" y="1386" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 47.1] *** TRIP reported by hart 4: reason DEADLINE, trip #2, hart 4 tick 123071 ms ***</text>
-<text class="rl" style="animation-name:lab-m10-recording_l74;animation-delay:58.083s" x="24" y="1404" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 48.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 0M avg 0M src STOP h4 SAFE trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l75;animation-delay:59.054s" x="24" y="1422" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 49.0] frames 30371 bad 3 drop 2 0/s ovr 206 pk 0M avg 0M src STOP h4 SAFE trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l76;animation-delay:59.093s" x="24" y="1440" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">echo reset &gt; /dev/shm/station/cmd</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l77;animation-delay:59.982s" x="24" y="1458" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 50.0] operator&gt; reset</text>
-<text class="rl" style="animation-name:lab-m10-recording_l78;animation-delay:60.002s" x="24" y="1476" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 50.0] reset accepted by hart 4 (trips so far 2), station resumes</text>
-<text class="rl" style="animation-name:lab-m10-recording_l79;animation-delay:60.052s" x="24" y="1494" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 50.0] frames 30411 bad 3 drop 2 40/s ovr 206 pk 0M avg 0M src RUN h4 ARMED trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l80;animation-delay:61.075s" x="24" y="1512" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 51.0] frames 31435 bad 3 drop 2 1001/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l81;animation-delay:62.086s" x="24" y="1530" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 52.1] frames 32446 bad 3 drop 2 1000/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l82;animation-delay:63.056s" x="24" y="1548" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 53.0] frames 33401 bad 3 drop 2 999/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l83;animation-delay:64.049s" x="24" y="1566" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 54.0] frames 34407 bad 3 drop 2 1000/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l84;animation-delay:65.053s" x="24" y="1584" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 55.0] frames 35404 bad 3 drop 2 993/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l85;animation-delay:66.056s" x="24" y="1602" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 56.0] frames 36408 bad 3 drop 2 1000/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l86;animation-delay:66.096s" x="24" y="1620" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">/root/stop_station.sh</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l87;animation-delay:67.068s" x="24" y="1638" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 57.0] frames 37420 bad 3 drop 2 1000/s ovr 206 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l88;animation-delay:67.410s" x="24" y="1656" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 57.4] summary: frames 37493, bad 3, drops 2, windows 102, trips 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l89;animation-delay:67.410s" x="24" y="1674" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 57.4] summary: ring overruns 206, fabric drops 0, source runs 13, aborts 2</text>
-<text class="rl" style="animation-name:lab-m10-recording_l90;animation-delay:67.667s" x="24" y="1692" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">frames 37493 bad 3 gaps 2 trips 2 overruns 206 fabric_drops 0 runs 13 aborts 2</text>
-<rect class="rw" style="animation-name:lab-m10-recording_w69" x="16" y="96" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w70" x="16" y="276" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w71" x="16" y="510" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w72" x="16" y="726" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w73" x="16" y="870" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w74" x="16" y="1050" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w75" x="16" y="1374" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w76" x="16" y="1446" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w77" x="16" y="1626" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<text class="rl" style="animation-name:lab-m10-recording_l1;animation-delay:1.484s" x="24" y="90" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[75.613 cpu 0] sending HELLO #1: hart 1 (Linux cpu 0), text "core 1 here"</text>
+<text class="rl" style="animation-name:lab-m10-recording_l2;animation-delay:1.492s" x="24" y="108" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[75.622 cpu 0] hart 4 answered: "hart 4 FreeRTOS", its tick 93219 ms, 1 of 3 Linux cpus heard so far</text>
+<text class="rl" style="animation-name:lab-m10-recording_l3;animation-delay:2.504s" x="24" y="126" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">taskset -c 1 /root/station hello --cpu 1 --seq 1</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l4;animation-delay:3.571s" x="24" y="144" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[77.700 cpu 1] sending HELLO #1: hart 2 (Linux cpu 1), text "core 2 here"</text>
+<text class="rl" style="animation-name:lab-m10-recording_l5;animation-delay:3.579s" x="24" y="162" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[77.709 cpu 1] hart 4 answered: "hart 4 FreeRTOS", its tick 95306 ms, 2 of 3 Linux cpus heard so far</text>
+<text class="rl" style="animation-name:lab-m10-recording_l6;animation-delay:4.591s" x="24" y="180" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">taskset -c 2 /root/station hello --cpu 2 --seq 1</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l7;animation-delay:5.540s" x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[79.670 cpu 2] sending HELLO #1: hart 3 (Linux cpu 2), text "core 3 here"</text>
+<text class="rl" style="animation-name:lab-m10-recording_l8;animation-delay:5.552s" x="24" y="216" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[79.683 cpu 2] hart 4 answered: "hart 4 FreeRTOS", its tick 97275 ms, 3 of 3 Linux cpus heard so far</text>
+<text class="rl" style="animation-name:lab-m10-recording_l9;animation-delay:6.565s" x="24" y="234" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">/root/station listen</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l10;animation-delay:7.496s" x="24" y="252" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[81.626] asking hart 4 to speak (LISTEN)</text>
+<text class="rl" style="animation-name:lab-m10-recording_l11;animation-delay:7.496s" x="24" y="270" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[81.627] hart 4 acknowledged LISTEN, 3 of 3 Linux cpus heard; waiting up to 5 s for its own message</text>
+<text class="rl" style="animation-name:lab-m10-recording_l12;animation-delay:8.026s" x="24" y="288" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[82.134] core 4 speaks: "core 4 speaks" (hart 4 tick 99731 ms)</text>
+<text class="rl" style="animation-name:lab-m10-recording_l13;animation-delay:9.041s" x="24" y="306" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">/root/start_station.sh</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l14;animation-delay:10.132s" x="24" y="324" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">fabric NEXT_SEQ 0 taken as the starting sequence number</text>
+<text class="rl" style="animation-name:lab-m10-recording_l15;animation-delay:10.132s" x="24" y="342" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">shared memory in /dev/shm/station: ring A 256 x 1040 B, ring B 64 x 112 B, ring C 16 x 16 B</text>
+<text class="rl" style="animation-name:lab-m10-recording_l16;animation-delay:11.379s" x="24" y="360" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">station running: acq 303 on cpu 0, ana 298 on cpu 1, tel 297 on cpu 2; logs in /dev/shm/station</text>
+<text class="rl" style="animation-name:lab-m10-recording_l17;animation-delay:12.492s" x="24" y="378" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.027 cpu2 tel] pinned to cpu 2 (running on cpu 2); commands are read from /dev/shm/station/cmd</text>
+<text class="rl" style="animation-name:lab-m10-recording_l18;animation-delay:12.492s" x="24" y="396" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.027 cpu2 tel] commands: reset | limits &lt;max_bad&gt; &lt;max_drops&gt; | inject crc | inject off | status | quit</text>
+<text class="rl" style="animation-name:lab-m10-recording_l19;animation-delay:12.492s" x="24" y="414" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  0.0] event: hart 4 armed</text>
+<text class="rl" style="animation-name:lab-m10-recording_l20;animation-delay:12.492s" x="24" y="432" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  1.1] frames 867 bad 0 drop 0 845/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l21;animation-delay:12.492s" x="24" y="450" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  2.1] frames 1872 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l22;animation-delay:13.179s" x="24" y="468" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  3.1] frames 2875 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l23;animation-delay:14.227s" x="24" y="486" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  4.1] frames 3879 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l24;animation-delay:15.251s" x="24" y="504" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  5.1] frames 4883 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l25;animation-delay:16.172s" x="24" y="522" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  6.0] frames 5841 bad 0 drop 0 997/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l26;animation-delay:17.299s" x="24" y="540" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  7.0] frames 6845 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l27;animation-delay:18.323s" x="24" y="558" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  8.0] frames 7849 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l28;animation-delay:19.244s" x="24" y="576" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  9.0] frames 8853 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l29;animation-delay:20.350s" x="24" y="594" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 10.0] frames 9857 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l30;animation-delay:21.395s" x="24" y="612" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 11.1] frames 10864 bad 0 drop 0 996/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l31;animation-delay:22.310s" x="24" y="630" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 12.1] frames 11868 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l32;animation-delay:23.299s" x="24" y="648" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 13.1] frames 12872 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l33;animation-delay:24.237s" x="24" y="666" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 14.1] frames 13876 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l34;animation-delay:25.388s" x="24" y="684" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 15.1] frames 14880 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l35;animation-delay:26.247s" x="24" y="702" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 16.0] frames 15836 bad 0 drop 0 995/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l36;animation-delay:27.230s" x="24" y="720" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 17.0] frames 16840 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l37;animation-delay:27.515s" x="24" y="738" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">echo inject crc &gt; /dev/shm/station/cmd</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l38;animation-delay:28.215s" x="24" y="756" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 18.0] frames 17848 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l39;animation-delay:28.563s" x="24" y="774" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 18.4] operator&gt; inject crc</text>
+<text class="rl" style="animation-name:lab-m10-recording_l40;animation-delay:28.563s" x="24" y="792" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 18.4] fault injection on: the next runs carry a CRC fault every 100 slots</text>
+<text class="rl" style="animation-name:lab-m10-recording_l41;animation-delay:29.197s" x="24" y="810" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 19.0] frames 18848 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l42;animation-delay:30.180s" x="24" y="828" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 20.0] frames 19852 bad 0 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l43;animation-delay:30.917s" x="24" y="846" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 20.7] *** TRIP reported by hart 4: reason BAD_FRAMES, trip #1, hart 4 tick 122512 ms ***</text>
+<text class="rl" style="animation-name:lab-m10-recording_l44;animation-delay:31.287s" x="24" y="864" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 21.1] frames 20439 bad 5 drop 0 573/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l45;animation-delay:32.156s" x="24" y="882" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 22.0] frames 20439 bad 5 drop 0 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l46;animation-delay:33.252s" x="24" y="900" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 23.0] frames 20439 bad 5 drop 0 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l47;animation-delay:34.235s" x="24" y="918" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 24.1] frames 20439 bad 5 drop 0 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l48;animation-delay:35.218s" x="24" y="936" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 25.1] frames 20439 bad 5 drop 0 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l49;animation-delay:35.974s" x="24" y="954" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">echo reset &gt; /dev/shm/station/cmd</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l50;animation-delay:36.201s" x="24" y="972" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 26.0] frames 20439 bad 5 drop 0 0/s ovr 0 pk 0M avg 0M src STOP h4 SAFE trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l51;animation-delay:36.871s" x="24" y="990" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 26.7] operator&gt; reset</text>
+<text class="rl" style="animation-name:lab-m10-recording_l52;animation-delay:36.882s" x="24" y="1008" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 26.8] reset accepted by hart 4 (trips so far 1), station resumes</text>
+<text class="rl" style="animation-name:lab-m10-recording_l53;animation-delay:37.307s" x="24" y="1026" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 27.1] frames 20721 bad 5 drop 0 275/s ovr 0 pk 0M avg 0M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l54;animation-delay:38.174s" x="24" y="1044" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 28.1] frames 21712 bad 5 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l55;animation-delay:39.178s" x="24" y="1062" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 29.1] frames 22716 bad 5 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l56;animation-delay:40.183s" x="24" y="1080" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 30.1] frames 23721 bad 5 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l57;animation-delay:41.196s" x="24" y="1098" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 31.1] frames 24732 bad 5 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l58;animation-delay:42.195s" x="24" y="1116" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 32.0] frames 25683 bad 5 drop 0 996/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l59;animation-delay:43.205s" x="24" y="1134" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 33.0] frames 26687 bad 5 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l60;animation-delay:44.189s" x="24" y="1152" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 34.0] frames 27691 bad 5 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l61;animation-delay:45.267s" x="24" y="1170" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 35.0] frames 28702 bad 5 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l62;animation-delay:46.278s" x="24" y="1188" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 36.1] frames 29710 bad 5 drop 0 1000/s ovr 0 pk 547M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l63;animation-delay:47.261s" x="24" y="1206" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 37.1] frames 30481 bad 5 drop 0 771/s ovr 0 pk 795M avg 278M src RUN h4 ARMED trips 1</text>
+<text class="rl" style="animation-name:lab-m10-recording_l64;animation-delay:48.244s" x="24" y="1224" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 38.1] frames 30481 bad 5 drop 0 0/s ovr 248 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 1.3s</text>
+<text class="rl" style="animation-name:lab-m10-recording_l65;animation-delay:49.226s" x="24" y="1242" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 39.1] frames 30481 bad 5 drop 0 0/s ovr 248 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 2.3s</text>
+<text class="rl" style="animation-name:lab-m10-recording_l66;animation-delay:50.209s" x="24" y="1260" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 40.1] frames 30481 bad 5 drop 0 0/s ovr 248 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 3.3s</text>
+<text class="rl" style="animation-name:lab-m10-recording_l67;animation-delay:51.186s" x="24" y="1278" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 41.1] frames 30481 bad 5 drop 0 0/s ovr 248 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 4.3s</text>
+<text class="rl" style="animation-name:lab-m10-recording_l68;animation-delay:52.188s" x="24" y="1296" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 42.1] frames 30481 bad 5 drop 0 0/s ovr 248 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 5.3s</text>
+<text class="rl" style="animation-name:lab-m10-recording_l69;animation-delay:53.194s" x="24" y="1314" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 43.1] frames 30481 bad 5 drop 0 0/s ovr 248 pk 795M avg 278M src STOP h4 ARMED trips 1 SILENT 6.3s</text>
+<text class="rl" style="animation-name:lab-m10-recording_l70;animation-delay:53.336s" x="24" y="1332" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 43.2] *** TRIP reported by hart 4: reason DEADLINE, trip #2, hart 4 tick 139184 ms ***</text>
+<text class="rl" style="animation-name:lab-m10-recording_l71;animation-delay:54.195s" x="24" y="1350" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 44.1] frames 30481 bad 5 drop 0 0/s ovr 248 pk 0M avg 0M src STOP h4 SAFE trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l72;animation-delay:55.187s" x="24" y="1368" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 45.0] frames 30481 bad 5 drop 0 0/s ovr 248 pk 0M avg 0M src STOP h4 SAFE trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l73;animation-delay:55.347s" x="24" y="1386" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">echo reset &gt; /dev/shm/station/cmd</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l74;animation-delay:56.175s" x="24" y="1404" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 46.1] frames 30481 bad 5 drop 0 0/s ovr 248 pk 0M avg 0M src STOP h4 SAFE trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l75;animation-delay:56.431s" x="24" y="1422" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 46.3] operator&gt; reset</text>
+<text class="rl" style="animation-name:lab-m10-recording_l76;animation-delay:56.441s" x="24" y="1440" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 46.3] reset accepted by hart 4 (trips so far 2), station resumes</text>
+<text class="rl" style="animation-name:lab-m10-recording_l77;animation-delay:57.184s" x="24" y="1458" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 47.1] frames 31221 bad 5 drop 0 733/s ovr 248 pk 795M avg 278M src RUN h4 ARMED trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l78;animation-delay:58.196s" x="24" y="1476" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 48.1] frames 32225 bad 5 drop 0 1000/s ovr 248 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l79;animation-delay:59.191s" x="24" y="1494" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 49.1] frames 33229 bad 5 drop 0 1000/s ovr 248 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l80;animation-delay:60.308s" x="24" y="1512" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 50.1] frames 34233 bad 5 drop 0 1000/s ovr 248 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l81;animation-delay:61.309s" x="24" y="1530" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 51.0] frames 35187 bad 5 drop 0 1000/s ovr 248 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l82;animation-delay:62.356s" x="24" y="1548" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 52.0] frames 36194 bad 5 drop 0 996/s ovr 248 pk 795M avg 278M src RUN h4 ARMED trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l83;animation-delay:62.519s" x="24" y="1566" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">/root/stop_station.sh</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l84;animation-delay:63.235s" x="24" y="1584" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 53.0] frames 37202 bad 5 drop 0 1000/s ovr 248 pk 547M avg 278M src RUN h4 ARMED trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l85;animation-delay:63.799s" x="24" y="1602" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 53.7] summary: frames 37589, bad 5, drops 0, windows 94, trips 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l86;animation-delay:63.799s" x="24" y="1620" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[ 53.7] summary: ring overruns 248, fabric drops 0, source runs 14, aborts 2</text>
+<text class="rl" style="animation-name:lab-m10-recording_l87;animation-delay:64.097s" x="24" y="1638" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">frames 37589 bad 5 gaps 0 trips 2 overruns 248 fabric_drops 0 runs 14 aborts 2</text>
+<rect class="rw" style="animation-name:lab-m10-recording_w64" x="16" y="96" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w65" x="16" y="258" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w66" x="16" y="528" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w67" x="16" y="780" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w68" x="16" y="816" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w69" x="16" y="996" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w70" x="16" y="1302" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w71" x="16" y="1392" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w72" x="16" y="1608" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
 </g></g>
-<g class="rw" style="animation-name:lab-m10-recording_w69"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w70"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w71"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w72"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">6</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w73"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">7</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w74"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">8</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w75"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">10</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w76"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">11</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w77"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">12</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w64"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w65"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w66"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w67"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">6</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w68"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">8</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w69"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">9</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w70"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">11</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w71"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">12</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w72"><rect x="10" y="30" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="43" r="10" fill="#ffd166"/><text x="870" y="47" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">13</text></g>
 <rect x="10" y="202" width="880" height="146" rx="8" fill="#0d1117"/>
 <path d="M10 210 a8 8 0 0 1 8 -8 h864 a8 8 0 0 1 8 8 v18 h-880 z" fill="#1b222c"/>
 <circle cx="26" cy="215" r="5" fill="#ef6f6c"/>
@@ -435,167 +419,173 @@ text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif
 <circle cx="58" cy="215" r="5" fill="#5fbf84"/>
 <text x="80" y="219" font-size="12" fill="#9aa8b5">Linux CPUs 0 and 1: acquisition and analysis logs (ssh)</text>
 <g clip-path="url(#lab-m10-recording-clip1)"><g class="rg" style="animation-name:lab-m10-recording_s1" transform="translate(0 -414)">
-<text class="rl" style="animation-name:lab-m10-recording_l91;animation-delay:12.989s" x="24" y="244" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.170 cpu0 acq] pinned to cpu 0 (running on cpu 0), source: hw</text>
-<text class="rl" style="animation-name:lab-m10-recording_l92;animation-delay:12.989s" x="24" y="262" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.171 cpu0 acq] config: slot 1000 us (125000 cycles), 5000 slots per run, 100 slots per injection run</text>
-<text class="rl" style="animation-name:lab-m10-recording_l93;animation-delay:12.989s" x="24" y="280" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.171 cpu0 acq] config: window 500 ms, heartbeat 100 ms, deadline 500 ms, max lag 320 frames</text>
-<text class="rl" style="animation-name:lab-m10-recording_l94;animation-delay:12.989s" x="24" y="298" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.171 cpu0 acq] config: limits per window: bad &lt;= 2, drops &lt;= 4, peak &lt;= 900000000, mean &lt;= 320000000</text>
-<text class="rl" style="animation-name:lab-m10-recording_l95;animation-delay:12.989s" x="24" y="316" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.172 cpu0 acq] run 1 started: 5000 slots</text>
-<text class="rl" style="animation-name:lab-m10-recording_l96;animation-delay:12.989s" x="24" y="334" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.019 cpu1 ana] pinned to cpu 1 (running on cpu 1); owns the link to hart 4</text>
-<text class="rl" style="animation-name:lab-m10-recording_l97;animation-delay:12.989s" x="24" y="352" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.019 cpu1 ana] config: slot 1000 us (125000 cycles), 5000 slots per run, 100 slots per injection run</text>
-<text class="rl" style="animation-name:lab-m10-recording_l98;animation-delay:12.989s" x="24" y="370" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.019 cpu1 ana] config: window 500 ms, heartbeat 100 ms, deadline 500 ms, max lag 320 frames</text>
-<text class="rl" style="animation-name:lab-m10-recording_l99;animation-delay:12.989s" x="24" y="388" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.019 cpu1 ana] config: limits per window: bad &lt;= 2, drops &lt;= 4, peak &lt;= 900000000, mean &lt;= 320000000</text>
-<text class="rl" style="animation-name:lab-m10-recording_l100;animation-delay:12.989s" x="24" y="406" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.026 cpu1 ana] hart 4 armed: state ARMED, uptime 81708 ms</text>
-<text class="rl" style="animation-name:lab-m10-recording_l101;animation-delay:17.730s" x="24" y="424" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   7.178 cpu0 acq] run 1: no progress for 2 s, aborting the source</text>
-<text class="rl" style="animation-name:lab-m10-recording_l102;animation-delay:34.912s" x="24" y="442" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  24.300 cpu0 acq] run 4: no progress for 2 s, aborting the source</text>
-<text class="rl" style="animation-name:lab-m10-recording_l103;animation-delay:34.952s" x="24" y="460" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  24.401 cpu0 acq] run 5 started: 100 slots, CRC fault at frame 10 of every run</text>
-<text class="rl" style="animation-name:lab-m10-recording_l104;animation-delay:34.964s" x="24" y="478" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  24.412 cpu1 ana] bad frame: seq 20010 (magic a55a00fc, crc mismatch)</text>
-<text class="rl" style="animation-name:lab-m10-recording_l105;animation-delay:35.100s" x="24" y="496" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  24.519 cpu1 ana] bad frame: seq 20110 (magic a55a00fc, crc mismatch)</text>
-<text class="rl" style="animation-name:lab-m10-recording_l106;animation-delay:35.178s" x="24" y="514" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  24.626 cpu1 ana] bad frame: seq 20210 (magic a55a00fc, crc mismatch)</text>
-<text class="rl" style="animation-name:lab-m10-recording_l107;animation-delay:35.406s" x="24" y="532" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  24.738 cpu0 acq] run 8 ended by ABORT (hart 4 trip), waiting for reset; frames 20307 overruns 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l108;animation-delay:35.406s" x="24" y="550" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  24.738 cpu1 ana] TRIP notice from hart 4: BAD_FRAMES, trip #1, tick 106412 ms; ring A flushed</text>
-<text class="rl" style="animation-name:lab-m10-recording_l109;animation-delay:40.855s" x="24" y="568" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  30.828 cpu1 ana] RESET: hart 4 ARMED again (trips so far 1), ring A flushed, source released</text>
-<text class="rl" style="animation-name:lab-m10-recording_l110;animation-delay:40.862s" x="24" y="586" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  30.836 cpu0 acq] reset accepted (epoch 1): restarting the source</text>
-<text class="rl" style="animation-name:lab-m10-recording_l111;animation-delay:40.864s" x="24" y="604" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  30.837 cpu0 acq] run 9 started: 5000 slots</text>
-<text class="rl" style="animation-name:lab-m10-recording_l112;animation-delay:49.936s" x="24" y="622" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">kill -STOP 318     # the analysis process (cpu 1) freezes</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l113;animation-delay:51.447s" x="24" y="640" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  41.396 cpu0 acq] run 11 ended by ABORT (hart 4 trip), waiting for reset; frames 30842 overruns 206</text>
-<text class="rl" style="animation-name:lab-m10-recording_l114;animation-delay:56.198s" x="24" y="658" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">kill -CONT 318     # the analysis process continues</tspan></text>
-<text class="rl" style="animation-name:lab-m10-recording_l115;animation-delay:57.082s" x="24" y="676" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  47.055 cpu1 ana] TRIP notice from hart 4: DEADLINE, trip #2, tick 123071 ms; ring A flushed</text>
-<text class="rl" style="animation-name:lab-m10-recording_l116;animation-delay:60.001s" x="24" y="694" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  49.975 cpu1 ana] RESET: hart 4 ARMED again (trips so far 2), ring A flushed, source released</text>
-<text class="rl" style="animation-name:lab-m10-recording_l117;animation-delay:60.010s" x="24" y="712" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  49.983 cpu0 acq] reset accepted (epoch 2): restarting the source</text>
-<text class="rl" style="animation-name:lab-m10-recording_l118;animation-delay:67.147s" x="24" y="730" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  57.121 cpu0 acq] stopped: 37964 frames in 13 runs, ring overruns 206, fabric drops 0</text>
-<text class="rl" style="animation-name:lab-m10-recording_l119;animation-delay:67.352s" x="24" y="748" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  57.246 cpu1 ana] stopped: 37493 frames verified, 3 bad, 2 gaps, 102 windows, 0 failed transfers</text>
-<rect class="rw" style="animation-name:lab-m10-recording_w78" x="16" y="394" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w73" x="16" y="502" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w74" x="16" y="592" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w75" x="16" y="664" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w76" x="16" y="664" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<text class="rl" style="animation-name:lab-m10-recording_l88;animation-delay:12.492s" x="24" y="244" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.182 cpu0 acq] pinned to cpu 0 (running on cpu 0), source: hw</text>
+<text class="rl" style="animation-name:lab-m10-recording_l89;animation-delay:12.492s" x="24" y="262" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.182 cpu0 acq] config: slot 1000 us (125000 cycles), 5000 slots per run, 100 slots per injection run</text>
+<text class="rl" style="animation-name:lab-m10-recording_l90;animation-delay:12.492s" x="24" y="280" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.182 cpu0 acq] config: window 500 ms, heartbeat 100 ms, deadline 500 ms, max lag 320 frames</text>
+<text class="rl" style="animation-name:lab-m10-recording_l91;animation-delay:12.492s" x="24" y="298" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.182 cpu0 acq] config: limits per window: bad &lt;= 2, drops &lt;= 4, peak &lt;= 900000000, mean &lt;= 320000000</text>
+<text class="rl" style="animation-name:lab-m10-recording_l92;animation-delay:12.492s" x="24" y="316" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.183 cpu0 acq] run 1 started: 5000 slots</text>
+<text class="rl" style="animation-name:lab-m10-recording_l93;animation-delay:12.492s" x="24" y="334" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.029 cpu1 ana] pinned to cpu 1 (running on cpu 1); owns the link to hart 4</text>
+<text class="rl" style="animation-name:lab-m10-recording_l94;animation-delay:12.492s" x="24" y="352" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.030 cpu1 ana] config: slot 1000 us (125000 cycles), 5000 slots per run, 100 slots per injection run</text>
+<text class="rl" style="animation-name:lab-m10-recording_l95;animation-delay:12.492s" x="24" y="370" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.030 cpu1 ana] config: window 500 ms, heartbeat 100 ms, deadline 500 ms, max lag 320 frames</text>
+<text class="rl" style="animation-name:lab-m10-recording_l96;animation-delay:12.492s" x="24" y="388" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.030 cpu1 ana] config: limits per window: bad &lt;= 2, drops &lt;= 4, peak &lt;= 900000000, mean &lt;= 320000000</text>
+<text class="rl" style="animation-name:lab-m10-recording_l97;animation-delay:12.492s" x="24" y="406" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[   0.041 cpu1 ana] hart 4 armed: state ARMED, uptime 101884 ms</text>
+<text class="rl" style="animation-name:lab-m10-recording_l98;animation-delay:30.427s" x="24" y="424" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">run end: 5000 frames taken from the descriptors, 4999 UIO events (fewer events than completed frames)</text>
+<text class="rl" style="animation-name:lab-m10-recording_l99;animation-delay:30.427s" x="24" y="442" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  20.201 cpu0 acq] run 5 started: 100 slots, CRC fault at frame 10 of every run</text>
+<text class="rl" style="animation-name:lab-m10-recording_l100;animation-delay:30.427s" x="24" y="460" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  20.212 cpu1 ana] bad frame: seq 20010 (magic a55a00fc, crc mismatch)</text>
+<text class="rl" style="animation-name:lab-m10-recording_l101;animation-delay:30.435s" x="24" y="478" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  20.316 cpu1 ana] bad frame: seq 20110 (magic a55a00fc, crc mismatch)</text>
+<text class="rl" style="animation-name:lab-m10-recording_l102;animation-delay:30.548s" x="24" y="496" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  20.420 cpu1 ana] bad frame: seq 20210 (magic a55a00fc, crc mismatch)</text>
+<text class="rl" style="animation-name:lab-m10-recording_l103;animation-delay:30.917s" x="24" y="514" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  20.669 cpu0 acq] run 9 ended by ABORT (hart 4 trip), waiting for reset; frames 20448 overruns 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l104;animation-delay:30.917s" x="24" y="532" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  20.673 cpu1 ana] TRIP notice from hart 4: BAD_FRAMES, trip #1, tick 122512 ms; ring A flushed</text>
+<text class="rl" style="animation-name:lab-m10-recording_l105;animation-delay:36.879s" x="24" y="550" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  26.760 cpu1 ana] RESET: hart 4 ARMED again (trips so far 1), ring A flushed, source released</text>
+<text class="rl" style="animation-name:lab-m10-recording_l106;animation-delay:36.899s" x="24" y="568" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  26.780 cpu0 acq] reset accepted (epoch 1): restarting the source</text>
+<text class="rl" style="animation-name:lab-m10-recording_l107;animation-delay:36.900s" x="24" y="586" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  26.781 cpu0 acq] run 10 started: 5000 slots</text>
+<text class="rl" style="animation-name:lab-m10-recording_l108;animation-delay:45.984s" x="24" y="604" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">kill -STOP 298     # the analysis process (cpu 1) freezes</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l109;animation-delay:46.908s" x="24" y="622" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">run end: 5000 frames taken from the descriptors, 4998 UIO events (fewer events than completed frames)</text>
+<text class="rl" style="animation-name:lab-m10-recording_l110;animation-delay:47.505s" x="24" y="640" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  37.340 cpu0 acq] run 12 ended by ABORT (hart 4 trip), waiting for reset; frames 30994 overruns 248</text>
+<text class="rl" style="animation-name:lab-m10-recording_l111;animation-delay:52.288s" x="24" y="658" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">kill -CONT 298     # the analysis process continues</tspan></text>
+<text class="rl" style="animation-name:lab-m10-recording_l112;animation-delay:53.336s" x="24" y="676" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  43.216 cpu1 ana] TRIP notice from hart 4: DEADLINE, trip #2, tick 139184 ms; ring A flushed</text>
+<text class="rl" style="animation-name:lab-m10-recording_l113;animation-delay:56.441s" x="24" y="694" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  46.321 cpu1 ana] RESET: hart 4 ARMED again (trips so far 2), ring A flushed, source released</text>
+<text class="rl" style="animation-name:lab-m10-recording_l114;animation-delay:56.442s" x="24" y="712" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  46.323 cpu0 acq] reset accepted (epoch 2): restarting the source</text>
+<text class="rl" style="animation-name:lab-m10-recording_l115;animation-delay:63.560s" x="24" y="730" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  53.440 cpu0 acq] stopped: 38102 frames in 14 runs, ring overruns 248, fabric drops 0</text>
+<text class="rl" style="animation-name:lab-m10-recording_l116;animation-delay:63.726s" x="24" y="748" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[  53.569 cpu1 ana] stopped: 37589 frames verified, 5 bad, 0 gaps, 94 windows, 0 failed transfers</text>
+<rect class="rw" style="animation-name:lab-m10-recording_w73" x="16" y="394" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w74" x="16" y="394" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w68" x="16" y="484" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w69" x="16" y="574" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w70" x="16" y="646" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w71" x="16" y="664" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
 </g></g>
-<g class="rw" style="animation-name:lab-m10-recording_w78"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w73"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">7</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w74"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">8</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w75"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">10</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w76"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">11</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w73"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w74"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">7</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w68"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">8</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w69"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">9</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w70"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">11</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w71"><rect x="10" y="202" width="880" height="146" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="215" r="10" fill="#ffd166"/><text x="870" y="219" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">12</text></g>
 <rect x="10" y="356" width="880" height="164" rx="8" fill="#0d1117"/>
 <path d="M10 364 a8 8 0 0 1 8 -8 h864 a8 8 0 0 1 8 8 v18 h-880 z" fill="#1b222c"/>
 <circle cx="26" cy="369" r="5" fill="#ef6f6c"/>
 <circle cx="42" cy="369" r="5" fill="#e6c04f"/>
 <circle cx="58" cy="369" r="5" fill="#5fbf84"/>
 <text x="80" y="373" font-size="12" fill="#9aa8b5">hart 4 console (UART)</text>
-<g clip-path="url(#lab-m10-recording-clip2)"><g class="rg" style="animation-name:lab-m10-recording_s2" transform="translate(0 -270)">
-<text class="rl" style="animation-name:lab-m10-recording_l120;animation-delay:2.014s" x="24" y="398" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] hart 4 (FreeRTOS) got HELLO #1 from hart 1 (Linux cpu 0): core 1 here</text>
-<text class="rl" style="animation-name:lab-m10-recording_l121;animation-delay:4.013s" x="24" y="416" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] hart 4 (FreeRTOS) got HELLO #1 from hart 2 (Linux cpu 1): core 2 here</text>
-<text class="rl" style="animation-name:lab-m10-recording_l122;animation-delay:6.110s" x="24" y="434" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] hart 4 (FreeRTOS) got HELLO #1 from hart 3 (Linux cpu 2): core 3 here</text>
-<text class="rl" style="animation-name:lab-m10-recording_l123;animation-delay:6.126s" x="24" y="452" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] heard all three Linux harts (1, 2, 3)</text>
-<text class="rl" style="animation-name:lab-m10-recording_l124;animation-delay:8.575s" x="24" y="470" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] core 4 speaks: sending one message of its own to Linux</text>
-<text class="rl" style="animation-name:lab-m10-recording_l125;animation-delay:10.590s" x="24" y="488" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] ARMED: deadline 500 ms, max lag 320 frames, fabric seq 0, t=81708 ms</text>
-<text class="rl" style="animation-name:lab-m10-recording_l126;animation-delay:10.590s" x="24" y="506" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] limits per window: bad &lt;= 2, drops &lt;= 4, peak &lt;= 900000000, mean &lt;= 320000000</text>
-<text class="rl" style="animation-name:lab-m10-recording_l127;animation-delay:15.631s" x="24" y="524" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=86745 ms window 10: frames 502, bad 0, drops 0, peak 547781479, mean 278201440</text>
-<text class="rl" style="animation-name:lab-m10-recording_l128;animation-delay:20.686s" x="24" y="542" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=91799 ms window 20: frames 503, bad 0, drops 0, peak 547781479, mean 278154420</text>
-<text class="rl" style="animation-name:lab-m10-recording_l129;animation-delay:25.710s" x="24" y="560" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=96830 ms window 30: frames 502, bad 0, drops 0, peak 547781479, mean 278179235</text>
-<text class="rl" style="animation-name:lab-m10-recording_l130;animation-delay:30.735s" x="24" y="578" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=101857 ms window 40: frames 502, bad 0, drops 0, peak 547781479, mean 278260257</text>
-<text class="rl" style="animation-name:lab-m10-recording_l131;animation-delay:35.294s" x="24" y="596" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=106412 ms window 49: frames 300, bad 3, drops 1, peak 795986176, mean 278034714</text>
-<text class="rl" style="animation-name:lab-m10-recording_l132;animation-delay:35.294s" x="24" y="614" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] TRIP #1: BAD_FRAMES at t=106412 ms, source aborted, state SAFE</text>
-<text class="rl" style="animation-name:lab-m10-recording_l133;animation-delay:40.865s" x="24" y="632" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] RESET from operator: trip #1 (BAD_FRAMES) cleared, ARMED again, t=112506 ms</text>
-<text class="rl" style="animation-name:lab-m10-recording_l134;animation-delay:45.377s" x="24" y="650" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=117025 ms window 70: frames 503, bad 0, drops 0, peak 547781479, mean 278206925</text>
-<text class="rl" style="animation-name:lab-m10-recording_l135;animation-delay:50.401s" x="24" y="668" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=122052 ms window 80: frames 502, bad 0, drops 0, peak 547781479, mean 278168512</text>
-<text class="rl" style="animation-name:lab-m10-recording_l136;animation-delay:51.426s" x="24" y="686" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] ALARM: no message within 500 ms (miss #1, t=123071 ms)</text>
-<text class="rl" style="animation-name:lab-m10-recording_l137;animation-delay:51.426s" x="24" y="704" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] TRIP #2: DEADLINE at t=123071 ms, source aborted, state SAFE</text>
-<text class="rl" style="animation-name:lab-m10-recording_l138;animation-delay:60.001s" x="24" y="722" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] RESET from operator: trip #2 (DEADLINE) cleared, ARMED again, t=131653 ms</text>
-<text class="rl" style="animation-name:lab-m10-recording_l139;animation-delay:61.137s" x="24" y="740" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=132786 ms window 90: frames 503, bad 0, drops 0, peak 547781479, mean 278259022</text>
-<text class="rl" style="animation-name:lab-m10-recording_l140;animation-delay:66.177s" x="24" y="758" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=137817 ms window 100: frames 502, bad 0, drops 0, peak 547781479, mean 278179434</text>
-<text class="rl" style="animation-name:lab-m10-recording_l141;animation-delay:67.281s" x="24" y="776" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] DISARM from ARMED: 505 status, 102 windows, 1 deadline misses, 0 seq mismatches, 2 trips</text>
-<rect class="rw" style="animation-name:lab-m10-recording_w69" x="16" y="386" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w79" x="16" y="422" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w70" x="16" y="458" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w78" x="16" y="494" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w71" x="16" y="512" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w73" x="16" y="602" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w74" x="16" y="620" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w80" x="16" y="656" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<g clip-path="url(#lab-m10-recording-clip2)"><g class="rg" style="animation-name:lab-m10-recording_s2" transform="translate(0 -252)">
+<text class="rl" style="animation-name:lab-m10-recording_l117;animation-delay:1.502s" x="24" y="398" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] hart 4 (FreeRTOS) got HELLO #1 from hart 1 (Linux cpu 0): core 1 here</text>
+<text class="rl" style="animation-name:lab-m10-recording_l118;animation-delay:3.582s" x="24" y="416" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] hart 4 (FreeRTOS) got HELLO #1 from hart 2 (Linux cpu 1): core 2 here</text>
+<text class="rl" style="animation-name:lab-m10-recording_l119;animation-delay:5.550s" x="24" y="434" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] hart 4 (FreeRTOS) got HELLO #1 from hart 3 (Linux cpu 2): core 3 here</text>
+<text class="rl" style="animation-name:lab-m10-recording_l120;animation-delay:5.566s" x="24" y="452" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] heard all three Linux harts (1, 2, 3)</text>
+<text class="rl" style="animation-name:lab-m10-recording_l121;animation-delay:8.015s" x="24" y="470" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[roll-call] core 4 speaks: sending one message of its own to Linux</text>
+<text class="rl" style="animation-name:lab-m10-recording_l122;animation-delay:10.158s" x="24" y="488" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] ARMED: deadline 500 ms, max lag 320 frames, fabric seq 0, t=101884 ms</text>
+<text class="rl" style="animation-name:lab-m10-recording_l123;animation-delay:10.174s" x="24" y="506" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] limits per window: bad &lt;= 2, drops &lt;= 4, peak &lt;= 900000000, mean &lt;= 320000000</text>
+<text class="rl" style="animation-name:lab-m10-recording_l124;animation-delay:15.199s" x="24" y="524" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=106922 ms window 10: frames 502, bad 0, drops 0, peak 547781479, mean 278212448</text>
+<text class="rl" style="animation-name:lab-m10-recording_l125;animation-delay:20.223s" x="24" y="542" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=111949 ms window 20: frames 502, bad 0, drops 0, peak 547781479, mean 278146575</text>
+<text class="rl" style="animation-name:lab-m10-recording_l126;animation-delay:25.263s" x="24" y="560" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=116976 ms window 30: frames 502, bad 0, drops 0, peak 547781479, mean 278223279</text>
+<text class="rl" style="animation-name:lab-m10-recording_l127;animation-delay:30.286s" x="24" y="578" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=122003 ms window 40: frames 502, bad 0, drops 0, peak 547781479, mean 278260246</text>
+<text class="rl" style="animation-name:lab-m10-recording_l128;animation-delay:30.798s" x="24" y="596" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=122512 ms window 41: frames 487, bad 5, drops 0, peak 795986176, mean 277951146</text>
+<text class="rl" style="animation-name:lab-m10-recording_l129;animation-delay:30.798s" x="24" y="614" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] TRIP #1: BAD_FRAMES at t=122512 ms, source aborted, state SAFE</text>
+<text class="rl" style="animation-name:lab-m10-recording_l130;animation-delay:36.878s" x="24" y="632" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] RESET from operator: trip #1 (BAD_FRAMES) cleared, ARMED again, t=128605 ms</text>
+<text class="rl" style="animation-name:lab-m10-recording_l131;animation-delay:40.399s" x="24" y="650" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=132118 ms window 60: frames 503, bad 0, drops 0, peak 547781479, mean 278262299</text>
+<text class="rl" style="animation-name:lab-m10-recording_l132;animation-delay:45.422s" x="24" y="668" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=137146 ms window 70: frames 502, bad 0, drops 0, peak 547781479, mean 278190442</text>
+<text class="rl" style="animation-name:lab-m10-recording_l133;animation-delay:47.470s" x="24" y="686" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] ALARM: no message within 500 ms (miss #1, t=139184 ms)</text>
+<text class="rl" style="animation-name:lab-m10-recording_l134;animation-delay:47.470s" x="24" y="704" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] TRIP #2: DEADLINE at t=139184 ms, source aborted, state SAFE</text>
+<text class="rl" style="animation-name:lab-m10-recording_l135;animation-delay:56.447s" x="24" y="722" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] RESET from operator: trip #2 (DEADLINE) cleared, ARMED again, t=148167 ms</text>
+<text class="rl" style="animation-name:lab-m10-recording_l136;animation-delay:61.423s" x="24" y="740" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] t=153134 ms window 90: frames 502, bad 0, drops 0, peak 547781479, mean 278266794</text>
+<text class="rl" style="animation-name:lab-m10-recording_l137;animation-delay:63.696s" x="24" y="758" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">[station] DISARM from ARMED: 467 status, 94 windows, 1 deadline misses, 0 seq mismatches, 2 trips</text>
+<rect class="rw" style="animation-name:lab-m10-recording_w75" x="16" y="440" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w65" x="16" y="440" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w73" x="16" y="494" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w66" x="16" y="512" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w68" x="16" y="602" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w69" x="16" y="620" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
 <rect class="rw" style="animation-name:lab-m10-recording_w76" x="16" y="692" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
-<rect class="rw" style="animation-name:lab-m10-recording_w77" x="16" y="764" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w71" x="16" y="692" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
+<rect class="rw" style="animation-name:lab-m10-recording_w72" x="16" y="746" width="868" height="18" rx="3" fill="#ffd166" fill-opacity="0.15" stroke="#ffd166" stroke-width="2"/>
 </g></g>
-<g class="rw" style="animation-name:lab-m10-recording_w69"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w79"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w70"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w78"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w71"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w73"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">7</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w74"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">8</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w80"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">9</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w76"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">11</text></g>
-<g class="rw" style="animation-name:lab-m10-recording_w77"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">12</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w64"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w75"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w65"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w73"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w66"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">5</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w68"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">8</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w69"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">9</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w76"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">10</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w71"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">12</text></g>
+<g class="rw" style="animation-name:lab-m10-recording_w72"><rect x="10" y="356" width="880" height="164" rx="8" fill="none" stroke="#ffd166" stroke-width="2.5"/><circle cx="870" cy="369" r="10" fill="#ffd166"/><text x="870" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">13</text></g>
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
-<g class="rw" style="animation-name:lab-m10-recording_w69">
+<g class="rw" style="animation-name:lab-m10-recording_w64">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
 <circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Core 1 speaks</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">Linux CPU 0 sends HELLO; hart 4 prints it on its UART and answers with its own tick count.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w79">
+<g class="rw" style="animation-name:lab-m10-recording_w75">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
 <circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">All three Linux cores heard</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">CPU 2 is the third; hart 4 reports that it has heard harts 1, 2 and 3.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w70">
+<g class="rw" style="animation-name:lab-m10-recording_w65">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
 <circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Core 4 speaks</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">Hart 4 sends one message of its own to Linux, and the listener on Linux prints it.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w78">
+<g class="rw" style="animation-name:lab-m10-recording_w73">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
 <circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">The station starts</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">Acquisition on CPU 0, analysis on CPU 1, telemetry on CPU 2; hart 4 arms with its limits.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w71">
+<g class="rw" style="animation-name:lab-m10-recording_w66">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
 <circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">5</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Normal operation</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">About 1000 frames per second, no bad frames; hart 4 prints a window line every tenth window.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w72">
+<g class="rw" style="animation-name:lab-m10-recording_w67">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
 <circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">6</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Fault A: corrupt frames</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">The operator asks for CRC faults; the fabric corrupts one frame in every injection run.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w73">
-<rect x="0" y="528" width="900" height="74" fill="#12171d"/>
-<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">7</text>
-<text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Trip on bad frames</text>
-<text x="48" y="574" font-size="13" fill="#9aa8b5">Hart 4 sees 3 bad frames in a window, aborts the source and shows SAFE on all three consoles.</text>
-</g>
 <g class="rw" style="animation-name:lab-m10-recording_w74">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">7</text>
+<text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">A run ends without a stall</text>
+<text x="48" y="574" font-size="13" fill="#9aa8b5">The 5000-slot run ended on 4999 UIO events; the last frame was taken from its descriptor and the injection runs start at once.</text>
+</g>
+<g class="rw" style="animation-name:lab-m10-recording_w68">
+<rect x="0" y="528" width="900" height="74" fill="#12171d"/>
 <circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">8</text>
+<text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Trip on bad frames</text>
+<text x="48" y="574" font-size="13" fill="#9aa8b5">Hart 4 sees 5 bad frames in a window, aborts the source and shows SAFE on all three consoles.</text>
+</g>
+<g class="rw" style="animation-name:lab-m10-recording_w69">
+<rect x="0" y="528" width="900" height="74" fill="#12171d"/>
+<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">9</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Operator reset</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">The reset travels CPU 2, CPU 1 and RPMsg to hart 4; the station is armed and running again.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w80">
+<g class="rw" style="animation-name:lab-m10-recording_w76">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
-<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">9</text>
+<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">10</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Fault B: the analysis process hangs</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">After kill -STOP on CPU 1, no message reaches hart 4 for 500 ms: ALARM, then a trip on DEADLINE.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w75">
+<g class="rw" style="animation-name:lab-m10-recording_w70">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
-<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">10</text>
+<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">11</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">The frozen process wakes up</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">After kill -CONT, CPU 1 receives the trip notice that hart 4 sent while it was frozen.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w76">
+<g class="rw" style="animation-name:lab-m10-recording_w71">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
-<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">11</text>
+<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">12</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Second reset</text>
 <text x="48" y="574" font-size="13" fill="#9aa8b5">The station resumes and runs normally to the end.</text>
 </g>
-<g class="rw" style="animation-name:lab-m10-recording_w77">
+<g class="rw" style="animation-name:lab-m10-recording_w72">
 <rect x="0" y="528" width="900" height="74" fill="#12171d"/>
-<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">12</text>
+<circle cx="24" cy="556" r="13" fill="#ffd166"/><text x="24" y="561" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">13</text>
 <text x="48" y="554" font-size="15" font-weight="bold" fill="#e6ecf1">Summary</text>
-<text x="48" y="574" font-size="13" fill="#9aa8b5">37,493 frames verified, 3 bad, 2 trips, 0 sequence mismatches; hart 4's own counts agree.</text>
+<text x="48" y="574" font-size="13" fill="#9aa8b5">37,589 frames verified, 5 bad, 2 trips, 0 sequence mismatches; hart 4's own counts agree.</text>
 </g>
 </svg>

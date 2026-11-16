@@ -1,0 +1,78 @@
+### acquisition alone, board idle, 90 s (loop of the first run, with the register note)
+### source: logs/m5/stall/acq-alone-proven-90s.txt
+frames 0 bad 0 gaps 0 trips 0 overruns 89609 fabric_drops 0 runs 18 aborts 0
+[   0.026 cpu0 acq] run 1 started: 5000 slots
+[  90.019 cpu0 acq] stopped: 89865 frames in 18 runs, ring overruns 89609, fabric drops 0
+
+### whole station, 5 minutes, one idle ssh session
+### source: logs/m5/stall/a/acq.log
+[   0.171 cpu0 acq] run 1 started: 5000 slots
+[ 306.634 cpu0 acq] stopped: 306014 frames in 62 runs, ring overruns 0, fabric drops 0
+
+### whole station, 200 s, with the three ssh observers of the demo script and the roll call first
+### source: logs/m5/stall/b/acq.log
+[   0.179 cpu0 acq] run 1 started: 5000 slots
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 311014, drops 0, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 311010, d1 cfg 0xd buf seq 311011, d2 cfg 0xd buf seq 311012, d3 cfg 0x9 buf seq 311013
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 311014, drops 0, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 311010, d1 cfg 0xd buf seq 311011, d2 cfg 0xd buf seq 311012, d3 cfg 0x9 buf seq 311013
+[   7.184 cpu0 acq] run 1: no progress for 2 s, aborting the source
+[ 202.568 cpu0 acq] stopped: 199999 frames in 40 runs, ring overruns 0, fabric drops 0
+
+### acquisition alone, the PC streaming data to the board, 120 s
+### source: logs/m5/stall/c-old-netload-120s.txt
+frames 0 bad 0 gaps 0 trips 0 overruns 116366 fabric_drops 0 runs 24 aborts 0
+[   0.026 cpu0 acq] run 1 started: 5000 slots
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 511014, drops 0, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 511010, d1 cfg 0xd buf seq 511011, d2 cfg 0xd buf seq 511012, d3 cfg 0x9 buf seq 511013
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 511014, drops 0, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 511010, d1 cfg 0xd buf seq 511011, d2 cfg 0xd buf seq 511012, d3 cfg 0x9 buf seq 511013
+[   7.032 cpu0 acq] run 1: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 616014, drops 0, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 616010, d1 cfg 0xd buf seq 616011, d2 cfg 0xd buf seq 616012, d3 cfg 0x9 buf seq 616013
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 616014, drops 0, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 616010, d1 cfg 0xd buf seq 616011, d2 cfg 0xd buf seq 616012, d3 cfg 0x9 buf seq 616013
+[ 114.291 cpu0 acq] run 22: no progress for 2 s, aborting the source
+
+### acquisition alone, the PC streaming data to the board, 300 s
+### source: logs/m5/stall/g-old-netload-300s.txt
+frames 0 bad 0 gaps 0 trips 0 overruns 269928 fabric_drops 0 runs 55 aborts 0
+[   0.028 cpu0 acq] run 1 started: 5000 slots
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1365884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1365880, d1 cfg 0xd buf seq 1365881, d2 cfg 0xd buf seq 1365882, d3 cfg 0x9 buf seq 1365883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1365884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1365880, d1 cfg 0xd buf seq 1365881, d2 cfg 0xd buf seq 1365882, d3 cfg 0x9 buf seq 1365883
+[  22.051 cpu0 acq] run 4: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1370884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1370880, d1 cfg 0xd buf seq 1370881, d2 cfg 0xd buf seq 1370882, d3 cfg 0x9 buf seq 1370883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1370884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1370880, d1 cfg 0xd buf seq 1370881, d2 cfg 0xd buf seq 1370882, d3 cfg 0x9 buf seq 1370883
+[  29.159 cpu0 acq] run 5: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1420884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1420880, d1 cfg 0xd buf seq 1420881, d2 cfg 0xd buf seq 1420882, d3 cfg 0x9 buf seq 1420883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1420884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1420880, d1 cfg 0xd buf seq 1420881, d2 cfg 0xd buf seq 1420882, d3 cfg 0x9 buf seq 1420883
+[  81.333 cpu0 acq] run 15: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4998 of 5000, fabric sent 5000, status 0x2, next_seq 1425884, drops 3372, credits 2, dma stat 0x210, uio events 4998 (read 4998), d0 cfg 0xd buf seq 1425880, d1 cfg 0xd buf seq 1425881, d2 cfg 0x9 buf seq 1425882, d3 cfg 0x9 buf seq 1425883
+DIAG no progress for 2 s: processed 4998 of 5000, fabric sent 5000, status 0x2, next_seq 1425884, drops 3372, credits 2, dma stat 0x210, uio events 4998 (read 4998), d0 cfg 0xd buf seq 1425880, d1 cfg 0xd buf seq 1425881, d2 cfg 0x9 buf seq 1425882, d3 cfg 0x9 buf seq 1425883
+[  88.438 cpu0 acq] run 16: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1430884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1430880, d1 cfg 0xd buf seq 1430881, d2 cfg 0xd buf seq 1430882, d3 cfg 0x9 buf seq 1430883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1430884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1430880, d1 cfg 0xd buf seq 1430881, d2 cfg 0xd buf seq 1430882, d3 cfg 0x9 buf seq 1430883
+[  95.544 cpu0 acq] run 17: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1450884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1450880, d1 cfg 0xd buf seq 1450881, d2 cfg 0xd buf seq 1450882, d3 cfg 0x9 buf seq 1450883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1450884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1450880, d1 cfg 0xd buf seq 1450881, d2 cfg 0xd buf seq 1450882, d3 cfg 0x9 buf seq 1450883
+[ 117.670 cpu0 acq] run 21: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1475884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1475880, d1 cfg 0xd buf seq 1475881, d2 cfg 0xd buf seq 1475882, d3 cfg 0x9 buf seq 1475883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1475884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1475880, d1 cfg 0xd buf seq 1475881, d2 cfg 0xd buf seq 1475882, d3 cfg 0x9 buf seq 1475883
+[ 144.807 cpu0 acq] run 26: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1490884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1490880, d1 cfg 0xd buf seq 1490881, d2 cfg 0xd buf seq 1490882, d3 cfg 0x9 buf seq 1490883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1490884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1490880, d1 cfg 0xd buf seq 1490881, d2 cfg 0xd buf seq 1490882, d3 cfg 0x9 buf seq 1490883
+[ 161.928 cpu0 acq] run 29: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4998 of 5000, fabric sent 5000, status 0x2, next_seq 1495884, drops 3372, credits 2, dma stat 0x210, uio events 4998 (read 4998), d0 cfg 0xd buf seq 1495880, d1 cfg 0xd buf seq 1495881, d2 cfg 0x9 buf seq 1495882, d3 cfg 0x9 buf seq 1495883
+DIAG no progress for 2 s: processed 4998 of 5000, fabric sent 5000, status 0x2, next_seq 1495884, drops 3372, credits 2, dma stat 0x210, uio events 4998 (read 4998), d0 cfg 0xd buf seq 1495880, d1 cfg 0xd buf seq 1495881, d2 cfg 0x9 buf seq 1495882, d3 cfg 0x9 buf seq 1495883
+[ 169.033 cpu0 acq] run 30: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4998 of 5000, fabric sent 5000, status 0x2, next_seq 1520884, drops 3372, credits 2, dma stat 0x210, uio events 4998 (read 4998), d0 cfg 0xd buf seq 1520880, d1 cfg 0xd buf seq 1520881, d2 cfg 0x9 buf seq 1520882, d3 cfg 0x9 buf seq 1520883
+DIAG no progress for 2 s: processed 4998 of 5000, fabric sent 5000, status 0x2, next_seq 1520884, drops 3372, credits 2, dma stat 0x210, uio events 4998 (read 4998), d0 cfg 0xd buf seq 1520880, d1 cfg 0xd buf seq 1520881, d2 cfg 0x9 buf seq 1520882, d3 cfg 0x9 buf seq 1520883
+[ 196.169 cpu0 acq] run 35: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1530884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1530880, d1 cfg 0xd buf seq 1530881, d2 cfg 0xd buf seq 1530882, d3 cfg 0x9 buf seq 1530883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1530884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1530880, d1 cfg 0xd buf seq 1530881, d2 cfg 0xd buf seq 1530882, d3 cfg 0x9 buf seq 1530883
+[ 208.281 cpu0 acq] run 37: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1550884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1550880, d1 cfg 0xd buf seq 1550881, d2 cfg 0xd buf seq 1550882, d3 cfg 0x9 buf seq 1550883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1550884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1550880, d1 cfg 0xd buf seq 1550881, d2 cfg 0xd buf seq 1550882, d3 cfg 0x9 buf seq 1550883
+[ 230.410 cpu0 acq] run 41: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1560884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1560880, d1 cfg 0xd buf seq 1560881, d2 cfg 0xd buf seq 1560882, d3 cfg 0x9 buf seq 1560883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1560884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1560880, d1 cfg 0xd buf seq 1560881, d2 cfg 0xd buf seq 1560882, d3 cfg 0x9 buf seq 1560883
+[ 242.525 cpu0 acq] run 43: no progress for 2 s, aborting the source
+DIAG no frame for 100 ms: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1590884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1590880, d1 cfg 0xd buf seq 1590881, d2 cfg 0xd buf seq 1590882, d3 cfg 0x9 buf seq 1590883
+DIAG no progress for 2 s: processed 4999 of 5000, fabric sent 5000, status 0x2, next_seq 1590884, drops 3372, credits 3, dma stat 0x210, uio events 4999 (read 4999), d0 cfg 0xd buf seq 1590880, d1 cfg 0xd buf seq 1590881, d2 cfg 0xd buf seq 1590882, d3 cfg 0x9 buf seq 1590883
+[ 274.671 cpu0 acq] run 49: no progress for 2 s, aborting the source
+[ 300.020 cpu0 acq] stopped: 270184 frames in 55 runs, ring overruns 269928, fabric drops 0
+

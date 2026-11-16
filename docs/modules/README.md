@@ -15,7 +15,7 @@ Every module is one page with the same structure: what it teaches, what you need
 | [F03 Interrupts from fabric to hart: F2M lines, the PLIC and contexts](F03-fabric-interrupts.md)<br>How a wire in the fabric becomes an interrupt on one chosen hart, and how two operating systems share one controller. | 2 | shared baseline | validated |
 | [F04 Clocks and resets: one PLL, two bus clocks](F04-clocks-and-resets.md)<br>Where the 50 MHz and 125 MHz clocks come from and which logic lives in which domain. | 2 | read | validated |
 | [F05 The tool flow in batch: Libero, the IP vault and FlashPro Express](F05-tool-flow-in-batch.md)<br>Building and programming the fabric from scripts, with no GUI step. | 1 | read | validated |
-| F06 GPIO from both sides: MSS GPIO and fabric CoreGPIO *(planned)*<br>The same LED driven from the processor's GPIO block and from a GPIO core in the fabric, plus switch inputs and a button interrupt. | 2 | shared baseline | planned |
+| [F06 GPIO from both sides: MSS GPIO and fabric CoreGPIO](F06-gpio-both-sides.md)<br>The same LED reached from the processor's GPIO block through the kernel and from a GPIO core in the fabric through a user program, DIP5 to DIP8 read through the gpiochip device, and what software can and cannot observe. | 2 | shared baseline | validated |
 | [F07 Create your own IP in Libero: from a Verilog file to a core in the Catalog](F07-create-your-own-ip-in-libero.md)<br>Turn a Verilog file into a core with an APB slave and an AXI4-Stream interface that Libero recognises, wire it in a SmartDesign and synthesize it, then package it so it appears in the Catalog like a vendor core. By hand in the GUI and then by script. | 3 | Libero on a PC | validated |
 
 ## Boot and Linux
@@ -126,4 +126,4 @@ Every module is one page with the same structure: what it teaches, what you need
 |---|---|---|---|
 | [C01 Direct memory access](../concepts/C01-dma.md)<br>Why hardware writes memory by itself, what a descriptor is, and what it costs. | 1 | read | validated |
 
-70 modules, 66 written.
+70 modules, 67 written.

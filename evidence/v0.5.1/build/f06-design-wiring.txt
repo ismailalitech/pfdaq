@@ -1,0 +1,50 @@
+### MPFS_DISCOVERY_KIT.tcl (Microchip MPFS Discovery Kit reference design v2026.04, the lines about LED, DIP and GPIO pins)
+sd_invert_pins -sd_name ${sd_name} -pin_names {DIP1}
+sd_invert_pins -sd_name ${sd_name} -pin_names {DIP2}
+sd_invert_pins -sd_name ${sd_name} -pin_names {DIP3}
+sd_invert_pins -sd_name ${sd_name} -pin_names {DIP4}
+sd_invert_pins -sd_name ${sd_name} -pin_names {DIP5}
+sd_invert_pins -sd_name ${sd_name} -pin_names {DIP6}
+sd_invert_pins -sd_name ${sd_name} -pin_names {DIP7}
+sd_invert_pins -sd_name ${sd_name} -pin_names {DIP8}
+sd_connect_pins_to_constant -sd_name ${sd_name} -pin_names {MSS_WRAPPER_0:GPIO_2_F2M_24} -value {GND}
+sd_connect_net_to_pins -sd_name ${sd_name} -net_name {MSS_WRAPPER_0_GPIO_2_M2F_21} -pin_names {"MSS_WRAPPER_0:GPIO_2_M2F_21" "OR2_LED5:B" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"DIP1" "MSS_WRAPPER_0:MSS_INT_F2M[6:6]" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"DIP2" "MSS_WRAPPER_0:MSS_INT_F2M[7:7]" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"DIP3" "MSS_WRAPPER_0:MSS_INT_F2M[8:8]" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"DIP4" "MSS_WRAPPER_0:MSS_INT_F2M[9:9]" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"DIP5" "MSS_WRAPPER_0:GPIO_2_F2M_25" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"DIP6" "MSS_WRAPPER_0:GPIO_2_F2M_26" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"DIP7" "MSS_WRAPPER_0:GPIO_2_F2M_27" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"DIP8" "MSS_WRAPPER_0:GPIO_2_F2M_28" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"FIC_3_PERIPHERALS_0:GPIO_OUT[0:0]" "OR2_LED1:A" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"FIC_3_PERIPHERALS_0:GPIO_OUT[1:1]" "OR2_LED2:A" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"FIC_3_PERIPHERALS_0:GPIO_OUT[2:2]" "OR2_LED3:A" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"FIC_3_PERIPHERALS_0:GPIO_OUT[3:3]" "OR2_LED4:A" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"FIC_3_PERIPHERALS_0:GPIO_OUT[4:4]" "OR2_LED5:A" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"FIC_3_PERIPHERALS_0:GPIO_OUT[5:5]" "OR2_LED6:A" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"FIC_3_PERIPHERALS_0:GPIO_OUT[6:6]" "OR2_LED7:A" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"GPIO_1_9_OUT" "MSS_WRAPPER_0:GPIO_1_9_OUT" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"LED1" "OR2_LED1:Y" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"LED2" "OR2_LED2:Y" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"LED3" "OR2_LED3:Y" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"LED4" "OR2_LED4:Y" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"LED5" "OR2_LED5:Y" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"LED6" "OR2_LED6:Y" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"LED7" "OR2_LED7:Y" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"MSS_WRAPPER_0:GPIO_2_M2F_17" "OR2_LED1:B" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"MSS_WRAPPER_0:GPIO_2_M2F_18" "OR2_LED2:B" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"MSS_WRAPPER_0:GPIO_2_M2F_19" "OR2_LED3:B" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"MSS_WRAPPER_0:GPIO_2_M2F_20" "OR2_LED4:B" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"MSS_WRAPPER_0:GPIO_2_M2F_22" "OR2_LED6:B" }
+sd_connect_pins -sd_name ${sd_name} -pin_names {"MSS_WRAPPER_0:GPIO_2_M2F_23" "OR2_LED7:B" }
+### FIC_3_PERIPHERALS.tcl
+sd_mark_pins_unused -sd_name ${sd_name} -pin_names {COREGPIO_C0:INT}
+sd_connect_pins_to_constant -sd_name ${sd_name} -pin_names {COREGPIO_C0:GPIO_IN} -value {GND}
+### GPIO.tcl (CoreGPIO parameters)
+create_and_configure_core -core_vlnv {Actel:DirectCore:CoreGPIO:3.2.102} -component_name {GPIO} -params {\
+"APB_WIDTH:32"  \
+"FIXED_CONFIG_0:true"  \
+"IO_NUM:7"  \
+"IO_TYPE_0:1"  \
+"OE_TYPE:1"   }

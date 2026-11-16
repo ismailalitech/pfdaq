@@ -1,0 +1,175 @@
+### kernel: 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d-dirty
+### gpiodetect
+gpiochip0 [20121000.gpio] (24 lines)
+gpiochip1 [20122000.gpio] (32 lines)
+### gpioinfo lines held by a driver
+gpiochip0 - 24 lines:
+	line   9:	unnamed         	output consumer=led8
+gpiochip1 - 32 lines:
+	line  17:	unnamed         	output consumer=led1
+	line  18:	unnamed         	output consumer=led2
+	line  19:	unnamed         	output consumer=led3
+	line  20:	unnamed         	output consumer=led4
+	line  21:	unnamed         	output consumer=led5
+	line  22:	unnamed         	output consumer=led6
+	line  23:	unnamed         	output consumer=led7
+### /sys/class/leds
+led1 brightness 0 trigger none
+led2 brightness 0 trigger none
+led3 brightness 0 trigger none
+led4 brightness 0 trigger none
+led5 brightness 0 trigger none
+led6 brightness 0 trigger none
+led7 brightness 0 trigger none
+led8 brightness 0 trigger none
+### /sys/kernel/debug/gpio
+gpiochip0: 24 GPIOs, parent: platform/20121000.gpio, 20121000.gpio:
+ gpio-9   (                    |led8                ) out lo 
+
+gpiochip1: 32 GPIOs, parent: platform/20122000.gpio, 20122000.gpio:
+ gpio-17  (                    |led1                ) out lo 
+ gpio-18  (                    |led2                ) out lo 
+ gpio-19  (                    |led3                ) out lo 
+ gpio-20  (                    |led4                ) out lo 
+ gpio-21  (                    |led5                ) out lo 
+ gpio-22  (                    |led6                ) out lo 
+ gpio-23  (                    |led7                ) out lo 
+### UIO devices
+uio0 fpga_lsram addr 0x0000000060000000 size 0x0000000000001000
+uio1 pfdaq_stream_src addr 0x0000000040000000 size 0x0000000000001000
+uio2 dma-controller@60010000 addr 0x0000000060010000 size 0x0000000000001000
+### interrupt lines that have a handler (PLIC sources)
+PLIC source 94: ttyS1
+PLIC source 54: 20108000.spi
+PLIC source 55: 20109000.spi
+PLIC source 64: end0
+PLIC source 65: end0
+PLIC source 66: end0
+PLIC source 67: end0
+PLIC source 119: pfdaq_stream_src
+PLIC source 120: dma-controller@60010000
+PLIC source 80: 20124000.rtc
+PLIC source 58: 2010a000.i2c
+PLIC source 122: 40000200.i2c
+PLIC source 101: mpfs-wdt
+PLIC source 106: mpfs-wdt
+PLIC source 88: mmc0
+PLIC source 96: mpfs-mailbox
+PLIC source 180: miv-ihc-irq
+PLIC source 179: miv-ihc-irq
+PLIC source 178: miv-ihc-irq
+PLIC source 1: ccache_ecc
+PLIC source 3: ccache_ecc
+PLIC source 4: ccache_ecc
+PLIC source 2: ccache_ecc
+PLIC source 5: 3000000.dma-controller
+PLIC source 6: 3000000.dma-controller
+PLIC source 7: 3000000.dma-controller
+PLIC source 8: 3000000.dma-controller
+PLIC source 9: 3000000.dma-controller
+PLIC source 10: 3000000.dma-controller
+PLIC source 11: 3000000.dma-controller
+PLIC source 12: 3000000.dma-controller
+### gpio_both_sides -n
+mss  chip /dev/gpiochip1 label 20122000.gpio lines 32
+mss  line owners (kernel = held by a driver, out/in = direction the driver reports):
+mss    line 16  out  free    consumer ""
+mss    line 17  out  kernel  consumer "led1"
+mss    line 18  out  kernel  consumer "led2"
+mss    line 19  out  kernel  consumer "led3"
+mss    line 20  out  kernel  consumer "led4"
+mss    line 21  out  kernel  consumer "led5"
+mss    line 22  out  kernel  consumer "led6"
+mss    line 23  out  kernel  consumer "led7"
+mss    line 24  out  free    consumer ""
+mss    line 25  in   free    consumer ""
+mss    line 26  in   free    consumer ""
+mss    line 27  in   free    consumer ""
+mss    line 28  in   free    consumer ""
+mss    line 29  out  free    consumer ""
+mss  DIP5..DIP8 read 0 0 0 0 (read 1)
+mss  DIP5..DIP8 read 0 0 0 0 (read 2)
+mss  request of line 17 (led1, held by leds-gpio): Device or resource busy
+core CoreGPIO at UIO page + 0x100 (0x4000_0100)
+core CFG0..CFG7 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+core IRQ 00000000  GPIO_IN 00000000  GPIO_OUT 00000000
+read-only run: nothing written
+### gpio_both_sides, run 1
+mss  chip /dev/gpiochip1 label 20122000.gpio lines 32
+mss  line owners (kernel = held by a driver, out/in = direction the driver reports):
+mss    line 16  out  free    consumer ""
+mss    line 17  out  kernel  consumer "led1"
+mss    line 18  out  kernel  consumer "led2"
+mss    line 19  out  kernel  consumer "led3"
+mss    line 20  out  kernel  consumer "led4"
+mss    line 21  out  kernel  consumer "led5"
+mss    line 22  out  kernel  consumer "led6"
+mss    line 23  out  kernel  consumer "led7"
+mss    line 24  out  free    consumer ""
+mss    line 25  in   free    consumer ""
+mss    line 26  in   free    consumer ""
+mss    line 27  in   free    consumer ""
+mss    line 28  in   free    consumer ""
+mss    line 29  out  free    consumer ""
+mss  DIP5..DIP8 read 0 0 0 0 (read 1)
+mss  DIP5..DIP8 read 0 0 0 0 (read 2)
+mss  request of line 17 (led1, held by leds-gpio): Device or resource busy
+core CoreGPIO at UIO page + 0x100 (0x4000_0100)
+core CFG0..CFG7 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+core IRQ 00000000  GPIO_IN 00000000  GPIO_OUT 00000000
+core GPIO_OUT after writing 0xffffffff: 0000007f
+core GPIO_OUT after writing 0:          00000000
+core GPIO_OUT after writing bit 0:      00000001
+core GPIO_OUT after writing bit 1:      00000002
+core GPIO_OUT after writing bit 2:      00000004
+core GPIO_OUT after writing bit 3:      00000008
+core GPIO_OUT after writing bit 4:      00000010
+core GPIO_OUT after writing bit 5:      00000020
+core GPIO_OUT after writing bit 6:      00000040
+core GPIO_OUT after writing bit 7:      00000000
+both LED1: MSS GPIO2 line 17 (kernel LED class) and CoreGPIO GPIO_OUT bit 0
+both  mss=0 core=0: led1 brightness 0, debugfs gpio-17 out lo | CoreGPIO OUT bit0 0, IN 00000000
+both  mss=0 core=1: led1 brightness 0, debugfs gpio-17 out lo | CoreGPIO OUT bit0 1, IN 00000000
+both  mss=1 core=0: led1 brightness 1, debugfs gpio-17 out hi | CoreGPIO OUT bit0 0, IN 00000000
+both  mss=1 core=1: led1 brightness 1, debugfs gpio-17 out hi | CoreGPIO OUT bit0 1, IN 00000000
+both  restored: led1 brightness 0, GPIO_OUT 00000000
+### gpio_both_sides, run 2
+mss  chip /dev/gpiochip1 label 20122000.gpio lines 32
+mss  line owners (kernel = held by a driver, out/in = direction the driver reports):
+mss    line 16  out  free    consumer ""
+mss    line 17  out  kernel  consumer "led1"
+mss    line 18  out  kernel  consumer "led2"
+mss    line 19  out  kernel  consumer "led3"
+mss    line 20  out  kernel  consumer "led4"
+mss    line 21  out  kernel  consumer "led5"
+mss    line 22  out  kernel  consumer "led6"
+mss    line 23  out  kernel  consumer "led7"
+mss    line 24  out  free    consumer ""
+mss    line 25  in   free    consumer ""
+mss    line 26  in   free    consumer ""
+mss    line 27  in   free    consumer ""
+mss    line 28  in   free    consumer ""
+mss    line 29  out  free    consumer ""
+mss  DIP5..DIP8 read 0 0 0 0 (read 1)
+mss  DIP5..DIP8 read 0 0 0 0 (read 2)
+mss  request of line 17 (led1, held by leds-gpio): Device or resource busy
+core CoreGPIO at UIO page + 0x100 (0x4000_0100)
+core CFG0..CFG7 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+core IRQ 00000000  GPIO_IN 00000000  GPIO_OUT 00000000
+core GPIO_OUT after writing 0xffffffff: 0000007f
+core GPIO_OUT after writing 0:          00000000
+core GPIO_OUT after writing bit 0:      00000001
+core GPIO_OUT after writing bit 1:      00000002
+core GPIO_OUT after writing bit 2:      00000004
+core GPIO_OUT after writing bit 3:      00000008
+core GPIO_OUT after writing bit 4:      00000010
+core GPIO_OUT after writing bit 5:      00000020
+core GPIO_OUT after writing bit 6:      00000040
+core GPIO_OUT after writing bit 7:      00000000
+both LED1: MSS GPIO2 line 17 (kernel LED class) and CoreGPIO GPIO_OUT bit 0
+both  mss=0 core=0: led1 brightness 0, debugfs gpio-17 out lo | CoreGPIO OUT bit0 0, IN 00000000
+both  mss=0 core=1: led1 brightness 0, debugfs gpio-17 out lo | CoreGPIO OUT bit0 1, IN 00000000
+both  mss=1 core=0: led1 brightness 1, debugfs gpio-17 out hi | CoreGPIO OUT bit0 0, IN 00000000
+both  mss=1 core=1: led1 brightness 1, debugfs gpio-17 out hi | CoreGPIO OUT bit0 1, IN 00000000
+both  restored: led1 brightness 0, GPIO_OUT 00000000
+### after: led1 brightness 0;  gpio-17  (                    |led1                ) out lo 

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" width="900" height="330" role="img" aria-labelledby="t d">
+<title id="t">Where the other board pins go. DIP5 to DIP8 are inputs, through an inverter, to MSS GPIO2 bits 25 to 28, so they can be read through the gpiochip device. DIP1 to DIP4 are not GPIO lines: they are interrupt inputs F2M[6] to F2M[9], PLIC sources 124 to 127, and no handler is registered for them on this image. LED8 is driven by line 9 of the first GPIO chip, with no fabric logic in between.</title><desc id="d">Where the other board pins go. DIP5 to DIP8 are inputs, through an inverter, to MSS GPIO2 bits 25 to 28, so they can be read through the gpiochip device. DIP1 to DIP4 are not GPIO lines: they are interrupt inputs F2M[6] to F2M[9], PLIC sources 124 to 127, and no handler is registered for them on this image. LED8 is driven by line 9 of the first GPIO chip, with no fabric logic in between.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 21.50s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 21.50s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}6.05%{opacity:1}9.05%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="330" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M180,55 L290,55" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:1.30s" d="M180,55 L290,55" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e1">
+<path d="M490,55 L610,55" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.90s" d="M490,55 L610,55" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="532.12" y="33" width="35.76" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="550" y="45.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">read</text>
+</g>
+<g id="e2">
+<path d="M180,165 L290,165" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:7.80s" d="M180,165 L290,165" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e3">
+<path d="M490,165 L610,165" fill="none" stroke="#ef6f6c" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-bad)"/>
+<path class="hl flow" style="animation-delay:10.40s" d="M490,165 L610,165" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="499.92" y="143" width="100.16" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="550" y="155.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">nobody listens</text>
+</g>
+<g id="e4">
+<path d="M610,275 L490,275" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:14.30s" d="M610,275 L490,275" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="525.68" y="253" width="48.64" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="550" y="265.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">writes</text>
+</g>
+<g id="e5">
+<path d="M290,275 L180,275" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:16.90s" d="M290,275 L180,275" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="d58">
+<rect x="10" y="20" width="170" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="95" y="51" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">DIP5 to DIP8</text>
+<text x="95" y="68" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">switch pins, inverted</text>
+<rect class="hl" style="animation-delay:0.00s" x="9" y="19" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="d14">
+<rect x="10" y="130" width="170" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="95" y="161" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">DIP1 to DIP4</text>
+<text x="95" y="178" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">switch pins, inverted</text>
+<rect class="hl" style="animation-delay:6.50s" x="9" y="129" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="l8">
+<rect x="10" y="240" width="170" height="70" rx="9" fill="#17382f" stroke="#4fd1a5" stroke-width="1.5"/>
+<text x="95" y="271" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">LED8</text>
+<text x="95" y="288" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">pin GPIO_1_9_OUT</text>
+<rect class="hl" style="animation-delay:18.20s" x="9" y="239" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="g2">
+<rect x="290" y="20" width="200" height="70" rx="9" fill="#232c44" stroke="#8da6d4" stroke-width="1.5"/>
+<text x="390" y="51" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">MSS GPIO2 bits 25 to 28</text>
+<text x="390" y="68" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">inputs F2M_25 to F2M_28</text>
+<rect class="hl" style="animation-delay:2.60s" x="289" y="19" width="202" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="plic">
+<rect x="290" y="130" width="200" height="70" rx="9" fill="#232c44" stroke="#8da6d4" stroke-width="1.5"/>
+<text x="390" y="161" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">PLIC sources 124 to 127</text>
+<text x="390" y="178" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">fabric lines F2M[6] to [9]</text>
+<rect class="hl" style="animation-delay:9.10s" x="289" y="129" width="202" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="g0">
+<rect x="290" y="240" width="200" height="70" rx="9" fill="#232c44" stroke="#8da6d4" stroke-width="1.5"/>
+<text x="390" y="271" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">MSS GPIO1 bit 9</text>
+<text x="390" y="288" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">gpiochip0 line 9</text>
+<rect class="hl" style="animation-delay:15.60s" x="289" y="239" width="202" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="rd">
+<rect x="610" y="20" width="280" height="70" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="750" y="51" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">gpiochip1 read</text>
+<text x="750" y="68" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">request lines 25 to 28 as inputs</text>
+<rect class="hl" style="animation-delay:5.20s" x="609" y="19" width="282" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="none">
+<rect x="610" y="130" width="280" height="70" rx="9" fill="#43201f" stroke="#ef6f6c" stroke-width="1.5"/>
+<text x="750" y="161" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">no handler</text>
+<text x="750" y="178" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">no entry in /proc/interrupts</text>
+<rect class="hl" style="animation-delay:11.70s" x="609" y="129" width="282" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="drv">
+<rect x="610" y="240" width="280" height="70" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="750" y="271" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">leds-gpio driver</text>
+<text x="750" y="288" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">/sys/class/leds/led8</text>
+<rect class="hl" style="animation-delay:13.00s" x="609" y="239" width="282" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+</svg>
