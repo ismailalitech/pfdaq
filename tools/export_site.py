@@ -368,6 +368,10 @@ controller over an AXI4-Stream link and raises two latency interrupts. The other
 - **Verification.** Testbenches that only record, judged by independent Python models; a board suite with 27 functional
   tests, run from a freshly written card.
 - **Measurement.** The interrupt-to-acknowledge latency at five software levels, measured by the fabric itself.
+- **Applications and studies built on it.** A [four-core monitoring station](@M10@) in which one core acquires, one
+  analyses, one reports and the real-time core stops the source on a fault, recorded on the board; the cost of three
+  ways to signal another core ([M08](@M08@)); cached memory and DMA ([I08](@I08@)); the fabric DMA against the
+  chip's own DMA ([I09](@I09@)); and a parallel verifier that raises the verified speed ([P08](@P08@)).
 
 The parts of the project, each with its notes and numbered labs, are listed at the top of this page, in the order a
 reader would work through them.
@@ -407,9 +411,11 @@ Every number is traced to a record with the command and the conditions that prod
 | Does it come up every time? | 30 of 30 warm reboots, both systems up |
 | Are injected faults caught? | Every corrupted CRC, skipped sequence number and flipped bit, in all three payload types |
 | Hardware path speed | 931 to 947 MB/s into memory (measured on an earlier fabric version) |
-| Verified path speed | 29.6 MB/s for counter payload: one Linux core copying and checking |
+| Verified path speed | 29.6 MB/s for counter payload: one Linux core copying and checking; 70.6 MB/s with three worker threads ([P08](@P08@)) |
 | Interrupt response, supervisor core | 0.5 microseconds typical, 3.1 microseconds worst seen, none missed in 600,000 |
 | Interrupt response, Linux user space | 78 microseconds typical, up to 5.1 ms |
+| Signalling the real-time core from Linux | RPMsg 0.89 ms; a polled flag in shared memory 3 microseconds; a fabric interrupt 4 microseconds ([M08](@M08@)) |
+| Four cores as one application | One recorded 64-second run: a trip on bad frames and a trip on a missed deadline, both caught and each reset ([M10](@M10@)) |
 
 Limits, stated plainly:
 
@@ -418,6 +424,11 @@ Limits, stated plainly:
 - **Linux cannot restart the supervisor core.** It can stop it; the boot monitor rejects the restart. Recovery is a
   reboot. See [the case study](@K11@).
 - The ten-minute, 17.8 GB soak was run on an earlier fabric version and has not been repeated on the final one.
+- **The real-time core's memory protection is not a fence on this board.** The boot monitor leaves one locked entry
+  that allows everything, so the planned violation test is refused. See [M09](@M09@).
+- **Under heavy network load the Linux capture loop can miss interrupt events.** The monitoring station's loop was
+  changed to read the descriptors instead; the proven capture tool was not, and timed out in 15 of 20 runs under that
+  load ([the stall in M10](@M10@)).
 - Everything was measured on one board.
 - The code is public: [github.com/ismailalitech/pfdaq](https://github.com/ismailalitech/pfdaq). The labs run from it.
 """
@@ -522,7 +533,7 @@ def main():
 
     # the project page and its parts
     write(os.path.join(project_dir, '_index.md'),
-          WORK.replace('@DATE@', "'%s'" % DATE).replace('@I04@', site.url('I04')).replace('@K10@', site.url('K10')).replace('@K11@', site.url('K11')).replace('@GUIDE@', site.url('X03')), written)
+          WORK.replace('@DATE@', "'%s'" % DATE).replace('@I04@', site.url('I04')).replace('@M10@', site.url('M10')).replace('@M08@', site.url('M08')).replace('@M09@', site.url('M09')).replace('@I08@', site.url('I08')).replace('@I09@', site.url('I09')).replace('@P08@', site.url('P08')).replace('@K10@', site.url('K10')).replace('@K11@', site.url('K11')).replace('@GUIDE@', site.url('X03')), written)
     for sub, (title, desc, weight) in SUBTOPICS.items():
         old = PLACE_TOPIC(sub)
         aliases = ['/topics/%s/%s/' % (old, sub)] if old else []
