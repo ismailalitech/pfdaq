@@ -337,7 +337,7 @@ results:
     fabric: "0.5.1"
     date: 2026-11-15
     command: "python3 experiments/lab-assertions/planted_bugs.py /tmp/planted-bugs a_wready"
-    conditions: "Scratch copy of the RTL with wire w_ready = ~out_valid | TREADY changed to ~out_valid, run with make -C hw sim-assert ASSERT_RTL=<copy>."
+    conditions: "Scratch copy of the RTL with wire w_ready = ~out_valid | TREADY changed to ~out_valid, run with make -C hw sim-assert ASSERT_RTL set to that copy."
   - id: sim-planted-bug-emit
     title: "Planted bug: the generator ignores w_ready. TDATA changes under a stalled sink and rule 2 fires"
     file: sim/planted-bug-emit.txt
@@ -345,7 +345,7 @@ results:
     fabric: "0.5.1"
     date: 2026-11-15
     command: "python3 experiments/lab-assertions/planted_bugs.py /tmp/planted-bugs b_emit"
-    conditions: "Scratch copy of the RTL with w_ready removed from the definition of emit, run with make -C hw sim-assert ASSERT_RTL=<copy>."
+    conditions: "Scratch copy of the RTL with w_ready removed from the definition of emit, run with make -C hw sim-assert ASSERT_RTL set to that copy."
   - id: sim-planted-bug-force-abort
     title: "Planted bug: FORCE_ABORT leaves the output register full. Rule 17 fires at the cause, 208 ns before the old monitor"
     file: sim/planted-bug-force-abort.txt
@@ -353,7 +353,7 @@ results:
     fabric: "0.5.1"
     date: 2026-11-15
     command: "python3 experiments/lab-assertions/planted_bugs.py /tmp/planted-bugs c_force"
-    conditions: "Scratch copy of the RTL with out_valid <= 1'b0 removed from the FORCE_ABORT branch, run with make -C hw sim-assert ASSERT_RTL=<copy>."
+    conditions: "Scratch copy of the RTL with out_valid <= 1'b0 removed from the FORCE_ABORT branch, run with make -C hw sim-assert ASSERT_RTL set to that copy."
   - id: sim-assert-extra-runs
     title: "Coverage after five added runs in a scratch copy of the stream testbench: 70 of 89 bins, checks still pass"
     file: sim/coverage-extra-runs.txt
@@ -369,7 +369,7 @@ results:
     fabric: "0.5.1"
     date: 2026-11-15
     command: "sh experiments/P08-parallel-verify/run_all.sh 8 on the board, as root, after pfdaq_cap -L 0 (pfdaq_cap_mt built statically with a RISC-V Linux GCC; pfdaq_cap is the image's unchanged tool)"
-    conditions: "Proven pfdaq-v051 image, FreeRTOS on hart 4, board idle, nothing else using the stream source or the DMA. 32 bursts of 1 MiB per run. Eight runs per condition; one run per fault-injection row. Labels: base = pfdaq_cap without -r, base_r = with -r, mt/<payload>/j<N> = N worker threads."
+    conditions: "Proven pfdaq-v051 image, FreeRTOS on hart 4, board idle, nothing else using the stream source or the DMA. 32 bursts of 1 MiB per run. Eight runs per condition; one run per fault-injection row. Labels: base = pfdaq_cap without -r, base_r = with -r, mt/PAYLOAD/jN = N worker threads."
   - id: p08-parallel-summary
     title: "Per-condition minimum, mean and maximum of the multi-threaded capture runs"
     file: board/p08-parallel-summary.txt
