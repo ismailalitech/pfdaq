@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" width="900" height="470" role="img" aria-labelledby="t d">
+<title id="t">One Linux program pinned to a cpu signals hart 4 three ways and waits for the answer. RPMsg: the program writes to the rpmsg device, the message goes through the shared rings and the Mi-V inter-hart interrupt wakes the supervisor task, which answers through the rings. Flag: the program writes req in a 4 KiB page of the non-cached DDR window at 0xC9E00000 and hart 4, polling inside one RPMsg call, writes ack. Interrupt: the program writes irq_req in the same page and then writes CTRL.ONESHOT of latency channel 1 in the fabric, which raises F2M 5, PLIC source 123, taken by hart 4 in machine mode; the handler writes irq_ack.</title><desc id="d">One Linux program pinned to a cpu signals hart 4 three ways and waits for the answer. RPMsg: the program writes to the rpmsg device, the message goes through the shared rings and the Mi-V inter-hart interrupt wakes the supervisor task, which answers through the rings. Flag: the program writes req in a 4 KiB page of the non-cached DDR window at 0xC9E00000 and hart 4, polling inside one RPMsg call, writes ack. Interrupt: the program writes irq_req in the same page and then writes CTRL.ONESHOT of latency channel 1 in the fabric, which raises F2M 5, PLIC source 123, taken by hart 4 in machine mode; the handler writes irq_ack.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 22.40s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 22.40s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}5.36%{opacity:1}8.36%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="900" height="470" rx="12" fill="#12171d"/>
+<g id="e0">
+<path d="M129,190 L129,65 L250,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:1.20s" d="M129,190 L129,65 L250,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e1">
+<path d="M420,65 L470,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:3.60s" d="M420,65 L470,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e2">
+<path d="M640,65 L690,65" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:6.00s" d="M640,65 L690,65" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e3">
+<path d="M180,235 L400,235" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:8.40s" d="M180,235 L400,235" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+<rect x="243.14" y="213" width="93.72" height="17" rx="4" fill="#12171d" fill-opacity="0.85"/>
+<text x="290" y="225.5" text-anchor="middle" font-size="11.5" fill="#e6ecf1">req / irq_req</text>
+</g>
+<g id="e4">
+<path d="M650,235 L690,235" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:10.80s" d="M650,235 L690,235" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e5">
+<path d="M129,280 L129,405 L250,405" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:13.20s" d="M129,280 L129,405 L250,405" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e6">
+<path d="M420,405 L470,405" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:15.60s" d="M420,405 L470,405" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="e7">
+<path d="M640,405 L690,405" fill="none" stroke="#7d8c9b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#ar-plain)"/>
+<path class="hl flow" style="animation-delay:18.00s" d="M640,405 L690,405" fill="none" stroke="#ffd166" stroke-width="3.4" stroke-linejoin="round" marker-end="url(#ar-hl)"/>
+</g>
+<g id="prog">
+<rect x="10" y="190" width="170" height="90" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="95" y="222.5" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">m08_rtt</text>
+<text x="95" y="239.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">pinned to one cpu</text>
+<text x="95" y="256.5" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">CLOCK_MONOTONIC</text>
+<rect class="hl" style="animation-delay:0.00s" x="9" y="189" width="172" height="92" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="dev">
+<rect x="250" y="30" width="170" height="70" rx="9" fill="#2f2447" stroke="#b08fe0" stroke-width="1.5"/>
+<text x="335" y="61" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">/dev/rpmsgN</text>
+<text x="335" y="78" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">write, poll, read</text>
+<rect class="hl" style="animation-delay:2.40s" x="249" y="29" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="rings">
+<rect x="470" y="30" width="170" height="70" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="555" y="61" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Shared rings</text>
+<text x="555" y="78" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">0x91D0_0000</text>
+<rect class="hl" style="animation-delay:4.80s" x="469" y="29" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="ihc">
+<rect x="690" y="30" width="200" height="70" rx="9" fill="#232c44" stroke="#8da6d4" stroke-width="1.5"/>
+<text x="790" y="61" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Mi-V IHC interrupt</text>
+<text x="790" y="78" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">mailbox doorbell</text>
+<rect class="hl" style="animation-delay:7.20s" x="689" y="29" width="202" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="page">
+<rect x="400" y="200" width="250" height="70" rx="9" fill="#352f1c" stroke="#c0a95f" stroke-width="1.5"/>
+<text x="525" y="231" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Page in the non-cached window</text>
+<text x="525" y="248" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">0xC9E0_0000, four words used</text>
+<rect class="hl" style="animation-delay:9.60s" x="399" y="199" width="252" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="poll">
+<rect x="690" y="200" width="200" height="70" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="790" y="231" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Hart 4 polls</text>
+<text x="790" y="248" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">inside one RPMsg call</text>
+<rect class="hl" style="animation-delay:12.00s" x="689" y="199" width="202" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="reg">
+<rect x="250" y="370" width="170" height="70" rx="9" fill="#1a3626" stroke="#5fbf84" stroke-width="1.5"/>
+<text x="335" y="401" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Latency channel 1</text>
+<text x="335" y="418" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">CTRL.ONESHOT</text>
+<rect class="hl" style="animation-delay:14.40s" x="249" y="369" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="plic">
+<rect x="470" y="370" width="170" height="70" rx="9" fill="#232c44" stroke="#8da6d4" stroke-width="1.5"/>
+<text x="555" y="401" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">F2M 5 to the PLIC</text>
+<text x="555" y="418" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">source 123, hart 4</text>
+<rect class="hl" style="animation-delay:16.80s" x="469" y="369" width="172" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<g id="isr">
+<rect x="690" y="370" width="200" height="70" rx="9" fill="#1b3047" stroke="#5aa0d6" stroke-width="1.5"/>
+<text x="790" y="401" text-anchor="middle" font-size="14" font-weight="bold" fill="#e6ecf1">Hart 4 handler</text>
+<text x="790" y="418" text-anchor="middle" font-size="11.5" font-weight="normal" fill="#9aa8b5">writes irq_ack, then ACK</text>
+<rect class="hl" style="animation-delay:19.20s" x="689" y="369" width="202" height="72" rx="9" fill="#ffd166" fill-opacity="0.10" stroke="#ffd166" stroke-width="3"/>
+</g>
+<text x="250" y="16" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">1  RPMsg: message through the rings and the mailbox</text>
+<text x="400" y="186" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">2  Flag: both sides read and write the same word</text>
+<text x="250" y="356" text-anchor="start" font-size="12" fill="#9aa8b5" font-weight="bold">3  Interrupt: one register write raises a fabric interrupt</text>
+<text x="10" y="450" text-anchor="start" font-size="12" fill="#9aa8b5">The answer of every method is a word in the page or a message back; the program stops its clock when it sees it.</text>
+</svg>

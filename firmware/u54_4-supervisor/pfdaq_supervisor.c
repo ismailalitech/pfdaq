@@ -36,6 +36,11 @@
 
 #ifdef PFDAQ_SUPERVISOR
 
+/* At most one demo variant per build; none gives the production supervisor. */
+#if (defined(PFDAQ_AMP_DEMO) + defined(PFDAQ_AMP_M08) + defined(PFDAQ_AMP_M09)) > 1
+#error "PFDAQ_AMP_DEMO, PFDAQ_AMP_M08 and PFDAQ_AMP_M09 exclude each other"
+#endif
+
 #ifdef PFDAQ_AMP_DEMO
 /* demo variant (experiments/amp-station): station protocol and protection logic, see the header */
 #include <stdarg.h>
@@ -43,6 +48,18 @@
 #define PFDAQ_RX_MAX    sizeof(struct st_msg)       /* the demo receives 64-byte messages as well */
 #else
 #define PFDAQ_RX_MAX    sizeof(struct pfdaq_msg)
+#endif
+
+#ifdef PFDAQ_AMP_M08
+/* demo variant (experiments/amp-m08): answers a polled flag and the latency-channel-1 interrupt, see the header */
+#include "pfdaq_m08.h"
+#endif
+
+#ifdef PFDAQ_AMP_M09
+/* demo variant (experiments/amp-m09): reads the PMP, runs a fenced user-mode test once, see the headers */
+#include <stdarg.h>
+#include "pfdaq_pmp.h"
+#include "pfdaq_pmp_hw.h"
 #endif
 
 #define PFDAQ_SUP_CHANNEL   "pfdaq-supervisor"
@@ -112,6 +129,9 @@ static void delay_ms(uint32_t ms) { vTaskDelay(ms); }
 
 static volatile uint32_t lat1_isr_count;
 static volatile uint32_t lat1_task_mode;
+#ifdef PFDAQ_AMP_M08
+static volatile struct m08_shm *volatile m08_shm;     /* set by M08_T_SETUP, never before */
+#endif
 #ifndef PFDAQ_BM
 static SemaphoreHandle_t lat1_sem;
 #endif
@@ -135,6 +155,10 @@ uint8_t PLIC_f2m_5_IRQHandler(void)
         portEND_SWITCHING_ISR(woken);
         return EXT_IRQ_KEEP_ENABLED;
     }
+#endif
+#ifdef PFDAQ_AMP_M08
+    if (m08_shm)
+        m08_irq_answer(m08_shm);    /* interrupt method of experiments/amp-m08: answer in shared memory first */
 #endif
     SRC_REG(LAT1_ACK) = 1u;         /* this write drops the line and stops the fabric timer */
     lat1_isr_count++;
@@ -233,6 +257,149 @@ static void st_send(uint32_t remote, const void *buf, uint32_t len)
 static void st_delay(uint32_t ms) { delay_ms(ms); }
 #endif
 
+#ifdef PFDAQ_AMP_M08
+/*
+ * Experiment M08 (three ways to signal another hart). These three message types are answered before the
+ * fabric snapshot of the production path, which waits 1 ms and would hide what is being compared.
+ *   SETUP  burst = physical address of the shared block (must be inside the non-cached window)
+ *   POLL   next_seq = longest time to poll in ms; the flag method runs inside this call, the answer
+ *          is sent when Linux sets `stop` or the time has run out
+ *   PING   nothing to do but echo the number (burst) in fabric_frames, answered at once
+ * Answer fields: status_rx, fabric_seq, fabric_frames carry what each type returns (see below).
+ */
+static void m08_handle(rpmsg_comm_stack_t *rp, uint32_t remote_addr, const struct pfdaq_msg *msg, uint32_t state)
+{
+    struct pfdaq_ack ack;
+    uint32_t a = 0, b = 0, c = 0;
+
+    switch (msg->type)
+    {
+        case M08_T_SETUP:
+            if (!m08_block_ok(msg->burst))
+            {
+                m08_shm = 0;
+                a = 0xFFFFFFFFu;        /* refused: not a page inside the non-cached window */
+                printf_to(UART_APP, "[m08] shared block 0x%08x refused (outside the non-cached window)\r\n",
+                          (unsigned int)msg->burst);
+            }
+            else
+            {
+                m08_shm = (volatile struct m08_shm *)(uintptr_t)msg->burst;
+                a = m08_shm->magic;     /* what hart 4 sees there: Linux wrote M08_MAGIC before sending SETUP */
+                b = m08_shm->version;
+                c = m08_shm->irq_count;
+                printf_to(UART_APP, "[m08] shared block at 0x%08x, magic %08x (%s), interrupt answers enabled\r\n",
+                          (unsigned int)msg->burst, (unsigned int)a, (a == M08_MAGIC) ? "ok" : "UNEXPECTED");
+            }
+            break;
+
+        case M08_T_POLL:
+            if (!m08_shm)
+            {
+                a = 0xFFFFFFFEu;        /* no SETUP yet */
+            }
+            else
+            {
+                uint32_t timed_out = 0;
+                a = m08_poll(m08_shm, now_ms, msg->next_seq, &timed_out);
+                b = timed_out;
+                c = m08_shm->poll_answers;
+                printf_to(UART_APP, "[m08] poll ended: %u answers, %s, %u interrupts so far\r\n", (unsigned int)a,
+                          timed_out ? "time ran out" : "stopped by Linux", (unsigned int)m08_shm->irq_count);
+            }
+            break;
+
+        default:                        /* M08_T_PING */
+            c = msg->burst;             /* echo the request number, Linux matches late answers by it */
+            break;
+    }
+
+    ack.magic = PFDAQ_ACK_MAGIC;
+    ack.type = msg->type;
+    ack.state = state;
+    ack.status_rx = a;                  /* SETUP: magic seen; POLL: answers given in this call; PING: 0 */
+    ack.deadline_miss = 0;
+    ack.seq_mismatch = 0;
+    ack.fabric_seq = b;                 /* SETUP: version seen; POLL: 1 if the time ran out */
+    ack.fabric_frames = c;              /* SETUP: interrupts handled so far; POLL: answers since SETUP; PING: the number sent */
+    ack.uptime_ms = (now_ms() & 0x7FFFFFFFu) | PFDAQ_BUILD_TAG;
+    (void)rpmsg_lite_send(rp->my_rpmsg, rp->ctrl_ept, remote_addr, (char *)&ack, sizeof(ack), RL_BLOCK);
+}
+#endif
+
+#ifdef PFDAQ_AMP_M09
+/*
+ * Experiment M09 (fencing the real-time hart with PMP). The report is read-only and printed at start.
+ * The user-mode test runs only when Linux asks for it (M09_T_RUN), once per request, never at boot, so a
+ * hart 4 that misbehaves can still come up and be inspected. Everything else is in pfdaq_pmp.h and
+ * pfdaq_pmp_hw.h.
+ */
+int ee_vsprintf(char *buf, const char *fmt, va_list args);     /* the example's printf, defined in ee_vsprintf.c */
+
+static void m09_print(const char *fmt, ...)
+{
+    char line[240];
+    va_list ap;
+    va_start(ap, fmt);
+    (void)ee_vsprintf(line, fmt, ap);     /* MAX_TEXT_LENGTH of the example is 256: every line above is shorter */
+    va_end(ap);
+    printf_to(UART_APP, "%s\r\n", line);
+}
+
+static const struct m09_io m09_io = { m09_print, m09_hw_read_state, m09_hw_write_state, m09_hw_run_user };
+
+/* where the plan puts its regions: the 1 MiB image at 0x91C00000, and the rings, buffers and resource table up to 0x91D51000 */
+static void m09_geom(struct m09_geom *g)
+{
+    g->canary = m09_hw_canary_base();
+    g->fw_base = 0x91C00000ull;
+    g->fw_size = 0x100000ull;
+    g->ring_lo = 0x91D00000ull;
+    g->ring_hi = 0x91D51000ull;
+    g->own_data = m09_hw_own_addr();
+    g->linux_addr = 0x80200000ull;        /* start of the DDR window Linux (U-Boot, kernel) uses: only ever loaded from */
+    g->hss_addr = 0x0A000000ull;          /* L2 scratchpad, where the boot monitor runs (hss-l2scratch.lds): only ever loaded from */
+}
+
+static void m09_handle(rpmsg_comm_stack_t *rp, uint32_t remote_addr, const struct pfdaq_msg *msg, uint32_t state)
+{
+    struct pfdaq_ack ack;
+    struct pmp_state st;
+    unsigned active, locked, idx = 0;
+    int open = 0;
+    uint32_t res = 0, nlog = 0, ended = 0;
+
+    m09_hw_read_state(&st);
+    pmp_count(&st, &active, &locked);
+    if (msg->type == M09_T_RUN)
+    {
+        struct m09_geom g;
+        struct m09_run run;
+        m09_geom(&g);
+        printf_to(UART_APP, "[m09] RUN requested by Linux\r\n");
+        res = (uint32_t)m09_run(&m09_io, &g, &run);
+        nlog = run.nlog;
+        ended = (uint32_t)run.ended;
+    }
+    else
+    {
+        m09_report(&m09_io, &st);
+        if (pmp_first_locked(&st, &idx, &open))
+            res = open ? 2u : 1u;           /* REPORT: 0 nothing locked, 1 a locked entry, 2 a locked entry open to everything */
+    }
+    ack.magic = PFDAQ_ACK_MAGIC;
+    ack.type = msg->type;
+    ack.state = state;
+    ack.status_rx = res;                    /* RUN: enum m09_result; REPORT: see above */
+    ack.deadline_miss = ended;              /* RUN: enum m09_ended */
+    ack.seq_mismatch = 0;
+    ack.fabric_seq = nlog;                  /* RUN: access faults caught */
+    ack.fabric_frames = (active << 16) | locked;   /* active and locked entries, as found at the start of the request */
+    ack.uptime_ms = (now_ms() & 0x7FFFFFFFu) | PFDAQ_BUILD_TAG;
+    (void)rpmsg_lite_send(rp->my_rpmsg, rp->ctrl_ept, remote_addr, (char *)&ack, sizeof(ack), RL_BLOCK);
+}
+#endif
+
 void pfdaq_supervisor(rpmsg_comm_stack_handle_t handle)
 {
     rpmsg_comm_stack_t *rp = (rpmsg_comm_stack_t *)handle;
@@ -279,6 +446,18 @@ void pfdaq_supervisor(rpmsg_comm_stack_handle_t handle)
     printf_to(UART_APP, "[pfdaq-sup] channel \"%s\" announced, state IDLE\r\n", PFDAQ_SUP_CHANNEL);
 #ifdef PFDAQ_AMP_DEMO
     printf_to(UART_APP, "[station] AMP demo variant: roll call and station protocol (64-byte messages) enabled\r\n");
+#endif
+#ifdef PFDAQ_AMP_M09
+    printf_to(UART_APP, "[m09] AMP demo variant M09: PMP report and one user-mode test, then the supervisor as usual\r\n");
+    {
+        struct pmp_state st0;
+        m09_hw_read_state(&st0);
+        m09_report(&m09_io, &st0);
+    }
+    printf_to(UART_APP, "[m09] the user-mode test runs only when Linux sends RUN (m09_ctl run)\r\n");
+#endif
+#ifdef PFDAQ_AMP_M08
+    printf_to(UART_APP, "[m08] AMP demo variant M08: flag polling and latency-channel-1 interrupt answers available, shared block not set yet\r\n");
 #endif
 
     for (;;)
@@ -328,6 +507,20 @@ void pfdaq_supervisor(rpmsg_comm_stack_handle_t handle)
             continue;
         }
 
+#ifdef PFDAQ_AMP_M09
+        if (msg.type == M09_T_REPORT || msg.type == M09_T_RUN)
+        {
+            m09_handle(rp, remote_addr, &msg, state);
+            continue;
+        }
+#endif
+#ifdef PFDAQ_AMP_M08
+        if (msg.type == M08_T_SETUP || msg.type == M08_T_POLL || msg.type == M08_T_PING)
+        {
+            m08_handle(rp, remote_addr, &msg, state);
+            continue;
+        }
+#endif
         fabric_snapshot(&fabric_frames, &fabric_seq);
 
         switch (msg.type)

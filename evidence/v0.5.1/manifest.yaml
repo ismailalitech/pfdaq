@@ -298,6 +298,46 @@ results:
     date: 2026-11-15
     command: "uname -r; grep isa /proc/cpuinfo; dmesg | grep CCACHE; the u-dma-buf attributes of the two devices; four options of /proc/config.gz"
     conditions: "Proven pfdaq-v051 image, read after the runs."
+  - id: i09-dma-compare-matrix
+    title: "Raw output of the DMA comparison: fabric DMA, MSS DMA (PDMA) and memcpy, four sizes, five passes, one JSON line per run (377 lines)"
+    file: board/i09-dma-compare-matrix.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "sh experiments/I09-dma-comparison/run_all.sh 5 on the board, as root, started with nohup and read after it finished (dma_compare built statically with a RISC-V Linux GCC)"
+    conditions: "Proven pfdaq-v051 image, proven payload, supervisor attached, board idle, nobody logged in during the run. Buffers in the u-dma-buf regions at offsets 0x40_0000 (destination) and 0x100_0000 (source). Idle floor 0.0035 cores not idle (0.001 to 0.006)."
+  - id: i09-dma-compare-summary
+    title: "Mean, minimum and maximum over the five passes of every configuration of the DMA comparison"
+    file: board/i09-dma-compare-summary.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "python3 experiments/I09-dma-comparison/summarise.py of board/i09-dma-compare-matrix.txt (computed on the development PC, no new board run)"
+    conditions: "The program's CPU column has the cost of the two thread-clock calls subtracted. 'Cores not idle' is online cores minus idle time over the timed loop, left out (n/a) when the loop included an untimed 8 MiB read."
+  - id: i09-dma-compare-figure-runs
+    title: "Six single runs of dma_compare (1 MiB) used for the figure, and six runs of the project's cached_dma bench as a cross-check"
+    file: board/i09-dma-compare-figure-runs.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "dma_compare -m idle|fabric|pdma|memcpy ...; cached_dma -S bench -n 32 -D nc and -D c, three runs each, in this order, right after the matrix"
+    conditions: "Same session and board state as the matrix."
+  - id: i09-board-state
+    title: "What the board offers for the MSS DMA: PDMA and dma-proxy device-tree nodes, drivers, DMA channels, kernel options, u-dma-buf regions"
+    file: board/i09-board-state.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "sh experiments/I09-dma-comparison/board_state.sh on the board (read-only), before any run"
+    conditions: "Proven pfdaq-v051 image; the board had been up 4 h 41 min."
+  - id: i09-dma-compare-first-matrix
+    title: "The first matrix of the session, before dma_compare pushed stale cache lines out: non-cached and write-combining destinations show wrong words in the DDR view"
+    file: board/i09-dma-compare-first-matrix.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "sh run_all.sh 5 on the board with the first build of dma_compare (no eviction before the check, no clock-cost subtraction, no nc-to-c and cold c-to-nc rows)"
+    conditions: "Same board and session. The wrong words come from modified lines left in the caches by the previous program run; the timings agree with the second matrix. Kept for the claim in the module."
   - id: sim-assert
     title: "Stream source simulation with 18 protocol checks: no violation in 21 runs, the existing trace checker also passes"
     file: sim/assert-results.txt
@@ -764,3 +804,91 @@ results:
     date: 2026-11-16
     command: "grep of the Microchip reference design v2026.04 SmartDesign scripts that the project's fabric is built from (MPFS_DISCOVERY_KIT.tcl, FIC_3_PERIPHERALS.tcl, GPIO.tcl)"
     conditions: "Read from the scripts, not measured on the board; connection lines only, copied unchanged."
+  - id: m08-report-idle
+    title: "Round trips of the four signalling methods, idle pass: text table and the fabric reading of the interrupt"
+    file: board/m08-report-idle.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "experiments/amp-m08/run_m08.sh (pass idle)"
+    conditions: "Demo payload with the M08 variant of the hart 4 firmware on the SD card payload partition (backed up first), board otherwise idle; measurement program pinned to Linux cpu 2, 2000 trials per method after 50 warm-up, one run per pass."
+  - id: m08-report-loaded
+    title: "The same, loaded pass: the other two Linux cpus run a busy loop"
+    file: board/m08-report-loaded.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "experiments/amp-m08/run_m08.sh (pass loaded)"
+    conditions: "Demo payload with the M08 variant of the hart 4 firmware on the SD card payload partition (backed up first), board otherwise idle; measurement program pinned to Linux cpu 2, 2000 trials per method after 50 warm-up, one run per pass."
+  - id: m08-trials-idle
+    title: "Every trial of the idle pass: method, sequence number, phase, class, round trip in nanoseconds"
+    file: board/m08-trials-idle.csv
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "written by m08_rtt during run_m08.sh"
+    conditions: "Demo payload with the M08 variant of the hart 4 firmware on the SD card payload partition (backed up first), board otherwise idle; measurement program pinned to Linux cpu 2, 2000 trials per method after 50 warm-up, one run per pass."
+  - id: m08-trials-loaded
+    title: "Every trial of the loaded pass"
+    file: board/m08-trials-loaded.csv
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "written by m08_rtt during run_m08.sh"
+    conditions: "Demo payload with the M08 variant of the hart 4 firmware on the SD card payload partition (backed up first), board otherwise idle; measurement program pinned to Linux cpu 2, 2000 trials per method after 50 warm-up, one run per pass."
+  - id: m08-console
+    title: "The hart 4 console lines of the M08 variant during the run (shared block, polling windows)"
+    file: board/m08-console.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "read from the UART during run_m08.sh"
+    conditions: "Demo payload with the M08 variant of the hart 4 firmware on the SD card payload partition (backed up first), board otherwise idle; measurement program pinned to Linux cpu 2, 2000 trials per method after 50 warm-up, one run per pass."
+  - id: m08-first-run-report-idle
+    title: "The first run, before the fix: the rpmsg-ping method got no answer because the answer did not echo the request number; the other three methods are the same within noise"
+    file: board/m08-first-run-report-idle.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "experiments/amp-m08/run_m08.sh with the first build of the M08 payload"
+    conditions: "Same as the main run, but the first payload build. Kept because it shows the bug and that the other rows reproduce."
+  - id: m09-report
+    title: "The PMP report of hart 4 as m09_ctl prints it: 1 entry active, 1 locked (the register values are in m09-console)"
+    file: board/m09-report.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "m09_ctl report, run by experiments/amp-m09/run_m09.sh"
+    conditions: "Demo payload with the M09 variant of the hart 4 firmware on the SD card payload partition (backed up first). Read-only report at boot; one RUN request from Linux."
+  - id: m09-run
+    title: "The answer to RUN: REFUSED, 0 access faults, nothing installed"
+    file: board/m09-run.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "m09_ctl run, run by experiments/amp-m09/run_m09.sh"
+    conditions: "Demo payload with the M09 variant of the hart 4 firmware on the SD card payload partition (backed up first). Read-only report at boot; one RUN request from Linux."
+  - id: m09-console
+    title: "The hart 4 console during the M09 session: the report, RUN requested, REFUSED, the report again"
+    file: board/m09-console.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "read from the UART during run_m09.sh"
+    conditions: "Demo payload with the M09 variant of the hart 4 firmware on the SD card payload partition (backed up first). Read-only report at boot; one RUN request from Linux."
+  - id: m09-ping-after
+    title: "20 RPMsg pings to hart 4 after the refused test: all answered"
+    file: board/m09-ping-after.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "m09_ctl ping, run by experiments/amp-m09/run_m09.sh"
+    conditions: "Demo payload with the M09 variant of the hart 4 firmware on the SD card payload partition (backed up first). Read-only report at boot; one RUN request from Linux."
+  - id: m0809-suite-after
+    title: "The board suite after the proven payload was written back following the M08 and M09 sessions: 27 of 27 functional tests"
+    file: board/m09-suite-after.txt
+    class: board
+    fabric: "0.5.1"
+    date: 2026-11-16
+    command: "deploy_payload.sh restore, reboot, sh /root/pfdaq_final_suite.sh"
+    conditions: "Proven payload read back and compared by SHA-256; supervisor attached."

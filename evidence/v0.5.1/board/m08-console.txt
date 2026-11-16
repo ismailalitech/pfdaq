@@ -1,0 +1,8 @@
+[m08] shared block at 0xc9e00000, magic 3830464d (ok), interrupt answers enabled
+[m08] poll ended: 1142 answers, stopped by Linux, 0 interrupts so far
+[m08] poll ended: 908 answers, stopped by Linux, 0 interrupts so far
+[m08] shared block at 0xc9e00000, magic 3830464d (ok), interrupt answers enabled
+[m08] shared block at 0xc9e00000, magic 3830464d (ok), interrupt answers enabled
+[m08] poll ended: 1142 answers, stopped by Linux, 0 interrupts so far
+[m08] poll ended: 908 answers, stopped by Linux, 0 interrupts so far
+[m08] shared block at 0xc9e00000, magic 3830464d (ok), interrupt answers enabled

@@ -1,0 +1,87 @@
+# Figures of module M09 (fencing the real-time hart with PMP). No figure shows a result from the board: the experiment has not been run there.
+# Edit by hand; run tools/gen_diagrams.py afterwards.
+
+- id: lab-m09-plan
+  alt: "The four PMP entries the demo installs for user mode, and what each access of the test meets. Entry 0 is a 4 KiB canary page inside the image, read only: a load works, a store is denied with mcause 7. Entry 1 is the 1 MiB image at 0x91C00000, read, write and execute: the own data word, the code and the stack. Entry 2 is off and only holds the bottom address for entry 3, the rings, buffers and resource table from 0x91D00000 to 0x91D51000, read and write; the test only reads the first word. A user-mode load from Linux DDR at 0x80200000 or from the boot monitor's L2 scratchpad at 0x0A000000 matches no entry and is denied with mcause 5. The lowest-numbered entry that matches decides. Machine mode is not limited by any of them, because none has the lock bit, and the entries are put back as found when the test ends."
+  width: 900
+  height: 560
+  step: 1.2
+  nodes:
+    user:  {x: 10,  y: 215, w: 160, h: 90, kind: hart,   title: "User mode", sub: "a few microseconds\ninterrupts masked"}
+    p0:    {x: 270, y: 30,  w: 250, h: 100, kind: mem,   title: "pmp0  canary page", sub: "NAPOT 4 KiB, R only (0x19)"}
+    p1:    {x: 270, y: 170, w: 250, h: 70, kind: mem,    title: "pmp1  the image", sub: "NAPOT 1 MiB at 0x91C0_0000, RWX"}
+    p3:    {x: 270, y: 270, w: 250, h: 70, kind: mem,    title: "pmp2, pmp3  rings", sub: "TOR 0x91D0_0000 to 0x91D5_1000, RW"}
+    none:  {x: 270, y: 380, w: 250, h: 100, kind: plain, title: "no entry matches", sub: "user mode: denied"}
+    ok:    {x: 640, y: 20,  w: 250, h: 55, kind: good,   title: "load works", sub: "read of the canary page"}
+    can:   {x: 640, y: 85,  w: 250, h: 55, kind: bad,    title: "store: mcause 7", sub: "pmp0 says read only"}
+    own:   {x: 640, y: 170, w: 250, h: 70, kind: good,   title: "load and store work", sub: "own data word, code, stack"}
+    ring:  {x: 640, y: 270, w: 250, h: 70, kind: good,   title: "load works", sub: "first ring word, only read"}
+    lnx:   {x: 640, y: 370, w: 250, h: 55, kind: bad,    title: "Linux DDR 0x8020_0000", sub: "load: mcause 5"}
+    hss:   {x: 640, y: 435, w: 250, h: 55, kind: bad,    title: "L2 scratchpad 0x0A00_0000", sub: "boot monitor, load: mcause 5"}
+  edges:
+    - {from: user.top@0.5,    to: p0.left}
+    - {from: user.top@0.8,    to: p1.left}
+    - {from: user.right@0.4,  to: p3.left}
+    - {from: user.bottom@0.5, to: none.left}
+    - {from: p0.right@0.2,    to: ok.left}
+    - {from: p0.right@0.8,    to: can.left, kind: bad}
+    - {from: p1.right,        to: own.left}
+    - {from: p3.right,        to: ring.left}
+    - {from: none.right@0.2,  to: lnx.left}
+    - {from: none.right@0.8,  to: hss.left}
+  steps: [user, e0, p0, e4, ok, e5, can, e1, p1, e6, own, e2, p3, e7, ring, e3, none, e8, lnx, e9, hss]
+  notes:
+    - {x: 10,  y: 518, text: "The lowest-numbered entry that matches decides: the store to the canary page meets pmp0 before pmp1."}
+    - {x: 10,  y: 542, text: "No entry has the lock bit: machine mode is not limited, and the entries are put back as found when the test ends."}
+
+- id: lab-m09-excursion
+  alt: "One trip into user mode, in the order it happens. m09_user_run saves the callee-saved registers and the four CSRs it changes, clears mie so no interrupt can arrive, points mtvec at m09_trap, keeps the stack pointer in mscratch, sets mepc to the user code, clears MPP and MPRV and executes mret. The user code does three allowed accesses and then three violations. Each violation traps into m09_trap, which logs mcause, mtval and mepc, skips the instruction and returns by mret to user mode. The ecall that ends the code traps too; m09_trap restores mtvec, mscratch, mstatus, the registers and mie, and returns to the caller as an ordinary function return. FreeRTOS' trap vector and its own mret are never involved."
+  width: 900
+  height: 420
+  step: 1.2
+  nodes:
+    save:  {x: 10,  y: 40,  w: 200, h: 80, kind: hart, title: "m09_user_run", sub: "save s0-s11, ra, mtvec,\nmscratch, mstatus, mie"}
+    mask:  {x: 250, y: 40,  w: 200, h: 80, kind: hart, title: "Mask and aim", sub: "mie = 0, mtvec = m09_trap\nmscratch = sp, mepc set"}
+    mret:  {x: 490, y: 40,  w: 200, h: 80, kind: mss,  title: "mret", sub: "MPP = user, MPRV = 0\none-way trip"}
+    user:  {x: 730, y: 40,  w: 160, h: 80, kind: sw,   title: "m09_user_entry", sub: "3 allowed accesses\n3 violations, ecall"}
+    trap:  {x: 490, y: 190, w: 200, h: 80, kind: bad,  title: "m09_trap: fault", sub: "log mcause, mtval, mepc\nskip the instruction, mret"}
+    done:  {x: 730, y: 190, w: 160, h: 80, kind: mss,  title: "m09_trap: ecall", sub: "or a full log or any\nother trap: the end"}
+    rest:  {x: 250, y: 190, w: 200, h: 80, kind: hart, title: "Restore", sub: "mtvec, mscratch, mstatus,\nregisters, then mie last"}
+    ret:   {x: 10,  y: 190, w: 200, h: 80, kind: good, title: "Return", sub: "a0 = 0, ordinary ret to\nthe supervisor task"}
+  edges:
+    - {from: save.right, to: mask.left}
+    - {from: mask.right, to: mret.left}
+    - {from: mret.right, to: user.left}
+    - {from: user.bottom@0.2, to: trap.right@0.3, kind: bad}
+    - {from: trap.top, to: mret.bottom, label: "mret"}
+    - {from: user.bottom@0.8, to: done.top@0.8}
+    - {from: done.left, to: rest.right}
+    - {from: rest.left, to: ret.right}
+  steps: [save, e0, mask, e1, mret, e2, user, e3, trap, e4, e5, done, e6, rest, e7, ret]
+  notes:
+    - {x: 10,  y: 26,  text: "Into user mode", bold: true}
+    - {x: 10,  y: 176, text: "Out again", bold: true}
+    - {x: 10,  y: 320, text: "Interrupts stay masked the whole time, so FreeRTOS' own trap vector, tick and mret never run on the user stack."}
+    - {x: 10,  y: 345, text: "A fault that repeats cannot loop: after 8 log entries the test is ended."}
+
+- id: lab-m09-predicted-state
+  type: terminal
+  title: 'disco-kit MSS configuration, hart 4 (read from the source, not measured)'
+  alt: Three lines of the project's MSS configuration file for the Discovery Kit, which the boot monitor's and the firmware's start-up code both use to program the PMP. PMP0CFG is 0x9F, which is binary 1001 1111, the lock bit, address mode NAPOT, and execute, write and read. CSR_PMPADDR0 is all ones, a NAPOT range that covers the whole address space. The configurator's own PMP switch, MEM_CONFIGS_ENABLED, is 0. Together they predict that entry 0 is locked and open to everything on every application hart, which would make the demo's own entries unreachable.
+  width: 900
+  height: 380
+  step: 3.6
+  lines:
+  - '<field Type="RW" name="PMP0CFG" offset="0" width="8">0x9F</field>'
+  - '<field Type="RW" name="CSR_PMPADDR0" offset="0" width="64">0xFFFFFFFFFFFFFFFF</field>'
+  - '<field Type="RW" name="PMP" offset="0" width="0">0x0</field>'
+  callouts:
+  - lines: [0, 0]
+    title: 0x9F = 1001 1111
+    text: Bit 7 is L (locked), bits 4 and 3 are 11 (NAPOT), bits 2 to 0 are X, W, R. A locked entry cannot be changed until reset.
+  - lines: [1, 1]
+    title: All ones
+    text: A NAPOT range whose address is all ones covers the whole address space. Entry 0, lowest number, decides every access.
+  - lines: [2, 2]
+    title: Configurator PMP off
+    text: MEM_CONFIGS_ENABLED.PMP is 0, so the vendor start-up code writes pmpcfg0 straight from the first line.

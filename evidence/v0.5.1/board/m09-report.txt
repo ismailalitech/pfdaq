@@ -1,0 +1,2 @@
+report: 1 entries active, 1 locked; a locked entry exists
+{"experiment": "m09", "command": "report", "active": 1, "locked": 1, "locked_open_to_all": false}

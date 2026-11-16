@@ -68,14 +68,14 @@ Modules are grouped in five levels. Nothing forces an order: every module lists 
 
 - [M06 remoteproc: attach, stop, and why restart fails here](modules/M06-remoteproc-attach-stop.md). Needs: M01.
 - [M07 Deferred interrupt handling, and a port that switches tasks inside the handler](modules/M07-deferred-interrupt-handling.md). Needs: M03.
-- M08 Three ways to signal another hart *(planned)*. Needs: M05.
+- [M08 Three ways to signal another hart](modules/M08-three-ways-to-signal.md). Needs: M05.
 - [M10 A four-core monitoring station: acquire, analyse, report, protect](modules/M10-four-core-monitoring-station.md). Needs: M02, M05.
 - [H10 Timing closure, and the build that lost its pins](modules/H10-timing-closure.md). Needs: H03, H09.
 - [H12 Assertions and coverage for the stream source](modules/H12-assertions-and-coverage.md). Needs: H11.
 - [I03 A small kernel driver for a fabric interrupt](modules/I03-kernel-driver-fabric-interrupt.md). Needs: I02.
 - [I07 Real-time capture with four descriptors and credits](modules/I07-real-time-capture.md). Needs: I06, H06.
 - [I08 DMA into cached memory: when you need cache maintenance](modules/I08-dma-cached-memory.md). Needs: I05.
-- I09 Fabric DMA against the MSS DMA *(planned)*. Needs: I04.
+- [I09 Fabric DMA against the MSS DMA](modules/I09-fabric-dma-vs-mss-dma.md). Needs: I04.
 - [P01 Where 940 MB/s becomes 30: throughput layer by layer](modules/P01-throughput-layers.md). Needs: I06.
 - [P02 Interrupt latency: bare metal, RTOS task, kernel, user space](modules/P02-interrupt-latency.md). Needs: H07, I02.
 - [P05 Abort without wedging the DMA](modules/P05-abort.md). Needs: I04.
@@ -85,7 +85,7 @@ Modules are grouped in five levels. Nothing forces an order: every module lists 
 
 ## Level 5: advanced engineering
 
-- M09 Fencing the real-time hart with physical memory protection *(planned)*. Needs: M01.
+- [M09 Fencing the real-time hart with physical memory protection](modules/M09-fencing-the-real-time-hart-with-pmp.md). Needs: M01.
 - [P07 Making Linux more deterministic](modules/P07-deterministic-linux.md). Needs: P02.
 - [P08 Raising verified throughput with more cores](modules/P08-parallel-verify.md). Needs: P01.
 

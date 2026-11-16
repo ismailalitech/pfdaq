@@ -1,4 +1,4 @@
-# Figures for the labs written from runs on the board in November 2026 (modules I08, P08, P07, F06, and the stall figure of M10).
+# Figures for the labs written from runs on the board in November 2026 (modules I08, I09, P08, P07, F06, and the stall figure of M10).
 # Every number in a terminal figure was printed by a recorded run (logs and evidence name them).
 
 # ---------------------------------------------------------------- I08
@@ -307,3 +307,86 @@
   - lines: [5, 5]
     title: Same load, no stall
     text: "The loop that reads descriptors took all 5000 frames although only 4999 events were counted, and the run ended at once."
+
+# ---------------------------------------------------------------- I09
+- id: lab-i09-three-movers
+  alt: "Three ways to put 1 MiB into a DDR buffer. The fabric DMA: the stream source sends frames to the CoreAXI4DMAController, which writes them into the destination buffer after the program has armed a descriptor. The MSS DMA: the program gives two physical addresses and a length to the dma-proxy device with two ioctls, and the PDMA copies from a source buffer to the destination buffer. The processor: the program copies with memcpy, so a hart does every load and store."
+  width: 920
+  height: 440
+  nodes:
+    ss:   {x: 10,  y: 20,  w: 150, h: 70, kind: fabric, title: "Stream source", sub: "1 KiB frames,\ncounter payload"}
+    fd:   {x: 220, y: 20,  w: 190, h: 70, kind: fabric, title: "Fabric DMA", sub: "CoreAXI4DMAController\narmed by a descriptor"}
+    prog: {x: 10,  y: 190, w: 190, h: 90, kind: hart,   title: "Linux program", sub: "U54, three cores\ntimes every transfer"}
+    px:   {x: 260, y: 190, w: 150, h: 70, kind: sw,     title: "dma-proxy", sub: "two ioctls:\nstart, finish"}
+    pd:   {x: 470, y: 190, w: 170, h: 70, kind: mss,    title: "MSS PDMA", sub: "4 channels, PLIC 5 to 12"}
+    cp:   {x: 260, y: 340, w: 150, h: 70, kind: hart,   title: "memcpy", sub: "a hart does every\nload and store"}
+    srcb: {x: 700, y: 190, w: 200, h: 70, kind: mem,    title: "Source buffer", sub: "c, nc or wcb window\nof the same DDR"}
+    dstb: {x: 700, y: 340, w: 200, h: 70, kind: mem,    title: "Destination buffer", sub: "c, nc or wcb window\nof the same DDR"}
+  edges:
+    - {id: e0, from: ss.right,   to: fd.left,    label: "stream"}
+    - {id: e1, from: fd.right,   to: dstb.top,   label: "FIC0, writes"}
+    - {id: e2, from: prog.right@0.3, to: px.left, label: "ioctl"}
+    - {id: e3, from: px.right,   to: pd.left,    label: "memcpy"}
+    - {id: e4, from: srcb.left,  to: pd.right,   label: "reads"}
+    - {id: e5, from: pd.bottom,  to: dstb.left@0.2,  label: "writes"}
+    - {id: e6, from: prog.bottom, to: cp.left,   label: "same copy"}
+    - {id: e7, from: cp.right,   to: dstb.left@0.8, dashed: true, label: "loads, stores"}
+  steps: [ss, e0, fd, e1, dstb, prog, e2, px, e3, pd, e4, srcb, e5, e6, cp, e7]
+  notes:
+    - {x: 20, y: 425, text: "Same bytes, same kind of destination, three movers. The fabric DMA has no source buffer: its data comes from the stream."}
+
+- id: lab-i09-run
+  type: terminal
+  title: "dma_compare on the board: 1 MiB into DDR, four ways (fields marked ... left out)"
+  alt: "Four recorded runs of dma_compare moving 1 MiB. The fabric DMA into the non-cached window takes 1.2078 ms per transfer, 868 MB/s, with the program on a CPU 45 microseconds of that. The MSS DMA from non-cached to non-cached takes 2.8412 ms, 369 MB/s, 38 microseconds on a CPU. The MSS DMA from the non-cached to the cached window takes 0.9093 ms, 1,153 MB/s, 74 microseconds. memcpy for the same copy takes 13.0429 ms, 80 MB/s, with the program on a CPU the whole time. No word was wrong in any of them."
+  width: 940
+  height: 420
+  step: 3.6
+  lines:
+    - "$ dma_compare -m fabric -b 1048576 -D nc"
+    - '{"mode": "fabric", ..., "reps": 819, "counted_words": 260096, "bad_words_own_view": 0, "bad_words_ddr_view": 0,'
+    - ' "ms_mean": 1.2078, "mb_per_s": 868.16, "cpu_ms_net": 0.0451, "cpu_share": 0.0373, "non_idle_cores": 0.091, ...}'
+    - "$ dma_compare -m pdma -b 1048576 -R nc -D nc"
+    - '{"mode": "pdma", ..., "reps": 351, "counted_words": 262144, "bad_words_own_view": 0, "bad_words_ddr_view": 0,'
+    - ' "ms_mean": 2.8412, "mb_per_s": 369.07, "cpu_ms_net": 0.0378, "cpu_share": 0.0133, "non_idle_cores": 0.027, ...}'
+    - "$ dma_compare -m pdma -b 1048576 -R nc -D c"
+    - '{"mode": "pdma", ..., "reps": 1078, "counted_words": 262144, "bad_words_own_view": 0, "bad_words_ddr_view": 0,'
+    - ' "ms_mean": 0.9093, "mb_per_s": 1153.13, "cpu_ms_net": 0.0735, "cpu_share": 0.0808, "non_idle_cores": 0.173, ...}'
+    - "$ dma_compare -m memcpy -b 1048576 -R nc -D c"
+    - '{"mode": "memcpy", ..., "reps": 77, "counted_words": 262144, "bad_words_own_view": 0, "bad_words_ddr_view": 0,'
+    - ' "ms_mean": 13.0429, "mb_per_s": 80.39, "cpu_ms_net": 13.044, "cpu_share": 1.0001, "non_idle_cores": 1.002, ...}'
+  callouts:
+    - {lines: [0, 2], title: "Fabric DMA", text: "The stream source's 1 MiB lands in the non-cached buffer in 1.21 ms, and the program is on a CPU 45 us of that."}
+    - {lines: [3, 5], title: "MSS DMA, non-cached to non-cached", text: "A copy that the processor only starts and waits for: 2.84 ms, 38 us on a CPU. The source is read from the non-cached window."}
+    - {lines: [6, 8], title: "MSS DMA, non-cached to cached", text: "The copy-out step of the project's capture loop done by the DMA: 0.91 ms."}
+    - {lines: [9, 11], title: "The processor's copy", text: "The same copy with memcpy: 13.04 ms with a hart busy the whole time (cpu_share 1.0001)."}
+
+- id: lab-i09-time-per-mib
+  type: timeline
+  alt: "Time to move 1 MiB into DDR, to scale, means of five passes. The fabric DMA into the non-cached window: 1.20 ms. The MSS DMA copying from non-cached to non-cached: 2.84 ms. The MSS DMA copying from the non-cached window to the cached window: 0.91 ms. memcpy for the same copy: 13.05 ms, with a hart busy the whole time. Only the memcpy bar keeps a processor busy."
+  width: 900
+  height: 410
+  label_width: 190
+  scale: 45
+  length: 14.4
+  top: 40
+  lane_h: 48
+  play: 9
+  ticks: [[0, "0 ms"], [2, "2"], [4, "4"], [6, "6"], [8, "8"], [10, "10"], [12, "12"], [14, "14 ms"]]
+  lanes:
+    - name: "Fabric DMA, stream to nc"
+      segments:
+        - {t0: 0, t1: 1.202, kind: fabric, label: ""}
+    - name: "MSS DMA, nc to nc"
+      segments:
+        - {t0: 0, t1: 2.84, kind: mss, label: ""}
+    - name: "MSS DMA, nc to cached"
+      segments:
+        - {t0: 0, t1: 0.9118, kind: mss, label: ""}
+    - name: "memcpy, nc to cached"
+      segments:
+        - {t0: 0, t1: 13.05, kind: hart, label: "a hart copies 13.05 ms"}
+  notes:
+    - {x: 20, y: 340, text: "Per 1 MiB, mean times of five passes: fabric DMA 1.20 ms; MSS DMA 2.84 ms and 0.91 ms."}
+    - {x: 20, y: 362, text: "818 to 831, 351, 1,069 to 1,079 and 77 transfers per pass, in this order."}
+    - {x: 20, y: 384, text: "The program was on a CPU 0.04 ms of each DMA transfer (0.08 ms for the cached destination), all of the memcpy."}

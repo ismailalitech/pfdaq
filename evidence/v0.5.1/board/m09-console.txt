@@ -1,0 +1,10 @@
+[m09] pmpcfg0 0x000000000000009f pmpcfg2 0x0000000000000000
+[m09] pmp0  cfg 0x9f NAPOT RWX L pmpaddr 0x00000fffffffff covers 0x0..0x7fffffffff
+[m09] 1 entries active, 1 locked
+[m09] entry 0 is locked: a locked entry cannot be changed before the hart is reset
+[m09] RUN requested by Linux
+[m09] REFUSED: pmp0 is locked, so writes to it are ignored until the hart is reset. Nothing installed, no user-mode test run, nothing changed
+[m09] pmpcfg0 0x000000000000009f pmpcfg2 0x0000000000000000
+[m09] pmp0  cfg 0x9f NAPOT RWX L pmpaddr 0x00000fffffffff covers 0x0..0x7fffffffff
+[m09] 1 entries active, 1 locked
+[m09] entry 0 is locked: a locked entry cannot be changed before the hart is reset

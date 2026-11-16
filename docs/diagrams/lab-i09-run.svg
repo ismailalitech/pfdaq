@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 420" width="940" height="420" role="img" aria-labelledby="t d">
+<title id="t">dma_compare on the board: 1 MiB into DDR, four ways (fields marked ... left out)</title><desc id="d">Four recorded runs of dma_compare moving 1 MiB. The fabric DMA into the non-cached window takes 1.2078 ms per transfer, 868 MB/s, with the program on a CPU 45 microseconds of that. The MSS DMA from non-cached to non-cached takes 2.8412 ms, 369 MB/s, 38 microseconds on a CPU. The MSS DMA from the non-cached to the cached window takes 0.9093 ms, 1,153 MB/s, 74 microseconds. memcpy for the same copy takes 13.0429 ms, 80 MB/s, with the program on a CPU the whole time. No word was wrong in any of them.</desc>
+<style>
+text{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif}
+.hl,.co{opacity:0;animation:lit 16.40s linear infinite;animation-fill-mode:forwards}
+.flow{stroke-dasharray:9 6;animation:lit 16.40s linear infinite,flow .7s linear infinite;animation-fill-mode:forwards}
+@keyframes lit{0%{opacity:0}2%{opacity:1}21.95%{opacity:1}24.95%{opacity:0}100%{opacity:0}}
+@keyframes flow{to{stroke-dashoffset:-15}}
+.play{animation-name:slide;animation-timing-function:linear;animation-iteration-count:infinite}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@media (prefers-reduced-motion:reduce){.hl,.play{animation:none}.play{display:none}.co{animation:none;opacity:1}.cap{display:none}}
+</style>
+<defs><marker id="ar-plain" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8c9b"/></marker><marker id="ar-start" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c9d3dd"/></marker><marker id="ar-hart" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5aa0d6"/></marker><marker id="ar-mss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8da6d4"/></marker><marker id="ar-fabric" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5fbf84"/></marker><marker id="ar-mem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0a95f"/></marker><marker id="ar-sw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b08fe0"/></marker><marker id="ar-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4fd1a5"/></marker><marker id="ar-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef6f6c"/></marker><marker id="ar-hl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/></marker></defs>
+<rect width="940" height="420" rx="12" fill="#12171d"/>
+<rect x="0" y="0" width="940" height="314" fill="#0d1117"/>
+<rect x="0" y="0" width="940" height="34" fill="#1b222c"/>
+<circle cx="20" cy="17" r="6" fill="#ef6f6c"/>
+<circle cx="38" cy="17" r="6" fill="#e6c04f"/>
+<circle cx="56" cy="17" r="6" fill="#5fbf84"/>
+<text x="470" y="22" text-anchor="middle" font-size="12" fill="#9aa8b5">dma_compare on the board: 1 MiB into DDR, four ways (fields marked ... left out)</text>
+<text x="24" y="58" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">dma_compare -m fabric -b 1048576 -D nc</tspan></text>
+<text x="24" y="78" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"mode": "fabric", ..., "reps": 819, "counted_words": 260096, "bad_words_own_view": 0, "bad_words_ddr_view": 0,</text>
+<text x="24" y="98" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "ms_mean": 1.2078, "mb_per_s": 868.16, "cpu_ms_net": 0.0451, "cpu_share": 0.0373, "non_idle_cores": 0.091, ...}</text>
+<text x="24" y="118" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">dma_compare -m pdma -b 1048576 -R nc -D nc</tspan></text>
+<text x="24" y="138" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"mode": "pdma", ..., "reps": 351, "counted_words": 262144, "bad_words_own_view": 0, "bad_words_ddr_view": 0,</text>
+<text x="24" y="158" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "ms_mean": 2.8412, "mb_per_s": 369.07, "cpu_ms_net": 0.0378, "cpu_share": 0.0133, "non_idle_cores": 0.027, ...}</text>
+<text x="24" y="178" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">dma_compare -m pdma -b 1048576 -R nc -D c</tspan></text>
+<text x="24" y="198" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"mode": "pdma", ..., "reps": 1078, "counted_words": 262144, "bad_words_own_view": 0, "bad_words_ddr_view": 0,</text>
+<text x="24" y="218" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "ms_mean": 0.9093, "mb_per_s": 1153.13, "cpu_ms_net": 0.0735, "cpu_share": 0.0808, "non_idle_cores": 0.173, ...}</text>
+<text x="24" y="238" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" xml:space="preserve"><tspan fill="#5fbf84">$ </tspan><tspan fill="#e6ecf1">dma_compare -m memcpy -b 1048576 -R nc -D c</tspan></text>
+<text x="24" y="258" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve">{"mode": "memcpy", ..., "reps": 77, "counted_words": 262144, "bad_words_own_view": 0, "bad_words_ddr_view": 0,</text>
+<text x="24" y="278" font-family="IBM Plex Mono, ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#b9c4cf" xml:space="preserve"> "ms_mean": 13.0429, "mb_per_s": 80.39, "cpu_ms_net": 13.044, "cpu_share": 1.0001, "non_idle_cores": 1.002, ...}</text>
+<rect x="0" y="314" width="940" height="106" fill="#12171d"/>
+<g class="co" style="animation-delay:0.00s"><rect x="8" y="43" width="924" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="45" r="11" fill="#ffd166"/><text x="8" y="49" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">1</text></g>
+<g class="co cap" style="animation-delay:0.00s">
+<rect x="0" y="314" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="340" r="13" fill="#ffd166"/><text x="24" y="345" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">1</text>
+<text x="48" y="338" font-size="15" font-weight="bold" fill="#e6ecf1">Fabric DMA</text>
+<text x="48" y="358" font-size="13" fill="#9aa8b5">The stream source's 1 MiB lands in the non-cached buffer in 1.21 ms, and the program is on a CPU 45 us of that.</text>
+</g>
+<g class="co" style="animation-delay:3.60s"><rect x="8" y="103" width="924" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="105" r="11" fill="#ffd166"/><text x="8" y="109" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">2</text></g>
+<g class="co cap" style="animation-delay:3.60s">
+<rect x="0" y="314" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="340" r="13" fill="#ffd166"/><text x="24" y="345" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">2</text>
+<text x="48" y="338" font-size="15" font-weight="bold" fill="#e6ecf1">MSS DMA, non-cached to non-cached</text>
+<text x="48" y="358" font-size="13" fill="#9aa8b5">A copy that the processor only starts and waits for: 2.84 ms, 38 us on a CPU. The source is read from the non-cached window.</text>
+</g>
+<g class="co" style="animation-delay:7.20s"><rect x="8" y="163" width="924" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="165" r="11" fill="#ffd166"/><text x="8" y="169" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">3</text></g>
+<g class="co cap" style="animation-delay:7.20s">
+<rect x="0" y="314" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="340" r="13" fill="#ffd166"/><text x="24" y="345" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">3</text>
+<text x="48" y="338" font-size="15" font-weight="bold" fill="#e6ecf1">MSS DMA, non-cached to cached</text>
+<text x="48" y="358" font-size="13" fill="#9aa8b5">The copy-out step of the project's capture loop done by the DMA: 0.91 ms.</text>
+</g>
+<g class="co" style="animation-delay:10.80s"><rect x="8" y="223" width="924" height="63" rx="4" fill="#ffd166" fill-opacity="0.13" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="8" cy="225" r="11" fill="#ffd166"/><text x="8" y="229" text-anchor="middle" font-size="12" font-weight="bold" fill="#12171d">4</text></g>
+<g class="co cap" style="animation-delay:10.80s">
+<rect x="0" y="314" width="940" height="106" fill="#12171d"/>
+<circle cx="24" cy="340" r="13" fill="#ffd166"/><text x="24" y="345" text-anchor="middle" font-size="14" font-weight="bold" fill="#12171d">4</text>
+<text x="48" y="338" font-size="15" font-weight="bold" fill="#e6ecf1">The processor's copy</text>
+<text x="48" y="358" font-size="13" fill="#9aa8b5">The same copy with memcpy: 13.04 ms with a hart busy the whole time (cpu_share 1.0001).</text>
+</g>
+</svg>

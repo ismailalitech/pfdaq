@@ -106,8 +106,11 @@ PLACE = {
     'P07': ('fpga', 'performance-and-reliability', 70, 'auto', None, None),
     'P08': ('fpga', 'performance-and-reliability', 80, 'auto', None, None),
     'I08': ('embedded-linux', 'linux-fpga-interfaces', 70, 'auto', None, None),
+    'I09': ('embedded-linux', 'linux-fpga-interfaces', 90, 'auto', None, None),
     'F06': ('embedded-linux', 'linux-fpga-interfaces', 80, 'auto', None, None),
     'M10': ('microcontrollers', 'linux-and-rtos', 50, 'auto', None, None),
+    'M08': ('microcontrollers', 'linux-and-rtos', 60, 'auto', None, None),
+    'M09': ('microcontrollers', 'linux-and-rtos', 70, 'auto', None, None),
 }
 CORE_BY_TRACK = {'boot': 'E51 and U54', 'fundamentals': 'PolarFire SoC', 'integration': 'U54 (Linux)',
                  'multicore': 'U54 (Linux) and U54 hart 4', 'performance': 'U54 (Linux) and FPGA fabric',
